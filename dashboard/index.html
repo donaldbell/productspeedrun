@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Product Speedrun</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="/style.css">
+<script type="module" src="/vendor/model-viewer.min.js"></script>
+<script type="module" src="https://kicanvas.org/kicanvas/kicanvas.js"></script>
+</head>
+<body data-stage="1">
+<div class="console" id="console">
+  <header class="hud">
+    <button class="ep-btn" id="epBtn" type="button" title="Episodes (E)">
+      <span class="ep-num" id="epNum">#—</span>
+      <span class="ep-title" id="epTitle">No episode</span>
+      <span class="caret" aria-hidden="true">▾</span>
+    </button>
+    <div class="stage-head">
+      <div class="stage-kicker" id="stageKicker">Stage 1 of 7</div>
+      <h1 class="stage-name" id="stageName">Roll &amp; brief</h1>
+    </div>
+    <div class="clock" id="clock" title="T starts or pauses the timer">
+      <div class="clock-total" id="clockTotal">0:00.0</div>
+      <div class="clock-sub" id="clockSub">Paused · press T</div>
+    </div>
+  </header>
+
+  <main class="work" id="work" aria-live="polite"></main>
+
+  <aside class="splits" id="splits" aria-label="Stages"></aside>
+</div>
+
+<div class="dropveil" id="dropveil" hidden><div>Drop to add to <b id="dropTarget">this stage</b></div></div>
+
+<div class="lightbox" id="lightbox" hidden>
+  <img id="lbImg" alt="">
+  <div class="lb-cap" id="lbCap"></div>
+  <div class="lb-keys">← → browse · F favorite · Esc close</div>
+</div>
+
+<div class="sheet" id="episodes" hidden>
+  <div class="sheet-card">
+    <h2>Episodes</h2>
+    <form id="newEp" class="new-ep">
+      <input id="newEpTitle" type="text" placeholder="Working title, e.g. Plant Whisperer" aria-label="New episode title" autocomplete="off">
+      <button type="submit" class="btn primary">Start episode</button>
+    </form>
+    <div class="ep-list" id="epList"></div>
+    <button type="button" class="btn ghost close" data-close>Close</button>
+  </div>
+</div>
+
+<div class="sheet" id="settings" hidden>
+  <div class="sheet-card">
+    <h2>Settings</h2>
+    <fieldset>
+      <legend>Image generators</legend>
+      <div id="providerList" class="provider-list"></div>
+      <p class="hint">Add keys to the <code>.env</code> file next to <code>server.mjs</code>, then restart <code>npm start</code>. Keys never leave this computer.</p>
+    </fieldset>
+    <fieldset>
+      <legend>Leave room for our faces</legend>
+      <div class="row" id="safeOpts">
+        <label><input type="radio" name="safe" value="none" id="safe-none"> None</label>
+        <label><input type="radio" name="safe" value="bottom" id="safe-bottom"> Bottom strip</label>
+        <label><input type="radio" name="safe" value="left" id="safe-left"> Left column</label>
+        <label><input type="radio" name="safe" value="right" id="safe-right"> Right column</label>
+      </div>
+      <label class="check"><input type="checkbox" id="showSafe"> Outline the reserved area (for lining up in Riverside)</label>
+    </fieldset>
+    <fieldset>
+      <legend>Sound</legend>
+      <label class="check"><input type="checkbox" id="soundOn"> Sound effects</label>
+    </fieldset>
+    <button type="button" class="btn primary close" data-close>Done</button>
+  </div>
+</div>
+
+<div class="safe-outline" id="safeOutline" hidden></div>
+<div class="toast" id="toast" role="status"></div>
+<div class="keys" id="keys">← → stages · N split · T timer · E episodes · , settings · F full screen</div>
+
+<script src="/app.js" type="module"></script>
+</body>
+</html>

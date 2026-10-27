@@ -1,0 +1,14 @@
+{
+  "name": "productspeedrun",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Product Speedrun: the show console and episode archive",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "build:site": "node scripts/build-site.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
