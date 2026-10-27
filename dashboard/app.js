@@ -81,40 +81,11 @@ const sfx = {
 let toastT;
 function toast(msg, isErr) { const t = $("toast"); t.textContent = msg; t.classList.toggle("error", !!isErr); t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), isErr ? 5000 : 2400); }
 
-/* ---------- timer ---------- */
-function stageMs(n) {
-  const t = S.ep?.timer; if (!t) return 0;
-  return (t.splits?.[n] || 0) + (t.running && S.ep.stage === n ? Date.now() - t.since : 0);
-}
-const totalMs = () => STAGES.reduce((a, s) => a + stageMs(s.n), 0);
-function fmt(ms, tenths = true) {
-  const s = Math.floor(ms / 1000), hh = Math.floor(s / 3600), mm = Math.floor((s % 3600) / 60), ss = s % 60;
-  const base = hh ? `${hh}:${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}` : `${mm}:${String(ss).padStart(2, "0")}`;
-  return tenths ? `${base}.${Math.floor((ms % 1000) / 100)}` : base;
-}
-function bankTime() { const t = S.ep.timer; if (t.running) { t.splits[S.ep.stage] = (t.splits[S.ep.stage] || 0) + Date.now() - t.since; t.since = Date.now(); } }
-function toggleTimer() {
-  if (!S.ep) return;
-  const t = S.ep.timer;
-  if (t.running) { bankTime(); t.running = false; t.since = null; }
-  else { t.running = true; t.since = Date.now(); sfx.start(); }
-  save(true); tick();
-}
-function tick() {
-  if (!S.ep) return;
-  const running = S.ep.timer.running;
-  document.body.classList.toggle("running", running);
-  $("clockTotal").textContent = fmt(totalMs());
-  $("clockSub").textContent = running ? `Stage ${S.ep.stage} · ${fmt(stageMs(S.ep.stage), false)}` : (totalMs() ? "Paused · press T" : "Press T to start the run");
-  document.querySelectorAll(".split").forEach((el) => { const n = Number(el.dataset.n); el.querySelector(".t").textContent = stageMs(n) ? fmt(stageMs(n), false) : "—"; });
-}
-setInterval(tick, 100);
-
 /* ---------- navigation ---------- */
 function goStage(n, { silent } = {}) {
   if (!S.ep) return;
   n = Math.max(1, Math.min(7, n));
-  if (n !== S.ep.stage) { bankTime(); S.ep.stage = n; save(); if (!silent) sfx.stage(); }
+  if (n !== S.ep.stage) { S.ep.stage = n; save(); if (!silent) sfx.stage(); }
   document.body.dataset.stage = n;
   const st = STAGES[n - 1];
   $("stageKicker").textContent = `Stage ${n} of 7`;
@@ -127,7 +98,7 @@ function split() {
   if (!S.ep.done.includes(n)) S.ep.done.push(n);
   sfx.split();
   const el = document.querySelector(`.split[data-n="${n}"]`); el?.classList.remove("flash"); void el?.offsetWidth; el?.classList.add("flash");
-  toast(`Split! ${STAGES[n - 1].name} in ${fmt(stageMs(n), false)}`);
+  toast(`${STAGES[n - 1].name}: done`);
   if (n < 7) setTimeout(() => goStage(n + 1, { silent: true }), 350); else { save(); renderSplits(); }
 }
 
@@ -160,10 +131,9 @@ function renderSplits() {
   for (const st of STAGES) {
     const cls = ["split", S.ep.stage === st.n && "current", S.ep.done.includes(st.n) && "done", S.arrivals.has(st.dir) && "arrive"].filter(Boolean).join(" ");
     box.append(h("button", { type: "button", class: cls, "data-n": st.n, onclick: () => goStage(st.n) },
-      h("span", { class: "n", text: String(st.n).padStart(2, "0") }), h("span", { class: "nm", text: st.name }), h("span", { class: "t", text: "—" }),
+      h("span", { class: "n", text: String(st.n).padStart(2, "0") }), h("span", { class: "nm", text: st.name }), h("span", { class: "t", text: S.ep.done.includes(st.n) ? "✓" : "" }),
       evidence(st.n)));
   }
-  tick();
 }
 
 /* ---------- stage views ---------- */
@@ -197,8 +167,10 @@ function viewRoll() {
   const field = (key, label, kind = "textarea", ph = "") => {
     const input = kind === "input"
       ? h("input", { id: "brief-" + key, class: key === "name" ? "name" : null, type: "text", value: ep.brief[key] || "", placeholder: ph, autocomplete: "off" })
-      : h("textarea", { id: "brief-" + key, placeholder: ph, rows: 2 }, ep.brief[key] || "");
-    input.addEventListener("input", () => { ep.brief[key] = input.value; save(); if (key === "name") renderSplits(); });
+      : h("textarea", { id: "brief-" + key, placeholder: ph, rows: 1 }, ep.brief[key] || "");
+    const fit = () => { if (input.tagName === "TEXTAREA") { input.style.height = "auto"; input.style.height = input.scrollHeight + 2 + "px"; } };
+    input.addEventListener("input", () => { ep.brief[key] = input.value; save(); fit(); if (key === "name") renderSplits(); });
+    requestAnimationFrame(fit);
     return h("label", { class: "field" }, h("span", { class: "label", text: label }), input);
   };
   const el = h("div", { class: "stage-view s1" },
@@ -206,10 +178,17 @@ function viewRoll() {
     h("div", { class: "panel-col" },
       h("div", { class: "label", text: "The roll" }), chips,
       field("name", "Product name", "input", "Name it"),
-      field("pitch", "One-line pitch", "textarea", "A ___ that ___ for ___"),
-      field("who", "Who it's for", "textarea"),
-      field("does", "What it does", "textarea", "The moment someone uses it…"),
-      field("electronics", "Electronics notes", "textarea", "Board, sensors, outputs, power…")));
+      field("pitch", "One-line pitch", "textarea", "Haptic nudges on your handlebars, straight from your phone"),
+      field("what", "What it is", "textarea", "a bike accessory that clips onto your handlebars like a bike light"),
+      field("does", "What it does", "textarea", "adds haptic buzzing to the handlebars, connects to your phone, and a single LED on top lights up when it buzzes"),
+      field("electronics", "What's inside", "textarea", "a small ESP32 module along with a haptic pager motor"),
+      h("div", { class: "field-row" },
+        field("design", "Design language", "textarea", "minimal, black and white with silver accents"),
+        field("looksLike", "Form factor like", "textarea", "the DJI clip-on Bluetooth microphone")),
+      h("div", { class: "field-row" },
+        field("size", "Rough size", "textarea", "about 1.5 in wide and tall, 0.5 in thick"),
+        field("who", "Who it's for", "textarea", "commuting cyclists")),
+      h("p", { class: "hint", text: "These answers write the starting prompts for concept art, the layout sheet and the 3D model." })));
   return { el, refresh() {}, onRoll() { drawChips(true); } };
 }
 window.addEventListener("message", (e) => {
@@ -220,38 +199,107 @@ window.addEventListener("message", (e) => {
   save(); renderSplits(); S.view?.onRoll?.(); sfx.arrive(); toast("Roll captured");
 });
 
-// Stages 2 and 3: image lab
-const PRESETS = {
+// Prompt kit: starting prompts written from the brief, in the hosts' own voice.
+const STYLES = {
   "2-concept": [
-    ["Marker sketch", "Loose product-design concept sketch, black marker and grey copic shading on white sketchbook paper, quick annotations and arrows, not photorealistic."],
-    ["Napkin doodle", "Rough ballpoint doodle on a cafe napkin, playful, a few handwritten labels, not photorealistic."],
-    ["Storyboard", "Three-panel storyboard sketch showing the product being used, pencil with a single accent color, not photorealistic."],
+    ["Pen & watercolor", "fine technical pen and watercolor"],
+    ["Marker & copic", "loose black marker with grey copic shading on sketchbook paper"],
+    ["Pencil storyboard", "a three-panel graphite pencil storyboard with a single accent color"],
+    ["Clean vector", "a clean, flat vector product illustration"],
   ],
   "3-layout": [
-    ["Isometric line", "Clean isometric technical illustration, thin black linework on white, semi-transparent enclosure revealing the circuit board, battery and components inside, small callout labels, not photorealistic."],
-    ["Exploded view", "Isometric exploded-view diagram, parts separated along vertical axis with dashed guide lines, labeled enclosure shell, PCB, battery, buttons, flat colors, not photorealistic."],
-    ["Blueprint", "Isometric blueprint drawing, white lines on blue grid paper, dimension lines and part labels, not photorealistic."],
+    ["Multi-view sheet", "with every view laid out on one sheet like an AutoCAD multi-view isometric layout. This can be black and white line art."],
+    ["Exploded view", "drawn as an exploded isometric view with the enclosure, circuit board, battery and other parts pulled apart along dashed guide lines. This can be black and white line art."],
+    ["Blueprint", "drawn as a blueprint-style isometric sheet, white lines on a blue grid, with dimension lines and callouts."],
   ],
 };
-function basePrompt(dir, style) {
-  const b = S.ep.brief, roll = S.ep.roll.map((r) => r.label).join(", ");
-  const clean = (t) => String(t || "").trim().replace(/[.!?\s]+$/, "");
-  const what = [b.name && `"${clean(b.name)}"`, clean(b.pitch)].filter(Boolean).join(": ") || "a small electronic gadget";
-  if (dir === "2-concept") return `${style}\n\nThe product: ${what}.${b.does ? ` ${clean(b.does)}.` : ""}${b.who ? `\nShow it in use by ${clean(b.who).toLowerCase()}.` : ""}${roll ? `\nIngredients: ${roll}.` : ""}`;
-  return `${style}\n\nThe product: ${what}.${b.electronics ? `\nInside: ${clean(b.electronics)}.` : ""}${roll ? `\nIngredients: ${roll}.` : ""}\nMatch the shape of the product in the reference sketch.`;
+const clean = (t) => String(t || "").trim().replace(/\s+/g, " ").replace(/[.!?;,\s]+$/, "");
+const lower1 = (t) => (t ? t[0].toLowerCase() + t.slice(1) : t);
+const upper1 = (t) => (t ? t[0].toUpperCase() + t.slice(1) : t);
+const rollPick = (bucket) => S.ep.roll.find((r) => r.bucket === bucket)?.label;
+
+// The product description, reused by every prompt.
+function describe() {
+  const b = S.ep.brief, out = [];
+  const what = clean(b.what) || clean(b.pitch);
+  out.push(what ? `It's ${lower1(what.replace(/^(it'?s|it is)\s+/i, ""))}.` : "It's a small electronic gadget.");
+  const does = clean(b.does);
+  if (does) out.push(/^(it|its|this|the|a|an|when|whenever|you|your|users?|riders?|once|if)\b/i.test(does) ? upper1(does) + "." : `It ${lower1(does)}.`);
+  if (clean(b.who)) out.push(`It's made for ${lower1(clean(b.who))}.`);
+  if (clean(b.electronics)) out.push(`It fits ${lower1(clean(b.electronics))} inside.`);
+  const design = clean(b.design), looks = clean(b.looksLike), size = clean(b.size);
+  if (design || looks) {
+    let t = design ? `The design is ${lower1(design)}` : "The design";
+    if (looks) t += `${design ? ", and it" : ""} resembles the form factor of ${looks}`;
+    if (size) t += ` (${size})`;
+    out.push(t + ".");
+  } else if (size) out.push(`It's ${lower1(size)}.`);
+  return out.join(" ");
 }
+function insideList() {
+  const b = S.ep.brief, inside = clean(b.electronics);
+  if (inside) return `a PCB carrying ${lower1(inside)}${/batter|lipo|coin cell|aa\b|usb/i.test(inside) ? "" : ", plus a small LiPo battery"}`;
+  const bits = [rollPick("Brain") && `the ${rollPick("Brain")} module`, rollPick("Sense"), rollPick("Act")].filter(Boolean).map(lower1);
+  return `a PCB with ${bits.length ? bits.join(", ") : "a small microcontroller module"}, and a small LiPo battery`;
+}
+const imagePaths = () => [favOrLatest("2-concept"), favOrLatest("3-layout")].filter(Boolean).map((p) => `episodes/${S.ep.slug}/${p}`);
+const styleIndex = (dir) => S.ep.prompts[dir + ":style"] ?? 0;
+
+const BUILDERS = {
+  "2-concept": () => {
+    const name = clean(S.ep.brief.name);
+    return `I'd like a concept art design for an imaginary product${name ? ` called "${name}"` : ""}. ${describe()} Show me an artistically drawn concept image (think ${STYLES["2-concept"][styleIndex("2-concept")][1]}) of it in use, framed close enough so that I can pick up on its design.`;
+  },
+  "3-layout": () =>
+    `Now take this same product concept and provide me with a CAD-style isometric layout of how it's designed, its dimensions, labels, ${STYLES["3-layout"][styleIndex("3-layout")][1]}\n\nFor reference, here's the product: ${describe()}`,
+  model: () => {
+    const name = clean(S.ep.brief.name), imgs = imagePaths();
+    return `Let's do an imaginary product for Product Speedrun episode ${S.ep.slug}${name ? `, "${name}"` : ""}. I made some concept art for the product idea. Here's what I asked for: ${describe()}\n\n` +
+      `Here are the images it created: ${imgs.length ? imgs.join(" and ") : `the images in episodes/${S.ep.slug}/2-concept and 3-layout`}. Bear in mind they're just fantasy and not based on any actual technical specifications. ` +
+      `Show what you can do to make a 3D model that draws from this design direction, but with some more informed ideas of the likely dimensions needed to house ${insideList()}.\n\n` +
+      `Use Solidcraft (headless) and follow the Stage 4 steps in CLAUDE.md, saving to episodes/${S.ep.slug}/4-model/ (NOTES.md first, then iso.png, model.step and model.glb).`;
+  },
+  electronics: () => {
+    const name = clean(S.ep.brief.name);
+    return `Now the electronics for Product Speedrun episode ${S.ep.slug}${name ? `, "${name}"` : ""}. ${describe()}\n\n` +
+      `Design the simplest circuit that does this, built around ${rollPick("Brain") ? `the ${rollPick("Brain")}` : "a common microcontroller module"}, sized to fit the enclosure in episodes/${S.ep.slug}/4-model/. ` +
+      `Follow the Stage 5 steps in CLAUDE.md: NOTES.md first, then the KiCad schematic and board, bom.csv, and board.glb plus renders in episodes/${S.ep.slug}/5-electronics/.`;
+  },
+  showcase: () => {
+    const vibe = rollPick("Vibe");
+    return `Build the showcase page for Product Speedrun episode ${S.ep.slug}. Use the brief in episode.json, the concept art, the layout sheet, the 3D model and the electronics notes and BOM to make the product feel real and close to existing.` +
+      `${vibe ? ` Give the page a ${lower1(vibe)} feel to match the roll.` : ""}\n\nFollow the Stage 6 steps in CLAUDE.md and save it as episodes/${S.ep.slug}/6-showcase/index.html.`;
+  },
+};
+const promptText = (kind) => (S.ep.promptEdited[kind] && S.ep.prompts[kind] != null ? S.ep.prompts[kind] : BUILDERS[kind]());
+
+// An editable prompt with Copy and Rebuild. Untouched prompts keep following the brief.
+function promptBox(kind, { label, copyNote, rows = 9 } = {}) {
+  const ta = h("textarea", { class: "prompt", id: "prompt-" + kind, rows, spellcheck: "true" });
+  ta.value = promptText(kind);
+  ta.addEventListener("input", () => { S.ep.prompts[kind] = ta.value; S.ep.promptEdited[kind] = true; save(); });
+  const rebuild = () => { S.ep.promptEdited[kind] = false; delete S.ep.prompts[kind]; ta.value = BUILDERS[kind](); save(); };
+  const box = h("div", { class: "prompt-box" },
+    h("div", { class: "row", style: "justify-content:space-between" }, h("span", { class: "label", text: label || "Prompt" }),
+      h("span", { class: "row" },
+        h("button", { type: "button", class: "btn ghost", text: "Rebuild", title: "Rewrite from the brief (drops your edits)", onclick: rebuild }),
+        h("button", { type: "button", class: "btn", text: "Copy", onclick: async () => {
+          try { await navigator.clipboard.writeText(ta.value); toast(copyNote || "Prompt copied"); }
+          catch { ta.select(); toast("Copy failed. The text is selected: press Cmd+C.", true); }
+        } }))),
+    ta);
+  return { box, ta, rebuild, sync() { if (!S.ep.promptEdited[kind]) ta.value = BUILDERS[kind](); } };
+}
+
+// Stages 2 and 3: image lab
 function viewLab(dir) {
-  const ep = S.ep; ep.prompts = ep.prompts || {};
-  const presets = PRESETS[dir];
-  let style = ep.prompts[dir + ":style"] ?? 0;
-  const ta = h("textarea", { class: "prompt", id: "prompt-" + dir, spellcheck: "true" });
-  ta.value = ep.prompts[dir] || basePrompt(dir, presets[style][1]);
-  ta.addEventListener("input", () => { ep.prompts[dir] = ta.value; save(); });
-  const presetRow = h("div", { class: "row presets" }, presets.map(([name, text], i) => h("button", {
-    type: "button", class: "btn", "aria-pressed": String(i === style), text: name,
-    onclick: () => { style = i; ep.prompts[dir + ":style"] = i; ta.value = basePrompt(dir, text); ep.prompts[dir] = ta.value; save(); presetRow.querySelectorAll("button").forEach((b, j) => b.setAttribute("aria-pressed", String(j === i))); },
+  const ep = S.ep;
+  const pb = promptBox(dir, { label: "Prompt", copyNote: "Prompt copied. Paste it into Gemini or ChatGPT, then drag the image back in.", rows: 10 });
+  const ta = pb.ta;
+  const presetRow = h("div", { class: "row presets" }, STYLES[dir].map(([name], i) => h("button", {
+    type: "button", class: "btn", "aria-pressed": String(i === styleIndex(dir)), text: name,
+    onclick: () => { ep.prompts[dir + ":style"] = i; pb.rebuild(); presetRow.querySelectorAll("button").forEach((b, j) => b.setAttribute("aria-pressed", String(j === i))); },
   })));
-  const rebuild = h("button", { type: "button", class: "btn ghost", text: "Rebuild from brief", onclick: () => { ta.value = basePrompt(dir, presets[style][1]); ep.prompts[dir] = ta.value; save(); } });
 
   // References: earlier favorites plus this stage's images
   const refsBox = h("div", { class: "refs" });
@@ -300,7 +348,7 @@ function viewLab(dir) {
   const el = h("div", { class: "stage-view lab" },
     h("div", { class: "panel-col" },
       h("div", { class: "label", text: "Style" }), presetRow,
-      h("div", { class: "row", style: "justify-content:space-between" }, h("span", { class: "label", text: "Prompt" }), rebuild), ta,
+      pb.box,
       h("div", { class: "selects" }, providerSel, aspectSel), genBtn,
       h("div", { class: "label", text: "References" }), refsBox),
     gallery);
@@ -335,21 +383,9 @@ async function removeFile(dir, name) {
 
 // Shared bits for stages 4 to 6
 function handoffCard(n) {
-  const text = handoffPrompt(n);
-  return h("div", { class: "handoff" },
-    h("div", { class: "row", style: "justify-content:space-between" }, h("span", { class: "label", text: "Hand off to Claude Code" }),
-      h("button", { type: "button", class: "btn primary", text: "Copy prompt", onclick: async () => {
-        try { await navigator.clipboard.writeText(text); toast("Prompt copied. Paste it into Claude Code."); }
-        catch { toast("Copy failed. Select the text and copy it by hand.", true); }
-      } })),
-    h("pre", { text }));
-}
-function handoffPrompt(n) {
-  const slug = S.ep.slug;
-  const imgs = [favOrLatest("2-concept"), favOrLatest("3-layout")].filter(Boolean).map((p) => `episodes/${slug}/${p}`).join(" and ") || "the images in 2-concept and 3-layout";
-  if (n === 4) return `Run Stage 4 (3D model) for episode ${slug}, following CLAUDE.md.\nRead episodes/${slug}/episode.json and look at ${imgs}.\nUse Solidcraft to build a rough first-pass model, then save it to episodes/${slug}/4-model/ as model.glb plus an isometric screenshot.`;
-  if (n === 5) return `Run Stage 5 (electronics) for episode ${slug}, following CLAUDE.md.\nRead episodes/${slug}/episode.json, the brief's electronics notes, and look at ${imgs} and the model in 4-model/.\nDesign the schematic, KiCad board and BOM in episodes/${slug}/5-electronics/, then export board.glb and a board render.`;
-  return `Run Stage 6 (showcase) for episode ${slug}, following CLAUDE.md.\nUse everything in episodes/${slug}/ to build an interactive showcase page at episodes/${slug}/6-showcase/index.html.`;
+  const kind = { 4: "model", 5: "electronics", 6: "showcase" }[n];
+  const pb = promptBox(kind, { label: "Prompt for Claude Code", copyNote: "Prompt copied. Paste it into Claude Code.", rows: 12 });
+  return h("div", { class: "handoff" }, pb.box);
 }
 function fileList(dir) {
   const fs = filesIn(dir);
@@ -460,13 +496,12 @@ function viewDecision() {
       card("Board", board ? h("model-viewer", { src: fileUrl(`5-electronics/${board.name}`), "auto-rotate": true, "interaction-prompt": "none", alt: "Board" }) : imgOr(boardShot && `5-electronics/${boardShot.name}`, "No board"), 4));
     const verdict = h("div", { class: "verdict" },
       h("button", { type: "button", class: "btn big shelve", text: "Shelve it", onclick: () => decide("shelve") }),
-      h("div", { class: "final-time" }, "Final time", h("br"), h("b", { text: fmt(totalMs()) })),
+      h("div", { class: "final-time" }, "Stages done", h("br"), h("b", { text: `${ep.done.filter((n) => n < 7).length} / 6` })),
       h("button", { type: "button", class: "btn big keep", text: "Keep building", onclick: () => decide("keep") }));
     el.replaceChildren(recap, verdict);
     if (ep.decision) el.append(h("div", { class: "stamp " + ep.decision }, h("span", { text: ep.decision === "keep" ? "Keep building" : "Shelved" })));
   };
   const decide = (d) => {
-    if (ep.timer.running) { bankTime(); ep.timer.running = false; ep.timer.since = null; }
     ep.decision = d; ep.decidedAt = new Date().toISOString(); if (!ep.done.includes(7)) ep.done.push(7);
     save(true); sfx.stamp(); draw(); renderSplits();
   };
@@ -512,9 +547,9 @@ document.addEventListener("drop", async (e) => {
 async function loadEpisode(slug) {
   const r = await api(`/episodes/${slug}`);
   S.ep = r.episode; S.files = r.files;
-  S.ep.timer = S.ep.timer || { running: false, since: null, splits: {} }; S.ep.timer.splits = S.ep.timer.splits || {};
   S.ep.done = S.ep.done || []; S.ep.favorites = S.ep.favorites || {}; S.ep.roll = S.ep.roll || [];
-  S.ep.brief = { name: "", pitch: "", who: "", does: "", electronics: "", ...(S.ep.brief || {}) };
+  S.ep.brief = { name: "", pitch: "", what: "", does: "", who: "", electronics: "", design: "", looksLike: "", size: "", ...(S.ep.brief || {}) };
+  S.ep.prompts = S.ep.prompts || {}; S.ep.promptEdited = S.ep.promptEdited || {};
   local.set("last", slug);
   $("epNum").textContent = "#" + String(S.ep.number || "").padStart(3, "0");
   $("epTitle").textContent = S.ep.title;
@@ -606,7 +641,6 @@ document.addEventListener("keydown", (e) => {
   const k = e.key.toLowerCase();
   if (e.key === "ArrowRight") goStage((S.ep?.stage || 1) + 1);
   else if (e.key === "ArrowLeft") goStage((S.ep?.stage || 1) - 1);
-  else if (k === "t") toggleTimer();
   else if (k === "n") split();
   else if (k === "e") openSheet("episodes");
   else if (k === ",") openSheet("settings");
@@ -614,7 +648,6 @@ document.addEventListener("keydown", (e) => {
   else if (/^[1-7]$/.test(k)) goStage(Number(k));
 });
 $("epBtn").addEventListener("click", () => openSheet("episodes"));
-$("clock").addEventListener("click", toggleTimer);
 let idleT; document.addEventListener("mousemove", () => { document.body.classList.remove("idle"); clearTimeout(idleT); idleT = setTimeout(() => document.body.classList.add("idle"), 3000); });
 
 /* ---------- boot ---------- */

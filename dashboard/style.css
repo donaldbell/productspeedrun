@@ -59,6 +59,8 @@ code { font-family: var(--font-mono); background: var(--panel-2); padding: 0 .35
 .ep-btn { grid-column: 1; grid-row: 1; align-self: start; }
 .stage-kicker { font-size: clamp(12px, 1.6vh, 19px); letter-spacing: .2em; text-transform: uppercase; color: var(--stage); }
 .stage-name { margin: .1em 0 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(30px, 6.2vh, 78px); line-height: .95; letter-spacing: -0.02em; text-wrap: balance; }
+.brandmark { grid-column: 3; align-self: start; font-family: var(--font-display); font-weight: 800; font-size: clamp(18px, 3vh, 36px); letter-spacing: -0.01em; color: var(--muted); }
+.brandmark b { color: var(--stage); }
 .clock { grid-column: 3; text-align: right; cursor: pointer; user-select: none; }
 .clock-total {
   font-family: var(--font-mono); font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1;
@@ -68,7 +70,7 @@ code { font-family: var(--font-mono); background: var(--panel-2); padding: 0 .35
 .running .clock-total { color: var(--run); text-shadow: 0 0 2.4vh rgba(99, 227, 154, .35); }
 .clock-sub { font-size: clamp(11px, 1.5vh, 18px); color: var(--muted); letter-spacing: .14em; text-transform: uppercase; margin-top: .4vh; }
 
-/* ---------- splits / evidence rail ---------- */
+/* ---------- stage rail ---------- */
 .splits { grid-column: 2; grid-row: 2; display: grid; grid-auto-rows: minmax(0, 1fr); gap: .8vh; min-height: 0; }
 .split {
   position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto minmax(0, 1fr);
@@ -84,7 +86,7 @@ code { font-family: var(--font-mono); background: var(--panel-2); padding: 0 .35
 .split .ev img { height: 100%; max-height: 9vh; aspect-ratio: 16/10; object-fit: cover; border-radius: 6px; border: 1px solid var(--line); min-width: 0; }
 .split .ev .chip { white-space: nowrap; }
 .split.done { --c: var(--gold); }
-.split.done .t { color: var(--gold); }
+.split.done .t { color: var(--gold); font-weight: 700; }
 .split.current { background: var(--panel-2); border-color: var(--stage); box-shadow: inset 4px 0 0 var(--stage); --c: var(--stage); }
 .split.current .t { color: var(--ink); }
 .running .split.current .t { color: var(--run); }
@@ -136,9 +138,9 @@ body[data-stage="5"] .work {
 @keyframes radar { from { transform: scale(1); opacity: .8; } to { transform: scale(2.4); opacity: 0; } }
 
 /* ---------- stage 1 ---------- */
-.s1 { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); }
+.s1 { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
 .roller { border: 0; width: 100%; height: 100%; background: #06130E; display: block; }
-.s1 .panel-col { border-left: 1px solid var(--line); }
+.s1 .panel-col { border-left: 1px solid var(--line); gap: 1.2vh; }
 .chips { display: flex; flex-wrap: wrap; gap: .7vh .5vw; }
 .chip {
   display: inline-flex; align-items: center; gap: .4em; border: 1.5px solid var(--gc, var(--line)); border-radius: 999px;
@@ -152,16 +154,21 @@ body[data-stage="5"] .work {
 @keyframes chipin { from { transform: scale(.4); opacity: 0; } }
 .field { display: grid; gap: .5vh; }
 .field input, .field textarea {
-  width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: .55em .7em;
-  font-size: clamp(14px, 1.9vh, 22px); line-height: 1.35; resize: vertical;
+  width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: .45em .7em;
+  font-size: clamp(13px, 1.75vh, 21px); line-height: 1.35; resize: vertical;
 }
 .field input.name { font-family: var(--font-display); font-weight: 800; font-size: clamp(22px, 3.6vh, 44px); padding: .25em .5em; }
-.field textarea { min-height: 7vh; font-family: var(--font-display); }
+.field textarea { min-height: 0; font-family: var(--font-display); resize: none; overflow: hidden; }
+.field-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1vw; }
+.field-row .field textarea { font-size: clamp(13px, 1.65vh, 20px); }
+.prompt-box { display: grid; gap: .8vh; }
+.prompt-box .row .btn { padding: .35em .8em; font-size: clamp(11px, 1.35vh, 15px); }
+.handoff textarea.prompt { min-height: 30vh; }
 
 /* ---------- stages 2 and 3: image lab ---------- */
-.lab { grid-template-columns: minmax(280px, .85fr) minmax(0, 2fr); }
+.lab { grid-template-columns: minmax(300px, 1.1fr) minmax(0, 2fr); }
 .lab .panel-col { border-right: 1px solid var(--line); background: rgba(0,0,0,.15); }
-.lab textarea.prompt {
+textarea.prompt {
   width: 100%; min-height: 17vh; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: .7em;
   font-size: clamp(12px, 1.6vh, 18px); line-height: 1.45; resize: vertical;
 }

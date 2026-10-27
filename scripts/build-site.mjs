@@ -13,10 +13,6 @@ const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "
 const IMG = /\.(png|jpe?g|webp|gif)$/i;
 const enc = (rel) => rel.split("/").map(encodeURIComponent).join("/");
 
-function fmt(ms) {
-  const s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), x = s % 60;
-  return h ? `${h}:${String(m).padStart(2, "0")}:${String(x).padStart(2, "0")}` : `${m}:${String(x).padStart(2, "0")}`;
-}
 
 await rm(OUT, { recursive: true, force: true });
 await mkdir(OUT, { recursive: true });
@@ -32,21 +28,20 @@ if (existsSync(EP)) {
     if (!cover) for (const sd of ["2-concept", "3-layout", "4-model"]) {
       try { const f = (await readdir(path.join(dir, sd))).find((n) => IMG.test(n)); if (f) { cover = `${sd}/${f}`; break; } } catch {}
     }
-    const total = Object.values(ep.timer?.splits || {}).reduce((a, b) => a + (Number(b) || 0), 0);
     const showcase = existsSync(path.join(dir, "6-showcase", "index.html"));
-    episodes.push({ slug: d.name, ep, cover, total, showcase });
+    episodes.push({ slug: d.name, ep, cover, showcase });
   }
 }
 episodes.sort((a, b) => (b.ep.number || 0) - (a.ep.number || 0));
 
-const cards = episodes.map(({ slug, ep, cover, total, showcase }) => {
+const cards = episodes.map(({ slug, ep, cover, showcase }) => {
   const href = showcase ? `episodes/${enc(slug)}/6-showcase/` : cover ? `episodes/${enc(slug)}/${enc(cover)}` : null;
   const tag = ep.decision === "keep" ? '<span class="tag keep">Keep building</span>' : ep.decision === "shelve" ? '<span class="tag shelve">Shelved</span>' : `<span class="tag">In progress · stage ${esc(ep.stage || 1)}</span>`;
   const roll = (ep.roll || []).map((r) => `<li>${esc(r.label)}</li>`).join("");
   return `<article class="card">
   ${href ? `<a class="cover" href="${href}">` : '<div class="cover">'}${cover ? `<img src="episodes/${enc(slug)}/${enc(cover)}" alt="" loading="lazy">` : '<div class="blank">No art yet</div>'}${href ? "</a>" : "</div>"}
   <div class="body">
-    <div class="meta"><span>#${esc(String(ep.number || "").padStart(3, "0"))}</span>${total ? `<span>${fmt(total)}</span>` : ""}${tag}</div>
+    <div class="meta"><span>#${esc(String(ep.number || "").padStart(3, "0"))}</span>${tag}</div>
     <h2>${href ? `<a href="${href}">` : ""}${esc(ep.brief?.name || ep.title)}${href ? "</a>" : ""}</h2>
     ${ep.brief?.pitch ? `<p>${esc(ep.brief.pitch)}</p>` : ""}
     ${roll ? `<ul class="roll">${roll}</ul>` : ""}

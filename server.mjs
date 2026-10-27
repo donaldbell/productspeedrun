@@ -126,8 +126,8 @@ async function createEpisode(title) {
   for (const d of STAGE_DIRS) await mkdir(path.join(dir, d), { recursive: true });
   const ep = {
     slug, number, title: String(title || "Untitled build").slice(0, 120), createdAt: new Date().toISOString(),
-    stage: 1, roll: [], brief: { name: "", pitch: "", who: "", does: "", electronics: "" },
-    favorites: {}, timer: { running: false, since: null, splits: {} }, done: [], decision: null,
+    stage: 1, roll: [], brief: { name: "", pitch: "", what: "", does: "", who: "", electronics: "", design: "", looksLike: "", size: "" },
+    prompts: {}, promptEdited: {}, favorites: {}, done: [], decision: null,
   };
   await writeFile(path.join(dir, "episode.json"), JSON.stringify(ep, null, 2) + "\n");
   for (const d of STAGE_DIRS) await writeFile(path.join(dir, d, ".gitkeep"), "");

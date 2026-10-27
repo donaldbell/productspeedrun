@@ -6,7 +6,7 @@ This repo is the working folder for **Product Speedrun**, a show where two hosts
 
 ```
 episodes/<slug>/
-  episode.json      # owned by the dashboard: title, roll, brief, favorite images, timer, decision
+  episode.json      # owned by the dashboard: title, roll, brief, prompts, favorite images, decision
   2-concept/        # concept sketches (images). Each generated image has a .prompt.txt beside it
   3-layout/         # isometric layout images
   4-model/          # Stage 4 output: 3D model
@@ -16,7 +16,7 @@ episodes/<slug>/
 
 Rules for every stage:
 
-- **Read `episode.json` first.** `brief` holds the product name, pitch, who it's for, what it does, and electronics notes. `roll` holds the random ingredients. `favorites["2-concept"]` and `favorites["3-layout"]` are the chosen images (paths relative to the episode folder). Look at those images.
+- **Read `episode.json` first.** `brief` holds the product name, pitch, what it is, what it does, who it's for, what's inside (`electronics`), design language, a reference product for the form factor (`looksLike`) and rough size. `prompts` may hold the hosts' edited prompts for each stage. `roll` holds the random ingredients. `favorites["2-concept"]` and `favorites["3-layout"]` are the chosen images (paths relative to the episode folder). Look at those images.
 - **Never edit `episode.json`.** The dashboard owns it and will overwrite your changes. Put notes in the stage folder instead (for example `4-model/NOTES.md`).
 - **Keep it a first pass.** This is a speedrun: aim for something credible and buildable by a two-person team, not production-ready. Write down open questions and shortcuts in the stage's `NOTES.md`.
 - **Use these file names** so the dashboard picks them up.
@@ -24,7 +24,7 @@ Rules for every stage:
 
 ## Stage 4: 3D model (Solidcraft)
 
-Use the Solidcraft MCP server (`solidcraft-cli mcp`; if it isn't configured, run `claude mcp add solidcraft -- solidcraft-cli mcp`). If the Solidcraft desktop app is open, use it in bridged mode so the hosts can watch the model being built.
+Use the Solidcraft MCP server in **headless** mode (`solidcraft-cli mcp`; if it isn't configured, run `claude mcp add solidcraft -- solidcraft-cli mcp`). Headless is faster than driving the desktop app, so don't use bridged mode. Save progress screenshots as you go (`4-model/progress-01.png`, `progress-02.png`, …) so the hosts can follow along on the dashboard.
 
 1. From the brief and the two favorite images, decide the overall form, approximate dimensions in mm, and the main parts (shell, lid, buttons, windows, mounting for the board). Write that plan to `4-model/NOTES.md` before modeling.
 2. Build a simple parametric model: a few sketches and features, with named parameters for the key dimensions. Leave room inside for the electronics described in the brief.
