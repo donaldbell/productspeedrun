@@ -1,0 +1,317 @@
+#!/usr/bin/env python3
+"""Route the Backpack Defender board: GND pours on both layers, then Freerouting.
+
+Run with KiCad's bundled Python, on a board fresh from tools/gen_pcb.py:
+  .../Python.framework/Versions/Current/bin/python3 tools/route_pcb.py
+
+1. GND vias around the module's ground pad (the amp's thermal vias come with its footprint;
+   the TPS61023 loop is kept short by placement, so everything else goes to the autorouter).
+2. GND pours on both layers (the bottom one comes from gen_pcb.py), a keep-out band along the edge.
+3. Export Specctra DSN (GND plane stripped), run Freerouting headless (two passes), import the
+   session, stitch GND vias.
+Then: kicad-cli pcb drc --refill-zones --save-board to fill and check (tools/build.sh).
+Adapted from the bollard ring v2 router.
+"""
+
+import math
+import os
+import re
+import subprocess
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import pcbnew  # noqa: E402
+from gen_pcb import BH, BR, BW, inside_outline, rounded_rect_pts  # noqa: E402
+
+HW = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PCB = os.path.join(HW, "backpack-defender.kicad_pcb")
+OUT = os.path.join(HW, "output", "routing")
+JAVA = os.environ.get("JAVA", "/Users/donaldbell/.local/opt/jdk-25.0.4.1+1-jre/Contents/Home/bin/java")
+JAR = os.environ.get("FREEROUTING_JAR", "/Users/donaldbell/.local/opt/freerouting/freerouting-2.5.0.jar")
+
+CX, CY = 100.0, 100.0
+# GND *is* autorouted: Freerouting links pour fragments the pours alone can't reach. Its
+# board-wide planes are dropped so Freerouting doesn't treat both layers as blocked.
+STRIP_PLANES = ("/GND",)
+
+
+def mm(v):
+    return pcbnew.FromMM(v)
+
+
+def to_page(x, y):
+    return pcbnew.VECTOR2I(mm(CX + x), mm(CY - y))
+
+
+def from_page(p):
+    return pcbnew.ToMM(p.x) - CX, CY - pcbnew.ToMM(p.y)
+
+
+def seg_dist(p, a, b):
+    """Distance from point p to segment ab."""
+    (px, py), (ax, ay), (bx, by) = p, a, b
+    dx, dy = bx - ax, by - ay
+    L = dx * dx + dy * dy
+    t = 0.0 if L == 0 else max(0.0, min(1.0, ((px - ax) * dx + (py - ay) * dy) / L))
+    return math.hypot(px - (ax + t * dx), py - (ay + t * dy))
+
+
+class Router:
+    def __init__(self, board):
+        self.b = board
+
+    def net(self, name):
+        n = self.b.FindNet(name)
+        assert n is not None, name
+        return n
+
+    def track(self, net, a, b, w, layer=pcbnew.F_Cu):
+        t = pcbnew.PCB_TRACK(self.b)
+        t.SetStart(to_page(*a))
+        t.SetEnd(to_page(*b))
+        t.SetWidth(mm(w))
+        t.SetLayer(layer)
+        t.SetNet(self.net(net))
+        t.SetLocked(True)
+        self.b.Add(t)
+
+    def via(self, net, p, d=0.6, drill=0.3):
+        v = pcbnew.PCB_VIA(self.b)
+        v.SetPosition(to_page(*p))
+        v.SetWidth(mm(d))
+        v.SetDrill(mm(drill))
+        v.SetNet(self.net(net))
+        v.SetLocked(True)
+        self.b.Add(v)
+
+    def via_ok(self, net, p, d=0.6, margin=0.3):
+        """True if a via at p clears other nets' pads, tracks, vias, keep-outs, holes and the edge."""
+        x, y = p
+        if not inside_outline(x, y, d / 2 + 0.5):
+            return False
+        reach = d / 2 + margin
+        for fp in self.b.GetFootprints():
+            for pad in fp.Pads():
+                if pad.HasHole() or pad.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH:
+                    px, py = from_page(pad.GetPosition())
+                    hole = pcbnew.ToMM(max(pad.GetDrillSize().x, pad.GetDrillSize().y, pad.GetSize().x))
+                    if math.hypot(px - x, py - y) < d / 2 + hole / 2 + 0.35:
+                        return False
+                    continue
+                if pad.GetNetname() == net:
+                    continue
+                bb = pad.GetBoundingBox()
+                x0, y1 = from_page(bb.GetOrigin())
+                x1, y0 = from_page(bb.GetEnd())
+                if x0 - reach < x < x1 + reach and y0 - reach < y < y1 + reach:
+                    return False
+        for t in self.b.GetTracks():
+            if t.GetClass() == "PCB_VIA":
+                vx, vy = from_page(t.GetPosition())
+                if math.hypot(vx - x, vy - y) < d / 2 + 0.3 + (0 if t.GetNetname() == net else 0.3):
+                    return False
+            elif t.GetNetname() != net:
+                a, b = from_page(t.GetStart()), from_page(t.GetEnd())
+                if seg_dist((x, y), a, b) < d / 2 + pcbnew.ToMM(t.GetWidth()) / 2 + margin:
+                    return False
+        ring = [(x, y)] + [(x + (d / 2 + 0.2) * math.cos(k * math.pi / 4),
+                             y + (d / 2 + 0.2) * math.sin(k * math.pi / 4)) for k in range(8)]
+        zones = list(self.b.Zones()) + [z for fp in self.b.GetFootprints() for z in fp.Zones()]
+        for z in zones:
+            if z.GetIsRuleArea() and z.GetDoNotAllowVias():
+                if any(z.Outline().Contains(to_page(*q)) for q in ring):
+                    return False
+        return True
+
+    def track_ok(self, net, a, b, w, margin=0.2):
+        """True if a track a-b of width w clears other nets' tracks, vias and pads."""
+        n = max(2, int(math.hypot(b[0] - a[0], b[1] - a[1]) / 0.2))
+        samples = [(a[0] + (b[0] - a[0]) * k / n, a[1] + (b[1] - a[1]) * k / n) for k in range(n + 1)]
+        for t in self.b.GetTracks():
+            if t.GetNetname() == net:
+                continue
+            if t.GetClass() == "PCB_VIA":
+                if seg_dist(from_page(t.GetPosition()), a, b) < w / 2 + 0.3 + margin:
+                    return False
+            else:
+                p0, p1 = from_page(t.GetStart()), from_page(t.GetEnd())
+                tw = pcbnew.ToMM(t.GetWidth())
+                if any(seg_dist(q, p0, p1) < w / 2 + tw / 2 + margin for q in samples):
+                    return False
+        for fp in self.b.GetFootprints():
+            for pad in fp.Pads():
+                if pad.GetNetname() == net:
+                    continue
+                bb = pad.GetBoundingBox()
+                x0, y1 = from_page(bb.GetOrigin())
+                x1, y0 = from_page(bb.GetEnd())
+                r = w / 2 + margin
+                if any(x0 - r < q[0] < x1 + r and y0 - r < q[1] < y1 + r for q in samples):
+                    return False
+        return True
+
+    def via_near(self, net, origin, candidates, w):
+        """Via at the first clear candidate, tracked back to origin; None if none fits."""
+        for c in candidates:
+            if self.via_ok(net, c) and self.track_ok(net, origin, c, w):
+                self.track(net, origin, c, w)
+                self.via(net, c)
+                return c
+        return None
+
+    def zone(self, net, pts, layer, name, priority, min_w=0.2):
+        z = pcbnew.ZONE(self.b)
+        z.SetLayer(layer)
+        z.SetNet(self.net(net))
+        z.SetZoneName(name)
+        z.SetAssignedPriority(priority)
+        z.SetMinThickness(mm(min_w))
+        z.SetLocalClearance(mm(0.25))
+        z.SetPadConnection(pcbnew.ZONE_CONNECTION_THT_THERMAL)
+        z.SetIslandRemovalMode(pcbnew.ISLAND_REMOVAL_MODE_ALWAYS)
+        o = z.Outline()
+        o.NewOutline()
+        for x, y in pts:
+            o.Append(to_page(x, y))
+        self.b.Add(z)
+
+
+def clear_previous(board):
+    for t in list(board.GetTracks()):
+        board.Remove(t)
+    for z in list(board.Zones()):
+        if z.GetZoneName().startswith("route:"):
+            board.Remove(z)
+
+
+def module_gnd_vias(r):
+    """GND vias around the WROOM-02's centre GND pad (pad 19 is mostly via-in-pad already) and
+    beside pin 9, so the module's ground reaches the bottom pour directly."""
+    x, y = from_page(r.b.FindFootprintByReference("U2").GetPosition())
+    for p in ((x - 3.0, y), (x + 3.0, y), (x, y - 3.0), (x, y + 3.0)):
+        if r.via_ok("/GND", p):
+            r.via("/GND", p)
+
+
+def edge_band(r):
+    """Keep-out band just inside the outline: Freerouting only keeps its own 0.15 mm from the
+    edge, but the board rule is 0.3 mm to copper."""
+    z = pcbnew.ZONE(r.b)
+    z.SetIsRuleArea(True)
+    z.SetZoneName("route:edge band")
+    ls = pcbnew.LSET()
+    ls.AddLayer(pcbnew.F_Cu)
+    ls.AddLayer(pcbnew.B_Cu)
+    z.SetLayerSet(ls)
+    z.SetDoNotAllowTracks(True)
+    z.SetDoNotAllowVias(True)
+    z.SetDoNotAllowZoneFills(False)
+    z.SetDoNotAllowPads(False)
+    z.SetDoNotAllowFootprints(False)
+    o = z.Outline()
+    o.NewOutline()
+    for x, y in rounded_rect_pts(BW + 0.4, BH + 0.4, BR + 0.2):
+        o.Append(to_page(x, y))
+    o.NewHole()
+    for x, y in reversed(rounded_rect_pts(BW - 0.9, BH - 0.9, BR - 0.45)):
+        o.Append(to_page(x, y))
+    r.b.Add(z)
+
+
+def top_gnd_pour(r):
+    r.zone("/GND", rounded_rect_pts(BW - 1.0, BH - 1.0, BR - 0.5), pcbnew.F_Cu, "route:GND top", 0, min_w=0.25)
+
+
+def stitch(r, pitch=3.0):
+    """GND vias on a grid wherever they fit, tying the top and bottom pours together."""
+    n = 0
+    for i in range(-int(BW / pitch), int(BW / pitch) + 1):
+        for j in range(-int(BH / pitch), int(BH / pitch) + 1):
+            p = (i * pitch + (j % 2) * pitch / 2, j * pitch)
+            if inside_outline(*p, 1.5) and r.via_ok("/GND", p, margin=0.35):
+                r.via("/GND", p)
+                n += 1
+    print("stitching vias:", n)
+
+
+def stitch_islands(r):
+    """Give every GND pour fragment with no via or through-hole GND pad a via of its own."""
+    anchors = [from_page(t.GetPosition()) for t in r.b.GetTracks()
+               if t.GetClass() == "PCB_VIA" and t.GetNetname() == "/GND"]
+    anchors += [from_page(p.GetPosition()) for fp in r.b.GetFootprints() for p in fp.Pads()
+                if p.GetNetname() == "/GND" and p.HasHole()]
+    added = 0
+    for z in r.b.Zones():
+        if z.GetNetname() != "/GND" or z.GetIsRuleArea():
+            continue
+        for layer in (pcbnew.F_Cu, pcbnew.B_Cu):
+            if not z.IsOnLayer(layer):
+                continue
+            polys = z.GetFilledPolysList(layer)
+            for i in range(polys.OutlineCount()):
+                one = pcbnew.SHAPE_POLY_SET()
+                one.AddOutline(polys.Outline(i))
+                if any(one.Contains(to_page(*a)) for a in anchors):
+                    continue
+                bb = one.BBox()
+                x0, y1 = from_page(bb.GetOrigin())
+                x1, y0 = from_page(bb.GetEnd())
+                placed = False
+                for a in range(13):
+                    for b in range(13):
+                        q = (x0 + (x1 - x0) * a / 12, y0 + (y1 - y0) * b / 12)
+                        ring = [q] + [(q[0] + 0.45 * math.cos(k * math.pi / 4), q[1] + 0.45 * math.sin(k * math.pi / 4))
+                                      for k in range(8)]
+                        if all(one.Contains(to_page(*c)) for c in ring) and r.via_ok("/GND", q, margin=0.3):
+                            r.via("/GND", q)
+                            anchors.append(q)
+                            added += 1
+                            placed = True
+                            break
+                    if placed:
+                        break
+    print("island vias:", added)
+
+
+def strip_planes_from_dsn(path):
+    text = open(path).read()
+    for name in STRIP_PLANES:
+        text = re.sub(r"\(plane %s \(polygon[^)]*\)\s*\)" % re.escape(name), "", text)
+    open(path, "w").write(text)
+
+
+def main():
+    os.makedirs(OUT, exist_ok=True)
+    board = pcbnew.LoadBoard(PCB)
+    clear_previous(board)
+    r = Router(board)
+    module_gnd_vias(r)
+    top_gnd_pour(r)
+    edge_band(r)
+    pcbnew.ZONE_FILLER(board).Fill(board.Zones())
+
+    dsn = os.path.join(OUT, "board.dsn")
+    ses = os.path.join(OUT, "board.ses")
+    # Two passes: the second starts from the first pass's routing and finishes what it left.
+    for n in (1, 2):
+        assert pcbnew.ExportSpecctraDSN(board, dsn), "DSN export failed"
+        strip_planes_from_dsn(dsn)
+        if os.path.exists(ses):
+            os.remove(ses)
+        cmd = [JAVA, "-Djava.awt.headless=true", "-jar", JAR, "-de", dsn, "-do", ses, "-mp", "40", "-mt", "6",
+               "--gui.enabled=false"]
+        print("freerouting pass", n)
+        log = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
+        open(os.path.join(OUT, "freerouting%d.log" % n), "w").write(log.stdout + log.stderr)
+        assert os.path.exists(ses), "Freerouting produced no session; see freerouting%d.log" % n
+        assert pcbnew.ImportSpecctraSES(board, ses), "SES import failed"
+    stitch(Router(board))
+    pcbnew.ZONE_FILLER(board).Fill(board.Zones())
+    stitch_islands(Router(board))
+    pcbnew.ZONE_FILLER(board).Fill(board.Zones())
+    pcbnew.SaveBoard(PCB, board)
+    print("routed:", len(board.GetTracks()), "tracks/vias")
+
+
+if __name__ == "__main__":
+    main()

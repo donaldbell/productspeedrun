@@ -1,0 +1,3 @@
+output/
+*.kicad_prl
+__pycache__/
