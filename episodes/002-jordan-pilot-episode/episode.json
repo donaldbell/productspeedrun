@@ -1,0 +1,57 @@
+{
+  "slug": "002-jordan-pilot-episode",
+  "number": 2,
+  "title": "Jordan Pilot Episode",
+  "createdAt": "2026-10-28T16:40:31.089Z",
+  "stage": 6,
+  "roll": [
+    {
+      "bucket": "Act",
+      "group": "Hardware",
+      "label": "Fan / airflow"
+    },
+    {
+      "bucket": "User",
+      "group": "Human",
+      "label": "Gamer"
+    },
+    {
+      "bucket": "Form factor",
+      "group": "Flavor",
+      "label": "Tiny robot"
+    },
+    {
+      "bucket": "Twist",
+      "group": "Flavor",
+      "label": "Usable without looking at it"
+    }
+  ],
+  "brief": {
+    "name": "Gamer Guardian",
+    "pitch": "Gamer monitor accessory that keeps you in peak performance with helpful reminders.",
+    "what": "A gamer accessory that sits on the top of your monitor and detects your presence while helping you develop habits that improve your performance. ",
+    "does": "After detecting your presence with basic sensors (preserving privacy, no cameras, only on-device AI) this friendly, robot themed monitor accessory will remind you to take breaks, hydrate, snack, adjust posture -- things a mindful parent might remind you to do.  Those reminders take the form of a gentle fan breeze, vocal reminders using an onboard speaker,",
+    "who": "for young teenage gamers, but marketed really to their concerned parents who want a tool that nags their kid who is no longer responsive to their pleas.",
+    "electronics": "small PC fan/blower, microphone, speaker, esp32 module, gets power over USB, PIR sensor, LED that only activates to get attention.",
+    "design": "A chibi robot character that appeals to young teenage gamers. Need not be high-end or luxurious. Fits the existing design language of gamer brands like alienware, razer, etc.",
+    "looksLike": "Around the same size as other monitor mounted accessories, like Logitech webcams, small streamer LED lights.",
+    "size": "2-3 inches tall and wide, 2 inches deep"
+  },
+  "prompts": {},
+  "promptEdited": {
+    "2-concept": false,
+    "3-layout": false,
+    "showcase": false
+  },
+  "favorites": {
+    "2-concept": "2-concept/Gamer-Companion-Robot-Concept-Board.png",
+    "3-layout": "3-layout/Gamer-Companion-GA-Drawing.jpg"
+  },
+  "done": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "decision": null
+}
