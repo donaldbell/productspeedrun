@@ -1,0 +1,829 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gamer Companion</title>
+<meta name="description" content="A chibi robot that sits on your monitor and nudges you to take breaks, drink water, snack and sit up, with a breeze and a voice, so you never have to look away from the game. Product Speedrun episode 002.">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js"></script>
+<style>
+:root {
+  --bg: #eef1ed;
+  --bg-2: #e3e8e2;
+  --surface: #ffffff;
+  --ink: #111511;
+  --muted: #56605a;
+  --line: rgba(17, 21, 17, .12);
+  --neon: #6fe82c;
+  --neon-ink: #2b7a07;
+  --cyan: #2fc6f2;
+  --cyan-ink: #0a6f93;
+  --warn-ink: #9a4b00;
+  --chip: rgba(17, 21, 17, .06);
+  --viewer: radial-gradient(circle at 50% 38%, #ffffff 0%, #e9eee8 60%, #dfe5de 100%);
+  --grid: rgba(17, 21, 17, .05);
+  --shadow: 0 1px 0 rgba(17,21,17,.06), 0 22px 44px -26px rgba(17,21,17,.4);
+  --display: "Chakra Petch", "Nunito Sans", system-ui, sans-serif;
+  --body: "Nunito Sans", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b0d10; --bg-2: #111419; --surface: #161a20; --ink: #edf2ee; --muted: #98a39c;
+    --line: rgba(237, 242, 238, .11); --neon: #7dff3c; --neon-ink: #8dff55; --cyan: #4fd8ff; --cyan-ink: #6fe0ff;
+    --warn-ink: #ffb066; --chip: rgba(237, 242, 238, .07);
+    --viewer: radial-gradient(circle at 50% 38%, #232a33 0%, #161a20 60%, #0f1216 100%);
+    --grid: rgba(125, 255, 60, .045); --shadow: 0 1px 0 rgba(0,0,0,.3), 0 22px 44px -24px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0b0d10; --bg-2: #111419; --surface: #161a20; --ink: #edf2ee; --muted: #98a39c;
+  --line: rgba(237, 242, 238, .11); --neon: #7dff3c; --neon-ink: #8dff55; --cyan: #4fd8ff; --cyan-ink: #6fe0ff;
+  --warn-ink: #ffb066; --chip: rgba(237, 242, 238, .07);
+  --viewer: radial-gradient(circle at 50% 38%, #232a33 0%, #161a20 60%, #0f1216 100%);
+  --grid: rgba(125, 255, 60, .045); --shadow: 0 1px 0 rgba(0,0,0,.3), 0 22px 44px -24px rgba(0,0,0,.9);
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 17px/1.6 var(--body);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  overflow-x: hidden;
+}
+img { max-width: 100%; display: block; }
+a { color: var(--cyan-ink); }
+h1, h2, h3 { font-family: var(--display); line-height: 1.08; margin: 0; letter-spacing: -.01em; }
+h2 { font-size: clamp(30px, 5vw, 46px); font-weight: 700; }
+h3 { font-size: 21px; font-weight: 600; }
+p { margin: 0 0 1em; }
+.wrap { max-width: 1140px; margin: 0 auto; padding: 0 16px; }
+section { padding: 84px 0; }
+.alt { background: var(--bg-2); }
+.kicker {
+  font: 700 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase;
+  color: var(--neon-ink); display: inline-flex; gap: 10px; align-items: center; margin-bottom: 16px;
+}
+.kicker::before { content: ""; width: 18px; height: 2px; background: var(--neon); box-shadow: 0 0 8px var(--neon); }
+.lede { font-size: 19px; color: var(--muted); max-width: 62ch; margin-top: 16px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); }
+.chip {
+  display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px; border-radius: 999px;
+  background: var(--chip); border: 1px solid var(--line); font: 600 13px/1.2 var(--body); color: var(--ink);
+}
+.chip b { font: 700 10px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+
+/* ---------- top bar ---------- */
+.bar { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  background: color-mix(in srgb, var(--bg) 82%, transparent); border-bottom: 1px solid var(--line); }
+.bar .wrap { display: flex; align-items: center; justify-content: space-between; height: 56px; gap: 12px; }
+.brand { font: 700 17px/1 var(--display); letter-spacing: .02em; display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; }
+.brand i { width: 22px; height: 16px; border-radius: 6px; background: #15181d; position: relative; box-shadow: 0 0 0 1.5px var(--neon); }
+.brand i::before, .brand i::after { content: ""; position: absolute; top: 5px; width: 5px; height: 3px; border: 1.6px solid var(--cyan); border-bottom: 0; border-radius: 5px 5px 0 0; }
+.brand i::before { left: 4px; } .brand i::after { right: 4px; }
+.nav { display: flex; gap: 18px; align-items: center; }
+.nav a { color: var(--muted); text-decoration: none; font: 600 14px/1 var(--body); }
+.nav a:hover { color: var(--ink); }
+.theme { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 7px 12px; font: 700 11px/1 var(--mono); letter-spacing: .08em; cursor: pointer; }
+@media (max-width: 760px) { .nav a { display: none; } }
+
+/* ---------- hero ---------- */
+.hero { padding: 56px 0 72px; }
+.hero-grid { display: grid; grid-template-columns: 1.02fr 1fr; gap: 48px; align-items: center; }
+.hero h1 { font-size: clamp(48px, 8.6vw, 96px); font-weight: 700; text-transform: uppercase; letter-spacing: -.02em; }
+.hero h1 span { color: var(--neon-ink); display: block; }
+:root[data-theme="dark"] .hero h1 span { text-shadow: 0 0 28px rgba(125,255,60,.35); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .hero h1 span { text-shadow: 0 0 28px rgba(125,255,60,.35); } }
+.pitch { font-size: clamp(20px, 2.4vw, 24px); font-weight: 600; margin: 20px 0 10px; max-width: 30ch; }
+.roll { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 28px; }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 13px 20px; border-radius: 12px; border: 0;
+  font: 700 15px/1 var(--display); letter-spacing: .04em; text-transform: uppercase; text-decoration: none; cursor: pointer;
+  background: var(--neon); color: #0b0d10; box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 10px 26px -12px var(--neon);
+}
+.btn.ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--line); }
+.hero-art { position: relative; }
+.hero-art .frame {
+  border-radius: 22px; overflow: hidden; background: #f4efe4;
+  box-shadow: 0 0 0 1px var(--line), 0 30px 60px -30px rgba(0,0,0,.55);
+  transform: rotate(1.2deg);
+}
+.hero-art .frame img { width: 100%; aspect-ratio: 560 / 400; object-fit: cover; }
+.hero-art .tag {
+  position: absolute; left: -10px; bottom: -18px; background: #0f1216; color: #edf2ee;
+  font: 700 12px/1.3 var(--mono); padding: 10px 14px; border-radius: 12px; box-shadow: 0 0 0 1.5px var(--neon), 0 12px 24px -10px rgba(0,0,0,.6);
+}
+.hero-art .tag em { color: #7dff3c; font-style: normal; }
+.specs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin-top: 60px; background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+.specs div { background: var(--surface); padding: 16px 18px; }
+.specs b { display: block; font: 700 22px/1.15 var(--display); }
+.specs small { display: block; color: var(--muted); font: 600 12px/1.3 var(--mono); letter-spacing: .04em; }
+@media (max-width: 860px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .specs { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ---------- who ---------- */
+.who-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; margin-top: 36px; }
+.moment { border-radius: 20px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--line); }
+.moment img { width: 100%; aspect-ratio: 504 / 420; object-fit: cover; }
+.personas { display: grid; gap: 14px; }
+.persona { padding: 20px 22px; }
+.persona .role { font: 700 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.persona h3 { margin-bottom: 6px; }
+.persona p { margin: 0; color: var(--muted); }
+.quote { font: 600 19px/1.4 var(--display); border-left: 3px solid var(--neon); padding: 4px 0 4px 16px; margin: 22px 0 0; }
+@media (max-width: 860px) { .who-grid { grid-template-columns: 1fr; } }
+
+/* ---------- demo ---------- */
+.demo { display: grid; grid-template-columns: 1.1fr .9fr; gap: 28px; margin-top: 36px; align-items: stretch; }
+.stage {
+  position: relative; border-radius: 22px; overflow: hidden; min-height: 400px;
+  background: radial-gradient(120% 90% at 50% 0%, #1d2430 0%, #0d1015 70%);
+  border: 1px solid rgba(255,255,255,.06); display: grid; place-items: center; padding: 40px 16px 30px;
+}
+.stage .screen-glow { position: absolute; inset: auto 0 0 0; height: 46%; background: linear-gradient(180deg, transparent, rgba(79,216,255,.12)); }
+.robot { position: relative; width: min(300px, 78%); aspect-ratio: 1.36; --eye: #4fd8ff; --on: 0; }
+.robot .ear { position: absolute; top: -27%; width: 22%; aspect-ratio: .9; background: #22262d; clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.robot .ear::after { content: ""; position: absolute; inset: 30% 30% 8% 38%; background: #7dff3c; clip-path: polygon(40% 0, 100% 100%, 0 100%); opacity: .9; }
+.robot .ear.l { left: 7%; transform: rotate(-16deg); } .robot .ear.r { right: 7%; transform: rotate(16deg) scaleX(-1); }
+.robot .head { position: absolute; inset: 0; border-radius: 30% / 40%; background: linear-gradient(160deg, #3a3f47 0%, #1d2026 55%, #121418 100%); box-shadow: inset 0 2px 0 rgba(255,255,255,.08), 0 24px 40px -18px rgba(0,0,0,.9); }
+.robot .ring { position: absolute; top: 30%; width: 13%; aspect-ratio: .55; border-radius: 50%; border: 4px solid #7dff3c; box-shadow: 0 0 14px rgba(125,255,60,.5); }
+.robot .ring.l { left: -5%; } .robot .ring.r { right: -5%; }
+.robot .visor { position: absolute; left: 14%; right: 14%; top: 18%; height: 50%; border-radius: 22% / 34%; background: #07090c; box-shadow: inset 0 0 0 2px #2b3038, inset 0 8px 18px rgba(0,0,0,.8); }
+.robot .eye { position: absolute; top: 34%; width: 22%; aspect-ratio: 2; border: 5px solid var(--eye); border-bottom: 0; border-radius: 100px 100px 0 0;
+  opacity: calc(.12 + var(--on) * .88); filter: drop-shadow(0 0 calc(var(--on) * 10px) var(--eye)); transition: opacity .35s, filter .35s, border-color .35s; }
+.robot .eye.l { left: 13%; } .robot .eye.r { right: 13%; }
+.robot.blink .eye { animation: blink 1.1s ease-in-out 2; }
+@keyframes blink { 0%, 100% { transform: scaleY(1); } 45%, 55% { transform: scaleY(.15); } }
+.robot .pir { position: absolute; left: 50%; top: 36%; width: 12%; aspect-ratio: 1; transform: translateX(-50%); border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #cfd5dc 55%, #8d96a1); }
+.robot .mouth { position: absolute; left: 34%; right: 34%; bottom: 14%; display: grid; gap: 5px; }
+.robot .mouth i { height: 3px; border-radius: 3px; background: #2d323a; }
+.robot .foot { position: absolute; bottom: -9%; width: 14%; height: 12%; background: #191c21; border-radius: 4px 4px 6px 6px; }
+.robot .foot.l { left: 18%; } .robot .foot.r { right: 18%; }
+.breeze { position: absolute; left: 50%; top: 58%; width: 80%; height: 60%; transform: translateX(-50%); pointer-events: none; opacity: 0; transition: opacity .4s; }
+.breeze.on { opacity: 1; }
+.breeze path { fill: none; stroke: #9fe6ff; stroke-width: 2; stroke-linecap: round; stroke-dasharray: 18 26; animation: flow 1s linear infinite; opacity: .7; }
+.breeze path:nth-child(2) { animation-duration: 1.3s; } .breeze path:nth-child(3) { animation-duration: .9s; } .breeze path:nth-child(4) { animation-duration: 1.15s; } .breeze path:nth-child(5) { animation-duration: 1.4s; }
+@keyframes flow { to { stroke-dashoffset: -88; } }
+.bubble {
+  position: absolute; top: 16px; right: 16px; max-width: 64%; background: #f6f8f5; color: #111511; border-radius: 16px 16px 4px 16px;
+  padding: 10px 14px; font: 700 15px/1.3 var(--body); transform: translateY(-6px) scale(.96); opacity: 0; transition: .3s;
+}
+.bubble.on { opacity: 1; transform: none; }
+.status { position: absolute; left: 16px; bottom: 14px; right: 16px; display: flex; gap: 8px; flex-wrap: wrap; font: 700 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: #8d98a2; }
+.status span { padding: 6px 9px; border-radius: 7px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.07); }
+.status span.live { color: #0b0d10; background: #7dff3c; border-color: #7dff3c; }
+.panel { padding: 24px; display: flex; flex-direction: column; gap: 14px; }
+.panel h3 { margin-bottom: 2px; }
+.panel p.hint { color: var(--muted); font-size: 15px; margin: 0; }
+.nudges { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.nudge {
+  text-align: left; border: 1px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 14px; padding: 12px 14px; cursor: pointer;
+  font: 700 15px/1.2 var(--display); letter-spacing: .02em; display: flex; flex-direction: column; gap: 6px; transition: transform .15s, border-color .15s;
+}
+.nudge small { font: 600 12px/1.3 var(--body); color: var(--muted); letter-spacing: 0; }
+.nudge .dot { width: 26px; height: 6px; border-radius: 6px; background: var(--c); box-shadow: 0 0 10px var(--c); }
+.nudge:hover { transform: translateY(-2px); border-color: var(--c); }
+.nudge[aria-pressed="true"] { border-color: var(--c); box-shadow: inset 0 0 0 1.5px var(--c); }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.small-btn { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 10px; padding: 9px 12px; font: 700 13px/1 var(--body); cursor: pointer; }
+.small-btn[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.fineprint { font-size: 13px; color: var(--muted); margin: 0; }
+@media (max-width: 860px) { .demo { grid-template-columns: 1fr; } }
+
+/* ---------- three cues ---------- */
+.cues { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 36px; }
+.cue { padding: 24px; position: relative; overflow: hidden; }
+.cue .num { font: 700 12px/1 var(--mono); color: var(--neon-ink); letter-spacing: .14em; }
+.cue h3 { margin: 12px 0 8px; }
+.cue p { color: var(--muted); margin: 0; font-size: 16px; }
+.cue svg { width: 44px; height: 44px; margin-top: 18px; color: var(--ink); }
+.privacy { margin-top: 18px; padding: 20px 24px; display: flex; gap: 18px; align-items: flex-start; }
+.privacy .shield { flex: 0 0 auto; width: 40px; height: 40px; color: var(--neon-ink); }
+.privacy p { margin: 0; color: var(--muted); }
+.privacy strong { color: var(--ink); }
+@media (max-width: 860px) { .cues { grid-template-columns: 1fr; } }
+
+/* ---------- day timeline ---------- */
+.timeline { margin-top: 28px; padding: 22px 22px 18px; }
+.tl-track { position: relative; height: 74px; margin: 18px 6px 4px; }
+.tl-track::before { content: ""; position: absolute; left: 0; right: 0; top: 34px; height: 4px; border-radius: 4px; background: linear-gradient(90deg, var(--neon), var(--cyan)); opacity: .55; }
+.tl-ev { position: absolute; top: 0; transform: translateX(-50%); text-align: center; width: 76px; }
+.tl-ev i { display: block; width: 14px; height: 14px; margin: 28px auto 6px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 3px var(--surface), 0 0 12px var(--c); }
+.tl-ev b { position: absolute; top: 0; left: 0; right: 0; font: 700 11px/1.2 var(--mono); color: var(--muted); }
+.tl-ev span { font: 700 12px/1.2 var(--body); }
+.tl-scroll { overflow-x: auto; }
+.tl-scroll .tl-track { min-width: 620px; margin: 18px 44px 4px; }
+.legend-note { font-size: 13px; color: var(--muted); margin: 10px 0 0; }
+
+/* ---------- model ---------- */
+.model-grid { display: grid; grid-template-columns: 1.35fr .65fr; gap: 24px; margin-top: 36px; }
+.viewer { overflow: hidden; position: relative; }
+model-viewer { width: 100%; height: 100%; min-height: 480px; background: var(--viewer); --poster-color: transparent; }
+.viewer .hud { position: absolute; left: 14px; top: 14px; display: flex; gap: 8px; flex-wrap: wrap; pointer-events: none; }
+.viewer .hud span { font: 700 11px/1 var(--mono); letter-spacing: .08em; padding: 7px 9px; border-radius: 8px; background: color-mix(in srgb, var(--surface) 85%, transparent); border: 1px solid var(--line); }
+.views { position: absolute; right: 14px; bottom: 14px; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.views button { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 9px; padding: 8px 11px; font: 700 12px/1 var(--mono); cursor: pointer; }
+.views button[aria-pressed="true"] { background: var(--neon); color: #0b0d10; border-color: var(--neon); }
+.parts { padding: 22px; }
+.parts ol { margin: 14px 0 0; padding: 0; list-style: none; counter-reset: p; display: grid; gap: 12px; }
+.parts li { counter-increment: p; display: grid; grid-template-columns: 28px 1fr; gap: 10px; font-size: 15px; }
+.parts li::before { content: counter(p, decimal-leading-zero); font: 700 12px/1.9 var(--mono); color: var(--neon-ink); }
+.parts li b { display: block; font-family: var(--display); font-size: 16px; }
+.parts li span { color: var(--muted); }
+@media (max-width: 860px) { .model-grid { grid-template-columns: 1fr; } model-viewer { min-height: 380px; } }
+
+/* ---------- inside ---------- */
+.inside-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 36px; }
+.board-card { overflow: hidden; display: flex; flex-direction: column; }
+.board-card .bv { position: relative; flex: 1; display: flex; }
+.board-card .bv model-viewer { flex: 1; height: auto; }
+.board-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 18px 20px 14px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.board-head small { font: 700 11px/1 var(--mono); color: var(--muted); letter-spacing: .06em; }
+.board-card model-viewer { min-height: 360px; background: #0f1216; }
+.board-load { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); white-space: nowrap; }
+.section-card { padding: 18px 20px 20px; }
+.section-card svg { width: 100%; height: auto; display: block; margin-top: 10px; }
+.section-card .s-shell { fill: var(--chip); stroke: var(--ink); stroke-width: 1.5; }
+.section-card .s-text { fill: var(--muted); font: 600 9.5px var(--mono); }
+.section-card .s-lead { stroke: var(--muted); stroke-width: .8; fill: none; }
+.blocks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 24px; }
+.block { padding: 18px 20px; }
+.block .ref { font: 700 11px/1 var(--mono); color: var(--muted); letter-spacing: .08em; }
+.block h3 { font-size: 18px; margin: 8px 0 6px; }
+.block p { margin: 0; font-size: 15px; color: var(--muted); }
+.block.wide { grid-column: span 2; }
+.block.hero-block { grid-column: span 2; background: linear-gradient(135deg, var(--surface), color-mix(in srgb, var(--neon) 9%, var(--surface))); }
+@media (max-width: 860px) { .inside-grid { grid-template-columns: 1fr; } .blocks { grid-template-columns: 1fr; } .block.hero-block, .block.wide { grid-column: auto; } }
+.power { margin-top: 24px; padding: 22px; }
+.bars { display: grid; gap: 10px; margin-top: 14px; }
+.bar-row { display: grid; grid-template-columns: 170px 1fr 82px; gap: 12px; align-items: center; font-size: 14px; }
+.bar-row .track { height: 12px; border-radius: 6px; background: var(--chip); position: relative; overflow: hidden; }
+.bar-row .typ, .bar-row .pk { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 6px; }
+.bar-row .pk { background: color-mix(in srgb, var(--cyan) 30%, transparent); }
+.bar-row .typ { background: var(--neon); }
+.bar-row .v { font: 700 12px/1.2 var(--mono); color: var(--muted); text-align: right; }
+.limit { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--warn-ink); }
+@media (max-width: 560px) { .bar-row { grid-template-columns: 1fr 70px; } .bar-row .track { grid-column: 1 / -1; grid-row: 2; } }
+details.bom { margin-top: 24px; }
+details.bom summary { cursor: pointer; font: 700 15px/1 var(--display); letter-spacing: .04em; text-transform: uppercase; padding: 16px 20px; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+details.bom summary::-webkit-details-marker { display: none; }
+details.bom summary::after { content: "+"; font: 700 20px/1 var(--mono); color: var(--neon-ink); }
+details.bom[open] summary::after { content: "–"; }
+.bom-wrap { overflow-x: auto; border-top: 1px solid var(--line); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { padding: 9px 14px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 700 11px/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+td.mpn { font: 500 12px/1.4 var(--mono); color: var(--muted); white-space: nowrap; }
+
+/* ---------- journey ---------- */
+.journey { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 36px; }
+.journey a { text-decoration: none; color: var(--ink); overflow: hidden; display: flex; flex-direction: column; }
+.journey img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: #fff; border-bottom: 1px solid var(--line); }
+.journey div { padding: 12px 14px 14px; }
+.journey b { font: 700 11px/1 var(--mono); letter-spacing: .1em; color: var(--neon-ink); display: block; margin-bottom: 6px; }
+.journey span { font: 600 15px/1.3 var(--body); }
+@media (max-width: 860px) { .journey { grid-template-columns: 1fr 1fr; } }
+
+/* ---------- next ---------- */
+.next-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 36px; }
+.q { padding: 20px 22px; }
+.q .tag { display: inline-block; font: 700 10px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; padding: 5px 8px; border-radius: 6px; background: var(--chip); color: var(--muted); }
+.q .tag.hot { color: var(--warn-ink); background: color-mix(in srgb, var(--warn-ink) 12%, transparent); }
+.q h3 { font-size: 18px; margin: 10px 0 6px; }
+.q p { margin: 0; color: var(--muted); font-size: 15px; }
+@media (max-width: 860px) { .next-grid { grid-template-columns: 1fr; } }
+
+footer { padding: 40px 0 60px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+footer b { font-family: var(--display); color: var(--ink); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="#top"><i aria-hidden="true"></i>GAMER COMPANION</a>
+    <nav class="nav">
+      <a href="#demo">Try it</a>
+      <a href="#model">3D</a>
+      <a href="#inside">Inside</a>
+      <a href="#next">What's next</a>
+      <button class="theme" id="theme" type="button" aria-label="Switch colour theme">AUTO</button>
+    </nav>
+  </div>
+</header>
+
+<!-- ======================= HERO ======================= -->
+<section class="hero" id="top">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="kicker">Product Speedrun · Episode 002</div>
+        <h1>Gamer <span>Companion</span></h1>
+        <p class="pitch">The monitor-top robot that keeps you in peak performance.</p>
+        <p class="lede" style="margin-top:0">It notices when you sit down, then nudges you to take a break, drink some water, grab a snack or sit up straight. It uses a puff of air and a friendly voice, so you never have to look away from the game.</p>
+        <div class="roll" aria-label="The rolled ingredients for this episode">
+          <span class="chip"><b>Act</b>Fan / airflow</span>
+          <span class="chip"><b>User</b>Gamer</span>
+          <span class="chip"><b>Form</b>Tiny robot</span>
+          <span class="chip"><b>Twist</b>Usable without looking</span>
+        </div>
+        <div class="cta">
+          <a class="btn" href="#demo">Feel a nudge ▸</a>
+          <a class="btn ghost" href="#model">Spin the model</a>
+        </div>
+      </div>
+      <div class="hero-art">
+        <div class="frame"><img src="hero.jpg" alt="Concept sketch: a charcoal chibi robot with angular cat ears, glowing blue eyes and green side rings, perched on a monitor and blowing a gentle breeze from its mouth grille." width="560" height="400"></div>
+        <div class="tag">eyes stay <em>dark</em> until it needs you</div>
+      </div>
+    </div>
+
+    <div class="specs">
+      <div><b>71 × 73 × 53 mm</b><small>2.8 × 2.9 × 2.1 in, ears to feet</small></div>
+      <div><b>USB-C, 5 V</b><small>No battery to charge</small></div>
+      <div><b>No camera</b><small>PIR presence sensing only</small></div>
+      <div><b>On-device voice</b><small>ESP32-S3 · nothing uploaded</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= WHO ======================= -->
+<section id="who" class="alt">
+  <div class="wrap">
+    <div class="kicker">Who it's for</div>
+    <h2>Two people, one desk</h2>
+    <div class="who-grid">
+      <figure class="moment" style="margin:0">
+        <img src="moment.jpg" alt="Concept sketch: a teen in headphones plays a fantasy game while the robot on top of the monitor says 'Time for a break!'" width="504" height="420" loading="lazy">
+      </figure>
+      <div>
+        <div class="personas">
+          <div class="card persona">
+            <div class="role">The user · 12 to 15</div>
+            <h3>The gamer</h3>
+            <p>Headphones on and eyes locked on the screen. Three hours vanish, the water bottle is still full and their back is a question mark. A chibi robot that looks like it belongs next to their RGB keyboard is something they'll actually leave on the monitor.</p>
+          </div>
+          <div class="card persona">
+            <div class="role">The buyer</div>
+            <h3>The parent</h3>
+            <p>They've asked nicely through the door four times. Gamer Companion repeats those reminders from inside the kid's own setup, in a voice that isn't Mum's or Dad's, and it doesn't need a camera in the bedroom to do it.</p>
+          </div>
+        </div>
+        <p class="quote">The moment: 90 minutes into a ranked match, a cool breeze hits your face and a small voice says "Grab some water. You've got this."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= DEMO ======================= -->
+<section id="demo">
+  <div class="wrap">
+    <div class="kicker">Try it</div>
+    <h2>A nudge you feel, not one you watch</h2>
+    <p class="lede">Pick a reminder. The robot's eyes light up in that reminder's colour, it speaks one short line and then the breeze kicks in. Turn voice on to hear it in your browser's own speech voice. The real robot plays recorded phrases.</p>
+
+    <div class="demo">
+      <div class="stage" aria-live="polite">
+        <div class="screen-glow"></div>
+        <div class="bubble" id="bubble"></div>
+        <div class="robot" id="robot" role="img" aria-label="Animated Gamer Companion robot face">
+          <div class="ear l"></div><div class="ear r"></div>
+          <div class="head"></div>
+          <div class="ring l"></div><div class="ring r"></div>
+          <div class="visor"></div>
+          <div class="eye l"></div><div class="eye r"></div>
+          <div class="pir"></div>
+          <div class="mouth"><i></i><i></i><i></i></div>
+          <div class="foot l"></div><div class="foot r"></div>
+          <svg class="breeze" id="breeze" viewBox="0 0 200 120" aria-hidden="true">
+            <path d="M100 0 C 90 40, 40 60, 10 118"/>
+            <path d="M100 0 C 95 45, 70 70, 55 118"/>
+            <path d="M100 0 C 100 40, 100 80, 100 118"/>
+            <path d="M100 0 C 105 45, 130 70, 145 118"/>
+            <path d="M100 0 C 110 40, 160 60, 190 118"/>
+          </svg>
+        </div>
+        <div class="status">
+          <span id="sPir" class="live">PIR · you're here</span>
+          <span id="sEyes">Eyes · off</span>
+          <span id="sFan">Fan · off</span>
+        </div>
+      </div>
+
+      <div class="card panel">
+        <h3>Trigger a reminder</h3>
+        <p class="hint">Each reminder has its own eye colour, so a glance from the corner of your eye is enough.</p>
+        <div class="nudges">
+          <button class="nudge" type="button" data-k="break" style="--c:#7dff3c"><span class="dot"></span>Take a break<small>after an hour of play</small></button>
+          <button class="nudge" type="button" data-k="water" style="--c:#2fb8ff"><span class="dot"></span>Hydrate<small>every 45 minutes</small></button>
+          <button class="nudge" type="button" data-k="snack" style="--c:#ff9a2f"><span class="dot"></span>Snack<small>long sessions only</small></button>
+          <button class="nudge" type="button" data-k="posture" style="--c:#b07bff"><span class="dot"></span>Sit up<small>a gentle one</small></button>
+        </div>
+        <div class="row">
+          <button class="small-btn" id="voice" type="button" aria-pressed="false">🔈 Voice off</button>
+          <button class="small-btn" id="done" type="button">Say "done"</button>
+          <button class="small-btn" id="snooze" type="button">Say "snooze"</button>
+        </div>
+        <p class="fineprint">On the real robot, saying "done", "snooze" or "I drank water" is heard by a wake word and fixed-command model that runs on the chip. No audio leaves the device.</p>
+      </div>
+    </div>
+
+    <div class="card timeline">
+      <h3>A sample evening</h3>
+      <div class="tl-scroll">
+        <div class="tl-track" aria-label="Timeline of a three-hour session with reminders">
+          <div class="tl-ev" style="left:0%;--c:var(--muted)"><b>0:00</b><i></i><span>Sits down</span></div>
+          <div class="tl-ev" style="left:25%;--c:#2fb8ff"><b>0:45</b><i></i><span>Hydrate</span></div>
+          <div class="tl-ev" style="left:33.3%;--c:#7dff3c"><b>1:00</b><i></i><span>Break</span></div>
+          <div class="tl-ev" style="left:50%;--c:#b07bff"><b>1:30</b><i></i><span>Sit up</span></div>
+          <div class="tl-ev" style="left:66.6%;--c:#7dff3c"><b>2:00</b><i></i><span>Break</span></div>
+          <div class="tl-ev" style="left:75%;--c:#ff9a2f"><b>2:15</b><i></i><span>Snack</span></div>
+          <div class="tl-ev" style="left:100%;--c:var(--muted)"><b>3:00</b><i></i><span>Leaves</span></div>
+        </div>
+      </div>
+      <p class="legend-note">This is an example schedule, not a tested one. The timers pause whenever the PIR sees no one at the desk, and the robot goes back to sleep.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= CUES ======================= -->
+<section class="alt" id="cues">
+  <div class="wrap">
+    <div class="kicker">Usable without looking at it</div>
+    <h2>Three cues, ranked by how rude they are</h2>
+    <div class="cues">
+      <div class="card cue">
+        <div class="num">01 · AIR</div>
+        <h3>A breeze on your face</h3>
+        <p>A 30 mm blower behind the mouth grille puffs a cool breeze at you for a few seconds. You feel it through a headset, mid-fight, without it covering any game audio. It runs at a low PWM duty so it whispers rather than whines.</p>
+        <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 16h22a5 5 0 1 0-5-5"/><path d="M4 24h30a5 5 0 1 1-5 5"/><path d="M4 32h14"/></svg>
+      </div>
+      <div class="card cue">
+        <div class="num">02 · VOICE</div>
+        <h3>One short line</h3>
+        <p>A 28 mm speaker on the side plays one stored phrase: "Time for a break! Stretch your body." It's loud enough to get past headphones at speech level, and short enough not to break your concentration.</p>
+        <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 17h7l9-8v26l-9-8H6z"/><path d="M29 15a10 10 0 0 1 0 14"/><path d="M34 10a16 16 0 0 1 0 24"/></svg>
+      </div>
+      <div class="card cue">
+        <div class="num">03 · LIGHT</div>
+        <h3>Eyes, only when needed</h3>
+        <p>Two RGB LEDs behind the smoked visor stay dark the rest of the time. When a reminder fires they glow in its colour, so peripheral vision tells you which one it was. They never blink on just to look pretty.</p>
+        <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 26a8 8 0 0 1 14 0"/><path d="M24 26a8 8 0 0 1 14 0"/><path d="M22 8v4M10 12l2 3M34 12l-2 3"/></svg>
+      </div>
+    </div>
+    <div class="card privacy">
+      <svg class="shield" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round" aria-hidden="true"><path d="M20 4l13 5v10c0 9-6 15-13 17C13 34 7 28 7 19V9z"/><path d="M14 20l4 4 8-8" stroke-linecap="round"/></svg>
+      <p><strong>Privacy is part of the design.</strong> Presence comes from a passive infrared sensor, the same kind used in a hallway light, so it knows someone is there but not who. The microphone listens for a wake word and a short list of commands, all on the ESP32-S3 itself. There's no camera, no cloud account and no recordings.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= MODEL ======================= -->
+<section id="model">
+  <div class="wrap">
+    <div class="kicker">Stage 4 · SolidCraft</div>
+    <h2>The real enclosure</h2>
+    <p class="lede">This is the first-pass CAD model, with every dimension taken from real, cheap parts. Drag to spin it. It has a face cap and a rear shell, a smoked PMMA visor, neon side rings, TPU feet and a hinged clip that hooks down the back of the monitor.</p>
+    <div class="model-grid">
+      <div class="card viewer">
+        <model-viewer id="shell" src="../4-model/model.glb" poster="../4-model/iso.png"
+          alt="Interactive 3D model of the Gamer Companion enclosure: a charcoal robot head with cat ears, a smoked visor, green side rings and a rear monitor clip"
+          camera-controls auto-rotate auto-rotate-delay="1500" rotation-per-second="18deg"
+          camera-orbit="-30deg 72deg auto" environment-image="neutral" exposure="1.05"
+          shadow-intensity="1" shadow-softness=".8" interaction-prompt="none" touch-action="pan-y"></model-viewer>
+        <div class="hud"><span>71 × 73 × 53 MM</span><span>16 PARTS</span></div>
+        <div class="views" role="group" aria-label="Camera presets">
+          <button type="button" data-orbit="-30deg 72deg auto" aria-pressed="true">ISO</button>
+          <button type="button" data-orbit="0deg 85deg auto">FRONT</button>
+          <button type="button" data-orbit="90deg 80deg auto">SPEAKER</button>
+          <button type="button" data-orbit="180deg 80deg auto">BACK</button>
+        </div>
+      </div>
+      <div class="card parts">
+        <h3>What you're looking at</h3>
+        <ol>
+          <li><div><b>Face cap</b><span>It holds the board, the visor window, the PIR hole, the mic port and three breeze slots (the "mouth").</span></div></li>
+          <li><div><b>Rear shell with ears</b><span>It carries the blower intake underneath, the speaker grille on the right, vents on the left and USB-C at the back.</span></div></li>
+          <li><div><b>Smoked visor</b><span>A 44 × 24 mm PMMA lens with cyan eye inlays. It has a hole for the PIR dome, because acrylic blocks infrared.</span></div></li>
+          <li><div><b>Neon side rings</b><span>Green PC rings pressed into grooves. The right-hand ring frames the speaker.</span></div></li>
+          <li><div><b>Feet and rear clip</b><span>The front feet have a lip over the bezel, and a friction-hinged arm grips the back of the monitor. The feet leave an 8 mm gap underneath for the fan's air intake.</span></div></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= INSIDE ======================= -->
+<section id="inside" class="alt">
+  <div class="wrap">
+    <div class="kicker">Stage 5 · KiCad</div>
+    <h2>What's inside</h2>
+    <p class="lede">One 48 × 31 mm two-layer board stands upright behind the face. The front of the board is what sees out through the visor: the PIR and the two eye LEDs. The back carries the ESP32-S3, the audio and the power parts. The blower, the speaker and the USB-C socket connect with short JST-SH leads.</p>
+
+    <div class="inside-grid">
+      <div class="card board-card">
+        <div class="board-head"><h3>The board in 3D</h3><small>first-pass routing · see "What's next"</small></div>
+        <div class="bv">
+          <model-viewer id="board" src="../5-electronics/board.glb" poster="../5-electronics/board-iso.png" reveal="manual" loading="lazy"
+            alt="Interactive 3D model of the Gamer Companion circuit board, with the PIR header and eye LEDs on the front and the ESP32-S3 module on the back"
+            camera-controls camera-orbit="20deg 55deg auto" environment-image="neutral" exposure="1.1" shadow-intensity="0"
+            interaction-prompt="none" touch-action="pan-y"></model-viewer>
+          <button class="btn board-load" id="boardLoad" type="button">Load the 3D board (7 MB)</button>
+        </div>
+      </div>
+
+      <div class="card section-card">
+        <h3>Side section, roughly to scale</h3>
+        <svg viewBox="0 0 300 330" role="img" aria-label="Side cross-section: the visor and PIR dome at the front, the upright board with the ESP32-S3 module behind it, the blower lying on the floor blowing air forward out of the mouth, air drawn in from below between the feet, and USB-C at the back.">
+          <!-- 4 px per mm. x = (y + 34) * 4 + 10, svg y = (44 - z) * 4. Face at y = -25 (left). -->
+          <!-- monitor -->
+          <rect x="0" y="308" width="300" height="22" fill="var(--chip)" />
+          <text class="s-text" x="6" y="324">MONITOR TOP</text>
+          <!-- rear clip -->
+          <path d="M238 284 L250 330" stroke="var(--muted)" stroke-width="5" stroke-linecap="round" />
+          <!-- ear -->
+          <path d="M128 92 L150 16 L172 92 Z" fill="var(--chip)" stroke="var(--ink)" stroke-width="1.5" />
+          <!-- shell -->
+          <rect class="s-shell" x="46" y="76" width="200" height="200" rx="32" />
+          <!-- feet -->
+          <rect x="62" y="276" width="34" height="32" rx="3" fill="var(--muted)" />
+          <rect x="196" y="276" width="34" height="32" rx="3" fill="var(--muted)" />
+          <!-- lens -->
+          <rect x="41" y="104" width="5" height="96" rx="2" fill="var(--cyan)" opacity=".75" />
+          <!-- PIR dome -->
+          <path d="M86 140 L46 140 Q 30 140 30 160 Q 30 180 46 180 L86 180 Z" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.2" />
+          <!-- board + module -->
+          <rect x="86" y="90" width="6.4" height="124" fill="var(--neon)" />
+          <rect x="92.4" y="93.4" width="12.4" height="102" rx="1.5" fill="var(--ink)" opacity=".75" />
+          <!-- blower + duct -->
+          <rect x="114" y="220" width="120" height="40" rx="6" fill="none" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="4 3" />
+          <path d="M114 228 L58 228 L58 244 L114 244" fill="var(--chip)" stroke="var(--ink)" stroke-width="1" />
+          <!-- breeze out -->
+          <g stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" fill="none">
+            <path d="M44 230 L8 236" /><path d="M44 236 L4 248" /><path d="M44 242 L10 258" />
+          </g>
+          <!-- intake -->
+          <g stroke="var(--cyan)" stroke-width="1.6" stroke-linecap="round" fill="none" opacity=".8">
+            <path d="M136 304 L136 282 M132 287 L136 282 L140 287" /><path d="M204 300 L204 282 M200 287 L204 282 L208 287" />
+          </g>
+          <!-- usb -->
+          <rect x="240" y="236" width="10" height="14" rx="2" fill="var(--ink)" />
+          <!-- labels -->
+          <path class="s-lead" d="M150 40 L196 40" /><text class="s-text" x="200" y="43">EAR</text>
+          <path class="s-lead" d="M43 112 L18 84" /><text class="s-text" x="2" y="78">VISOR</text>
+          <path class="s-lead" d="M32 156 L8 156" /><text class="s-text" x="0" y="150">PIR</text>
+          <path class="s-lead" d="M92 208 L124 200" /><text class="s-text" x="127" y="203">BOARD</text>
+          <path class="s-lead" d="M104 130 L200 120" /><text class="s-text" x="172" y="114">ESP32-S3</text>
+          <text class="s-text" x="148" y="244">BLOWER</text>
+          <text class="s-text" x="8" y="272" fill="var(--cyan-ink)" style="fill:var(--cyan-ink)">BREEZE</text>
+          <text class="s-text" x="170" y="298" text-anchor="middle" style="fill:var(--cyan-ink)">AIR IN</text>
+          <path class="s-lead" d="M250 243 L270 222" /><text class="s-text" x="252" y="216">USB-C</text>
+        </svg>
+        <p class="fineprint" style="margin-top:8px">The speaker sits on the right wall, out of this plane. Every gap is a first-pass guess that needs checking on a print.</p>
+      </div>
+    </div>
+
+    <div class="blocks">
+      <div class="card block hero-block">
+        <div class="ref">U2 · ESP32-S3-WROOM-1-N16R8</div>
+        <h3>The brain: ESP32-S3, 16 MB flash + 8 MB PSRAM</h3>
+        <p>We picked the S3 because it's the ESP32 that can run Espressif's ESP-SR speech stack (a wake word plus about 200 fixed commands) on the chip itself. It also has two I²S ports, one for the mic and one for the amp, and native USB, so it flashes over the same cable that powers it.</p>
+      </div>
+      <div class="card block">
+        <div class="ref">U5 · AM312</div>
+        <h3>Presence</h3>
+        <p>A tiny 3 V PIR draws about 15 µA. Its dome pokes through the visor, and it gets its own RC-filtered supply so fan and Wi-Fi noise don't cause false triggers.</p>
+      </div>
+      <div class="card block">
+        <div class="ref">U4 · ICS-43434</div>
+        <h3>Ears</h3>
+        <p>A digital I²S MEMS mic, ported through a 1 mm hole in the board to a pinhole in the face.</p>
+      </div>
+      <div class="card block">
+        <div class="ref">U3 · MAX98357A + LS1</div>
+        <h3>Voice</h3>
+        <p>A class-D I²S amp on 5 V drives a 28 mm, 8 Ω, 1 W speaker. It needs no codec and no filter.</p>
+      </div>
+      <div class="card block">
+        <div class="ref">Q1 · AO3400A + 3010 blower</div>
+        <h3>Breeze</h3>
+        <p>A low-side MOSFET switches the blower at 25 kHz PWM, which is too high to hear. A flyback diode protects it, and a pull-down keeps the fan off at boot.</p>
+      </div>
+      <div class="card block">
+        <div class="ref">LED1–2 · WS2812B-2020</div>
+        <h3>Eyes</h3>
+        <p>Two 2 mm RGB LEDs on one data line. One diode drops their supply to about 4.3 V, so the 3.3 V data signal reads reliably and no level shifter is needed.</p>
+      </div>
+      <div class="card block wide">
+        <div class="ref">U1 · AP2112K-3.3</div>
+        <h3>Power</h3>
+        <p>USB-C 5 V in, with a 600 mA LDO for the 3.3 V rail. There's no battery, so nothing ever needs charging.</p>
+      </div>
+    </div>
+
+    <div class="card power">
+      <h3>Power budget on 5 V</h3>
+      <p class="fineprint" style="margin-top:6px">The green bar is typical draw and the pale bar is peak. The orange line marks the 500 mA a USB 2.0 port promises.</p>
+      <div class="bars" id="bars"></div>
+      <p class="fineprint" style="margin-top:14px">If everything peaked at once it would draw about 870 mA, so the firmware takes turns: speech first, then the breeze, with Wi-Fi off. On a USB-C charger, the 5.1 kΩ CC resistors unlock 1.5 A anyway.</p>
+    </div>
+
+    <details class="card bom">
+      <summary>Full bill of materials · 22 lines</summary>
+      <div class="bom-wrap">
+        <table>
+          <thead><tr><th>Ref</th><th>Qty</th><th>Part</th><th>What it does</th><th>MPN</th></tr></thead>
+          <tbody id="bomBody"></tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ======================= JOURNEY ======================= -->
+<section id="journey">
+  <div class="wrap">
+    <div class="kicker">How we got here</div>
+    <h2>One episode, four stages</h2>
+    <div class="journey">
+      <a class="card" href="../2-concept/Gamer-Companion-Robot-Concept-Board.png"><img src="../2-concept/Gamer-Companion-Robot-Concept-Board.png" alt="Concept board with front, side and back views, an exploded view and the four reminder types" loading="lazy"><div><b>02 · CONCEPT</b><span>The chosen robot board</span></div></a>
+      <a class="card" href="../3-layout/Gamer-Companion-GA-Drawing.jpg"><img src="../3-layout/Gamer-Companion-GA-Drawing.jpg" alt="General arrangement drawing with orthographic views, a section and an exploded isometric" loading="lazy" style="object-position: 50% 12%"><div><b>03 · LAYOUT</b><span>The GA drawing, rev A</span></div></a>
+      <a class="card" href="../4-model/iso.png"><img src="../4-model/iso.png" alt="Isometric render of the CAD model" loading="lazy"><div><b>04 · MODEL</b><span>SolidCraft enclosure</span></div></a>
+      <a class="card" href="../5-electronics/schematic.png"><img src="../5-electronics/schematic.png" alt="KiCad schematic of the main board" loading="lazy" style="object-fit:contain"><div><b>05 · ELECTRONICS</b><span>The schematic</span></div></a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= NEXT ======================= -->
+<section id="next" class="alt">
+  <div class="wrap">
+    <div class="kicker">What's next</div>
+    <h2>What we still don't know</h2>
+    <p class="lede">This is a speedrun first pass. Here's what we'd want to answer before anyone orders a board or cuts a mould.</p>
+    <div class="next-grid">
+      <div class="card q"><span class="tag hot">Board</span><h3>Four connections are still unrouted</h3><p>The last routing run left PIR power, two I²S amp lines and the amp's shutdown pin unconnected (ERC is clean, DRC isn't). The placement around the amp needs loosening and another routing run.</p></div>
+      <div class="card q"><span class="tag hot">Brief vs. reality</span><h3>Whisper won't fit on an ESP32</h3><p>The brief asked for Whisper speech-to-text, but even Whisper-tiny needs far more RAM than the S3 has. A wake word plus fixed commands covers "snooze", "done" and "I drank water". Free-form speech would mean an ESP32-P4 or a small Linux chip, which brings a bigger board and more heat.</p></div>
+      <div class="card q"><span class="tag">Feel</span><h3>Can you feel the breeze at arm's length?</h3><p>3010 blowers move very little air. We need to test whether it's noticeable at 50–70 cm on a low, quiet duty cycle. If it isn't, the fix is a 40 mm axial fan and a bigger head.</p></div>
+      <div class="card q"><span class="tag">Sensing</span><h3>Does the PIR see a still, seated gamer?</h3><p>PIRs detect movement, and a focused player barely moves. The field of view also needs testing from 50–80 cm, with the user sitting below the sensor's axis.</p></div>
+      <div class="card q"><span class="tag">Power</span><h3>Staying under 500 mA</h3><p>Peak draw can pass what a PC's USB 2.0 port allows. The firmware has to take turns between loads, and we haven't measured real currents yet.</p></div>
+      <div class="card q"><span class="tag">Product</span><h3>How do parents set it up?</h3><p>The schedule, the phrases and the volume all need a setup flow. That could be a phone page over Wi-Fi or USB. None of it is designed yet, and it has to work without cloud accounts.</p></div>
+      <div class="card q"><span class="tag">Product</span><h3>Will a 14-year-old keep it plugged in?</h3><p>It has to be annoying enough to work and charming enough not to end up in a drawer. Snooze limits, a "streak" reward and the tone of the voice lines are all untested.</p></div>
+      <div class="card q"><span class="tag">Mechanical</span><h3>Fastening, ears and the mic seal</h3><p>The face cap and rear shell need screw bosses or snaps. The solid ears need coring out for moulding, and the rubber boot between the mic and the face port is a guess.</p></div>
+      <div class="card q"><span class="tag">Electrical</span><h3>No ESD or fuse on USB yet</h3><p>A kid's desk is a hostile place. Add a USBLC6 and a PTC fuse, re-terminate the blower's lead to JST-SH, and confirm the AM312's pin order and the mic's stock.</p></div>
+      <div class="card q"><span class="tag">Drawing</span><h3>The GA drawing lags the model</h3><p>Rev A shows a 25 mm blower, a 23 mm speaker and an INMP441 mic. The model and board moved to a 3010 blower, a 28 mm speaker and the ICS-43434. The drawing needs a rev B.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span><b>Gamer Companion</b> · a concept from Product Speedrun, episode 002. It isn't for sale.</span>
+    <span>Built from <a href="../4-model/model.step">model.step</a> and <a href="../5-electronics/bom.csv">bom.csv</a></span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  /* ---------- theme toggle ---------- */
+  const root = document.documentElement, tbtn = document.getElementById("theme");
+  const modes = ["auto", "light", "dark"];
+  let mode = "auto";
+  try { mode = localStorage.getItem("gc-theme") || "auto"; } catch (e) {}
+  const apply = () => {
+    if (mode === "auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme", mode);
+    tbtn.textContent = mode.toUpperCase();
+  };
+  apply();
+  tbtn.addEventListener("click", () => {
+    mode = modes[(modes.indexOf(mode) + 1) % modes.length]; apply();
+    try { localStorage.setItem("gc-theme", mode); } catch (e) {}
+  });
+
+  /* ---------- model camera presets ---------- */
+  const shell = document.getElementById("shell");
+  document.querySelectorAll(".views button").forEach((b) => b.addEventListener("click", () => {
+    document.querySelectorAll(".views button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    shell.autoRotate = false;
+    shell.cameraOrbit = b.dataset.orbit;
+  }));
+
+  /* ---------- board: load on demand (7 MB) ---------- */
+  const board = document.getElementById("board"), load = document.getElementById("boardLoad");
+  load.addEventListener("click", () => { board.dismissPoster(); load.textContent = "Loading…"; load.disabled = true; });
+  board.addEventListener("load", () => load.remove());
+
+  /* ---------- reminder demo ---------- */
+  const robot = document.getElementById("robot"), bubble = document.getElementById("bubble"), breeze = document.getElementById("breeze");
+  const sEyes = document.getElementById("sEyes"), sFan = document.getElementById("sFan");
+  const voiceBtn = document.getElementById("voice");
+  const lines = {
+    break:   { c: "#7dff3c", say: "Time for a break! Stretch your body.", name: "green" },
+    water:   { c: "#2fb8ff", say: "Grab some water. You've got this!", name: "blue" },
+    snack:   { c: "#ff9a2f", say: "Fuel up! Your brain needs energy.", name: "orange" },
+    posture: { c: "#b07bff", say: "Sit up a bit. Your back will thank you.", name: "purple" },
+  };
+  let voiceOn = false, timers = [];
+  const canSpeak = "speechSynthesis" in window;
+  if (!canSpeak) { voiceBtn.disabled = true; voiceBtn.textContent = "Voice unavailable"; }
+  const clear = () => { timers.forEach(clearTimeout); timers = []; if (canSpeak) speechSynthesis.cancel(); };
+  const later = (fn, ms) => timers.push(setTimeout(fn, ms));
+  const speak = (text) => {
+    if (!voiceOn || !canSpeak) return;
+    const u = new SpeechSynthesisUtterance(text); u.rate = 1.05; u.pitch = 1.45; speechSynthesis.speak(u);
+  };
+  const eyes = (on, c, label) => {
+    if (c) robot.style.setProperty("--eye", c);
+    robot.style.setProperty("--on", on ? 1 : 0);
+    sEyes.textContent = "Eyes · " + (on ? label : "off");
+    sEyes.classList.toggle("live", on);
+  };
+  const fan = (on) => { breeze.classList.toggle("on", on); sFan.textContent = "Fan · " + (on ? "breeze" : "off"); sFan.classList.toggle("live", on); };
+  const say = (text) => { bubble.textContent = text; bubble.classList.add("on"); };
+  const reset = () => { bubble.classList.remove("on"); eyes(false); fan(false);
+    document.querySelectorAll(".nudge").forEach((x) => x.setAttribute("aria-pressed", "false")); };
+
+  document.querySelectorAll(".nudge").forEach((b) => b.addEventListener("click", () => {
+    clear(); reset();
+    b.setAttribute("aria-pressed", "true");
+    const l = lines[b.dataset.k];
+    robot.classList.remove("blink"); void robot.offsetWidth; robot.classList.add("blink");
+    eyes(true, l.c, l.name);
+    later(() => { say(l.say); speak(l.say); }, 450);
+    later(() => fan(true), 1900);
+    later(() => fan(false), 6500);
+    later(() => { bubble.classList.remove("on"); }, 7200);
+  }));
+  const reply = (text, c) => {
+    clear(); reset();
+    eyes(true, c, "ack"); say(text); speak(text);
+    later(reset, 2600);
+  };
+  document.getElementById("done").addEventListener("click", () => reply("Nice! Timer reset.", "#7dff3c"));
+  document.getElementById("snooze").addEventListener("click", () => reply("Okay. Ten more minutes.", "#9aa6a0"));
+  voiceBtn.addEventListener("click", () => {
+    voiceOn = !voiceOn;
+    voiceBtn.setAttribute("aria-pressed", String(voiceOn));
+    voiceBtn.textContent = voiceOn ? "🔊 Voice on" : "🔈 Voice off";
+    if (!voiceOn && canSpeak) speechSynthesis.cancel();
+  });
+
+  /* ---------- power bars (from 5-electronics/NOTES.md) ---------- */
+  const loads = [
+    ["ESP32-S3 + ESP-SR", 90, 350], ["Amp + speaker", 80, 300], ["Blower (low duty)", 50, 150],
+    ["Eye LEDs", 25, 70], ["PIR, mic, LDO", 2, 2],
+  ];
+  const max = 500;
+  document.getElementById("bars").innerHTML = loads.map(([n, t, p]) =>
+    `<div class="bar-row"><span>${n}</span><div class="track"><div class="pk" style="width:${p / max * 100}%"></div><div class="typ" style="width:${Math.max(t / max * 100, .8)}%"></div></div><span class="v">${t} / ${p} mA</span></div>`
+  ).join("") +
+  `<div class="bar-row"><b>Typical total</b><div class="track"><div class="typ" style="width:${250 / max * 100}%"></div><div class="limit" style="left:calc(100% - 2px)"></div></div><span class="v">≈150–250 mA</span></div>`;
+
+  /* ---------- BOM (from 5-electronics/bom.csv) ---------- */
+  const bom = [
+    ["U2", 1, "ESP32-S3-WROOM-1-N16R8", "Wi-Fi/BLE module, 16 MB flash + 8 MB PSRAM, runs ESP-SR on-device", "ESP32-S3-WROOM-1-N16R8"],
+    ["U1", 1, "AP2112K-3.3", "LDO 3.3 V 600 mA, always on", "AP2112K-3.3TRG1"],
+    ["U3", 1, "MAX98357A", "I²S class-D mono amplifier on 5 V", "MAX98357AETE+T"],
+    ["U4", 1, "ICS-43434", "I²S MEMS microphone, bottom port through the board", "ICS-43434"],
+    ["U5", 1, "AM312", "Mini PIR motion sensor; dome through the visor", "AM312"],
+    ["LED1 LED2", 2, "WS2812B-2020", "2 × 2 mm RGB LED eyes", "WS2812B-2020"],
+    ["Q1", 1, "AO3400A", "N-MOSFET low-side PWM switch for the blower", "AO3400A"],
+    ["D1", 1, "1N5819WS", "Schottky flyback across the blower", "1N5819WS"],
+    ["D2", 1, "1N4148W", "Drops VBUS to ~4.3 V for the LEDs' logic level", "1N4148W"],
+    ["J1", 1, "JST-SH 4-pin", "USB harness: VBUS / D− / D+ / GND", "SM04B-SRSS-TB(LF)(SN)"],
+    ["J2", 1, "JST-SH 2-pin", "To the 5 V 3010 blower", "SM02B-SRSS-TB(LF)(SN)"],
+    ["J3", 1, "JST-SH 2-pin", "To the 28 mm speaker", "SM02B-SRSS-TB(LF)(SN)"],
+    ["C1", 1, "22 µF", "Ceramic, 25 V X5R 0805", "CL21A226MAQNNNE"],
+    ["C2 C3 C5 C8 C10 C13", 6, "10 µF", "Ceramic, 25 V X5R 0805", "CL21A106KAYNNNE"],
+    ["C4 C6 C9 C11 C12 C14", 6, "100 nF", "Ceramic, 50 V X7R 0603", "CC0603KRX7R9BB104"],
+    ["C7", 1, "1 µF", "Ceramic, 50 V X5R 0603 (EN reset RC)", "CL10A105KB8NNNC"],
+    ["R1 R2", 2, "10 k", "1 %, 0603", "0603WAF1002T5E"],
+    ["R3 R5 R7", 3, "100 Ω", "1 %, 0603", "0603WAF1000T5E"],
+    ["R4 R6 R8", 3, "100 k", "1 %, 0603", "0603WAF1003T5E"],
+    ["BLOWER", 1, "3010 blower 5 V", "30 × 30 × 10 mm radial, ~150 mA (off-board)", "generic"],
+    ["LS1", 1, "Speaker 8 Ω 1 W", "28 mm round, ~5 mm thick, right wall (off-board)", "generic"],
+    ["USB-C", 1, "USB-C breakout", "VBUS/D+/D−/GND + 5.1 k CC pull-downs, back wall (off-board)", "generic"],
+  ];
+  const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  document.getElementById("bomBody").innerHTML = bom.map(([r, q, v, d, m]) =>
+    `<tr><td><b>${esc(r)}</b></td><td>${q}</td><td>${esc(v)}</td><td>${esc(d)}</td><td class="mpn">${esc(m)}</td></tr>`).join("");
+})();
+</script>
+</body>
+</html>
