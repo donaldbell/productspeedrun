@@ -26,7 +26,7 @@ Rules for every stage:
 
 Use the Solidcraft MCP server in **headless** mode (`solidcraft-cli mcp`; if it isn't configured, run `claude mcp add solidcraft -- solidcraft-cli mcp`). Headless is faster than driving the desktop app, so don't use bridged mode. Save progress screenshots as you go (`4-model/progress-01.png`, `progress-02.png`, …) so the hosts can follow along on the dashboard.
 
-1. From the brief and the two favorite images, decide the overall form, approximate dimensions in mm, and the main parts (shell, lid, buttons, windows, mounting for the board). Write that plan to `4-model/NOTES.md` before modeling.
+1. From the brief and the two favorite images, decide the overall form, approximate dimensions in mm, and the main parts (shell, lid, buttons, windows, mounting for the board). Write that plan to `4-model/NOTES.md` before modeling, including a **"For Stage 5"** list: the board outline (width × height, corner radius), mounting post positions, and the XY of everything the board must line up with (buttons, sensors, LEDs, windows, connectors), all in the enclosure's own coordinates with the origin at its centre. Stage 5 places the board straight from that list.
 2. Build a simple parametric model: a few sketches and features, with named parameters for the key dimensions. Leave room inside for the electronics described in the brief.
 3. Save the Solidcraft design file in `4-model/`.
 4. Take an isometric screenshot with Solidcraft's `screenshot` tool and save it as `4-model/iso.png`.
@@ -35,12 +35,17 @@ Use the Solidcraft MCP server in **headless** mode (`solidcraft-cli mcp`; if it 
 
 ## Stage 5: Electronics (KiCad)
 
-Pick the simplest design that achieves the brief, using the rolled board (ESP32, Raspberry Pi, Pi Pico or nRF52840) as a module or dev board where sensible. Prefer common, easy-to-source parts.
+The deliverable is a **routed 2-layer PCB** that fits the Stage 4 enclosure, plus its schematic and BOM. A board on screen is the point of this stage, so don't stop at a schematic. Pick the simplest design that achieves the brief, using the rolled board (ESP32, Raspberry Pi, Pi Pico or nRF52840) as a module or dev board where sensible. Prefer common, easy-to-source parts (JLCPCB/LCSC basic parts where possible).
 
-1. Write `5-electronics/NOTES.md`: block diagram in words, part choices and why, power budget, and open questions.
-2. Create a KiCad project in `5-electronics/`: `<name>.kicad_pro`, `<name>.kicad_sch` (and sub-sheets if needed), `<name>.kicad_pcb`. Use standard KiCad library symbols and footprints. The schematic should pass ERC; route the board if practical, and note unrouted nets in NOTES.md. Size the board to fit inside the Stage 4 enclosure.
-3. Write **`5-electronics/bom.csv`** with a header row. Use these columns: `Ref,Qty,Value,Description,Footprint,MPN`.
-4. If `kicad-cli` is available: export a 3D board model to **`5-electronics/board.glb`** (or export STEP/VRML and convert with trimesh), plus renders or SVG/PNG plots of the schematic and board (`schematic.png`, `board.png`). Run ERC (`kicad-cli sch erc`) and DRC (`kicad-cli pcb drc`) and save the reports. If kicad-cli isn't installed, say so in NOTES.md rather than faking output.
+**Use the shared kit in `tools/kicad/`**. Don't write new generator or routing scripts (read `tools/kicad/README.md` once). An episode only writes two files, `5-electronics/src/design.py` (parts and nets) and `5-electronics/src/layout.py` (outline and placement), and the kit does the schematic, ERC, netlist check, placement, Freerouting, DRC fix-ups, silkscreen tidy, BOM, renders and GLB. Episode 001's board is the worked example in `tools/kicad/example/`, and `tools/kicad/parts.py` holds custom symbols already drawn. If the kit is missing something, improve the kit (and note it in its README) rather than working around it in the episode.
+
+1. Write `5-electronics/NOTES.md`: block diagram in words, part choices and why, power budget, how it fits the enclosure, and open questions. Read `4-model/NOTES.md` for the board outline, post positions and where buttons, sensors and windows sit.
+2. `tools/kicad/new_board.sh episodes/<slug> <project-name> "<Product Name>"` to start `src/`. Fill in `design.py`, copying proven blocks from the example. Then run `tools/kicad/build.sh episodes/<slug> schematic` and fix until ERC and the netlist check are clean. Commit (`NNN stage 5: schematic`) so the hosts see it.
+3. Fill in `layout.py` (outline, holes, fixed parts under the enclosure's features, preferred spots for the rest), then `tools/kicad/build.sh episodes/<slug> place`. Look at `board.png` and `output/placement.txt`, and adjust spots until the placement is sensible: each IC's decoupling next to its pins, the antenna on an edge with a copper keep-out, short power loops.
+4. `tools/kicad/build.sh episodes/<slug>` for the full run: routing, DRC, `board.png`, `board-bottom.png`, `board-iso.png`, `board.glb`. Aim for **DRC 0 and 0 unconnected**. If Freerouting leaves nets unrouted, loosen the placement around them and run again; anything still open goes in NOTES.md. Run it in the background and keep writing NOTES.md while it routes.
+5. Record the ERC/DRC results in NOTES.md and commit.
+
+Outputs the dashboard expects in `5-electronics/`: `<name>.kicad_pro/.kicad_sch/.kicad_pcb`, **`bom.csv`** (`Ref,Qty,Value,Description,Footprint,MPN`), `erc.rpt`, `drc.rpt`, `schematic.png`, `board.png`, `board.glb`. If `kicad-cli` or Freerouting isn't installed, say so in NOTES.md rather than faking output. If `tools/kicad/selftest.sh place` has never been run on this computer, run it first: it checks the kit against episode 001's board in a scratch folder.
 
 The dashboard shows the schematic and board live in the browser (KiCanvas), the 3D board, and the BOM table.
 

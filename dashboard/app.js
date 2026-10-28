@@ -289,7 +289,7 @@ const BUILDERS = {
     const name = clean(S.ep.brief.name);
     return `Now the electronics for Product Speedrun episode ${S.ep.slug}${name ? `, "${name}"` : ""}. ${describe()}\n\n` +
       `Design the simplest circuit that does this, built around ${rollPick("Brain") ? `the ${rollPick("Brain")}` : "a common microcontroller module"}, sized to fit the enclosure in episodes/${S.ep.slug}/4-model/. ` +
-      `Follow the Stage 5 steps in CLAUDE.md: NOTES.md first, then the KiCad schematic and board, bom.csv, and board.glb plus renders in episodes/${S.ep.slug}/5-electronics/.`;
+      `Follow the Stage 5 steps in CLAUDE.md using the shared kit in tools/kicad/ (start from its example): NOTES.md first, then src/design.py and the schematic, then src/layout.py and a routed 2-layer PCB with DRC clean, bom.csv, renders and board.glb, all in episodes/${S.ep.slug}/5-electronics/.`;
   },
   showcase: () => {
     const vibe = rollPick("Vibe");

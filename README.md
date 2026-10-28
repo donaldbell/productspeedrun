@@ -6,7 +6,7 @@ A show about racing a random product idea from brainstorm to a showcase-ready co
 2. **Concept sketches:** AI concept art of the product in use.
 3. **Isometric layout:** an AI isometric drawing of how it could be put together.
 4. **3D model:** Claude Code + [Solidcraft](https://solidcraft.pro/) build a first-pass model.
-5. **Electronics:** Claude Code designs a schematic, KiCad board and BOM.
+5. **Electronics:** Claude Code designs a schematic, a routed KiCad board and a BOM, using the shared kit in [`tools/kicad/`](tools/kicad/README.md).
 6. **Showcase:** Claude Code builds an interactive product page.
 7. **Keep or shelve:** the hosts decide.
 
@@ -52,6 +52,8 @@ Stages 2 and 3 can generate images in the console. Pollinations works with no se
 ### Stages 4–6 with Claude Code
 
 Open Claude Code in this folder. Each of those stages has a prompt written from the brief: edit it, press **Copy**, and paste it into Claude Code, which follows `CLAUDE.md` and writes into the episode's folder. The console watches the folder, so the model, schematic, board, BOM and showcase page appear on screen as they're saved.
+
+For stage 5, Claude Code only writes the parts list and placement for the new board. The kit in `tools/kicad/` does the rest: the schematic and ERC, then placement, Freerouting, DRC, renders and the 3D board. The schematic shows up within seconds, the placed board in about a minute, and the routed board after 5–15 minutes of routing.
 
 ## Episode folders
 
