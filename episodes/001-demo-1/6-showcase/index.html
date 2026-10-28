@@ -575,19 +575,6 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   });
 })();
 
-// The Stage 4 GLB stores its sRGB swatch colours as linear baseColorFactor,
-// which renders them washed out. Convert back to linear on load.
-(() => {
-  const shell = document.getElementById("shell");
-  const lin = (c) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
-  shell.addEventListener("load", () => {
-    for (const m of shell.model.materials) {
-      const pbr = m.pbrMetallicRoughness, [r, g, b, a] = pbr.baseColorFactor;
-      pbr.setBaseColorFactor([lin(r), lin(g), lin(b), a]);
-    }
-  }, { once: true });
-})();
-
 // board viewer: load the 8 MB model only on request
 document.getElementById("boardLoad").addEventListener("click", (e) => {
   document.getElementById("board").dismissPoster();
