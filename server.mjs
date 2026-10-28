@@ -342,6 +342,13 @@ const server = http.createServer(async (req, res) => {
 
 await mkdir(EPISODES, { recursive: true });
 startWatcher();
+server.on("error", (e) => {
+  if (e.code === "EADDRINUSE") {
+    console.error(`\n  The console is already running on http://localhost:${PORT} (maybe in another Terminal window).\n  Open that address in Chrome, or stop the other copy with:\n\n    lsof -ti tcp:${PORT} | xargs kill\n\n  and then run npm start again.\n`);
+    process.exit(1);
+  }
+  throw e;
+});
 server.listen(PORT, "127.0.0.1", () => {
   const ready = Object.entries(PROVIDERS).filter(([, v]) => v.ready).map(([, v]) => v.label).join(", ");
   console.log(`\n  Product Speedrun console → http://localhost:${PORT}\n  Image providers ready: ${ready}\n`);
