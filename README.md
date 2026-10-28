@@ -14,7 +14,7 @@ A show about racing a random product idea from brainstorm to a showcase-ready co
 
 **The easy way:** double-click **Start Product Speedrun.command** in this folder. It stops any copy that's already running, gets the latest updates, starts the console and opens it in Chrome. Close its Terminal window to stop. To keep it handy, drag it to the right-hand side of the Dock. If macOS says it can't be opened the first time, right-click it, choose **Open**, then **Open** again.
 
-To also open Claude Code in this folder each time, open the file in a text editor and change `OPEN_CLAUDE_CODE="no"` to `"yes"`.
+It also opens Claude Code in this folder in a second Terminal window. To stop that, open the file in a text editor and change `OPEN_CLAUDE_CODE="yes"` to `"no"`.
 
 **By hand:** needs Node 20 or newer, no packages to install.
 

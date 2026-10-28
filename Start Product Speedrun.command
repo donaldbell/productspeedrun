@@ -3,8 +3,8 @@
 # It stops any copy that's already running, gets the latest updates,
 # starts the console and opens it in Chrome. Close this window to stop it.
 
-# Set to "yes" to also open Claude Code in this folder in a second Terminal window.
-OPEN_CLAUDE_CODE="no"
+# "yes" also opens Claude Code in this folder in a second Terminal window.
+OPEN_CLAUDE_CODE="yes"
 
 PORT=4321
 cd "$(dirname "$0")" || exit 1
