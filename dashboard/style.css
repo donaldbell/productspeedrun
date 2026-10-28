@@ -57,6 +57,11 @@ code { font-family: var(--font-mono); background: var(--panel-2); padding: 0 .35
 .ep-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .stage-head { grid-column: 1; grid-row: 1; align-self: end; margin-top: 3.4vh; min-width: 0; }
 .ep-btn { grid-column: 1; grid-row: 1; align-self: start; }
+.kicker-row { display: flex; align-items: center; gap: 1vw; flex-wrap: wrap; }
+.done-btn { border: 1.5px solid var(--stage); background: transparent; color: var(--stage); border-radius: 999px; padding: .2em .9em; cursor: pointer; font-size: clamp(11px, 1.45vh, 17px); letter-spacing: .04em; }
+.done-btn:hover { background: color-mix(in srgb, var(--stage) 15%, transparent); }
+.done-btn.is-done { background: var(--stage); color: #14100A; font-weight: 700; }
+.btn.publish { margin-top: 1vh; font-size: clamp(12px, 1.5vh, 17px); }
 .stage-kicker { font-size: clamp(12px, 1.6vh, 19px); letter-spacing: .2em; text-transform: uppercase; color: var(--stage); }
 .stage-name { margin: .1em 0 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(30px, 6.2vh, 78px); line-height: .95; letter-spacing: -0.02em; text-wrap: balance; }
 .brandmark { grid-column: 3; align-self: start; font-family: var(--font-display); font-weight: 800; font-size: clamp(18px, 3vh, 36px); letter-spacing: -0.01em; color: var(--muted); }

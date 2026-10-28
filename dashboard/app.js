@@ -90,16 +90,40 @@ function goStage(n, { silent } = {}) {
   const st = STAGES[n - 1];
   $("stageKicker").textContent = `Stage ${n} of 7`;
   $("stageName").textContent = st.name;
-  renderSplits(); mountStage();
+  renderSplits(); mountStage(); updateDoneBtn();
+}
+// A stage counts as done when the hosts mark it, or automatically once its output exists.
+function autoDone(n) {
+  const ep = S.ep; if (!ep) return false;
+  if (n === 1) return ep.roll.length > 0 && !!String(ep.brief.name || "").trim();
+  if (n === 2) return imagesIn("2-concept").length > 0;
+  if (n === 3) return imagesIn("3-layout").length > 0;
+  if (n === 4) return !!pickFile("4-model", /\.(glb|gltf)$/i);
+  if (n === 5) return !!(pickFile("5-electronics", /\.kicad_(pcb|sch)$/i) || pickFile("5-electronics", /\.csv$/i));
+  if (n === 6) return !!pickFile("6-showcase", /^index\.html$/i);
+  return !!ep.decision;
+}
+const isDone = (n) => !!S.ep && (S.ep.done.includes(n) || autoDone(n));
+function updateDoneBtn() {
+  const b = $("doneBtn"); if (!b) return;
+  if (!S.ep || S.ep.stage === 7) { b.hidden = true; return; }
+  b.hidden = false;
+  b.textContent = isDone(S.ep.stage) ? "✓ Done · next stage →" : "Mark done · next stage →";
+  b.classList.toggle("is-done", isDone(S.ep.stage));
 }
 function split() {
   if (!S.ep) return;
   const n = S.ep.stage;
+  if (n === 7) return;
+  const wasDone = isDone(n);
   if (!S.ep.done.includes(n)) S.ep.done.push(n);
-  sfx.split();
-  const el = document.querySelector(`.split[data-n="${n}"]`); el?.classList.remove("flash"); void el?.offsetWidth; el?.classList.add("flash");
-  toast(`${STAGES[n - 1].name}: done`);
-  if (n < 7) setTimeout(() => goStage(n + 1, { silent: true }), 350); else { save(); renderSplits(); }
+  save();
+  if (!wasDone) {
+    sfx.split();
+    const el = document.querySelector(`.split[data-n="${n}"]`); el?.classList.remove("flash"); void el?.offsetWidth; el?.classList.add("flash");
+    toast(`${STAGES[n - 1].name}: done`);
+  }
+  setTimeout(() => goStage(n + 1, { silent: wasDone ? false : true }), wasDone ? 0 : 350);
 }
 
 /* ---------- splits / evidence rail ---------- */
@@ -129,11 +153,12 @@ function renderSplits() {
   const box = $("splits"); box.replaceChildren();
   if (!S.ep) return;
   for (const st of STAGES) {
-    const cls = ["split", S.ep.stage === st.n && "current", S.ep.done.includes(st.n) && "done", S.arrivals.has(st.dir) && "arrive"].filter(Boolean).join(" ");
+    const cls = ["split", S.ep.stage === st.n && "current", isDone(st.n) && "done", S.arrivals.has(st.dir) && "arrive"].filter(Boolean).join(" ");
     box.append(h("button", { type: "button", class: cls, "data-n": st.n, onclick: () => goStage(st.n) },
-      h("span", { class: "n", text: String(st.n).padStart(2, "0") }), h("span", { class: "nm", text: st.name }), h("span", { class: "t", text: S.ep.done.includes(st.n) ? "✓" : "" }),
+      h("span", { class: "n", text: String(st.n).padStart(2, "0") }), h("span", { class: "nm", text: st.name }), h("span", { class: "t", text: isDone(st.n) ? "✓" : "" }),
       evidence(st.n)));
   }
+  updateDoneBtn();
 }
 
 /* ---------- stage views ---------- */
@@ -194,9 +219,10 @@ function viewRoll() {
 window.addEventListener("message", (e) => {
   if (e.origin !== ROLLER_ORIGIN || !S.ep) return;
   const d = e.data;
-  if (!d || d.source !== "rpg" || d.type !== "lockin" || !Array.isArray(d.ingredients)) return;
+  if (!d || d.source !== "rpg" || !["roll", "lockin"].includes(d.type) || !Array.isArray(d.ingredients)) return;
   S.ep.roll = d.ingredients.slice(0, 12).map((i) => ({ bucket: String(i.bucket || ""), group: String(i.group || ""), label: String(i.label || "").slice(0, 80) })).filter((i) => i.label);
-  save(); renderSplits(); S.view?.onRoll?.(); sfx.arrive(); toast("Roll captured");
+  save(); renderSplits(); S.view?.onRoll?.();
+  if (d.type === "lockin") { sfx.arrive(); toast("Roll locked in"); }
 });
 
 // Prompt kit: starting prompts written from the brief, in the hosts' own voice.
@@ -496,7 +522,8 @@ function viewDecision() {
       card("Board", board ? h("model-viewer", { src: fileUrl(`5-electronics/${board.name}`), "auto-rotate": true, "interaction-prompt": "none", alt: "Board" }) : imgOr(boardShot && `5-electronics/${boardShot.name}`, "No board"), 4));
     const verdict = h("div", { class: "verdict" },
       h("button", { type: "button", class: "btn big shelve", text: "Shelve it", onclick: () => decide("shelve") }),
-      h("div", { class: "final-time" }, "Stages done", h("br"), h("b", { text: `${ep.done.filter((n) => n < 7).length} / 6` })),
+      h("div", { class: "final-time" }, "Stages done", h("br"), h("b", { text: `${[1, 2, 3, 4, 5, 6].filter(isDone).length} / 6` }),
+        h("br"), h("button", { type: "button", class: "btn publish", id: "publishBtn", text: "Publish to the site", onclick: publish })),
       h("button", { type: "button", class: "btn big keep", text: "Keep building", onclick: () => decide("keep") }));
     el.replaceChildren(recap, verdict);
     if (ep.decision) el.append(h("div", { class: "stamp " + ep.decision }, h("span", { text: ep.decision === "keep" ? "Keep building" : "Shelved" })));
@@ -504,9 +531,21 @@ function viewDecision() {
   const decide = (d) => {
     ep.decision = d; ep.decidedAt = new Date().toISOString(); if (!ep.done.includes(7)) ep.done.push(7);
     save(true); sfx.stamp(); draw(); renderSplits();
+    toast("Decision saved. Press Publish to the site to push the episode to GitHub.");
   };
   draw();
   return { el, refresh: draw };
+}
+
+// Commit and push this episode's folder with the local git setup.
+async function publish() {
+  const b = $("publishBtn"); if (b) { b.disabled = true; b.textContent = "Publishing…"; }
+  try {
+    await save(true);
+    const r = await api(`/episodes/${S.ep.slug}/publish`, { method: "POST" });
+    toast(r.message || "Published"); if (r.pushed) sfx.split();
+  } catch (e) { toast("Publish failed: " + e.message, true); }
+  finally { if (b) { b.disabled = false; b.textContent = "Publish to the site"; } }
 }
 
 /* ---------- lightbox ---------- */
@@ -571,6 +610,7 @@ async function reloadFiles(fresh = new Set()) {
   }
   renderSplits();
   if (changed.size) S.view?.refresh?.(changed);
+  updateDoneBtn();
   return changed;
 }
 let reloadT = null;
@@ -648,6 +688,7 @@ document.addEventListener("keydown", (e) => {
   else if (/^[1-7]$/.test(k)) goStage(Number(k));
 });
 $("epBtn").addEventListener("click", () => openSheet("episodes"));
+$("doneBtn").addEventListener("click", () => { $("doneBtn").blur(); split(); });
 let idleT; document.addEventListener("mousemove", () => { document.body.classList.remove("idle"); clearTimeout(idleT); idleT = setTimeout(() => document.body.classList.add("idle"), 3000); });
 
 /* ---------- boot ---------- */

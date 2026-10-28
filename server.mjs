@@ -9,6 +9,7 @@ import http from "node:http";
 import { readFile, writeFile, mkdir, readdir, stat, rename } from "node:fs/promises";
 import { existsSync, watch, createReadStream, readFileSync } from "node:fs";
 import path from "node:path";
+import { execFile } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
@@ -200,6 +201,32 @@ async function generate({ provider, prompt, refs = [], aspect = "16:9" }, slug) 
   }
 }
 
+// ---------- publishing with the local git setup ----------
+function git(args) {
+  return new Promise((resolve) => execFile("git", args, { cwd: ROOT, timeout: 120000, maxBuffer: 4 * 1024 * 1024 }, (err, stdout, stderr) =>
+    resolve({ ok: !err, out: `${stdout || ""}${stderr || ""}`.trim() })));
+}
+async function publishEpisode(slug) {
+  const rel = `episodes/${slug}`;
+  if (!(await git(["rev-parse", "--is-inside-work-tree"])).ok) throw Object.assign(new Error("This folder isn't a git repository."), { code: 400 });
+  const ep = await loadEpisode(slug);
+  await git(["add", "--", rel]);
+  const staged = !(await git(["diff", "--cached", "--quiet", "--", rel])).ok;
+  if (staged) {
+    const what = ep.decision === "keep" ? "keep building" : ep.decision === "shelve" ? "shelved" : `stage ${ep.stage || 1}`;
+    const c = await git(["commit", "-m", `${slug}: ${what}`, "--", rel]);
+    if (!c.ok) throw Object.assign(new Error("git commit failed: " + c.out.split("\n").slice(-2).join(" ")), { code: 500 });
+  }
+  let p = await git(["push"]);
+  if (!p.ok && /rejected|fetch first|non-fast-forward/i.test(p.out)) {
+    const pull = await git(["pull", "--rebase", "--autostash"]);
+    if (!pull.ok) throw Object.assign(new Error("Couldn't merge changes from GitHub. Open a terminal in the repo and run git pull."), { code: 500 });
+    p = await git(["push"]);
+  }
+  if (!p.ok) throw Object.assign(new Error("git push failed: " + p.out.split("\n").slice(-2).join(" ")), { code: 500 });
+  return { ok: true, pushed: true, message: staged ? "Published. The site updates in a minute or two." : "Nothing new to commit. Pushed anything that was waiting." };
+}
+
 // ---------- live events ----------
 const clients = new Set();
 let pending = new Map(), flushT = null;
@@ -276,8 +303,11 @@ const server = http.createServer(async (req, res) => {
           if (!inside(path.join(dir, sd), p) || !existsSync(p)) return send(res, 404, { error: "File not found." });
           const trash = path.join(dir, sd, ".trash"); await mkdir(trash, { recursive: true });
           await rename(p, await uniquePath(trash, path.basename(p)));
+          if (existsSync(p + ".prompt.txt")) await rename(p + ".prompt.txt", await uniquePath(trash, path.basename(p) + ".prompt.txt"));
           return send(res, 200, { ok: true });
         }
+        // Publish: POST /api/episodes/:slug/publish  (commit this episode folder and push)
+        if (parts[3] === "publish" && req.method === "POST") return send(res, 200, await publishEpisode(slug));
         // Generate: POST /api/episodes/:slug/generate {stageDir, provider, prompt, refs, aspect}
         if (parts[3] === "generate" && req.method === "POST") {
           const b = await readJson(req);
