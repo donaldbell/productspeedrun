@@ -1,0 +1,33 @@
+{
+  "slug": "001-demo-1",
+  "number": 1,
+  "title": "Demo 1",
+  "createdAt": "2026-10-27T21:02:07.926Z",
+  "stage": 6,
+  "roll": [],
+  "brief": {
+    "name": "Backpack Defender",
+    "pitch": "A fun motion-detecting alarm for a grade schooler's backpack or locker.",
+    "what": "A near-field motion detecting device that can either be placed in a locker or clipped/tied to a backpack. The design is cute and draws inspiration from Japanese kawaii culture, making it appealing to kids. A selection of different alarm tones can be selected by connecting to the device directly (wireless AP mode hosted settings page). The tones range from goofy, playful, musical, robotic, and standard alarm tones. The power comes from a standard AA or AAA battery or a pair of them, for both convenience and so that teachers can easily disarm them. I imagine the device is about the size of a deck of playing cards and would be placed on it's long, wide side for use in a locker. A large (maybe playfully large) button or integrated switch makes it clear for anyone how to silence the alarm sound. This is not a serious security device, but more of a toy.",
+    "does": "Makes sound when it detects motion nearby.",
+    "who": "kids, school-age",
+    "electronics": "an esp module that can host a setup page for selecting alarm tones. because it's a toy cost is a big factor, so it need not use the latest or fastest chip. Also include piezo buzzer for sound generation, some kind of i2s sound amplification circuit, and PIR motion sensor (or a suitable substitution for close range motion sensor if PIR isn't ideal).",
+    "design": "toy, kawaii cute, japan, gender neutral, ",
+    "looksLike": "deck of playing cards",
+    "size": "3inx2x1"
+  },
+  "prompts": {},
+  "promptEdited": {
+    "model": false,
+    "2-concept": false,
+    "3-layout": false,
+    "electronics": false,
+    "showcase": false
+  },
+  "favorites": {
+    "2-concept": "2-concept/Gemini_Generated_Image_aokq2uaokq2uaokq.jpeg",
+    "3-layout": "3-layout/Gemini_Generated_Image_gxrn7ggxrn7ggxrn.jpeg"
+  },
+  "done": [],
+  "decision": null
+}

@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Backpack Defender</title>
+<meta name="description" content="A pocket-sized kawaii motion alarm for a kid's backpack or locker. Product Speedrun episode 001.">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=M+PLUS+Rounded+1c:wght@700;800&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js"></script>
+<style>
+:root {
+  --bg: #fff7ea;
+  --bg-2: #fdeedd;
+  --surface: #ffffff;
+  --ink: #3b2342;
+  --muted: #7b6482;
+  --line: rgba(59, 35, 66, .13);
+  --mint: #8ed8c3;
+  --mint-ink: #1f6b58;
+  --butter: #f5d784;
+  --lavender: #c9b8f2;
+  --lav-ink: #5b45a3;
+  --coral: #f2897b;
+  --coral-ink: #b2402f;
+  --pink: #ffadc4;
+  --plum: #3b2342;
+  --viewer: radial-gradient(circle at 50% 40%, #ffffff 0%, #f4ecff 55%, #e9f7f1 100%);
+  --shadow: 0 2px 0 rgba(59,35,66,.08), 0 18px 40px -22px rgba(59,35,66,.35);
+  --dot: rgba(59, 35, 66, .07);
+  --display: "Fredoka", "Nunito", system-ui, sans-serif;
+  --body: "Nunito", system-ui, sans-serif;
+  --jp: "M PLUS Rounded 1c", "Fredoka", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1d1425; --bg-2: #241a2e; --surface: #2b2036; --ink: #fbf0ff; --muted: #c4b2cd;
+    --line: rgba(251, 240, 255, .14); --mint: #8fe3cb; --mint-ink: #9ff0d8; --butter: #f3d88f;
+    --lavender: #b9a6f0; --lav-ink: #cbbcff; --coral: #ff9a8c; --coral-ink: #ffb1a6; --pink: #ff9fbb;
+    --viewer: radial-gradient(circle at 50% 40%, #3a2c48 0%, #2a1f35 60%, #221a2c 100%);
+    --shadow: 0 2px 0 rgba(0,0,0,.25), 0 18px 40px -22px rgba(0,0,0,.8); --dot: rgba(251, 240, 255, .06);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1d1425; --bg-2: #241a2e; --surface: #2b2036; --ink: #fbf0ff; --muted: #c4b2cd;
+  --line: rgba(251, 240, 255, .14); --mint: #8fe3cb; --mint-ink: #9ff0d8; --butter: #f3d88f;
+  --lavender: #b9a6f0; --lav-ink: #cbbcff; --coral: #ff9a8c; --coral-ink: #ffb1a6; --pink: #ff9fbb;
+  --viewer: radial-gradient(circle at 50% 40%, #3a2c48 0%, #2a1f35 60%, #221a2c 100%);
+  --shadow: 0 2px 0 rgba(0,0,0,.25), 0 18px 40px -22px rgba(0,0,0,.8); --dot: rgba(251, 240, 255, .06);
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 17px/1.6 var(--body);
+  background-image: radial-gradient(var(--dot) 1.5px, transparent 1.6px);
+  background-size: 22px 22px;
+}
+img { max-width: 100%; display: block; }
+a { color: var(--lav-ink); text-underline-offset: 3px; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.05; margin: 0; text-wrap: balance; }
+h2 { font-size: clamp(30px, 5vw, 46px); font-weight: 700; letter-spacing: -.01em; }
+h3 { font-size: 21px; font-weight: 600; }
+p { margin: 0; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+section { padding: clamp(56px, 9vw, 104px) 0; }
+.kicker {
+  display: inline-flex; align-items: center; gap: 8px;
+  font: 700 13px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+  margin-bottom: 14px;
+}
+.kicker::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--coral); box-shadow: 14px 0 0 var(--mint), 28px 0 0 var(--lavender); margin-right: 30px; }
+.lede { font-size: clamp(18px, 2.2vw, 21px); color: var(--muted); max-width: 62ch; margin-top: 14px; }
+.card { background: var(--surface); border: 1.5px solid var(--line); border-radius: 26px; box-shadow: var(--shadow); }
+
+/* top bar */
+.bar { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; gap: 12px; }
+.bar a.back { font: 600 14px var(--display); color: var(--muted); text-decoration: none; }
+.bar a.back:hover { color: var(--ink); }
+.theme-btn {
+  font: 600 13px var(--display); color: var(--ink); background: var(--surface); border: 1.5px solid var(--line);
+  border-radius: 999px; padding: 7px 14px; cursor: pointer;
+}
+
+/* hero */
+.hero { padding-top: 12px; padding-bottom: 40px; }
+.hero-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: clamp(24px, 4vw, 56px); align-items: center; }
+.jp { font: 800 clamp(14px, 1.6vw, 17px)/1 var(--jp); color: var(--coral-ink); letter-spacing: .08em; }
+.hero h1 { font-size: clamp(52px, 8.4vw, 104px); font-weight: 700; letter-spacing: -.025em; margin-top: 12px; }
+.hero h1 span { display: block; color: var(--mint-ink); }
+.hero .pitch { font-size: clamp(19px, 2.3vw, 23px); margin-top: 18px; max-width: 30ch; font-weight: 600; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.chip { font: 600 14px var(--display); padding: 6px 13px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); }
+.chip b { color: var(--coral-ink); font-weight: 700; }
+.hero-art { position: relative; }
+.hero-art .frame { padding: 10px; transform: rotate(1.2deg); }
+.hero-art img { border-radius: 18px; width: 100%; height: auto; }
+.sticker {
+  position: absolute; left: -14px; bottom: -18px; transform: rotate(-7deg);
+  background: var(--butter); color: #3b2342; font: 700 15px/1.15 var(--display);
+  padding: 12px 16px; border-radius: 18px; box-shadow: var(--shadow); max-width: 190px;
+}
+.caption { font-size: 13.5px; color: var(--muted); margin-top: 26px; max-width: 68ch; }
+
+/* moments */
+.moments { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px; }
+.moment { overflow: hidden; display: flex; flex-direction: column; }
+.crop { aspect-ratio: 4 / 3; background-image: url("../2-concept/Gemini_Generated_Image_aokq2uaokq2uaokq.jpeg"); background-repeat: no-repeat; border-bottom: 1.5px solid var(--line); }
+.crop.locker { background-size: 245%; background-position: 19% 12%; }
+.crop.pack { background-size: 290%; background-position: 77% 14%; }
+.crop.teacher { background-size: 300%; background-position: 95% 65%; }
+.moment .body { padding: 20px 22px 24px; display: grid; gap: 8px; }
+.time { font: 700 13px var(--mono); color: var(--coral-ink); }
+.moment p { color: var(--muted); font-size: 16px; }
+
+/* 3d */
+.viewer-card { margin-top: 36px; overflow: hidden; display: grid; grid-template-columns: 1.6fr 1fr; }
+model-viewer { width: 100%; height: 100%; min-height: 460px; background: var(--viewer); --poster-color: transparent; }
+.viewer-side { padding: 28px; border-left: 1.5px solid var(--line); display: grid; align-content: start; gap: 18px; }
+.callouts { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.callouts li { display: grid; grid-template-columns: 30px 1fr; gap: 12px; align-items: start; font-size: 15.5px; color: var(--muted); }
+.callouts b { color: var(--ink); display: block; font-family: var(--display); font-weight: 600; font-size: 16.5px; }
+.num {
+  width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
+  font: 700 14px var(--display); color: #3b2342; background: var(--butter); border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,.2);
+}
+.hotspot { padding: 0; border: 0; background: none; cursor: pointer; }
+.hotspot .num { transition: transform .15s; }
+.hotspot:hover .num { transform: scale(1.15); }
+.hotspot[data-visible="false"] { opacity: .35; }
+.hint { font-size: 13px; color: var(--muted); }
+.dims { display: flex; gap: 8px; flex-wrap: wrap; }
+.dims span { font: 600 13px var(--mono); padding: 4px 9px; border-radius: 8px; background: var(--bg-2); }
+
+/* tones */
+.tones-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 4vw, 56px); align-items: center; margin-top: 8px; }
+.phone {
+  width: min(340px, 100%); margin: 0 auto; border-radius: 42px; padding: 12px;
+  background: #3b2342; box-shadow: var(--shadow);
+}
+.screen { background: #fffaf2; color: #3b2342; border-radius: 32px; overflow: hidden; }
+.ssid { display: flex; justify-content: space-between; font: 600 11.5px var(--mono); padding: 12px 20px 8px; color: #7b6482; }
+.screen-head { padding: 8px 20px 16px; display: flex; gap: 12px; align-items: center; }
+.mini-face { width: 48px; height: 36px; border-radius: 12px; background: #8ed8c3; position: relative; flex: none; }
+.mini-face::before, .mini-face::after { content: ""; position: absolute; top: 12px; width: 7px; height: 7px; border-radius: 50%; background: #3b2342; }
+.mini-face::before { left: 13px; } .mini-face::after { right: 13px; }
+.screen-head h3 { font-size: 18px; color: #3b2342; }
+.screen-head small { font-size: 12.5px; color: #7b6482; display: block; }
+.tone-list { list-style: none; margin: 0; padding: 0 12px 6px; display: grid; gap: 8px; }
+.tone {
+  width: 100%; display: grid; grid-template-columns: 40px 1fr auto; gap: 12px; align-items: center; text-align: left;
+  padding: 10px 12px; border-radius: 18px; border: 2px solid transparent; background: #fff; cursor: pointer;
+  font: 600 15px var(--display); color: #3b2342; box-shadow: 0 1px 0 rgba(59,35,66,.08);
+}
+.tone small { display: block; font: 400 12.5px var(--body); color: #7b6482; }
+.tone .ico { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 21px; }
+.tone[aria-pressed="true"] { border-color: #3b2342; }
+.tone .play { font-size: 12px; color: #7b6482; }
+.tone[aria-pressed="true"] .play { color: #b2402f; }
+.screen-foot { padding: 12px 20px 22px; display: flex; gap: 10px; align-items: center; justify-content: space-between; }
+.save { font: 700 14px var(--display); background: #3b2342; color: #fffaf2; border: 0; border-radius: 999px; padding: 10px 18px; cursor: pointer; }
+.saved { font-size: 12.5px; color: #1f6b58; min-height: 1em; }
+.silence-wrap { display: grid; justify-items: start; gap: 18px; margin-top: 28px; }
+.silence {
+  width: 150px; height: 150px; border-radius: 50%; border: 0; cursor: pointer;
+  background: radial-gradient(circle at 38% 32%, #ffc3b8 0 18%, #f2897b 46%, #d9604f 100%);
+  box-shadow: 0 10px 0 #b2402f, 0 22px 30px -10px rgba(178,64,47,.6);
+  font: 700 19px/1.05 var(--display); color: #fff; text-shadow: 0 1px 0 rgba(0,0,0,.2);
+  transition: transform .08s, box-shadow .08s;
+}
+.silence:active, .silence.pressed { transform: translateY(8px); box-shadow: 0 2px 0 #b2402f, 0 8px 16px -8px rgba(178,64,47,.6); }
+.silence.ringing { animation: wobble .35s infinite; }
+@keyframes wobble { 0%,100% { rotate: 0deg; } 25% { rotate: -4deg; } 75% { rotate: 4deg; } }
+@media (prefers-reduced-motion: reduce) { .silence.ringing { animation: none; } }
+.note { font-size: 13.5px; color: var(--muted); }
+
+/* states */
+.states { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 36px; counter-reset: s; }
+.state { padding: 22px; display: grid; gap: 8px; align-content: start; }
+.state .tag { font: 700 12px var(--mono); padding: 3px 9px; border-radius: 999px; justify-self: start; color: #3b2342; }
+.state p { color: var(--muted); font-size: 15.5px; }
+
+/* inside */
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 36px; }
+.stat { padding: 20px 22px; }
+.stat .v { font: 700 clamp(28px, 3.6vw, 38px)/1 var(--display); letter-spacing: -.01em; }
+.stat .k { font-size: 14px; color: var(--muted); margin-top: 8px; }
+.inside-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 20px; margin-top: 20px; }
+.board-card { overflow: hidden; display: grid; grid-template-rows: auto 1fr; }
+.board-card model-viewer { min-height: 380px; background: #131016; }
+.board-load {
+  position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%);
+  font: 700 14px var(--display); background: var(--butter); color: #3b2342; border: 0; border-radius: 999px; padding: 10px 18px; cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,0,0,.35); white-space: nowrap;
+}
+.board-head { padding: 18px 22px; display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; border-bottom: 1.5px solid var(--line); }
+.board-head small { color: var(--muted); font-size: 13.5px; }
+.stack { padding: 22px; display: grid; gap: 16px; align-content: start; }
+.stack svg { width: 100%; height: auto; }
+.legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 14.5px; }
+.legend li { display: grid; grid-template-columns: 14px 1fr auto; gap: 10px; align-items: center; }
+.legend i { width: 14px; height: 14px; border-radius: 4px; box-shadow: inset 0 0 0 1px var(--line); }
+.legend span:last-child { font: 600 12.5px var(--mono); color: var(--muted); }
+.parts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
+.part { padding: 22px; display: grid; gap: 6px; align-content: start; }
+.part .role { font: 700 12px var(--display); letter-spacing: .1em; text-transform: uppercase; }
+.part .mpn { font: 600 13px var(--mono); color: var(--muted); }
+.part p { font-size: 15.5px; color: var(--muted); margin-top: 4px; }
+.part .cost { font: 700 13px var(--mono); color: var(--ink); margin-top: 6px; }
+details.bom { margin-top: 20px; padding: 0; overflow: hidden; }
+details.bom summary { cursor: pointer; padding: 18px 22px; font: 600 17px var(--display); list-style: none; display: flex; justify-content: space-between; }
+details.bom summary::after { content: "+"; font-size: 22px; line-height: 1; color: var(--muted); }
+details.bom[open] summary::after { content: "–"; }
+.table-scroll { overflow-x: auto; border-top: 1.5px solid var(--line); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 640px; }
+th, td { text-align: left; padding: 9px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 700 12px var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+td.m { font-family: var(--mono); font-size: 12.5px; }
+.files { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.files a { font: 600 13.5px var(--mono); text-decoration: none; padding: 6px 12px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); }
+.files a:hover { border-color: var(--lav-ink); }
+
+/* journey */
+.journey { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 36px; }
+.step { overflow: hidden; }
+.step .img { aspect-ratio: 4 / 3; background: #fff; display: grid; place-items: center; overflow: hidden; border-bottom: 1.5px solid var(--line); }
+.step .img img { width: 100%; height: 100%; object-fit: cover; }
+.step .img.dark { background: #000; }
+.step .body { padding: 16px 18px 20px; display: grid; gap: 6px; }
+.step .n { font: 700 12px var(--mono); color: var(--coral-ink); }
+.step p { font-size: 14.5px; color: var(--muted); }
+
+/* next */
+.next { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 36px; }
+.q { padding: 22px 24px; display: grid; gap: 8px; align-content: start; }
+.q .pri { font: 700 11.5px var(--mono); letter-spacing: .06em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; justify-self: start; color: #3b2342; }
+.q p { color: var(--muted); font-size: 15.5px; }
+
+footer { padding: 48px 0 64px; border-top: 1.5px dashed var(--line); color: var(--muted); font-size: 14.5px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+@media (max-width: 920px) {
+  .hero-grid, .tones-grid, .inside-grid { grid-template-columns: 1fr; }
+  .viewer-card { grid-template-columns: 1fr; }
+  .viewer-side { border-left: 0; border-top: 1.5px solid var(--line); }
+  .states, .stats, .journey { grid-template-columns: repeat(2, 1fr); }
+  .moments, .parts { grid-template-columns: 1fr 1fr; }
+  .hero-art { order: -1; }
+}
+@media (max-width: 600px) {
+  body { font-size: 16px; }
+  .moments, .parts, .next, .states { grid-template-columns: 1fr; }
+  model-viewer { min-height: 360px; }
+  .sticker { left: 6px; bottom: -22px; font-size: 13.5px; }
+  .silence-wrap { justify-items: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav class="bar">
+    <a class="back" href="../../../">← Product Speedrun · Episode 001</a>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Toggle light or dark theme">◐ Theme</button>
+  </nav>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="jp" lang="ja">バックパック・ディフェンダー</div>
+      <h1>Backpack <span>Defender</span></h1>
+      <p class="pitch">A fun motion-detecting alarm for a grade schooler's backpack or locker.</p>
+      <div class="chips">
+        <span class="chip"><b>76 × 51 × 26</b> mm, deck-of-cards size</span>
+        <span class="chip"><b>2 × AAA</b>, pull one to disarm</span>
+        <span class="chip"><b>5</b> alarm voices</span>
+        <span class="chip"><b>≈ $5.40</b> electronics</span>
+      </div>
+    </div>
+    <div class="hero-art">
+      <div class="card frame">
+        <img src="../2-concept/Gemini_Generated_Image_aokq2uaokq2uaokq.jpeg" width="1200" height="896"
+             alt="Watercolour concept sheet: a mint, butter-yellow and lavender pebble-shaped gadget with a kawaii face, a purple sensor dome and a big yellow 'Silence Alarm' button, shown in a locker and clipped to a backpack.">
+      </div>
+      <div class="sticker">Hands off my snacks! ♡</div>
+    </div>
+  </div>
+  <div class="wrap">
+    <p class="caption">Concept art, chosen by the hosts in Stage 2. The engineered version below keeps the look but changes the insides: two AAA cells instead of three, an ESP32-C3 instead of an ESP-01, and no USB port.</p>
+  </div>
+</header>
+
+<!-- WHO / MOMENT -->
+<section id="who" style="padding-top: 40px;">
+  <div class="wrap">
+    <div class="kicker">Who it's for</div>
+    <h2>For kids whose stuff keeps "wandering off"</h2>
+    <p class="lede">School-age kids, roughly 6 to 12. It's a toy, not a security system: a cute guard with a loud, silly voice that makes a sneaky hand think twice, and makes the owner grin.</p>
+    <div class="moments">
+      <article class="card moment">
+        <div class="crop locker" role="img" aria-label="Concept sketch: the gadget lying flat on a locker shelf next to books."></div>
+        <div class="body">
+          <span class="time">8:12 am · Locker 214</span>
+          <h3>Lies flat on the shelf</h3>
+          <p>It sits on its big flat side, face up. When the door swings open and a warm arm reaches in, the purple dome sees it and the alarm goes off. If it's the owner, one slap of the big button shuts it up.</p>
+        </div>
+      </article>
+      <article class="card moment">
+        <div class="crop pack" role="img" aria-label="Concept sketch: the gadget clipped to a backpack strap, its kawaii face looking out."></div>
+        <div class="body">
+          <span class="time">12:30 pm · Lunch line</span>
+          <h3>Clipped to a backpack</h3>
+          <p>A charm loop on one end takes a keyring, a carabiner or a zip tie. The face looks out, and anyone unzipping the front pocket gets a robot shouting "INTRUDER" at them.</p>
+        </div>
+      </article>
+      <article class="card moment">
+        <div class="crop teacher" role="img" aria-label="Concept sketch: the big Silence Alarm button on the side of the gadget."></div>
+        <div class="body">
+          <span class="time">1:05 pm · Mid-lesson</span>
+          <h3>Teachers can stop it in one move</h3>
+          <p>The silence button is huge on purpose, so anyone can see how to stop it. For a full disarm, pop the battery door and take out a AAA. No app, no tools, no password.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 3D -->
+<section id="model" style="background: var(--bg-2);">
+  <div class="wrap">
+    <div class="kicker">Spin it around</div>
+    <h2>The real enclosure</h2>
+    <p class="lede">This is the Stage 4 CAD model, not a render of the art. It's a soft pebble in mint, butter and lavender, sized around real, cheap parts. Drag to rotate, pinch or scroll to zoom.</p>
+    <div class="card viewer-card">
+      <model-viewer id="shell" src="../4-model/model.glb" poster="../4-model/iso.png" alt="Interactive 3D model of the Backpack Defender enclosure"
+        camera-controls auto-rotate auto-rotate-delay="2500" rotation-per-second="18deg" interaction-prompt="none"
+        camera-orbit="25deg 58deg auto" shadow-intensity="1" shadow-softness=".8" exposure="1" environment-image="neutral" touch-action="pan-y">
+        <button class="hotspot" slot="hotspot-1" data-position="0.018 0.0287 0" data-normal="0 1 0" aria-label="Silence button"><span class="num">1</span></button>
+        <button class="hotspot" slot="hotspot-2" data-position="-0.026 0.0305 -0.013" data-normal="0 1 0" aria-label="PIR motion dome"><span class="num">2</span></button>
+        <button class="hotspot" slot="hotspot-3" data-position="0 0.026 0.0145" data-normal="0 1 0" aria-label="Sound holes"><span class="num">3</span></button>
+        <button class="hotspot" slot="hotspot-4" data-position="-0.046 0.0025 0" data-normal="-1 0 0" aria-label="Charm loop"><span class="num">4</span></button>
+      </model-viewer>
+      <div class="viewer-side">
+        <ul class="callouts">
+          <li><span class="num">1</span><span><b>Silence button</b>A Ø24 mm coral dome, held captive by a flange, that presses a 12 mm tact switch. It's also the setup key.</span></li>
+          <li><span class="num">2</span><span><b>Motion "eye"</b>The AM312 PIR's lavender Fresnel dome pokes 4 mm through the lid and looks straight up.</span></li>
+          <li><span class="num">3</span><span><b>Sound holes</b>Seven Ø1.6 mm holes sit right over the piezo's port, with a three-slot grille on the front edge.</span></li>
+          <li><span class="num">4</span><span><b>Charm loop</b>A tab with a Ø4 mm hole for a keyring, carabiner or zip tie.</span></li>
+        </ul>
+        <div class="dims"><span>76 × 51 × 26 mm</span><span>2.0 mm wall</span><span>11 parts</span></div>
+        <p class="hint">The face is flush inlays (plum eyes, pink cheeks) and could become a pad print or a sticker in production.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TONES -->
+<section id="tones">
+  <div class="wrap tones-grid">
+    <div>
+      <div class="kicker">Pick its voice</div>
+      <h2>Five alarm voices, picked from a phone</h2>
+      <p class="lede">Hold the big button while you put the batteries in. Backpack Defender starts its own little Wi-Fi network with a settings page, so there's no app and no account. Pick a voice, hear a preview, save it.</p>
+      <div class="silence-wrap">
+        <button class="silence" id="silence" type="button" aria-label="Silence the alarm preview">SILENCE<br>ALARM</button>
+        <p class="note">Try it: play a voice on the phone, then hit the button. These previews come from your browser's synthesiser. On the real thing they play through a 12 mm piezo, which sounds buzzier.</p>
+      </div>
+    </div>
+    <div>
+      <div class="phone" aria-label="Mock-up of the setup page served by the device">
+        <div class="screen">
+          <div class="ssid"><span>📶 BackpackDefender-7F3A</span><span>192.168.4.1</span></div>
+          <div class="screen-head">
+            <div class="mini-face" aria-hidden="true"></div>
+            <div><h3>Hi! Pick my voice</h3><small>Tap to preview · battery 87%</small></div>
+          </div>
+          <ul class="tone-list" id="toneList">
+            <li><button class="tone" type="button" data-tone="goofy" aria-pressed="false"><span class="ico" style="background:#ffe1a6">🤡</span><span>Goofy<small>slide whistle + boing</small></span><span class="play">▶</span></button></li>
+            <li><button class="tone" type="button" data-tone="playful" aria-pressed="false"><span class="ico" style="background:#ffd3e0">🎈</span><span>Playful<small>bouncy arpeggio</small></span><span class="play">▶</span></button></li>
+            <li><button class="tone" type="button" data-tone="musical" aria-pressed="false"><span class="ico" style="background:#d9cbff">🎵</span><span>Musical<small>a little tune</small></span><span class="play">▶</span></button></li>
+            <li><button class="tone" type="button" data-tone="robotic" aria-pressed="true"><span class="ico" style="background:#c8eee2">🤖</span><span>Robotic<small>intruder bleeps</small></span><span class="play">▶</span></button></li>
+            <li><button class="tone" type="button" data-tone="classic" aria-pressed="false"><span class="ico" style="background:#ffd0c8">🔔</span><span>Classic<small>two-tone siren</small></span><span class="play">▶</span></button></li>
+          </ul>
+          <div class="screen-foot">
+            <span class="saved" id="saved" aria-live="polite"></span>
+            <button class="save" id="save" type="button">Save voice</button>
+          </div>
+        </div>
+      </div>
+      <p class="note" style="text-align:center; margin-top:14px;">Mock-up of the setup page the device serves. Nothing here leaves your browser.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT BEHAVES -->
+<section id="how" style="background: var(--bg-2);">
+  <div class="wrap">
+    <div class="kicker">How it behaves</div>
+    <h2>Asleep almost all the time, loud when it counts</h2>
+    <p class="lede">The firmware plan from Stage 5. Deep sleep is what lets two AAA cells last most of a school year.</p>
+    <div class="states">
+      <article class="card state"><span class="tag" style="background: var(--mint)">ARMED</span><h3>Snoozing</h3><p>The ESP32-C3 sleeps at about 5 µA. The PIR or the button can wake it, and Wi-Fi stays off.</p></article>
+      <article class="card state"><span class="tag" style="background: var(--coral)">ALARM</span><h3>Squeals</h3><p>Motion wakes it. It turns the amp on, streams the chosen voice for about 10 s, then goes back to sleep.</p></article>
+      <article class="card state"><span class="tag" style="background: var(--butter)">SILENCE</span><h3>Shh</h3><p>One press stops the sound and ignores motion for a cool-down (about 60 s) so the owner can get their stuff.</p></article>
+      <article class="card state"><span class="tag" style="background: var(--lavender)">SETUP</span><h3>Hello, phone</h3><p>Hold the button at power-on to start the hotspot and settings page. The choice is saved to flash.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- INSIDE -->
+<section id="inside">
+  <div class="wrap">
+    <div class="kicker">What's inside</div>
+    <h2>One small board, two AAA cells</h2>
+    <p class="lede">A 70 × 45 mm two-layer board sits on four posts above the batteries. All 43 parts are on top, because the battery holder is just 0.5 mm below the board. It's fully routed, with zero ERC errors and zero DRC violations in KiCad 10.</p>
+
+    <div class="stats">
+      <div class="card stat"><div class="v">~90 µA</div><div class="k">from the cells while armed, about 12–15 months of pure standby</div></div>
+      <div class="card stat"><div class="v">6–9 mo</div><div class="k">per set of AAAs, at ~20 alarms a day plus a weekly setup</div></div>
+      <div class="card stat"><div class="v">≈ $5.40</div><div class="k">electronics at 1k units, before assembly</div></div>
+      <div class="card stat"><div class="v">43</div><div class="k">components, 111 pins, all checked against their intended nets</div></div>
+    </div>
+
+    <div class="inside-grid">
+      <div class="card board-card">
+        <div class="board-head"><h3>The board in 3D</h3><small>Stage 5 · KiCad export</small></div>
+        <div style="position:relative">
+          <model-viewer id="board" src="../5-electronics/board.glb" poster="../5-electronics/board-iso.png" reveal="manual" loading="lazy"
+            alt="Interactive 3D model of the Backpack Defender circuit board" camera-controls camera-orbit="20deg 55deg auto"
+            environment-image="neutral" exposure="1.1" shadow-intensity="0" interaction-prompt="none" touch-action="pan-y" style="min-height:380px"></model-viewer>
+          <button class="board-load" id="boardLoad" type="button">Load the 3D board (8 MB)</button>
+        </div>
+      </div>
+      <div class="card stack">
+        <h3>How it stacks up</h3>
+        <svg viewBox="0 0 400 210" role="img" aria-label="Side cross-section: battery floor, two AAA cells, the PCB, components, the lid, and the button and PIR dome on top.">
+          <!-- scale: 5 px per mm, x 76 mm → 380 px, origin bottom at y=190 -->
+          <g transform="translate(10,0)">
+            <path d="M0 190 H380 V150 H0 Z" fill="none"/>
+            <!-- base + floor -->
+            <rect x="0" y="130" width="380" height="60" rx="8" fill="#f5d784"/>
+            <rect x="0" y="180" width="380" height="10" rx="4" fill="#c9b8f2"/>
+            <!-- AAA cells (end view along length → shown as long bars) -->
+            <rect x="60" y="122" width="260" height="56" rx="10" fill="#9b93a3"/>
+            <rect x="60" y="122" width="16" height="56" rx="4" fill="#d9b25a"/>
+            <!-- PCB -->
+            <rect x="15" y="110" width="350" height="8" rx="2" fill="#2f6b4a"/>
+            <!-- parts -->
+            <rect x="70" y="94" width="90" height="16" rx="2" fill="#7d7d84"/>
+            <rect x="150" y="78" width="60" height="32" rx="6" fill="#2a2430"/>
+            <rect x="250" y="74" width="60" height="36" rx="3" fill="#2a2430"/>
+            <rect x="268" y="60" width="24" height="14" rx="3" fill="#2a2430"/>
+            <rect x="35" y="50" width="16" height="60" fill="#ece6da"/>
+            <!-- lid -->
+            <path d="M0 130 V70 Q0 50 35 50 H345 Q380 50 380 70 V130 Z" fill="#8ed8c3" opacity=".55"/>
+            <path d="M0 130 V70 Q0 50 35 50 H345 Q380 50 380 70 V130" fill="none" stroke="#1f6b58" stroke-width="2"/>
+            <!-- button + dome -->
+            <path d="M220 52 Q220 38 280 38 Q340 38 340 52 Z" fill="#f2897b"/>
+            <path d="M18 50 A25 25 0 0 1 68 50 Z" fill="#c9b8f2" transform="translate(0,0)"/>
+          </g>
+        </svg>
+        <ul class="legend">
+          <li><i style="background:#c9b8f2"></i><span>PIR dome and bottom plate</span><span>~30 mm</span></li>
+          <li><i style="background:#f2897b"></i><span>Silence button top</span><span>28.5</span></li>
+          <li><i style="background:#8ed8c3"></i><span>Mint lid</span><span>12–26</span></li>
+          <li><i style="background:#2a2430"></i><span>Piezo, switch, module</span><span>to ~23</span></li>
+          <li><i style="background:#2f6b4a"></i><span>PCB, 1.6 mm</span><span>14.5</span></li>
+          <li><i style="background:#9b93a3"></i><span>2 × AAA, side by side</span><span>2–14</span></li>
+          <li><i style="background:#f5d784"></i><span>Butter base</span><span>0–12</span></li>
+        </ul>
+        <p class="hint">Schematic side view, not to exact scale for every part. Heights in mm above the floor.</p>
+      </div>
+    </div>
+
+    <div class="parts">
+      <article class="card part"><span class="role" style="color: var(--lav-ink)">Brain + Wi-Fi</span><h3>ESP32-C3-WROOM-02</h3><span class="mpn">U2 · 18 × 20 × 3.2 mm</span><p>Hosts the hotspot settings page, plays tones over I2S, and wakes from deep sleep on a GPIO with no extra parts. It has native USB, so there's no serial chip.</p><span class="cost">~$1.90</span></article>
+      <article class="card part"><span class="role" style="color: var(--coral-ink)">Voice</span><h3>MAX98357A + PS1240 piezo</h3><span class="mpn">U3 · BZ1</span><p>A filterless class-D amp takes the digital audio and drives a Ø12 mm TDK piezo, loudest near 4 kHz. Two 100 Ω resistors tame the edges.</p><span class="cost">~$1.45</span></article>
+      <article class="card part"><span class="role" style="color: var(--mint-ink)">Eye</span><h3>AM312 mini PIR</h3><span class="mpn">U4 · Ø10 Fresnel lens</span><p>Near-field (3–5 m) with a digital output, drawing about 15 µA. An RC filter stops boost and Wi-Fi ripple from setting it off. Radar was rejected because it sees through locker walls.</p><span class="cost">~$0.80</span></article>
+      <article class="card part"><span class="role" style="color: var(--lav-ink)">Heart</span><h3>TPS61023 boost</h3><span class="mpn">U1 · L1 1 µH</span><p>Two AAAs sag from 3.2 V to 2.0 V. The boost holds a steady 3.3 V and copes with 650 mA Wi-Fi peaks.</p><span class="cost">~$0.45</span></article>
+      <article class="card part"><span class="role" style="color: var(--coral-ink)">Kid-proofing</span><h3>AO3401A guard FET</h3><span class="mpn">Q1 · SOT-23</span><p>Kids will put batteries in backwards. This one-cent P-FET shrugs it off and costs only ~40 mV of drop.</p><span class="cost">~$0.01</span></article>
+      <article class="card part"><span class="role" style="color: var(--mint-ink)">Big button</span><h3>12 × 12 × 7.3 tact switch</h3><span class="mpn">SW1 · THT</span><p>Sits under the coral cap. A 0.4 mm pocket in the cap keeps it from pressing the switch all the time.</p><span class="cost">~$0.08</span></article>
+    </div>
+
+    <details class="card bom">
+      <summary>Full bill of materials (18 lines)</summary>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Ref</th><th>Qty</th><th>Value</th><th>Description</th><th>MPN</th></tr></thead>
+          <tbody>
+            <tr><td>U2</td><td>1</td><td>ESP32-C3-WROOM-02-N4</td><td>ESP32-C3 Wi-Fi/BLE module, 4 MB flash, PCB antenna</td><td class="m">ESP32-C3-WROOM-02-N4</td></tr>
+            <tr><td>U3</td><td>1</td><td>MAX98357A</td><td>I2S class-D mono amplifier, TQFN-16 3 × 3 mm</td><td class="m">MAX98357AETE+T</td></tr>
+            <tr><td>U1</td><td>1</td><td>TPS61023</td><td>Synchronous boost converter, 0.5–5.5 V in, 3.7 A switch, SOT-563</td><td class="m">TPS61023DRLR</td></tr>
+            <tr><td>U4</td><td>1</td><td>AM312</td><td>Mini PIR motion sensor, Fresnel dome through the lid</td><td class="m">AM312</td></tr>
+            <tr><td>BZ1</td><td>1</td><td>PS1240P02BT</td><td>Piezo transducer, 12.2 mm, ~4 kHz resonance</td><td class="m">PS1240P02BT</td></tr>
+            <tr><td>SW1</td><td>1</td><td>SILENCE</td><td>Tactile switch 12 × 12 × 7.3 mm THT, under the big button</td><td class="m">TS-1212-7.3</td></tr>
+            <tr><td>Q1</td><td>1</td><td>AO3401A</td><td>P-MOSFET −30 V −4 A SOT-23, reverse-battery guard</td><td class="m">AO3401A</td></tr>
+            <tr><td>L1</td><td>1</td><td>1 µH</td><td>Power inductor, 9 A sat, 7 × 6.6 mm</td><td class="m">FXL0624-1R0-M</td></tr>
+            <tr><td>C1 C5 C8 C9</td><td>4</td><td>10 µF</td><td>Ceramic, 25 V X5R 0805</td><td class="m">CL21A106KAYNNNE</td></tr>
+            <tr><td>C2 C3</td><td>2</td><td>22 µF</td><td>Ceramic, 25 V X5R 0805</td><td class="m">CL21A226MAQNNNE</td></tr>
+            <tr><td>C4 C6 C10</td><td>3</td><td>100 nF</td><td>Ceramic, 50 V X7R 0603</td><td class="m">CC0603KRX7R9BB104</td></tr>
+            <tr><td>C7</td><td>1</td><td>1 µF</td><td>Ceramic, 50 V X5R 0603</td><td class="m">CL10A105KB8NNNC</td></tr>
+            <tr><td>R1 R3 R4</td><td>3</td><td>1 M</td><td>Resistor 1 % 0603</td><td class="m">0603WAF1004T5E</td></tr>
+            <tr><td>R2</td><td>1</td><td>220 k</td><td>Resistor 1 % 0603</td><td class="m">0603WAF2203T5E</td></tr>
+            <tr><td>R5–R8</td><td>4</td><td>10 k</td><td>Resistor 1 % 0603</td><td class="m">0603WAF1002T5E</td></tr>
+            <tr><td>R9 R11</td><td>2</td><td>100 k</td><td>Resistor 1 % 0603</td><td class="m">0603WAF1003T5E</td></tr>
+            <tr><td>R10 R12 R13</td><td>3</td><td>100 Ω</td><td>Resistor 1 % 0603</td><td class="m">0603WAF1000T5E</td></tr>
+            <tr><td>BT1</td><td>1</td><td>2 × AAA holder</td><td>Side-by-side, wire leads (~52 × 25 × 12 mm), soldered to J1</td><td class="m">generic</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+    <div class="files">
+      <a href="../5-electronics/bom.csv">bom.csv</a>
+      <a href="../5-electronics/schematic.png">schematic.png</a>
+      <a href="../5-electronics/backpack-defender.kicad_pcb">backpack-defender.kicad_pcb</a>
+      <a href="../4-model/model.step">model.step</a>
+      <a href="../4-model/model.glb">model.glb</a>
+    </div>
+  </div>
+</section>
+
+<!-- JOURNEY -->
+<section id="journey" style="background: var(--bg-2);">
+  <div class="wrap">
+    <div class="kicker">From doodle to board</div>
+    <h2>How we got here in one episode</h2>
+    <div class="journey">
+      <article class="card step"><div class="img"><img src="../2-concept/Gemini_Generated_Image_aokq2uaokq2uaokq.jpeg" alt="Concept art sheet" loading="lazy"></div><div class="body"><span class="n">STAGE 2</span><h3>Concept art</h3><p>The vibe: a pastel pebble, a kawaii face, a playfully huge button.</p></div></article>
+      <article class="card step"><div class="img"><img src="../3-layout/Gemini_Generated_Image_gxrn7ggxrn7ggxrn.jpeg" alt="CAD-style isometric layout sheet with views and parts list" loading="lazy"></div><div class="body"><span class="n">STAGE 3</span><h3>Layout sheet</h3><p>Views, a 76 × 51 × 25 mm envelope, batteries under a board.</p></div></article>
+      <article class="card step"><div class="img"><img src="../4-model/iso.png" alt="Isometric screenshot of the CAD enclosure" loading="lazy"></div><div class="body"><span class="n">STAGE 4</span><h3>Enclosure</h3><p>Parametric CAD, 11 parts, clearance-checked with no overlaps.</p></div></article>
+      <article class="card step"><div class="img dark"><img src="../5-electronics/board-iso.png" alt="3D render of the circuit board" loading="lazy"></div><div class="body"><span class="n">STAGE 5</span><h3>Electronics</h3><p>KiCad schematic and routed board, fitted back into the shell.</p></div></article>
+    </div>
+  </div>
+</section>
+
+<!-- NEXT -->
+<section id="next">
+  <div class="wrap">
+    <div class="kicker">What's next</div>
+    <h2>What we still don't know</h2>
+    <p class="lede">This is a first pass from a speedrun. It's credible and buildable, but nothing has been printed, ordered or heard by an actual kid yet. Here's the honest list.</p>
+    <div class="next">
+      <article class="card q"><span class="pri" style="background: var(--coral)">test first</span><h3>Does a piezo sound fun enough?</h3><p>A 12 mm piezo is loud near 4 kHz, but "musical" and "goofy" will come out thin and buzzy. A 20–28 mm micro-speaker fits the same pads for the same cost. We need an A/B test with real kids' ears.</p></article>
+      <article class="card q"><span class="pri" style="background: var(--coral)">test first</span><h3>Does the PIR behave in a metal locker?</h3><p>The dome looks straight up. It should trip on a door opening and a warm arm, but not when the locker warms up. Firmware could require two triggers within a few seconds.</p></article>
+      <article class="card q"><span class="pri" style="background: var(--butter)">before ordering</span><h3>Check pinouts and part numbers</h3><p>Check the AM312 pin order (it varies by vendor), the MAX98357A TQFN pinout and every LCSC number. Clean up the autorouted boost loop by hand, and confirm the fab can drill the 0.2 mm thermal vias.</p></article>
+      <article class="card q"><span class="pri" style="background: var(--butter)">before ordering</span><h3>Fix the switch height mismatch</h3><p>The enclosure is sized for a 7.3 mm tact switch, but the KiCad 3D model is an 8.5 mm part. Order the right one, or the plunger will dig 1.2 mm into the button.</p></article>
+      <article class="card q"><span class="pri" style="background: var(--lavender)">enclosure</span><h3>How does it stay together?</h3><p>The lid, base and bottom plate aren't fastened yet (snap lip or screws?), and the battery door has no latch. Both matter for something that lives on a backpack.</p></article>
+      <article class="card q"><span class="pri" style="background: var(--lavender)">enclosure</span><h3>Inlays, pad print or sticker?</h3><p>The face is printed as flush colour inlays for the prototype. Pad printing or a sticker would be much cheaper at volume.</p></article>
+      <article class="card q"><span class="pri" style="background: var(--mint)">product</span><h3>Does it need a power switch?</h3><p>Pulling a battery disarms it, as the brief asked. A $0.05 slide switch on the end is easy to add if teachers want one.</p></article>
+      <article class="card q"><span class="pri" style="background: var(--mint)">product</span><h3>AAA or LiPo, and how cheap can it get?</h3><p>We chose AAA so teachers can disarm it and nothing needs charging. Swapping the amp for an NS4168 saves about $1. A chip-down ESP32-C3 saves more, but needs RF work.</p></article>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Backpack Defender · Product Speedrun episode 001 · a concept, not a product for sale.</span>
+    <a href="../../../">See all episodes →</a>
+  </div>
+</footer>
+
+<script>
+// theme toggle (per-viewer convenience only)
+(() => {
+  const root = document.documentElement, btn = document.getElementById("themeBtn");
+  try { const t = localStorage.getItem("bd-theme"); if (t) root.dataset.theme = t; } catch (e) {}
+  btn.addEventListener("click", () => {
+    const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    root.dataset.theme = dark ? "light" : "dark";
+    try { localStorage.setItem("bd-theme", root.dataset.theme); } catch (e) {}
+  });
+})();
+
+// The Stage 4 GLB stores its sRGB swatch colours as linear baseColorFactor,
+// which renders them washed out. Convert back to linear on load.
+(() => {
+  const shell = document.getElementById("shell");
+  const lin = (c) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
+  shell.addEventListener("load", () => {
+    for (const m of shell.model.materials) {
+      const pbr = m.pbrMetallicRoughness, [r, g, b, a] = pbr.baseColorFactor;
+      pbr.setBaseColorFactor([lin(r), lin(g), lin(b), a]);
+    }
+  }, { once: true });
+})();
+
+// board viewer: load the 8 MB model only on request
+document.getElementById("boardLoad").addEventListener("click", (e) => {
+  document.getElementById("board").dismissPoster();
+  e.currentTarget.remove();
+});
+
+// tone previews (Web Audio)
+(() => {
+  let ctx, master, live = [], timer;
+  const silenceBtn = document.getElementById("silence");
+  const audio = () => {
+    if (!ctx) {
+      ctx = new (window.AudioContext || window.webkitAudioContext)();
+      master = ctx.createGain(); master.gain.value = 0.09;
+      const comp = ctx.createDynamicsCompressor();
+      master.connect(comp).connect(ctx.destination);
+    }
+    if (ctx.state === "suspended") ctx.resume();
+    return ctx;
+  };
+  const note = (type, f0, t, dur, f1, vol = 1) => {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type; o.frequency.setValueAtTime(f0, t);
+    if (f1) o.frequency.exponentialRampToValueAtTime(f1, t + dur);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + 0.01);
+    g.gain.setValueAtTime(vol, t + dur - 0.03); g.gain.linearRampToValueAtTime(0, t + dur);
+    o.connect(g).connect(master); o.start(t); o.stop(t + dur + 0.02); live.push(o);
+  };
+  const tones = {
+    goofy(t) { note("sine", 400, t, .45, 1400); note("sine", 1400, t + .45, .45, 300); note("triangle", 220, t + .95, .25, 90); note("triangle", 180, t + 1.25, .2, 80); return 1.6; },
+    playful(t) { const s = [523, 659, 784, 1047, 784, 1047, 1319]; s.forEach((f, i) => note("square", f, t + i * .11, .1, 0, .6)); note("square", 1568, t + .8, .3, 0, .6); return 1.2; },
+    musical(t) { const s = [[659,.2],[784,.2],[880,.2],[784,.2],[659,.2],[523,.4],[587,.2],[659,.5]]; let x = t; s.forEach(([f, d]) => { note("triangle", f, x, d - .02); x += d; }); return x - t; },
+    robotic(t) { for (let i = 0; i < 10; i++) note("square", i % 2 ? 1180 : 760, t + i * .12, .08, 0, .55); note("sawtooth", 300, t + 1.25, .35, 120, .5); return 1.7; },
+    classic(t) { for (let i = 0; i < 6; i++) note("square", i % 2 ? 770 : 960, t + i * .28, .26, 0, .5); return 1.7; },
+  };
+  const stop = () => {
+    live.forEach((o) => { try { o.stop(); } catch (e) {} }); live = [];
+    clearTimeout(timer); silenceBtn.classList.remove("ringing");
+  };
+  const play = (name) => {
+    stop(); audio();
+    const dur = tones[name](ctx.currentTime + 0.03);
+    silenceBtn.classList.add("ringing");
+    timer = setTimeout(() => silenceBtn.classList.remove("ringing"), dur * 1000 + 60);
+  };
+  let current = "robotic";
+  document.querySelectorAll(".tone").forEach((b) => b.addEventListener("click", () => {
+    document.querySelectorAll(".tone").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    current = b.dataset.tone; document.getElementById("saved").textContent = "";
+    play(current);
+  }));
+  document.getElementById("save").addEventListener("click", () => {
+    document.getElementById("saved").textContent = "Saved! I'll sound " + current + " ♡";
+  });
+  silenceBtn.addEventListener("click", () => {
+    stop(); silenceBtn.classList.add("pressed");
+    setTimeout(() => silenceBtn.classList.remove("pressed"), 140);
+  });
+})();
+</script>
+</body>
+</html>
