@@ -407,6 +407,101 @@
   {
    "command": "sketch.create",
    "params": {
+    "plane": "XY",
+    "offset": 26.0,
+    "name": "Sound Holes"
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     0.0,
+     -14.5
+    ],
+    "radius": 0.8
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     2.5981,
+     -13.0
+    ],
+    "radius": 0.8
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     0.0,
+     -11.5
+    ],
+    "radius": 0.8
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -2.5981,
+     -13.0
+    ],
+    "radius": 0.8
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -2.5981,
+     -16.0
+    ],
+    "radius": 0.8
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -0.0,
+     -17.5
+    ],
+    "radius": 0.8
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     2.5981,
+     -16.0
+    ],
+    "radius": 0.8
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "distance": 3,
+    "direction": "negative",
+    "operation": "cut",
+    "targets": [
+     "Lid"
+    ],
+    "name": "Sound Holes",
+    "profiles": "all"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
     "plane": {
      "origin": [
       0,
@@ -664,6 +759,71 @@
    "command": "sketch.create",
    "params": {
     "plane": "XY",
+    "offset": 14.5,
+    "name": "Post Pilot Holes"
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -31.0,
+     -17.0
+    ],
+    "radius": 0.85
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -31.0,
+     17.0
+    ],
+    "radius": 0.85
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     31.0,
+     -17.0
+    ],
+    "radius": 0.85
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     31.0,
+     17.0
+    ],
+    "radius": 0.85
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "distance": 6,
+    "direction": "negative",
+    "operation": "cut",
+    "targets": [
+     "Bottom Plate"
+    ],
+    "name": "Post Pilot Holes",
+    "profiles": "all"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
     "name": "Battery Door"
    }
   },
@@ -792,6 +952,23 @@
     ],
     "radius": 4,
     "name": "Button Dome"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "radius": 4,
+    "height": 0.5,
+    "base": [
+     18.0,
+     0.0,
+     23.1
+    ],
+    "operation": "cut",
+    "targets": [
+     "Silence Button"
+    ],
+    "name": "Plunger Pocket"
    }
   },
   {
@@ -1033,17 +1210,17 @@
   {
    "command": "solid.box",
    "params": {
-    "length": 24,
-    "width": 16,
+    "length": 18,
+    "width": 20,
     "height": 3.2,
     "center": [
-     -2,
-     12,
+     -8.5,
+     12.1,
      17.700000000000003
     ],
     "operation": "new",
-    "body_name": "ESP-12F",
-    "name": "ESP-12F"
+    "body_name": "ESP32-C3-WROOM-02",
+    "name": "U2 ESP32-C3-WROOM-02"
    }
   },
   {
@@ -1051,46 +1228,61 @@
    "params": {
     "length": 12,
     "width": 12,
-    "height": 7.0,
+    "height": 3.8,
     "center": [
      18.0,
      0.0,
-     19.6
+     18.0
     ],
     "operation": "new",
     "body_name": "Tact Switch",
-    "name": "Tact Switch"
+    "name": "SW1 body"
    }
   },
   {
    "command": "solid.cylinder",
    "params": {
-    "radius": 6,
-    "height": 3,
+    "radius": 3.5,
+    "height": 3.5,
     "base": [
-     2,
-     -14,
+     18.0,
+     0.0,
+     19.900000000000002
+    ],
+    "operation": "new",
+    "body_name": "Switch Plunger",
+    "name": "SW1 plunger"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "radius": 6.1,
+    "height": 6.5,
+    "base": [
+     0.0,
+     -14.5,
      16.1
     ],
     "operation": "new",
     "body_name": "Piezo",
-    "name": "Piezo"
+    "name": "BZ1 PS1240"
    }
   },
   {
    "command": "solid.box",
    "params": {
-    "length": 4,
-    "width": 4,
-    "height": 1,
+    "length": 3,
+    "width": 3,
+    "height": 0.8,
     "center": [
-     13,
-     -14,
-     16.6
+     12,
+     -12.5,
+     16.5
     ],
     "operation": "new",
     "body_name": "MAX98357A",
-    "name": "MAX98357A"
+    "name": "U3 MAX98357A"
    }
   },
   {
@@ -1290,7 +1482,7 @@
    "command": "appearance.assign",
    "params": {
     "bodies": [
-     "ESP-12F"
+     "ESP32-C3-WROOM-02"
     ],
     "color": "#c0c4c8"
    }
@@ -1302,6 +1494,15 @@
      "Tact Switch"
     ],
     "color": "#222222"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Switch Plunger"
+    ],
+    "color": "#555555"
    }
   },
   {

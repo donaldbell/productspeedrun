@@ -20,6 +20,7 @@ BTN_TOP     = 28.5
 FLANGE_NOTE = "flange r = BTN_R + 1.5: clears the lid's inner top round"
 PIR_XY, PIR_R = (-26.0, 13.0), 5.0    # AM312 dome
 PCB_Z       = 14.5                    # PCB underside
+PIEZO_XY    = (0.0, -14.5)            # BZ1 (KiCad), sound port on top
 PCB_T       = 1.6
 
 FACE_DEPTH  = 0.6
@@ -77,6 +78,14 @@ face_pts = [{"point": [ex - 2.0, ey - 1.5]} for ex, ey in EYES] + [{"point": [-1
 face_sketch("Face")
 c("solid.extrude", distance=FACE_DEPTH, direction="negative", operation="cut", targets=["Lid"], name="Face Pockets", profiles=face_pts)
 
+c("sketch.create", **XY(z_top), name="Sound Holes")         # PS1240's port faces up: 7 holes right above it
+c("sketch.circle.center", center=list(PIEZO_XY), radius=0.8)
+for k in range(6):
+    a = math.radians(60 * k + 30)
+    c("sketch.circle.center", center=[round(PIEZO_XY[0] + 3.0 * math.cos(a), 4), round(PIEZO_XY[1] + 3.0 * math.sin(a), 4)], radius=0.8)
+c("sketch.finish")
+c("solid.extrude", distance=3, direction="negative", operation="cut", targets=["Lid"], name="Sound Holes", profiles="all")
+
 c("sketch.create", plane={"origin": [0, -W / 2, 0], "x_dir": [1, 0, 0], "y_dir": [0, 0, 1]}, name="Speaker Grille")
 for x in (-4.0, 0.0, 4.0):
     c("sketch.slot.overall", p0=[x, 14.8], p1=[x, 18.6], width=2.0)
@@ -107,6 +116,11 @@ for px, py in POSTS:
     c("sketch.circle.center", center=[px, py], radius=2.5)
 c("sketch.finish")
 c("solid.extrude", distance=PCB_Z - WALL, operation="join", targets=["Bottom Plate"], name="PCB Posts", profiles="all")
+c("sketch.create", **XY(PCB_Z), name="Post Pilot Holes")      # M2 self-tapping screws through the board's H1-H4 (Ø2.2)
+for px, py in POSTS:
+    c("sketch.circle.center", center=[px, py], radius=0.85)
+c("sketch.finish")
+c("solid.extrude", distance=6, direction="negative", operation="cut", targets=["Bottom Plate"], name="Post Pilot Holes", profiles="all")
 c("sketch.create", **XY(0), name="Battery Door")
 g = 0.2
 c("sketch.rectangle.rounded", p0=[dx - dw / 2 + g, dy - dh / 2 + g], p1=[dx + dw / 2 - g, dy + dh / 2 - g], radius=dr - g)
@@ -122,6 +136,7 @@ c("sketch.line", closed=True, points=[[0, 23.2], [BTN_R + 1.5, 23.2], [BTN_R + 1
 c("sketch.finish")
 c("solid.revolve", axis="y", operation="new", name="Silence Button", body_name="Silence Button")
 c("solid.fillet", edges=[[bx + BTN_R, by, BTN_TOP]], radius=4, name="Button Dome")
+c("solid.cylinder", radius=4, height=0.5, base=[bx, by, 23.1], operation="cut", targets=["Silence Button"], name="Plunger Pocket")  # 0.2 clear of SW1
 
 # 6. Face inlays (second colour, flush in the pockets)
 stage("face")
@@ -130,7 +145,7 @@ for i, p in enumerate(face_pts):
     nm = ["Eye L", "Eye R", "Smile", "Cheek L", "Cheek R"][i]
     c("solid.extrude", sketch="Face Inlays", distance=FACE_DEPTH, direction="negative", operation="new", name=nm, body_name=nm, profiles=[p])
 
-# 7. Electronics stand-ins (fit check only; not exported to the GLB)
+# 7. Electronics stand-ins, positions from 5-electronics/backpack-defender.kicad_pcb (fit check only; not in the GLB)
 stage("electronics")
 z_pcb_top = PCB_Z + PCB_T
 c("sketch.create", **XY(PCB_Z), name="PCB")
@@ -138,10 +153,12 @@ c("sketch.rectangle.rounded", p0=[-35, -22.5], p1=[35, 22.5], radius=9)
 c("sketch.finish")
 c("solid.extrude", distance=PCB_T, operation="new", name="PCB", body_name="PCB")
 c("solid.box", length=52, width=25, height=12, center=[0, -10, WALL + 6], operation="new", body_name="2xAAA Holder", name="2xAAA Holder")
-c("solid.box", length=24, width=16, height=3.2, center=[-2, 12, z_pcb_top + 1.6], operation="new", body_name="ESP-12F", name="ESP-12F")
-c("solid.box", length=12, width=12, height=7.0, center=[bx, by, z_pcb_top + 3.5], operation="new", body_name="Tact Switch", name="Tact Switch")
-c("solid.cylinder", radius=6, height=3, base=[2, -14, z_pcb_top], operation="new", body_name="Piezo", name="Piezo")
-c("solid.box", length=4, width=4, height=1, center=[13, -14, z_pcb_top + 0.5], operation="new", body_name="MAX98357A", name="MAX98357A")
+c("solid.box", length=18, width=20, height=3.2, center=[-8.5, 12.1, z_pcb_top + 1.6], operation="new", body_name="ESP32-C3-WROOM-02", name="U2 ESP32-C3-WROOM-02")
+# SW1 12x12x7.3: a 3.8 mm body with a Ø7 round plunger to 7.3 (two bodies: a stand-in needs no join)
+c("solid.box", length=12, width=12, height=3.8, center=[bx, by, z_pcb_top + 1.9], operation="new", body_name="Tact Switch", name="SW1 body")
+c("solid.cylinder", radius=3.5, height=3.5, base=[bx, by, z_pcb_top + 3.8], operation="new", body_name="Switch Plunger", name="SW1 plunger")
+c("solid.cylinder", radius=6.1, height=6.5, base=[PIEZO_XY[0], PIEZO_XY[1], z_pcb_top], operation="new", body_name="Piezo", name="BZ1 PS1240")
+c("solid.box", length=3, width=3, height=0.8, center=[12, -12.5, z_pcb_top + 0.4], operation="new", body_name="MAX98357A", name="U3 MAX98357A")
 # AM312: Ø10 body with a domed lens, one revolved profile (a sphere joined to a same-radius cylinder only touches it)
 zd = z_top - 0.5
 c("sketch.create", plane={"origin": [PIR_XY[0], PIR_XY[1], 0], "x_dir": [1, 0, 0], "y_dir": [0, 0, 1]}, name="PIR Profile")
@@ -155,7 +172,7 @@ stage("colour")
 COLOURS = {"Lid": "#8fe0c9", "Base": "#ffe08a", "Bottom Plate": "#cdbdf2", "Battery Door": "#cdbdf2",
            "Silence Button": "#ff8f87", "Eye L": "#3b3552", "Eye R": "#3b3552", "Smile": "#3b3552",
            "Cheek L": "#ffadc4", "Cheek R": "#ffadc4", "PIR Dome": "#b39ddb",
-           "PCB": "#2e7d4f", "2xAAA Holder": "#3a3a3a", "ESP-12F": "#c0c4c8", "Tact Switch": "#222222",
+           "PCB": "#2e7d4f", "2xAAA Holder": "#3a3a3a", "ESP32-C3-WROOM-02": "#c0c4c8", "Tact Switch": "#222222", "Switch Plunger": "#555555",
            "Piezo": "#c9a227", "MAX98357A": "#111111"}
 for body, col in COLOURS.items():
     c("appearance.assign", bodies=[body], color=col)

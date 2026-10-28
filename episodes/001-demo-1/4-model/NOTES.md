@@ -52,6 +52,27 @@ Stack (z, mm): floor 0–2, AAAs 2–14, PCB 14.5–16.1, parts up to ~23, lid t
   - The cheeks moved to x = −24.5 / 2.5 to stay clear of the button opening.
   - The bottom round is 1.0 mm, applied after hollowing (1.5 before hollowing wouldn't offset).
 
+## Revision 2: matched to the Stage 5 board (`5-electronics/backpack-defender.kicad_pcb`)
+
+I exported the routed board from KiCad as STEP, placed it on the posts at z 14.5 and clearance-checked it against every enclosure part. The board outline (70 × 45, R9) and mounting holes (±31, ±17) already matched the model. Changes:
+
+| Change | Why |
+|---|---|
+| **ESP stand-in → ESP32-C3-WROOM-02** (18 × 20 × 3.2 at −8.5, 12.1) | Stage 5 swapped the ESP-12F for the C3 (it wakes from deep sleep on the PIR pin). Lines up with the real module's footprint to within 0.1 mm. |
+| **M2 pilot holes (Ø1.7, 6 deep) in the four posts** | The board's H1–H4 are Ø2.2 holes for M2 self-tapping screws. |
+| **7 sound holes (Ø1.6) in the lid over BZ1** at (0, −14.5) | The PS1240 piezo's port faces up, with only ~0.9 mm of air between it and the lid. The side grille alone would muffle it. |
+| **Piezo stand-in → Ø12.2 × 6.5** at BZ1's position | It was a generic Ø12 × 3. It clears the lid's inside by 0.9 mm. |
+| **Tact switch stand-in → 12 × 12 × 3.8 body + Ø7 plunger to 7.3**, plus a Ø8 × 0.4 pocket under the button | Stage 5 flagged a 0.2 mm preload. With the pocket, the plunger tip sits 0.2 mm *below* the button, so the button rests on its flange and isn't pressing the switch all the time. |
+| **MAX98357A stand-in → 3 × 3** at U3's position | Matches the board. |
+
+Clearance check of the enclosure and the stand-ins: **no overlaps**. The smallest gaps are button to lid 0.07 mm, PIR dome to lid 0.15 mm, and switch plunger to button 0.2 mm.
+
+**Flags from the real-board check (these are KiCad 3D-model issues for Stage 5, not enclosure changes):**
+- **SW1's 3D model is a Würth 430476085716, which is 8.5 mm tall,** but the BOM calls for 12 × 12 × **7.3**. With an 8.5 mm switch the plunger would push 1.2 mm into the button. Either order the 7.3 mm part as the BOM says (the enclosure is sized for it) or swap the KiCad model.
+- **J2 (programming pads) shows a full 6-pin header model** standing 8.5 mm tall, which would hit the lid at x 30. NOTES says it's unpopulated pads, so mark it DNP / no 3D model.
+- **The THT leads in the models (SW1, BZ1, U4, J2) run 2–3 mm below the board** into the battery holder and door. As Stage 5 already says, they must be clipped flush.
+- J1 (battery wires) has no 3D model in the KiCad library. It's wires, so it doesn't matter for fit.
+
 ## Shortcuts and open questions (first pass)
 
 - **LiPo vs AAA:** the Stage 4 request mentioned "a small LiPo battery", but the brief and both favourite images use AAA cells so teachers can disarm it easily. The model uses **2 × AAA**. If a LiPo is wanted, a 502535 (5 × 25 × 35) fits in the same bay, but it would need USB-C charging and adds cost.
