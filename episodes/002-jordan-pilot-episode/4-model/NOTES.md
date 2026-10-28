@@ -43,20 +43,20 @@ Stack front to back (y, mm): lens −26.2 to −25, wall −25 to −23, board p
 
 The main board stands **vertically** in the XZ plane, with its front face at **y = −15**, facing the viewer. All positions below are **(x, z)** in enclosure coordinates, so the board's own X = enclosure x and Y = enclosure z.
 
-- **Outline:** 48 × 26, corner radius R3, from x −24 to +24 and z −8 to +18. 1.6 mm thick.
-- **Mounting holes:** 4 × Ø2.2 (M2 self-tapping) at **(−21, −5), (21, −5), (−21, 15), (21, 15)**. Keep the **front** side clear within Ø5.5 of each, because the posts land there.
+- **Outline (rev 2):** 54 × 31, corner radius R5, from x −27 to +27 and z −9.5 to +21.5. 1.6 mm thick. (It was 48 × 26 at z −8 to +18 in the first pass.)
+- **Mounting holes (rev 2):** 3 × Ø2.2 (M2 self-tapping) at **(−21, −7.25), (21, −7.25), (21, 18.5)**, plus a rest post with no hole at (−21, 18.5). Keep the **front** side clear within Ø5.5 of each, because the posts land there.
 - **Front side (faces the lens, max 8 mm tall except the PIR):**
   - **PIR** centred at **(0, 4)**. Its lens apex must reach y ≈ −28 (13 mm above the board's front face).
-  - **Eye LEDs** at **(−11, 8)** and **(11, 8)**, firing forward. The lens is 10 mm away.
+  - **Eye LEDs** at **(−11, 9.2)** and **(11, 9.2)** (rev 2; they were at z 8), firing forward into the eye arcs. The lens is 10 mm away.
   - **Visible zone:** x −18 to 18, z −4 to 14 is seen through the smoked window. Keep it tidy (black solder mask would look best).
 - **Mic port:** a Ø1.0 hole through the board at **(0, −6)**. The bottom-port mic sits over it on the **back** side, and a Ø4 rubber boot fills the 8 mm to the face port at the same (x, z).
 - **Back side:**
-  - **ESP32-S3-WROOM-1:** x 4 to 22, z −7.5 to 18, antenna at the **top** edge. Copper keep-out under the antenna (z > 12).
-  - **Connectors along the bottom edge, x −22 to +2:** J1 USB harness (JST-SH 4-pin), J2 blower (JST-PH 2-pin, low-side MOSFET + flyback diode), J3 speaker (JST-PH 2-pin, from the MAX98357A).
+  - **ESP32-S3-WROOM-1 (rev 2):** x −22 to −4, z −4.85 to 20.65, antenna at the **top** edge. Copper keep-out under the antenna (z > 14.2).
+  - **Connectors (rev 2):** J1 USB harness (JST-SH 4-pin) and J2 blower (JST-SH 2-pin) on the bottom edge to the right of the mic. J3 speaker (JST-SH 2-pin) on the right edge.
   - Max height 6 mm.
 - **Clearances:**
-  - Below the board edge (z < −8) is the blower duct (top at z −12).
-  - The speaker magnet is at x ≥ 25.5, so keep the antenna end at least 3 mm inside x = 22.
+  - Below the board edge (z < −9.5) is the blower duct (top at z −12).
+  - The speaker magnet is at x ≥ 25.5, on the far side from the antenna.
 
 ## What was built (SolidCraft, headless)
 
@@ -70,9 +70,22 @@ The main board stands **vertically** in the XZ plane, with its front face at **y
   - The USB-C breakout ribs were trimmed to z −10.8 to clear the blower's top.
   - The ears were enlarged (tips at z 40) to read like the concept board.
 
+## Revision 2: matched to the Stage 5 board
+
+Stage 5 found that the 18 × 25.5 WROOM module on the board's back covered two of the original right-hand screw posts. It also needed a little more height. Changes:
+
+| Change | Why |
+|---|---|
+| **Board stand-in 48 × 26 → 54 × 31, R5** (x −27 to 27, z −9.5 to 21.5) | Room for the module, with its antenna on the top edge, plus M2 screw heads below it. The extra width gave Freerouting enough room for a clean route. It clears the shell's inner corners by ~1 mm, the inner side walls by 5 mm and the blower duct by 2.5 mm. |
+| **Posts at (−21, −7.25), (21, −7.25), (21, 18.5)** with M2 pilot holes, plus a **rest post with no hole at (−21, 18.5)** | These are the board's H1–H3. The fourth post sits under the module's antenna end, so it only supports the board. |
+| **Module stand-in moved to the left**: x −22 to −4, z −4.85 to 20.65 | The antenna ends up at the top-left, away from the speaker magnet on the right wall. |
+| **Amp stand-in moved** to (16.5, 8), **eye LED stand-ins** to z 9.2 | Matches U3 and LED1/LED2 on the board. The LEDs moved up 1.2 mm to clear the module's thermal vias, which are on the board's other face. |
+
+Clearance check of all 26 bodies after the change: **no overlaps**. `progress-04.png` is a see-through front view with the revised board and stand-ins.
+
 ## Shortcuts and open questions (first pass)
 
-- **"Whisper on the ESP32" isn't realistic.** Even Whisper-tiny needs about 40 M parameters and far more RAM than an ESP32-S3 has. What the S3 can do on-device is Espressif's **ESP-SR** (WakeNet wake word plus MultiNet, about 200 fixed commands), which covers "snooze / done / drank water". Free-form speech-to-text would need an ESP32-P4 or a small Linux SoC, which means a bigger board and more power. The reminders are spoken from stored phrases, so no speech synthesis is needed on the device.
+- **"Whisper on the ESP32": not on the S3, but Jordan reports it running on an ESP32-P4 dev board.** Even Whisper-tiny needs far more RAM than an ESP32-S3 has. The S3 can do Espressif's **ESP-SR** (WakeNet wake word plus MultiNet, ~200 fixed commands), which covers "snooze / done / drank water". Free-form speech-to-text means a P4 (plus an ESP32-C6 for Wi-Fi, which the P4 lacks), a bigger board and a slightly larger head. The reminders are spoken from stored phrases, so no speech synthesis is needed on the device.
 - **Power:** ESP32-S3 Wi-Fi bursts (~350 mA) + blower (~150 mA) + speaker peaks (~250 mA) can go over a 500 mA USB 2.0 port. The firmware should not run the fan and the voice at full power together, or the board should ask for 1.5 A with Type-C CC resistors on a USB-C charger.
 - **Blower noise:** 3010 blowers whine at full speed. Run them at a low PWM duty for a "breeze", and test whether you can feel the air at 50–70 cm. A 40 mm axial fan would move more air but makes the head bigger.
 - **PIR through a lens hole:** the dome is exposed, which is fine for a toy. It needs a field-of-view test from 50–80 cm, since the user sits just below the PIR's axis.

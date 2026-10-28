@@ -23,8 +23,9 @@ MIC_XZ      = (0.0, -6.0)
 SLOTS_Z     = (-14.0, -17.0, -20.0)
 
 PCB_Y, PCB_T = -15.0, 1.6              # board front face, thickness
-PCB         = (-24.0, -8.0, 24.0, 18.0, 3.0)
-POSTS       = [(-21.0, -5.0), (21.0, -5.0), (-21.0, 15.0), (21.0, 15.0)]
+PCB         = (-27.0, -9.5, 27.0, 21.5, 5.0)   # rev 2: matched to the Stage 5 board (54 x 31 R5)
+POSTS       = [(-21.0, -7.25), (21.0, -7.25), (21.0, 18.5), (-21.0, 18.5)]   # rev 2: H1..H3 + a rest under the antenna
+SCREW_POSTS = POSTS[:3]
 
 SPK_C, SPK_R, SPK_X = (5.0, 0.0), 14.0, (25.5, 30.5)   # (y, z) centre, radius, x span
 RING_OR, RING_IR = 16.0, 13.0
@@ -91,7 +92,7 @@ for px, pz in POSTS:
 c("sketch.finish")
 c("solid.extrude", distance=PCB_Y - y_in, direction="negative", operation="join", targets=["Rear Shell"], name="Board Posts", profiles="all")
 c("sketch.create", plane=front_plane(PCB_Y), name="Post Pilot Holes")     # M2 self-tapping, Ø1.7 x 6
-for px, pz in POSTS:
+for px, pz in SCREW_POSTS:
     c("sketch.circle.center", center=[px, pz], radius=0.85)
 c("sketch.finish")
 c("solid.extrude", distance=6, operation="cut", targets=["Rear Shell"], name="Post Pilot Holes", profiles="all")
@@ -222,11 +223,11 @@ c("sketch.rectangle.rounded", p0=[x0, z0], p1=[x1, z1], radius=pr_)
 c("sketch.finish")
 c("solid.extrude", distance=PCB_T, direction="negative", operation="new", name="Main Board", body_name="Main Board")
 yb = PCB_Y + PCB_T
-c("solid.box", length=18, width=3.1, height=25.5, center=[13, yb + 1.55, 5.25], operation="new", name="ESP32-S3-WROOM-1", body_name="ESP32-S3-WROOM-1")
+c("solid.box", length=18, width=3.1, height=25.5, center=[-13, yb + 1.55, 7.9], operation="new", name="ESP32-S3-WROOM-1", body_name="ESP32-S3-WROOM-1")
 for nm, (ex, ez) in zip(("LED L", "LED R"), EYES):
-    c("solid.box", length=2, width=0.8, height=2, center=[ex, PCB_Y - 0.4, ez + 2], operation="new", name=nm, body_name=nm)
+    c("solid.box", length=2, width=0.8, height=2, center=[ex, PCB_Y - 0.4, ez + 3.2], operation="new", name=nm, body_name=nm)
 c("solid.box", length=3.5, width=1.0, height=2.65, center=[MIC_XZ[0], yb + 0.5, MIC_XZ[1]], operation="new", name="Mic", body_name="Mic")
-c("solid.box", length=3, width=0.9, height=3, center=[-10, yb + 0.45, 4], operation="new", name="MAX98357A", body_name="MAX98357A")
+c("solid.box", length=3, width=0.9, height=3, center=[16.5, yb + 0.45, 8], operation="new", name="MAX98357A", body_name="MAX98357A")
 bx0, by0, bz0, bx1, by1, bz1 = BLOWER
 c("solid.box", length=bx1 - bx0, width=by1 - by0, height=bz1 - bz0, center=[(bx0 + bx1) / 2, (by0 + by1) / 2, (bz0 + bz1) / 2],
   operation="new", name="Blower 3010", body_name="Blower")
