@@ -22,7 +22,7 @@ Run from the repo folder.
 | `tools/kicad/build.sh episodes/<slug> place` | Also places the board and renders a quick `board.png` | under a minute |
 | `tools/kicad/build.sh episodes/<slug>` | Everything: Freerouting, DRC fix-ups, silkscreen tidy, DRC, renders, `board.glb` | 5–15 min |
 | `tools/kicad/export.sh episodes/<slug>` | Only the BOM, pictures and GLB again (after a hand edit in KiCad) | about a minute |
-| `tools/kicad/selftest.sh [place]` | Rebuilds episode 001's board in a scratch folder to check the kit works on this computer | as a build |
+| `tools/kicad/selftest.sh [place]` | Rebuilds episode 001's board in a scratch folder to check the kit works on this computer; the full run fails unless DRC is 0 violations, 0 unconnected | as a build |
 
 Each step saves as it goes, so the dashboard shows the schematic first, then the placed board, then the routed one.
 
@@ -45,15 +45,16 @@ Coordinates are the Stage 4 enclosure's (origin at the centre, mm, +y up), from 
 - `PREFER` holds everything else, in priority order (each IC first, then its decoupling). The auto-fitter spirals out up to 16 mm to the nearest free spot and lists what it moved in `output/placement.txt`.
 - `NO_PARTS` rectangles keep parts out (under tall parts, antennas). `NO_COPPER` keeps copper out (antenna keep-outs).
 - Optional: `POWER_NETS` (0.5 mm tracks), `GND_VIA_PADS` (parts with a big ground pad), `MODEL_SUBST` (stand-in 3D models), `HIDE_TEXT`, and a `silk(board, placed)` function for extra silkscreen such as the product name on the back.
+- Optional: `PREROUTE`, fixed tracks laid before Freerouting for connections it keeps fumbling or that must be short (a boost converter's switch node). Each entry is a path: `"REF.PAD"`, then `(x, y)` points in board mm, a number to set the track width from there on (default 0.5 mm on `POWER_NETS`, else 0.25 mm), `"via"` to drop a via and carry on on the other layer, ending with `"REF.PAD"` on the same net. It starts and ends on the top layer. The tracks are locked, so Freerouting routes around them. The points are absolute, so re-check them if you move the parts. The example's BOOST_SW entry is a worked case.
 
 ## What the full build does
 
 1. Generates the schematic and project, runs ERC, exports the netlist and checks every pin landed on its intended net.
 2. Loads stock footprints, places them, then adds the outline, keep-outs and the bottom GND pour.
-3. Adds GND vias at the big ground pads and the top GND pour, then runs Freerouting twice headless (`ROUTE_PASSES`, default 40) and stitches GND vias across the pours and islands.
-4. Runs two DRC passes with fixes: widens neck-downs, gives unreached GND pads a via, and removes dangling vias.
-5. Moves reference labels off pads, then runs the final DRC and writes `drc.rpt`.
-6. Writes the renders and `board.glb` (scaled to metres for the web viewer).
+3. Lays the `PREROUTE` tracks, adds GND vias at the big ground pads and the top GND pour, then runs Freerouting twice headless (`ROUTE_PASSES`, default 40) and stitches GND vias across the pours and islands. Each Freerouting run is stopped after `ROUTE_TIMEOUT` seconds (default 300), because now and then it never finishes; if the second run fails that way, the first run's routing is kept.
+4. Runs two DRC passes with fixes: widens neck-downs, gives unreached GND pads a via, and removes dangling vias and dangling track spurs. If anything is still unconnected, steps 3 and 4 start again from the placed board, up to `ROUTE_TRIES` times (default 3), and the best try is kept.
+5. Moves reference labels off pads, then runs the final DRC, writes `drc.rpt` and prints `DRC: N violations, N unconnected`.
+6. Writes the renders and `board.glb` (scaled to metres for the web viewer). If the DRC wasn't 0 and 0, the build then says so in a banner and exits with an error.
 
 Freerouting varies from run to run, so a rebuild gives a slightly different board. Once a board is hand-edited in KiCad, stop running `build.sh` on it (it overwrites) and use `export.sh`.
 

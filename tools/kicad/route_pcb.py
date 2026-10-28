@@ -4,12 +4,14 @@
 Run with KiCad's bundled Python on a board fresh from gen_pcb.py (tools/kicad/build.sh does this):
   "$KICAD_PY" tools/kicad/route_pcb.py <episode>
 
-1. GND vias around the big ground pads named in layout.GND_VIA_PADS (modules, QFNs).
+1. layout.PREROUTE's fixed tracks, then GND vias around the big ground pads named in
+   layout.GND_VIA_PADS (modules, QFNs).
 2. GND pours on both layers (the bottom one comes from gen_pcb.py), a keep-out band along the edge.
 3. Export Specctra DSN (GND plane stripped), run Freerouting headless (two passes), import the
    session, stitch GND vias.
 Then: kicad-cli pcb drc --refill-zones --save-board to fill and check (build.sh), and fix_route.py.
 ROUTE_PASSES (default 40) sets Freerouting's optimisation passes: lower is faster, higher is tidier.
+ROUTE_TIMEOUT (default 300) stops a Freerouting run that hangs.
 """
 
 import math
@@ -276,11 +278,63 @@ def strip_planes_from_dsn(path):
     open(path, "w").write(text)
 
 
+def prerouted(r):
+    """Lay layout.PREROUTE's fixed tracks before Freerouting (it routes around them; they're locked).
+
+    Each entry is a path: "REF.PAD", then any of (x, y) points in board mm, a number (track width
+    from there on, else 0.5 mm on POWER_NETS and 0.25 mm otherwise), "via" (via here, carry on
+    on the other layer), ending with "REF.PAD". The net comes from the first pad."""
+    for path in getattr(layout, "PREROUTE", []):
+        def pad(s):
+            ref, num = s.split(".")
+            fp = r.b.FindFootprintByReference(ref)
+            assert fp is not None, "PREROUTE: no part " + ref
+            p = fp.FindPadByNumber(num)
+            assert p is not None, "PREROUTE: no pad %s on %s" % (num, ref)
+            return p
+        first, last = pad(path[0]), pad(path[-1])
+        net = first.GetNetname()
+        assert last.GetNetname() == net, "PREROUTE: %s and %s are on different nets" % (path[0], path[-1])
+        w = 0.5 if net in getattr(layout, "POWER_NETS", ()) else 0.25
+        layer, at = pcbnew.F_Cu, from_page(first.GetPosition())
+        for step in list(path[1:-1]) + [from_page(last.GetPosition())]:
+            if isinstance(step, (int, float)):
+                w = step
+            elif step == "via":
+                r.via(net, at)
+                layer = pcbnew.B_Cu if layer == pcbnew.F_Cu else pcbnew.F_Cu
+            else:
+                r.track(net, at, step, w, layer)
+                at = step
+        assert layer == pcbnew.F_Cu, "PREROUTE %s: ends on the bottom layer (odd number of vias)" % path[0]
+        print("prerouted", net, path[0], "->", path[-1])
+
+
+def freerouting(dsn, ses, logname):
+    """One headless Freerouting run on dsn. Returns True if it saved a session.
+    Freerouting has no time limit of its own and now and then never finishes (a normal run is
+    well under a minute), so ROUTE_TIMEOUT (default 300 s) stops it."""
+    if os.path.exists(ses):
+        os.remove(ses)
+    cmd = [java(), "-Djava.awt.headless=true", "-jar", freerouting_jar(), "-de", dsn, "-do", ses,
+           "-mp", os.environ.get("ROUTE_PASSES", "40"), "-mt", "6", "--gui.enabled=false"]
+    try:
+        p = subprocess.run(cmd, capture_output=True, text=True, timeout=int(os.environ.get("ROUTE_TIMEOUT", "300")))
+        log = p.stdout + p.stderr
+    except subprocess.TimeoutExpired as e:
+        log = "%s%s\nTIMED OUT\n" % (e.stdout or "", e.stderr or "")
+        log = log.decode(errors="replace") if isinstance(log, bytes) else log
+        print("  timed out")
+    open(os.path.join(OUT, logname), "w").write(log)
+    return os.path.exists(ses) and "TIMED OUT" not in log
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     board = pcbnew.LoadBoard(PCB)
     clear_previous(board)
     r = Router(board)
+    prerouted(r)
     big_pad_gnd_vias(r)
     top_gnd_pour(r)
     edge_band(r)
@@ -288,21 +342,17 @@ def main():
 
     dsn = os.path.join(OUT, "board.dsn")
     ses = os.path.join(OUT, "board.ses")
-    jv, jar = java(), freerouting_jar()
-    passes = os.environ.get("ROUTE_PASSES", "40")
     # Two runs: the second starts from the first run's routing and finishes what it left.
+    # If the second one hangs or fails, the first run's routing stands.
     for n in (1, 2):
         assert pcbnew.ExportSpecctraDSN(board, dsn), "DSN export failed"
         strip_planes_from_dsn(dsn)
-        if os.path.exists(ses):
-            os.remove(ses)
-        cmd = [jv, "-Djava.awt.headless=true", "-jar", jar, "-de", dsn, "-do", ses, "-mp", passes, "-mt", "6",
-               "--gui.enabled=false"]
         print("freerouting run", n)
-        log = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
-        open(os.path.join(OUT, "freerouting%d.log" % n), "w").write(log.stdout + log.stderr)
-        assert os.path.exists(ses), "Freerouting produced no session; see output/routing/freerouting%d.log" % n
-        assert pcbnew.ImportSpecctraSES(board, ses), "SES import failed"
+        if freerouting(dsn, ses, "freerouting%d.log" % n):
+            assert pcbnew.ImportSpecctraSES(board, ses), "SES import failed"
+        else:
+            assert n == 2, "Freerouting produced no session; see output/routing/freerouting1.log"
+            print("  run 2 failed; keeping run 1's routing")
     stitch(Router(board))
     pcbnew.ZONE_FILLER(board).Fill(board.Zones())
     stitch_islands(Router(board))

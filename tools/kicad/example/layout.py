@@ -69,6 +69,13 @@ MODEL_SUBST = {
     "U3": "${KICAD10_3DMODEL_DIR}/Package_DFN_QFN.3dshapes/TQFN-16-1EP_3x3mm_P0.5mm_EP1.6x1.6mm.step",
 }
 POWER_NETS = ("/BAT_IN", "/VBAT", "/BOOST_SW", "/3V3")   # wider tracks (0.5 mm)
+# Fixed tracks laid before Freerouting: "REF.PAD", (x, y) points, a width in mm from there on,
+# "via" to change layer, then "REF.PAD". The boost's switch pin faces away from L1 and C2/C3
+# leave only 0.65 mm beside it, which Freerouting often fails to get through: so neck down to
+# 0.3 mm between the caps, drop to the bottom, and come back up beside L1.
+PREROUTE = [
+    ("U1.5", 0.3, (-11.6, -11.0), "via", 0.5, (-13.6, -13.0), (-16.3, -13.0), "via", "L1.2"),
+]
 GND_VIA_PADS = ["U2"]       # parts with a big ground pad: route_pcb drops GND vias around their centre
 
 

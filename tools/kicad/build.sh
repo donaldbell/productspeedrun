@@ -6,7 +6,9 @@
 #   tools/kicad/build.sh episodes/002-plant-whisperer place       ...plus the placed (unrouted) board and board.png
 #
 # Each step saves into 5-electronics/ as it goes, so the dashboard shows the schematic, then the
-# placed board, then the routed board. Machine paths: KICAD_CLI, KICAD_PY, KICAD_SHARE, JAVA,
+# placed board, then the routed board. Routing is retried up to ROUTE_TRIES (default 3) times if it
+# leaves anything unconnected. A full build exits with an error, after the renders, unless the final
+# DRC is 0 violations and 0 unconnected. Machine paths: KICAD_CLI, KICAD_PY, KICAD_SHARE, JAVA,
 # FREEROUTING_JAR (defaults are the macOS KiCad app and ~/.local/opt/freerouting).
 set -e
 KIT=$(cd "$(dirname "$0")" && pwd)
@@ -37,20 +39,56 @@ step "placement"
 sh "$KIT/export.sh" "$E" board-quick
 [ "$MODE" = place ] && exit 0
 
-step "routing (Freerouting)"
-"$PY" "$KIT/route_pcb.py" "$E"
-for pass in 1 2; do
-  step "DRC fix-ups $pass"
-  "$CLI" pcb drc --schematic-parity --severity-all --refill-zones --save-board --format json -o output/drc.json $P.kicad_pcb || true
-  "$PY" "$KIT/fix_route.py" "$E" output/drc.json
+# Freerouting varies from run to run, so if a try leaves anything unconnected, route again from
+# the placed board (up to ROUTE_TRIES, default 3) and keep the best try.
+cp $P.kicad_pcb output/placed.kicad_pcb
+TRIES=${ROUTE_TRIES:-3}
+BEST=""
+drc_counts() {
+  python3 -I -c 'import json, sys; d = json.load(open(sys.argv[1])); print("U=%d V=%d" % (len(d.get("unconnected_items", [])), len(d.get("violations", []))))' output/drc.json
+}
+t=1
+while [ $t -le $TRIES ]; do
+  cp output/placed.kicad_pcb $P.kicad_pcb
+  step "routing try $t of $TRIES (Freerouting)"
+  if "$PY" "$KIT/route_pcb.py" "$E"; then
+    for pass in 1 2; do
+      step "DRC fix-ups $pass"
+      "$CLI" pcb drc --schematic-parity --severity-all --refill-zones --save-board --format json -o output/drc.json $P.kicad_pcb || true
+      "$PY" "$KIT/fix_route.py" "$E" output/drc.json
+    done
+    "$CLI" pcb drc --schematic-parity --severity-all --refill-zones --save-board --format json -o output/drc.json $P.kicad_pcb || true
+    eval "$(drc_counts)"
+    echo "try $t: $U unconnected, $V DRC violations"
+    if [ -z "$BEST" ] || [ $((U * 1000 + V)) -lt "$BEST" ]; then
+      BEST=$((U * 1000 + V))
+      cp $P.kicad_pcb output/best.kicad_pcb
+    fi
+    [ "$U" -eq 0 ] && break
+  else
+    echo "try $t: routing failed"
+  fi
+  t=$((t + 1))
 done
+[ -n "$BEST" ] || { echo "Routing failed on every try; see output/routing/"; exit 1; }
+cp output/best.kicad_pcb $P.kicad_pcb
 step "silkscreen"
 "$PY" "$KIT/tidy_silk.py" "$E"
 step "DRC"
 "$CLI" pcb drc --schematic-parity --severity-all --refill-zones --save-board --format json -o output/drc.json $P.kicad_pcb || true
 "$CLI" pcb drc --schematic-parity --severity-all -o drc.rpt $P.kicad_pcb || true
-grep -E "^\*\* Found|violations|unconnected" drc.rpt || true
+VIOL=$(sed -n 's/^\*\* Found \([0-9]*\) DRC violations.*/\1/p' drc.rpt)
+UNCON=$(sed -n 's/^\*\* Found \([0-9]*\) unconnected pads.*/\1/p' drc.rpt)
+echo "DRC: ${VIOL:-?} violations, ${UNCON:-?} unconnected (details in drc.rpt)"
 step "renders and 3D"
 sh "$KIT/export.sh" "$E" board
 echo ""
-echo "Done: $E"
+if [ "${VIOL:-1}" -ne 0 ] || [ "${UNCON:-1}" -ne 0 ]; then
+  echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+  echo "!!  DRC NOT CLEAN: ${VIOL:-?} violations, ${UNCON:-?} unconnected"
+  echo "!!  The renders and board.glb were still written. See drc.rpt."
+  echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+  grep -A3 -E '^\*\* Found [1-9]' drc.rpt || true
+  exit 1
+fi
+echo "Done: $E (DRC 0 violations, 0 unconnected)"

@@ -28,6 +28,7 @@ PREFER = [            # (ref, x, y, orientation): everything else, each IC first
 MODEL_SUBST = {}      # ref -> stand-in 3D model path, for footprints KiCad ships without one
 POWER_NETS = ()       # e.g. ("/VBAT", "/3V3"): 0.5 mm tracks
 GND_VIA_PADS = []     # parts with a big ground pad (modules, QFNs): GND vias around their centre
+PREROUTE = []         # fixed tracks before Freerouting, e.g. ("U1.5", (x, y), "via", (x, y), "via", "L1.2"); see the README
 
 
 def silk(board, placed):
