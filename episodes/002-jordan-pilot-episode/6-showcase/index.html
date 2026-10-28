@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Gamer Companion</title>
+<title>Gamer Guardian</title>
 <meta name="description" content="A chibi robot that sits on your monitor and nudges you to take breaks, drink water, snack and sit up, with a breeze and a voice, so you never have to look away from the game. Product Speedrun episode 002.">
 <meta name="color-scheme" content="light dark">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -318,7 +318,7 @@ footer b { font-family: var(--display); color: var(--ink); }
 
 <header class="bar">
   <div class="wrap">
-    <a class="brand" href="#top"><i aria-hidden="true"></i>GAMER COMPANION</a>
+    <a class="brand" href="#top"><i aria-hidden="true"></i>GAMER GUARDIAN</a>
     <nav class="nav">
       <a href="#demo">Try it</a>
       <a href="#model">3D</a>
@@ -335,8 +335,8 @@ footer b { font-family: var(--display); color: var(--ink); }
     <div class="hero-grid">
       <div>
         <div class="kicker">Product Speedrun · Episode 002</div>
-        <h1>Gamer <span>Companion</span></h1>
-        <p class="pitch">The monitor-top robot that keeps you in peak performance.</p>
+        <h1>Gamer <span>Guardian</span></h1>
+        <p class="pitch">The monitor-top robot that keeps you in peak performance with helpful reminders.</p>
         <p class="lede" style="margin-top:0">It notices when you sit down, then nudges you to take a break, drink some water, grab a snack or sit up straight. It uses a puff of air and a friendly voice, so you never have to look away from the game.</p>
         <div class="roll" aria-label="The rolled ingredients for this episode">
           <span class="chip"><b>Act</b>Fan / airflow</span>
@@ -383,7 +383,7 @@ footer b { font-family: var(--display); color: var(--ink); }
           <div class="card persona">
             <div class="role">The buyer</div>
             <h3>The parent</h3>
-            <p>They've asked nicely through the door four times. Gamer Companion repeats those reminders from inside the kid's own setup, in a voice that isn't Mum's or Dad's, and it doesn't need a camera in the bedroom to do it.</p>
+            <p>They've asked nicely through the door four times. Gamer Guardian repeats those reminders from inside the kid's own setup, in a voice that isn't Mum's or Dad's, and it doesn't need a camera in the bedroom to do it.</p>
           </div>
         </div>
         <p class="quote">The moment: 90 minutes into a ranked match, a cool breeze hits your face and a small voice says "Grab some water. You've got this."</p>
@@ -403,7 +403,7 @@ footer b { font-family: var(--display); color: var(--ink); }
       <div class="stage" aria-live="polite">
         <div class="screen-glow"></div>
         <div class="bubble" id="bubble"></div>
-        <div class="robot" id="robot" role="img" aria-label="Animated Gamer Companion robot face">
+        <div class="robot" id="robot" role="img" aria-label="Animated Gamer Guardian robot face">
           <div class="ear l"></div><div class="ear r"></div>
           <div class="head"></div>
           <div class="ring l"></div><div class="ring r"></div>
@@ -504,7 +504,7 @@ footer b { font-family: var(--display); color: var(--ink); }
     <div class="model-grid">
       <div class="card viewer">
         <model-viewer id="shell" src="../4-model/model.glb" poster="../4-model/iso.png"
-          alt="Interactive 3D model of the Gamer Companion enclosure: a charcoal robot head with cat ears, a smoked visor, green side rings and a rear monitor clip"
+          alt="Interactive 3D model of the Gamer Guardian enclosure: a charcoal robot head with cat ears, a smoked visor, green side rings and a rear monitor clip"
           camera-controls auto-rotate auto-rotate-delay="1500" rotation-per-second="18deg"
           camera-orbit="-30deg 72deg auto" environment-image="neutral" exposure="1.05"
           shadow-intensity="1" shadow-softness=".8" interaction-prompt="none" touch-action="pan-y"></model-viewer>
@@ -535,14 +535,14 @@ footer b { font-family: var(--display); color: var(--ink); }
   <div class="wrap">
     <div class="kicker">Stage 5 · KiCad</div>
     <h2>What's inside</h2>
-    <p class="lede">One 48 × 31 mm two-layer board stands upright behind the face. The front of the board is what sees out through the visor: the PIR and the two eye LEDs. The back carries the ESP32-S3, the audio and the power parts. The blower, the speaker and the USB-C socket connect with short JST-SH leads.</p>
+    <p class="lede">One 54 × 31 mm two-layer board stands upright behind the face. The front of the board is what sees out through the visor: the PIR and the two eye LEDs. The back carries the ESP32-S3, the audio and the power parts. The blower, the speaker and the USB-C socket connect with short JST-SH leads.</p>
 
     <div class="inside-grid">
       <div class="card board-card">
-        <div class="board-head"><h3>The board in 3D</h3><small>first-pass routing · see "What's next"</small></div>
+        <div class="board-head"><h3>The board in 3D</h3><small>routed · ERC + DRC clean</small></div>
         <div class="bv">
           <model-viewer id="board" src="../5-electronics/board.glb" poster="../5-electronics/board-iso.png" reveal="manual" loading="lazy"
-            alt="Interactive 3D model of the Gamer Companion circuit board, with the PIR header and eye LEDs on the front and the ESP32-S3 module on the back"
+            alt="Interactive 3D model of the Gamer Guardian circuit board, with the PIR header and eye LEDs on the front and the ESP32-S3 module on the back"
             camera-controls camera-orbit="20deg 55deg auto" environment-image="neutral" exposure="1.1" shadow-intensity="0"
             interaction-prompt="none" touch-action="pan-y"></model-viewer>
           <button class="btn board-load" id="boardLoad" type="button">Load the 3D board (7 MB)</button>
@@ -663,7 +663,7 @@ footer b { font-family: var(--display); color: var(--ink); }
     <div class="kicker">How we got here</div>
     <h2>One episode, four stages</h2>
     <div class="journey">
-      <a class="card" href="../2-concept/Gamer-Companion-Robot-Concept-Board.png"><img src="../2-concept/Gamer-Companion-Robot-Concept-Board.png" alt="Concept board with front, side and back views, an exploded view and the four reminder types" loading="lazy"><div><b>02 · CONCEPT</b><span>The chosen robot board</span></div></a>
+      <a class="card" href="../2-concept/Gamer-Companion-Robot-Concept-Board.png"><img src="../2-concept/Gamer-Companion-Robot-Concept-Board.png" alt="Concept board with front, side and back views, an exploded view and the four reminder types" loading="lazy"><div><b>02 · CONCEPT</b><span>The chosen robot board (working name: Gamer Companion)</span></div></a>
       <a class="card" href="../3-layout/Gamer-Companion-GA-Drawing.jpg"><img src="../3-layout/Gamer-Companion-GA-Drawing.jpg" alt="General arrangement drawing with orthographic views, a section and an exploded isometric" loading="lazy" style="object-position: 50% 12%"><div><b>03 · LAYOUT</b><span>The GA drawing, rev A</span></div></a>
       <a class="card" href="../4-model/iso.png"><img src="../4-model/iso.png" alt="Isometric render of the CAD model" loading="lazy"><div><b>04 · MODEL</b><span>SolidCraft enclosure</span></div></a>
       <a class="card" href="../5-electronics/schematic.png"><img src="../5-electronics/schematic.png" alt="KiCad schematic of the main board" loading="lazy" style="object-fit:contain"><div><b>05 · ELECTRONICS</b><span>The schematic</span></div></a>
@@ -678,8 +678,8 @@ footer b { font-family: var(--display); color: var(--ink); }
     <h2>What we still don't know</h2>
     <p class="lede">This is a speedrun first pass. Here's what we'd want to answer before anyone orders a board or cuts a mould.</p>
     <div class="next-grid">
-      <div class="card q"><span class="tag hot">Board</span><h3>Four connections are still unrouted</h3><p>The last routing run left PIR power, two I²S amp lines and the amp's shutdown pin unconnected (ERC is clean, DRC isn't). The placement around the amp needs loosening and another routing run.</p></div>
-      <div class="card q"><span class="tag hot">Brief vs. reality</span><h3>Whisper won't fit on an ESP32</h3><p>The brief asked for Whisper speech-to-text, but even Whisper-tiny needs far more RAM than the S3 has. A wake word plus fixed commands covers "snooze", "done" and "I drank water". Free-form speech would mean an ESP32-P4 or a small Linux chip, which brings a bigger board and more heat.</p></div>
+      <div class="card q"><span class="tag hot">Board</span><h3>Routed and clean, but never built</h3><p>The two-layer board passes ERC and DRC with nothing left unconnected, after we widened it to 54 mm to give the autorouter room. Nobody has ordered or soldered one yet. The first prototype has to confirm the AM312's pin order, the mic hole lining up with the face port, and the fit on the enclosure's posts.</p></div>
+      <div class="card q"><span class="tag hot">Voice</span><h3>Free-form speech needs a bigger chip</h3><p>Whisper-style speech-to-text is out of reach on this board, because even Whisper-tiny needs more RAM than the S3 has. A wake word plus fixed commands covers "snooze", "done" and "I drank water". One of our hosts reports running Whisper on an ESP32-P4 dev board, which we haven't reproduced yet. That's the upgrade path, but the P4 has no Wi-Fi, so it needs an ESP32-C6 alongside it. That means a bigger board, a slightly bigger head and more power.</p></div>
       <div class="card q"><span class="tag">Feel</span><h3>Can you feel the breeze at arm's length?</h3><p>3010 blowers move very little air. We need to test whether it's noticeable at 50–70 cm on a low, quiet duty cycle. If it isn't, the fix is a 40 mm axial fan and a bigger head.</p></div>
       <div class="card q"><span class="tag">Sensing</span><h3>Does the PIR see a still, seated gamer?</h3><p>PIRs detect movement, and a focused player barely moves. The field of view also needs testing from 50–80 cm, with the user sitting below the sensor's axis.</p></div>
       <div class="card q"><span class="tag">Power</span><h3>Staying under 500 mA</h3><p>Peak draw can pass what a PC's USB 2.0 port allows. The firmware has to take turns between loads, and we haven't measured real currents yet.</p></div>
@@ -694,7 +694,7 @@ footer b { font-family: var(--display); color: var(--ink); }
 
 <footer>
   <div class="wrap">
-    <span><b>Gamer Companion</b> · a concept from Product Speedrun, episode 002. It isn't for sale.</span>
+    <span><b>Gamer Guardian</b> · a concept from Product Speedrun, episode 002. It isn't for sale.</span>
     <span>Built from <a href="../4-model/model.step">model.step</a> and <a href="../5-electronics/bom.csv">bom.csv</a></span>
   </div>
 </footer>
