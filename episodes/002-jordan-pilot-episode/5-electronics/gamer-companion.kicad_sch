@@ -4479,135 +4479,6 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 66.04 68.58 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "e4186144-bc99-5c32-997b-e59ad0ab4fcb")
-		(property "Reference" "C2"
-			(at 68.58 67.31 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "10uF"
-			(at 68.58 69.85 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
-			(at 66.04 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 66.04 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Capacitor, ceramic, 10 uF 25 V X5R 0805"
-			(at 66.04 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "C15850"
-			(at 66.04 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MPN" "CL21A106KAYNNNE"
-			(at 66.04 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "4a560fad-47bc-5933-a4bf-8508c9036115")
-		)
-		(pin "2"
-			(uuid "f79cee43-b8ac-5325-b8de-6e73daaf3446")
-		)
-		(instances
-			(project "gamer-companion"
-				(path "/b701c6fb-7827-5d61-b7c7-6e14b53fa01e"
-					(reference "C2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 66.04 64.77)
-			(xy 66.04 62.23)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c81aa280-55cd-518d-b996-a0ac21865147")
-	)
-	(label "VBUS"
-		(at 66.04 62.23 90)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "6d13e5f1-8c8b-54a0-87ae-c6a7c08e8405")
-	)
-	(wire
-		(pts
-			(xy 66.04 72.39)
-			(xy 66.04 74.93)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "aa79cbd1-0cae-5fe9-a2b5-7e33b190b1a5")
-	)
-	(label "GND"
-		(at 66.04 74.93 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "95f9774a-c2b4-5bdc-9428-5b9067f43725")
-	)
-	(symbol
-		(lib_id "Device:C")
 		(at 111.76 68.58 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -4863,267 +4734,6 @@
 			(justify right bottom)
 		)
 		(uuid "9ac0ba7b-16c3-5d52-9a21-8ba3d916b62f")
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 147.32 35.56 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(dnp yes)
-		(uuid "c3b9e9d2-241d-556b-b372-432d6d6428c0")
-		(property "Reference" "TP1"
-			(at 149.86 34.29 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "VBUS"
-			(at 149.86 36.83 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 147.32 35.56 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 147.32 35.56 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Test pad"
-			(at 147.32 35.56 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "baf71395-3efc-5ec4-82aa-7800066619fb")
-		)
-		(instances
-			(project "gamer-companion"
-				(path "/b701c6fb-7827-5d61-b7c7-6e14b53fa01e"
-					(reference "TP1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 147.32 35.56)
-			(xy 147.32 38.1)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c3969437-ef1f-5c88-84d8-a8a4975a8a60")
-	)
-	(label "VBUS"
-		(at 147.32 38.1 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "7a8f4fe9-c0f3-5d73-8667-a5b306fce4c8")
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 157.48 35.56 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(dnp yes)
-		(uuid "e4b34e05-c364-5059-b389-03351ddcffad")
-		(property "Reference" "TP2"
-			(at 160.02 34.29 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "3V3"
-			(at 160.02 36.83 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 157.48 35.56 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 157.48 35.56 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Test pad"
-			(at 157.48 35.56 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "b4d00ef7-cdfb-5a7b-bec0-cd875eedc1b2")
-		)
-		(instances
-			(project "gamer-companion"
-				(path "/b701c6fb-7827-5d61-b7c7-6e14b53fa01e"
-					(reference "TP2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 157.48 35.56)
-			(xy 157.48 38.1)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e5ac94e7-d07c-5721-9cf8-e819d3b71e2f")
-	)
-	(label "3V3"
-		(at 157.48 38.1 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "b6cc682f-8d13-5de6-a577-a69e4faca2ee")
-	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 167.64 35.56 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(dnp yes)
-		(uuid "9cc2c507-f18c-581a-9224-6000cb8aaa49")
-		(property "Reference" "TP3"
-			(at 170.18 34.29 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "GND"
-			(at 170.18 36.83 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
-			(at 167.64 35.56 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 167.64 35.56 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Test pad"
-			(at 167.64 35.56 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "6e9c0290-bee0-5cad-82f0-fcb4bb63bc17")
-		)
-		(instances
-			(project "gamer-companion"
-				(path "/b701c6fb-7827-5d61-b7c7-6e14b53fa01e"
-					(reference "TP3")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 167.64 35.56)
-			(xy 167.64 38.1)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "4a507190-8402-589e-81ea-b58ab4a8aa58")
-	)
-	(label "GND"
-		(at 167.64 38.1 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "ed84df0c-03a1-5717-a2e6-c811e52cb86d")
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
@@ -5577,7 +5187,7 @@
 		)
 		(uuid "2ba5564b-a76c-5747-8bec-54032b11058e")
 	)
-	(label "PIR_OUT"
+	(label "I2S_BCLK"
 		(at 58.42 185.42 180)
 		(effects
 			(font
@@ -5598,7 +5208,7 @@
 		)
 		(uuid "c7121da3-a6a6-5e99-8a36-02c6508c0e76")
 	)
-	(label "LED_IO"
+	(label "I2S_LRCLK"
 		(at 58.42 187.96 180)
 		(effects
 			(font
@@ -5608,47 +5218,13 @@
 		)
 		(uuid "b60c8664-2cac-56f1-ad1a-c430d80af835")
 	)
-	(wire
-		(pts
-			(xy 60.96 190.5)
-			(xy 58.42 190.5)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0fe38962-9acc-5d35-8084-733454ac0b74")
+	(no_connect
+		(at 60.96 190.5)
+		(uuid "b76e643a-bd19-5ea8-a5f2-9a4dced8b92b")
 	)
-	(label "FAN_PWM"
-		(at 58.42 190.5 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "6d45002e-0b6c-5c5e-956e-978ce06e5d96")
-	)
-	(wire
-		(pts
-			(xy 60.96 193.04)
-			(xy 58.42 193.04)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "be2467b3-13ff-59e2-a659-bc78418b0c43")
-	)
-	(label "I2S_BCLK"
-		(at 58.42 193.04 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "940618ef-54f1-5ee4-8322-e36579d1dc4b")
+	(no_connect
+		(at 60.96 193.04)
+		(uuid "a6d2bdbe-a132-5178-82f5-683bc706bce0")
 	)
 	(wire
 		(pts
@@ -5661,7 +5237,7 @@
 		)
 		(uuid "527a7163-12a9-5330-a3cb-03afc99d57aa")
 	)
-	(label "I2S_LRCLK"
+	(label "PIR_OUT"
 		(at 58.42 213.36 180)
 		(effects
 			(font
@@ -5682,7 +5258,7 @@
 		)
 		(uuid "d61404cb-7115-5b2a-ad8b-a141fcf2aae7")
 	)
-	(label "I2S_DIN"
+	(label "LED_IO"
 		(at 58.42 215.9 180)
 		(effects
 			(font
@@ -5692,26 +5268,9 @@
 		)
 		(uuid "fd12ba74-973e-59a0-9d2a-061833b422f2")
 	)
-	(wire
-		(pts
-			(xy 91.44 175.26)
-			(xy 93.98 175.26)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "3bb449d3-e2ca-56fc-805d-908e89b3acd9")
-	)
-	(label "AMP_SD"
-		(at 93.98 175.26 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "be8298e4-58fb-516d-817b-a8626938167b")
+	(no_connect
+		(at 91.44 175.26)
+		(uuid "4dfe4dd2-b352-5214-902f-8bfb4936e1ac")
 	)
 	(wire
 		(pts
@@ -5724,7 +5283,7 @@
 		)
 		(uuid "f97574bf-08be-597b-b386-b66b99f9207b")
 	)
-	(label "MIC_SCK"
+	(label "I2S_DIN"
 		(at 93.98 177.8 0)
 		(effects
 			(font
@@ -5745,7 +5304,7 @@
 		)
 		(uuid "727a2f02-0407-5549-addc-1082b7402896")
 	)
-	(label "MIC_WS"
+	(label "AMP_SD"
 		(at 58.42 195.58 180)
 		(effects
 			(font
@@ -5816,7 +5375,7 @@
 		)
 		(uuid "293f5df8-f7b7-5f43-add7-1ed2b6815724")
 	)
-	(label "MIC_SD"
+	(label "MIC_SCK"
 		(at 58.42 198.12 180)
 		(effects
 			(font
@@ -5826,17 +5385,68 @@
 		)
 		(uuid "b0ebe676-1b6c-5ab7-8133-e8ebcfeb8fed")
 	)
-	(no_connect
-		(at 60.96 200.66)
-		(uuid "c596eae8-60ad-5568-8ab3-314bd0b0b335")
+	(wire
+		(pts
+			(xy 60.96 200.66)
+			(xy 58.42 200.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3596d944-1542-52fd-a49e-74911871a766")
 	)
-	(no_connect
-		(at 60.96 203.2)
-		(uuid "4b43ceb4-b1ea-58f6-a2b4-af86583876b3")
+	(label "MIC_WS"
+		(at 58.42 200.66 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "d07f097d-3725-5027-9412-1552215111fe")
 	)
-	(no_connect
-		(at 60.96 205.74)
-		(uuid "3cb6a908-2b73-5348-81e7-77aded1da60d")
+	(wire
+		(pts
+			(xy 60.96 203.2)
+			(xy 58.42 203.2)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "17fc7ec2-ac5b-5dbf-86c2-cdbeb9141c0b")
+	)
+	(label "MIC_SD"
+		(at 58.42 203.2 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "3ee347f7-fa41-54a9-b5d7-c91cc032c32d")
+	)
+	(wire
+		(pts
+			(xy 60.96 205.74)
+			(xy 58.42 205.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b0091b3a-df2b-51e9-b7cc-1b324dad9159")
+	)
+	(label "FAN_PWM"
+		(at 58.42 205.74 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "7c4bc69e-0104-595e-86ab-3c1c36b20ae9")
 	)
 	(no_connect
 		(at 60.96 208.28)
@@ -6488,135 +6098,6 @@
 			(justify right bottom)
 		)
 		(uuid "822dbba0-6231-56e2-811b-1c199f484a5a")
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 137.16 147.32 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "9732f832-7050-5862-b60b-79287045d955")
-		(property "Reference" "R2"
-			(at 139.7 146.05 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "10k"
-			(at 139.7 148.59 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 137.16 147.32 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 137.16 147.32 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor, 1 %, 0603, 10k"
-			(at 137.16 147.32 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "C25804"
-			(at 137.16 147.32 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MPN" "0603WAF1002T5E"
-			(at 137.16 147.32 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "58769812-1d7f-5cce-85a4-8af36cd1c669")
-		)
-		(pin "2"
-			(uuid "de943e88-1ecd-5b81-9f53-55706b2dd479")
-		)
-		(instances
-			(project "gamer-companion"
-				(path "/b701c6fb-7827-5d61-b7c7-6e14b53fa01e"
-					(reference "R2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 137.16 143.51)
-			(xy 137.16 140.97)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "438b75c0-64c6-59b7-a07e-a1bcded298ba")
-	)
-	(label "3V3"
-		(at 137.16 140.97 90)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "af6791f1-a6d1-5639-9ef7-75ebc5b7b6e0")
-	)
-	(wire
-		(pts
-			(xy 137.16 151.13)
-			(xy 137.16 153.67)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "64ff0bfa-aeb4-564b-95c6-fef7d24af7ef")
-	)
-	(label "IO0"
-		(at 137.16 153.67 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "471e7b66-bce6-5256-bb78-ba24a12217a9")
 	)
 	(symbol
 		(lib_id "gamer:AM312")
@@ -10801,7 +10282,7 @@
 		)
 		(uuid "e80982ab-37fb-52e3-80f2-1c2029a48014")
 	)
-	(text "MCU: ESP32-S3-WROOM-1-N16R8 on the board's back, antenna on the top edge (copper-free).\nNative USB on IO19/IO20 for flashing (no buttons needed). IO4 PIR, IO5 LEDs, IO6 fan PWM,\nIO7/15/16/17 amp I2S + SD, IO18/8/9 mic I2S. IO35-37 belong to the octal PSRAM."
+	(text "MCU: ESP32-S3-WROOM-1-N16R8 on the board's back, antenna on the top edge (copper-free).\nNative USB on IO19/IO20 for flashing (no buttons needed). Pins picked for the layout: IO15 PIR\n(level with the PIR's OUT leg), IO16 LEDs, IO4/5/18 amp BCLK/LRCLK/DIN, IO8 amp SD,\nIO9/10/11 mic SCK/WS/SD, IO12 fan PWM. IO35-37 belong to the octal PSRAM."
 		(exclude_from_sim no)
 		(at 10.16 116.84 0)
 		(effects

@@ -94,10 +94,11 @@ def pad_xy(fp, num):
 
 
 def courtyard_rect(fp):
-    """Board-frame bounding box of a footprint's courtyard (pads + 0.3 mm if it has none)."""
+    """Board-frame bounding box of a footprint's courtyard (pads + 0.3 mm if it has none), on its own side."""
     xs, ys = [], []
+    crtyd = pcbnew.B_CrtYd if fp.IsFlipped() else pcbnew.F_CrtYd
     for g in fp.GraphicalItems():
-        if g.GetLayer() == pcbnew.F_CrtYd:
+        if g.GetLayer() == crtyd:
             bb = g.GetBoundingBox()
             xs += [bb.GetLeft(), bb.GetRight()]
             ys += [bb.GetTop(), bb.GetBottom()]
@@ -114,23 +115,89 @@ def overlaps(a, b, gap=0.1):
     return a[0] < b[2] + gap and b[0] < a[2] + gap and a[1] < b[3] + gap and b[1] < a[3] + gap
 
 
+def side(fp):
+    """Which faces of the board a footprint takes up: "F", "B", or "FB" for a through-hole part.
+
+    Goes by the footprint's own THT attribute, not its pads: an SMD module's plated thermal vias
+    don't make it block the other face."""
+    if fp.GetAttributes() & pcbnew.FP_THROUGH_HOLE:
+        return "FB"
+    return "B" if fp.IsFlipped() else "F"
+
+
+def pth_rects(fp, margin=0.3):
+    """Board-frame boxes of an SMD footprint's plated-hole pads (thermal vias): copper on both faces."""
+    if fp.GetAttributes() & pcbnew.FP_THROUGH_HOLE:
+        return []          # its whole courtyard already blocks both faces
+    out = []
+    for p in fp.Pads():
+        if p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH:
+            bb = p.GetBoundingBox()
+            (x0, y1), (x1, y0) = from_page(pcbnew.VECTOR2I(bb.GetLeft(), bb.GetTop())), \
+                from_page(pcbnew.VECTOR2I(bb.GetRight(), bb.GetBottom()))
+            out.append((x0 - margin, y0 - margin, x1 + margin, y1 + margin))
+    return out
+
+
+def set_orientation(fp, deg):
+    """Orientation as seen from the top. A left-right flip leaves a bottom footprint at 180 degrees
+    with its geometry mirrored in x only, so bottom parts add that 180 back."""
+    fp.SetOrientationDegrees((deg + 180) % 360 if fp.IsFlipped() else deg)
+
+
+def trim_courtyard(fp, margin=0.25):
+    """Replace a footprint's courtyard with its Fab-layer body outline plus margin.
+
+    For modules whose stock courtyard includes an antenna clearance zone wider than the board:
+    the auto-fitter and DRC then see the body only. Its built-in keep-out zone goes too, so keep
+    copper off the antenna with layout.NO_COPPER. DRC's footprint-vs-library check is turned off
+    for the board (gen_pcb.write_rules), since the edit is deliberate."""
+    fab = pcbnew.B_Fab if fp.IsFlipped() else pcbnew.F_Fab
+    crt = pcbnew.B_CrtYd if fp.IsFlipped() else pcbnew.F_CrtYd
+    bb = None
+    for g in list(fp.GraphicalItems()):
+        if g.GetLayer() == fab and isinstance(g, pcbnew.PCB_SHAPE):
+            b = g.GetBoundingBox()
+            if bb is None:
+                bb = b
+            else:
+                bb.Merge(b)
+    if bb is None:
+        raise RuntimeError("trim_courtyard: %s has no Fab outline" % fp.GetReference())
+    for g in list(fp.GraphicalItems()):
+        if g.GetLayer() == crt:
+            fp.Remove(g)
+    for z in list(fp.Zones()):      # the footprint's own antenna keep-out spans the same oversized zone
+        fp.Remove(z)
+    r = pcbnew.PCB_SHAPE(fp, pcbnew.SHAPE_T_RECT)
+    r.SetLayer(crt)
+    r.SetWidth(mm(0.05))
+    r.SetStart(pcbnew.VECTOR2I(bb.GetLeft() - mm(margin), bb.GetTop() - mm(margin)))
+    r.SetEnd(pcbnew.VECTOR2I(bb.GetRight() + mm(margin), bb.GetBottom() + mm(margin)))
+    fp.Add(r)
+
+
 def autofit(placed, prefer, keepouts, report=None):
     """Put each preferred part at its spot, or the nearest free spot in a widening spiral (up to 16 mm).
 
     report: list that collects (ref, mm moved) for parts that didn't fit where asked.
     """
     prefer_refs = {r for r, *_ in prefer}
-    occupied = [courtyard_rect(fp) for ref, fp in placed.items() if ref not in prefer_refs and not ref.startswith("H")]
-    occupied += keepouts
+    # (rect, sides): SMD parts on opposite faces may share board area; keep-outs and THT parts block both
+    occupied = [(courtyard_rect(fp), side(fp)) for ref, fp in placed.items()
+                if ref not in prefer_refs and not ref.startswith("H")]
+    occupied += [(r, "FB") for ref, fp in placed.items() if ref not in prefer_refs for r in pth_rects(fp)]
+    # keep-outs: a rect blocks both faces; (rect, "F") or (rect, "B") blocks one
+    occupied += [(r, "FB") if len(r) == 4 else (r[0], r[1]) for r in keepouts]
 
-    def free(r):
+    def free(r, s):
         if not all(inside_outline(x, y, 0.5) for x in (r[0], r[2]) for y in (r[1], r[3])):
             return False
-        return not any(overlaps(r, o) for o in occupied)
+        return not any(overlaps(r, o) and set(s) & set(os_) for o, os_ in occupied)
 
     for ref, x, y, o in prefer:
         fp = placed[ref]
-        fp.SetOrientationDegrees(o)
+        set_orientation(fp, o)
         best = None
         for step in range(0, 81):
             d = step * 0.2
@@ -139,7 +206,7 @@ def autofit(placed, prefer, keepouts, report=None):
                 a = 2 * math.pi * k / n
                 fp.SetPosition(to_page(x + d * math.cos(a), y + d * math.sin(a)))
                 r = courtyard_rect(fp)
-                if free(r):
+                if free(r, side(fp)):
                     best = r
                     break
             if best:
@@ -152,13 +219,14 @@ def autofit(placed, prefer, keepouts, report=None):
             print("  autofit: %-4s moved %.1f mm" % (ref, moved))
             if report is not None:
                 report.append((ref, moved))
-        occupied.append(best)
+        occupied.append((best, side(fp)))
+        occupied += [(r, "FB") for r in pth_rects(fp)]
 
 
 def place_row(fp, first, step_dir):
     """Rotate a 1xN pad footprint so pin 2 lies in step_dir from pin 1, then put pin 1 at first."""
     for o in (0, 90, 180, 270):
-        fp.SetOrientationDegrees(o)
+        set_orientation(fp, o)
         (x1, y1), (x2, y2) = pad_xy(fp, "1"), pad_xy(fp, "2")
         d = math.hypot(x2 - x1, y2 - y1)
         if abs((x2 - x1) / d - step_dir[0]) < 0.01 and abs((y2 - y1) / d - step_dir[1]) < 0.01:

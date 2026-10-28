@@ -283,7 +283,8 @@ def prerouted(r):
 
     Each entry is a path: "REF.PAD", then any of (x, y) points in board mm, a number (track width
     from there on, else 0.5 mm on POWER_NETS and 0.25 mm otherwise), "via" (via here, carry on
-    on the other layer), ending with "REF.PAD". The net comes from the first pad."""
+    on the other layer), ending with "REF.PAD". The net comes from the first pad. It starts on the
+    first pad's layer and must end on a layer the last pad is on."""
     for path in getattr(layout, "PREROUTE", []):
         def pad(s):
             ref, num = s.split(".")
@@ -296,7 +297,9 @@ def prerouted(r):
         net = first.GetNetname()
         assert last.GetNetname() == net, "PREROUTE: %s and %s are on different nets" % (path[0], path[-1])
         w = 0.5 if net in getattr(layout, "POWER_NETS", ()) else 0.25
-        layer, at = pcbnew.F_Cu, from_page(first.GetPosition())
+        # start on the first pad's own copper (a bottom-side SMD pad starts on B.Cu)
+        layer = pcbnew.F_Cu if first.IsOnLayer(pcbnew.F_Cu) else pcbnew.B_Cu
+        at = from_page(first.GetPosition())
         for step in list(path[1:-1]) + [from_page(last.GetPosition())]:
             if isinstance(step, (int, float)):
                 w = step
@@ -306,7 +309,7 @@ def prerouted(r):
             else:
                 r.track(net, at, step, w, layer)
                 at = step
-        assert layer == pcbnew.F_Cu, "PREROUTE %s: ends on the bottom layer (odd number of vias)" % path[0]
+        assert last.IsOnLayer(layer), "PREROUTE %s: ends on a layer %s isn't on (count the vias)" % (path[0], path[-1])
         print("prerouted", net, path[0], "->", path[-1])
 
 

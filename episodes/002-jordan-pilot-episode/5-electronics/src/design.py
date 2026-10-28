@@ -23,19 +23,19 @@ cap("C1", "22uF", at(20, 25), "VBUS", "GND")
 part("U1", "Regulator_Linear:AP2112K-3.3", "AP2112K-3.3TRG1", "Package_TO_SOT_SMD:SOT-23-5", "C51118", "AP2112K-3.3TRG1",
      at(34, 22), {"1": "VBUS", "3": "VBUS", "2": "GND", "4": None, "5": "3V3"},
      "LDO 3.3 V 600 mA, SOT-23-5, EN tied to VIN (always on)")
-cap("C2", "10uF", at(26, 27), "VBUS", "GND")
 cap("C3", "10uF", at(44, 27), "3V3", "GND")
 cap("C4", "100nF", at(48, 27), "3V3", "GND")
-for i, (net, col) in enumerate((("VBUS", 58), ("3V3", 62), ("GND", 66), ("EN", 70), ("IO0", 74)), 1):
+# test pads for reset / download mode (probe VBUS, 3V3, GND on J1, C3 and C1)
+for i, (net, col) in ((4, ("EN", 70)), (5, ("IO0", 74))):
     part("TP%d" % i, "Connector:TestPoint", net, "TestPoint:TestPoint_Pad_D1.5mm", "", "", at(col, 14), {"1": net},
          "Test pad", dnp=True)
 
 # --- MCU: ESP32-S3-WROOM-1-N16R8 with EN RC and IO0 pull-up (bottom-left)
 part("U2", "RF_Module:ESP32-S3-WROOM-1", "ESP32-S3-WROOM-1-N16R8", "RF_Module:ESP32-S3-WROOM-1", "C2913202",
      "ESP32-S3-WROOM-1-N16R8", at(30, 76),
-     {"1": "GND", "2": "3V3", "3": "EN", "4": "PIR_OUT", "5": "LED_IO", "6": "FAN_PWM", "7": "I2S_BCLK",
-      "8": "I2S_LRCLK", "9": "I2S_DIN", "10": "AMP_SD", "11": "MIC_SCK", "12": "MIC_WS", "13": "USB_DN",
-      "14": "USB_DP", "15": None, "16": None, "17": "MIC_SD", "18": None, "19": None, "20": None, "21": None,
+     {"1": "GND", "2": "3V3", "3": "EN", "4": "I2S_BCLK", "5": "I2S_LRCLK", "6": None, "7": None,
+      "8": "PIR_OUT", "9": "LED_IO", "10": None, "11": "I2S_DIN", "12": "AMP_SD", "13": "USB_DN",
+      "14": "USB_DP", "15": None, "16": None, "17": "MIC_SCK", "18": "MIC_WS", "19": "MIC_SD", "20": "FAN_PWM", "21": None,
       "22": None, "23": None, "24": None, "25": None, "26": None, "27": "IO0", "28": None, "29": None, "30": None,
       "31": None, "32": None, "33": None, "34": None, "35": None, "36": None, "37": None, "38": None, "39": None,
       "40": "GND", "41": "GND"},
@@ -44,7 +44,7 @@ cap("C5", "10uF", at(6, 58), "3V3", "GND")
 cap("C6", "100nF", at(10, 58), "3V3", "GND")
 res("R1", "10k", at(6, 68), "3V3", "EN")
 cap("C7", "1uF", at(10, 68), "EN", "GND")
-res("R2", "10k", at(54, 58), "3V3", "IO0")              # IO0 high = normal boot
+# IO0: the S3's internal pull-up holds it high at reset (normal boot); TP5 can force it low.
 
 # --- Sensors: PIR with filtered supply, I2S mic (top-right)
 part("U5", PIR, "AM312", "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical", "", "AM312",
@@ -108,8 +108,9 @@ NOTES += [
                "module, mic and PIR. Budget ~150-250 mA typical, ~870 mA if everything peaks: firmware staggers\n"
                "speech, Wi-Fi and fan. No battery."),
     (at(4, 46), "MCU: ESP32-S3-WROOM-1-N16R8 on the board's back, antenna on the top edge (copper-free).\n"
-                "Native USB on IO19/IO20 for flashing (no buttons needed). IO4 PIR, IO5 LEDs, IO6 fan PWM,\n"
-                "IO7/15/16/17 amp I2S + SD, IO18/8/9 mic I2S. IO35-37 belong to the octal PSRAM."),
+                "Native USB on IO19/IO20 for flashing (no buttons needed). Pins picked for the layout: IO15 PIR\n"
+                "(level with the PIR's OUT leg), IO16 LEDs, IO4/5/18 amp BCLK/LRCLK/DIN, IO8 amp SD,\n"
+                "IO9/10/11 mic SCK/WS/SD, IO12 fan PWM. IO35-37 belong to the octal PSRAM."),
     (at(80, 3), "SENSORS: AM312 PIR on an RC-filtered supply (R3/C8). ICS-43434 mic on the back, port over a\n"
                 "1 mm hole through the board, rubber boot to the face's mic port. L/R low = left slot."),
     (at(80, 36), "EYES: 2 x WS2812B-2020 on VLED = VBUS - one diode (~4.3 V), so their 0.7 x VDD input high\n"

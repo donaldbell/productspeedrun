@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Place the episode's board from its netlist and src/layout.py (all parts on top).
+"""Place the episode's board from its netlist and src/layout.py (parts on top unless layout.BOTTOM lists them).
 
 Run with KiCad's bundled Python (it has the pcbnew module); tools/kicad/build.sh does this:
   "$KICAD_PY" tools/kicad/gen_pcb.py <episode> <exported.net>
@@ -57,6 +57,9 @@ def write_rules():
     rules = pro["board"]["design_settings"]["rules"]
     rules.update(min_resolved_spokes=1, min_clearance=0.15, min_track_width=0.15, min_copper_edge_clearance=0.3,
                  min_hole_clearance=0.25, min_through_hole_diameter=0.2, min_via_diameter=0.5)
+    if getattr(layout, "TRIM_COURTYARD", ()):
+        # trimmed module courtyards differ from the library copy on purpose
+        pro["board"]["design_settings"].setdefault("rule_severities", {})["lib_footprint_mismatch"] = "ignore"
     ns = pro.setdefault("net_settings", {})
     classes = ns.get("classes") or [{"name": "Default"}]
     default = next((c for c in classes if c["name"] == "Default"), classes[0])
@@ -114,6 +117,10 @@ def main(netlist):
     pad_net = {node: name for name, nodes in nets.items() for node in nodes}
 
     subst = getattr(layout, "MODEL_SUBST", {})
+    bottom = set(getattr(layout, "BOTTOM", ()))
+    unknown = bottom - set(comps)
+    if unknown:
+        raise SystemExit("layout.BOTTOM names parts design.py doesn't have: " + ", ".join(sorted(unknown)))
     placed = {}
     for ref in sorted(comps):
         c = comps[ref]
@@ -135,6 +142,9 @@ def main(netlist):
         if ref[0] in "HF":
             fp.Reference().SetVisible(False)   # holes and fiducials need no label
         board.Add(fp)
+        if ref in bottom:
+            # mirrored onto the bottom face; positions and orientations in layout.py stay as seen from the top
+            fp.Flip(fp.GetPosition(), pcbnew.FLIP_DIRECTION_LEFT_RIGHT)
         for p in fp.Pads():
             name = pad_net.get((ref, p.GetNumber()))
             if name:
@@ -150,7 +160,9 @@ def main(netlist):
     for ref, (x, y, o) in getattr(layout, "FIXED", {}).items():
         fp = placed[ref]
         fp.SetPosition(k.to_page(x, y))
-        fp.SetOrientationDegrees(o)
+        k.set_orientation(fp, o)
+    for ref in getattr(layout, "TRIM_COURTYARD", ()):
+        k.trim_courtyard(placed[ref])
     for ref, (x, y, d) in getattr(layout, "ROWS", {}).items():
         k.place_row(placed[ref], (x, y), d)
 
