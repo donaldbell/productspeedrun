@@ -23,6 +23,7 @@ Run from the repo folder.
 | `tools/kicad/build.sh episodes/<slug>` | Everything: Freerouting, DRC fix-ups, silkscreen tidy, DRC, renders, `board.glb` | 5–15 min |
 | `tools/kicad/export.sh episodes/<slug>` | Only the BOM, pictures and GLB again (after a hand edit in KiCad) | about a minute |
 | `tools/kicad/selftest.sh [place]` | Rebuilds episode 001's board in a scratch folder to check the kit works on this computer; the full run fails unless DRC is 0 violations, 0 unconnected | as a build |
+| `tools/kicad/selftest.sh all blocks/<name>` | The same for one of the brain blocks below | 2–5 min |
 
 Each step saves as it goes, so the dashboard shows the schematic first, then the placed board, then the routed one.
 
@@ -36,7 +37,7 @@ Each step saves as it goes, so the dashboard shows the schematic first, then the
 
 ## Proven blocks
 
-Copy these rather than drawing them again. Both boards passed ERC, DRC 0 and 0 unconnected.
+Copy these rather than drawing them again. Every board here passed ERC, DRC 0 and 0 unconnected.
 
 | Block | Where |
 |---|---|
@@ -48,10 +49,19 @@ Copy these rather than drawing them again. Both boards passed ERC, DRC 0 and 0 u
 | USB 5 V in → AP2112K-3.3 LDO | episode 002 |
 | ICS-43434 I2S MEMS mic, WS2812B-2020 LEDs on a diode-dropped supply, low-side fan/motor PWM switch | episode 002 |
 | Double-sided placement (`BOTTOM`), `TRIM_COURTYARD` for WROOM-1's antenna zone | `episodes/002-jordan-pilot-episode/5-electronics/src/layout.py` |
+| Raspberry Pi Pico / Pico 2 soldered flat by its castellations: 5 V in through a Schottky into VSYS, 3V3 decoupling, RUN button, SWD pads under D1–D3, LED (46 × 60 mm) | `blocks/pico/` |
+| nRF52840 as a Raytac MDBT50Q-1MV2: USB-C (5.1k CC) → AP2112K-3.3 → VDD + VDDH, native USB, Tag-Connect TC2030 SWD, reset on P0.18, LED, antenna keep-out to the edge (32 × 44 mm) | `blocks/nrf52840/` |
+| Raspberry Pi HAT: 65 × 56.5 mm outline, M2.5 holes on the 58 × 49 pattern, 2 × 20 socket on the underside where the Pi's header is, ID EEPROM (CAT24C32 at 0x50, WP pad), decoupling, LED on GPIO17 | `blocks/pi-hat/` |
+
+The blocks are small boards of their own (`design.py` + `layout.py`), not part of an episode: copy their parts and placement into an episode's files. Each file's docstring gives the module's pad coordinates, so the rest of the layout can be planned around it. Notes from building them:
+
+- Pico: the `RaspberryPi_Pico_Debug` symbol adds the SWD pads D1–D3; its AGND and GND pins are both power outputs, so ERC wants a part between them (R2 0R, or a ferrite). Keep the micro-USB end on a board edge.
+- nRF52840: use the module's outer pad rows. Their 0.8 mm pitch leaves no room for a track to reach the inner row, so P0.18 (nRESET, inner only) gets a track inward under the module. No `POWER_NETS` on module pins. A blank module needs SWD for its first flash.
+- Pi HAT: `BOTTOM = ["J1"]` with `ROWS` pin 1 at (-24.13, 22.98) puts the socket's pins exactly on the Pi's header. Check against the current HAT+ spec before ordering.
 
 ## Board size
 
-Most of episode 002's Stage 5 time went into a board that was too small: Stage 4 picked 48 × 26 mm before the parts were known, and Freerouting never finished on it. `build.sh … schematic` now writes `SIZE.md` with the area the parts need. Give Stage 4 that number before it fixes the enclosure, and treat it as the minimum.
+Most of episode 002's Stage 5 time went into a board that was too small: Stage 4 picked 48 × 26 mm before the parts were known, and Freerouting never finished on it. `build.sh … schematic` now writes `SIZE.md` with the area the parts need. Big parts (modules, sockets) count once with a 2 mm ring round them, and everything else needs 2.5 times its own area. That matches every board so far, including 002's failed 48 × 26 board and the 54 × 31 one that routed. Give Stage 4 that number before it fixes the enclosure, and treat it as the minimum. Putting parts on both faces doesn't shrink it.
 
 ## Writing `layout.py`
 
@@ -60,7 +70,7 @@ Coordinates are the Stage 4 enclosure's (origin at the centre, mm, +y up), from 
 - `BOARD = (width, height, corner_radius)`. Use radius = half the width for a pill, or a square with half-width radius for a disc.
 - `HOLES` holds positions for H1, H2 and so on, and `HOLE_KEEPOUT` is the keep-out around each one (no parts, no copper).
 - `FIXED` holds parts that must sit exactly under the enclosure's features (module, buttons, sensors, LEDs). The footprint origin goes at the given point, and for THT parts that's often pin 1.
-- `ROWS` holds pad rows (headers, wire pads, THT sensors), given as pin 1 plus the direction to pin 2. `ROW_LABELS` adds their silkscreen pin names.
+- `ROWS` holds pad rows (headers, wire pads, THT sensors), given as pin 1 plus the direction to pin 2. `ROW_LABELS` adds their silkscreen pin names (`"left"`, `"right"`, `"below"` or `"above"` the pads, and optionally where the title goes).
 - `PREFER` holds everything else, in priority order (each IC first, then its decoupling). The auto-fitter spirals out up to 16 mm to the nearest free spot and lists what it moved in `output/placement.txt`.
 - `BOTTOM` lists refs that go on the bottom face (mirrored). Their positions and orientations are still given as seen from the top. The auto-fitter lets SMD parts on opposite faces share board area. Keep-outs, through-hole parts and an SMD part's plated holes (module and QFN thermal vias, which carry copper on both faces) block both faces. FIXED parts aren't moved, so check those against the vias yourself. Episode 002 is the worked case: a vertical board with the PIR and LEDs on the front and the module on the back.
 - `TRIM_COURTYARD` lists refs whose stock courtyard is replaced by their body outline (Fab layer + 0.25 mm), for modules like the ESP32-S3-WROOM-1 whose courtyard includes an antenna clearance zone wider than a small board. It also drops the footprint's own keep-out zone, and the build turns off DRC's footprint-vs-library check for that board. Pair it with a `NO_COPPER` keep-out under the antenna.

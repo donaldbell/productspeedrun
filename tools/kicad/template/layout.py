@@ -21,7 +21,7 @@ FIXED = {             # ref -> (x, y, orientation): parts the enclosure dictates
     "FID3": (22.0, -15.0, 0),
 }
 ROWS = {}             # ref -> (pin-1 x, y, (dx, dy) toward pin 2): headers, wire pads, THT sensors
-ROW_LABELS = {}       # ref -> (title, [pin labels], "left" | "right" | "below")
+ROW_LABELS = {}       # ref -> (title, [pin labels], "left" | "right" | "below" | "above"[, title (x, y)])
 PREFER = [            # (ref, x, y, orientation): everything else, each IC first, then its decoupling
 ]
 

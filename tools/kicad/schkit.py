@@ -141,10 +141,12 @@ FP_0603R = "Resistor_SMD:R_0603_1608Metric"
 CAPS = {
     "100nF": ("C14663", "CC0603KRX7R9BB104", FP_0603C, "Capacitor, ceramic, 100 nF 50 V X7R 0603"),
     "1uF": ("C15849", "CL10A105KB8NNNC", FP_0603C, "Capacitor, ceramic, 1 uF 50 V X5R 0603"),
+    "4.7uF": ("C19666", "CL10A475KO8NNNC", FP_0603C, "Capacitor, ceramic, 4.7 uF 16 V X5R 0603"),
     "10uF": ("C15850", "CL21A106KAYNNNE", FP_0805C, "Capacitor, ceramic, 10 uF 25 V X5R 0805"),
     "22uF": ("C45783", "CL21A226MAQNNNE", FP_0805C, "Capacitor, ceramic, 22 uF 25 V X5R 0805"),
 }
 RES = {"0": ("C21189", "0603WAF0000T5E"), "100": ("C22775", "0603WAF1000T5E"), "1k": ("C21190", "0603WAF1001T5E"),
+       "3.9k": ("C23018", "0603WAF3901T5E"),
        "4.7k": ("C23162", "0603WAF4701T5E"), "5.1k": ("C23186", "0603WAF5101T5E"),
        "10k": ("C25804", "0603WAF1002T5E"), "100k": ("C25803", "0603WAF1003T5E"),
        "220k": ("", "0603WAF2203T5E"), "1M": ("C22935", "0603WAF1004T5E")}

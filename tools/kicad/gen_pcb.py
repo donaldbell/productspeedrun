@@ -75,21 +75,21 @@ def write_rules():
 
 
 def row_labels(board, placed):
-    """Silkscreen pin labels beside pad rows: ROW_LABELS = {ref: (title, [labels], "left"|"right"|"below", [title_at])}."""
+    """Silkscreen pin labels beside pad rows: ROW_LABELS = {ref: (title, [labels], "left"|"right"|"below"|"above", [title_at])}."""
     for ref, (title, labels, where, *title_at) in getattr(layout, "ROW_LABELS", {}).items():
         fp = placed[ref]
         pts = [k.pad_xy(fp, str(i + 1)) for i in range(len(labels))]
         for (x, y), text in zip(pts, labels):
-            if where == "below":
-                k.add_text(board, text, x, y - 1.9, pcbnew.F_SilkS, 0.8)
+            if where in ("below", "above"):
+                k.add_text(board, text, x, y + (1.9 if where == "above" else -1.9), pcbnew.F_SilkS, 0.8)
             else:
                 dx = -2.4 - 0.35 * len(text) if where == "left" else 2.0 + 0.35 * len(text)
                 k.add_text(board, text, x + dx, y, pcbnew.F_SilkS, 0.8)
         cx = sum(p[0] for p in pts) / len(pts)
         if title_at:
             k.add_text(board, title, *title_at[0], pcbnew.F_SilkS, 0.9)
-        elif where == "below":
-            k.add_text(board, title, cx, pts[0][1] - 3.4, pcbnew.F_SilkS, 0.9)
+        elif where in ("below", "above"):
+            k.add_text(board, title, cx, pts[0][1] + (3.4 if where == "above" else -3.4), pcbnew.F_SilkS, 0.9)
         else:
             k.add_text(board, title, cx, max(p[1] for p in pts) + 2.0, pcbnew.F_SilkS, 0.9)
 
