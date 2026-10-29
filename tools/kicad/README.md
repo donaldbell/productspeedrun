@@ -61,11 +61,11 @@ The blocks are small boards of their own (`design.py` + `layout.py`), not part o
 
 ## Board size
 
-Most of episode 002's Stage 5 time went into a board that was too small: Stage 4 picked 48 × 26 mm before the parts were known, and Freerouting never finished on it. `build.sh … schematic` now writes `SIZE.md` with the area the parts need. Big parts (modules, sockets) count once with a 2 mm ring round them, and everything else needs 2.5 times its own area. That matches every board so far, including 002's failed 48 × 26 board and the 54 × 31 one that routed. Give Stage 4 that number before it fixes the enclosure, and treat it as the minimum. Putting parts on both faces doesn't shrink it.
+Most of episode 002's Stage 5 time went into a board that was too small: Stage 4 picked 48 × 26 mm before the parts were known, and Freerouting never finished on it. `build.sh … schematic` now writes `SIZE.md` with the area the parts need. Big parts (modules, sockets) count once with a 2 mm ring round them, and everything else needs 2.5 times its own area. That matches every board so far, including 002's failed 48 × 26 board and the 54 × 31 one that routed. Give Stage 4 that number through `FIT.md` before it fixes the enclosure, and treat it as the minimum. Putting parts on both faces doesn't shrink it.
 
 ## Writing `layout.py`
 
-Coordinates are the Stage 4 enclosure's (origin at the centre, mm, +y up), from the "For Stage 5" list in `4-model/NOTES.md`.
+Coordinates are the Stage 4 enclosure's (origin at the centre, mm, +y up), from the episode's `FIT.md` (the contract between Stages 4 and 5, see CLAUDE.md).
 
 - `BOARD = (width, height, corner_radius)`. Use radius = half the width for a pill, or a square with half-width radius for a disc.
 - `HOLES` holds positions for H1, H2 and so on, and `HOLE_KEEPOUT` is the keep-out around each one (no parts, no copper).

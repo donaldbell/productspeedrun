@@ -8,7 +8,7 @@ import pcbnew
 
 from pcbkit import add_text, circle_rect, rect_pts, silk_circle, silk_rect  # noqa: F401
 
-BOARD = (60.0, 40.0, 4.0)                        # width, height, corner radius: from 4-model/NOTES.md
+BOARD = (60.0, 40.0, 4.0)                        # width, height, corner radius: from the episode's FIT.md
 HOLES = [(sx * 26.0, sy * 16.0) for sx in (-1, 1) for sy in (-1, 1)]   # H1..H4 on the enclosure posts
 HOLE_KEEPOUT = 3.0
 
