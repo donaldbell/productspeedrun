@@ -189,10 +189,10 @@ function viewRoll() {
       r.label, h("button", { type: "button", "aria-label": "Remove " + r.label, text: "×", onclick: () => { ep.roll.splice(i, 1); save(); drawChips(); renderSplits(); } }))));
   };
   drawChips();
-  const field = (key, label, kind = "textarea", ph = "") => {
+  const field = (key, label, kind = "textarea") => {
     const input = kind === "input"
-      ? h("input", { id: "brief-" + key, class: key === "name" ? "name" : null, type: "text", value: ep.brief[key] || "", placeholder: ph, autocomplete: "off" })
-      : h("textarea", { id: "brief-" + key, placeholder: ph, rows: 1 }, ep.brief[key] || "");
+      ? h("input", { id: "brief-" + key, class: key === "name" ? "name" : null, type: "text", value: ep.brief[key] || "", autocomplete: "off" })
+      : h("textarea", { id: "brief-" + key, rows: 1 }, ep.brief[key] || "");
     const fit = () => { if (input.tagName === "TEXTAREA") { input.style.height = "auto"; input.style.height = input.scrollHeight + 2 + "px"; } };
     input.addEventListener("input", () => { ep.brief[key] = input.value; save(); fit(); if (key === "name") renderSplits(); });
     requestAnimationFrame(fit);
@@ -202,17 +202,17 @@ function viewRoll() {
     h("iframe", { class: "roller", src: ROLLER_URL, title: "Random Project Generator", allow: "fullscreen" }),
     h("div", { class: "panel-col" },
       h("div", { class: "label", text: "The roll" }), chips,
-      field("name", "Product name", "input", "Name it"),
-      field("pitch", "One-line pitch", "textarea", "Haptic nudges on your handlebars, straight from your phone"),
-      field("what", "What it is", "textarea", "a bike accessory that clips onto your handlebars like a bike light"),
-      field("does", "What it does", "textarea", "adds haptic buzzing to the handlebars, connects to your phone, and a single LED on top lights up when it buzzes"),
-      field("electronics", "What's inside", "textarea", "a small ESP32 module along with a haptic pager motor"),
+      field("name", "Product name", "input"),
+      field("pitch", "One-line pitch", "textarea"),
+      field("what", "What it is", "textarea"),
+      field("does", "What it does", "textarea"),
+      field("electronics", "What's inside", "textarea"),
       h("div", { class: "field-row" },
-        field("design", "Design language", "textarea", "minimal, black and white with silver accents"),
-        field("looksLike", "Form factor like", "textarea", "the DJI clip-on Bluetooth microphone")),
+        field("design", "Design language", "textarea"),
+        field("looksLike", "Form factor like", "textarea")),
       h("div", { class: "field-row" },
-        field("size", "Rough size", "textarea", "about 1.5 in wide and tall, 0.5 in thick"),
-        field("who", "Who it's for", "textarea", "commuting cyclists")),
+        field("size", "Rough size", "textarea"),
+        field("who", "Who it's for", "textarea")),
       h("p", { class: "hint", text: "These answers write the starting prompts for concept art, the layout sheet and the 3D model." })));
   return { el, refresh() {}, onRoll() { drawChips(true); } };
 }
