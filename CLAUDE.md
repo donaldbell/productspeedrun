@@ -31,7 +31,7 @@ Use the Solidcraft MCP server in **headless** mode (`solidcraft-cli mcp`; if it 
 3. Save the Solidcraft design file in `4-model/`.
 4. Take an isometric screenshot with Solidcraft's `screenshot` tool and save it as `4-model/iso.png`.
 5. Export **STEP** (`model.step`) and **OBJ or STL** (`model.obj` / `model.stl`).
-6. Convert the mesh to **`4-model/model.glb`** for the web viewer, for example with Python: `pip install trimesh` then `trimesh.load("model.obj").export("model.glb")`. Scale to meters if the viewer shows it huge (Solidcraft works in mm: multiply by 0.001).
+6. Convert the mesh to **`4-model/model.glb`** for the web viewer, for example with Python: `pip install trimesh` then `trimesh.load("model.obj").export("model.glb")`. Scale to meters if the viewer shows it huge (Solidcraft works in mm: multiply by 0.001). **Colours:** glTF's `baseColorFactor` (and `emissiveFactor`) are linear, not sRGB, so convert hex colours first (`c/12.92` if `c ≤ 0.04045`, else `((c+0.055)/1.055)^2.4`) and write the exact floats back after trimesh, which rounds them to 8 bits. Otherwise the model renders washed out. Start from `episodes/002-jordan-pilot-episode/4-model/make_glb.py`, which does both.
 
 Before every export, re-read `FIT.md` and take in any change requests from Stage 5: rebuild from the parameters, re-export, then mark the request done.
 
