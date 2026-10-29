@@ -1,0 +1,257 @@
+<!doctype html>
+<!--
+  Product Speedrun showcase page template. Copy to episodes/<slug>/6-showcase/index.html.
+
+  This copy is filled in with episode 002 (Gamer Guardian) as a worked example: replace the words,
+  pictures and accent colours, keep the structure and class names. kit/showcase/README.md explains
+  each section. Paths: ../2-concept/ … ../5-electronics/ are the episode's own folders, and
+  ../../../kit/ is the shared series look (the same on every page).
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gamer Guardian · Product Speedrun 002</title>
+<meta name="description" content="The monitor-top robot that keeps you in peak performance with helpful reminders. A Product Speedrun concept.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../../../kit/showcase.css">
+<style>
+/* This episode's accent: the only colours a page sets. Pick them from the product itself. */
+:root { --accent: #22B357; --accent-ink: #137A39; --accent-soft: #E1F4E7; }
+@media (prefers-color-scheme: dark) { :root { --accent-ink: #6FF09A; --accent-soft: #11241A; } }
+
+/* The free slot's own styles (this episode: a robot face that reacts to a reminder) */
+.bot { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--gap); align-items: center; }
+.bot svg { width: 100%; max-width: 380px; margin: 0 auto; display: block; }
+.bot .eye { fill: #1B2027; transition: fill .25s; }
+.bot[data-cue] .eye { fill: var(--cue); }
+.bot .air { opacity: 0; }
+.bot[data-cue] .air { opacity: 1; }
+@media (prefers-reduced-motion: no-preference) { .bot[data-cue] .air { animation: puff 1.2s ease-out 3; } }
+@keyframes puff { from { transform: translateY(0); opacity: 1; } to { transform: translateY(14px); opacity: 0; } }
+.cues { display: grid; gap: 8px; }
+.cues button { display: grid; grid-template-columns: 14px 1fr; gap: 2px 10px; text-align: left; padding: 12px 14px; border-radius: var(--r-md); border: 1px solid var(--line); background: var(--paper); color: var(--ink); font: inherit; cursor: pointer; }
+.cues button i { grid-row: span 2; width: 14px; height: 14px; border-radius: 50%; margin-top: 4px; background: var(--c); }
+.cues button small { color: var(--muted); }
+.cues button[aria-pressed="true"] { border-color: var(--accent); }
+.said { min-height: 3.2em; margin-top: 14px; font: 600 20px/1.35 var(--display); }
+@media (max-width: 860px) { .bot { grid-template-columns: 1fr; } }
+</style>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js"></script>
+<script type="module" src="../../../kit/series-bar.js"></script>
+<script type="module" src="../../../kit/showcase.js"></script>
+</head>
+<body>
+<ps-series-bar></ps-series-bar>
+
+<header class="ps-hero" id="top">
+  <div class="wrap">
+    <div>
+      <ul class="ps-roll" aria-label="The roll">
+        <li><small>Act</small><b>Fan / airflow</b></li>
+        <li><small>User</small><b>Gamer</b></li>
+        <li><small>Form factor</small><b>Tiny robot</b></li>
+        <li><small>Twist</small><b>Usable without looking at it</b></li>
+      </ul>
+      <h1>Gamer Guardian</h1>
+      <p class="ps-pitch">The monitor-top robot that keeps you in peak performance with helpful reminders.</p>
+      <p class="ps-lede">It notices when you sit down, then nudges you to take a break, drink some water, grab a snack or sit up straight. It uses a puff of air and a friendly voice, so you never have to look away from the game.</p>
+      <dl class="ps-facts">
+        <div><dt>71 × 73 × 53 mm</dt><dd>Ears to feet</dd></div>
+        <div><dt>USB-C, 5 V</dt><dd>No battery to charge</dd></div>
+        <div><dt>No camera</dt><dd>Presence by PIR only</dd></div>
+        <div><dt>On-device voice</dt><dd>Nothing is uploaded</dd></div>
+      </dl>
+    </div>
+    <figure>
+      <img src="hero.jpg" alt="Concept art: a chibi robot with cat ears and green side rings sitting on top of a gaming monitor, its cyan eyes glowing" width="560" height="400">
+      <figcaption>Stage 2 concept art. The eyes stay dark until it needs you.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<!-- The run strip: the same seven stages on every page. Link each to its section or file. -->
+<nav class="ps-run" aria-label="How this episode ran">
+  <ol>
+    <li><a href="#top"><span class="n"><i>1</i>Roll &amp; brief</span><span class="thumb"><svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><rect x="3" y="3" width="34" height="34" rx="8" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="13" cy="13" r="3" fill="currentColor"/><circle cx="27" cy="27" r="3" fill="currentColor"/><circle cx="20" cy="20" r="3" fill="currentColor"/></svg></span></a></li>
+    <li><a href="#trail"><span class="n"><i>2</i>Concept</span><span class="thumb"><img src="../2-concept/Gamer-Companion-Robot-Concept-Board.png" alt=""></span></a></li>
+    <li><a href="#trail"><span class="n"><i>3</i>Layout</span><span class="thumb"><img src="../3-layout/Gamer-Companion-GA-Drawing.jpg" alt=""></span></a></li>
+    <li><a href="#model"><span class="n"><i>4</i>3D model</span><span class="thumb"><img src="../4-model/iso.png" alt=""></span></a></li>
+    <li><a href="#inside"><span class="n"><i>5</i>Electronics</span><span class="thumb"><img src="../5-electronics/board.png" alt=""></span></a></li>
+    <li><a href="#top"><span class="n"><i>6</i>Showcase</span><span class="thumb">This page</span></a></li>
+    <li><a href="#next"><span class="n"><i>7</i>Verdict</span><span class="thumb"><span class="verdict open" data-verdict>Still deciding</span></span></a></li>
+  </ol>
+</nav>
+
+<main>
+  <section class="ps-section" id="who">
+    <div class="wrap">
+      <div class="ps-head">
+        <h2>Two people, one desk</h2>
+        <p>The gamer uses it. The parent buys it.</p>
+      </div>
+      <div class="ps-grid two">
+        <div class="ps-person">
+          <span class="role">The gamer, 12 to 15</span>
+          <h3>Headphones on, eyes locked on the screen</h3>
+          <p>Three hours vanish, the water bottle is still full and their back is a question mark. A chibi robot that looks like it belongs next to their RGB keyboard is something they'll actually leave on the monitor.</p>
+        </div>
+        <div class="ps-person">
+          <span class="role">The parent</span>
+          <h3>Asked nicely through the door four times</h3>
+          <p>Gamer Guardian repeats those reminders from inside the kid's own setup, in a voice that isn't Mum's or Dad's, and it doesn't need a camera in the bedroom to do it.</p>
+        </div>
+      </div>
+      <figure class="ps-moment">
+        <img src="moment.jpg" alt="Concept sketch: a gamer in headphones at a desk while a small robot on the monitor says 'Time for a break!'" width="504" height="420">
+        <blockquote>"Grab some water. You've got this."<cite>90 minutes into a ranked match, a cool breeze hits your face and a small voice says it once.</cite></blockquote>
+      </figure>
+    </div>
+  </section>
+
+  <!-- The free slot: one interactive or explanatory moment in the product's own style. -->
+  <section class="ps-section tint" id="demo">
+    <div class="wrap">
+      <div class="ps-head">
+        <h2>A nudge you feel, not one you watch</h2>
+        <p>Pick a reminder. The eyes light in its colour, it says one short line, then the breeze kicks in.</p>
+      </div>
+      <div class="ps-free bot" id="bot">
+        <svg viewBox="0 0 300 220" role="img" aria-label="The robot's face">
+          <path d="M70 40 L95 8 L112 46 Z M230 40 L205 8 L188 46 Z" fill="var(--ink)" opacity=".85"/>
+          <rect x="40" y="36" width="220" height="160" rx="46" fill="var(--sunk)" stroke="var(--ink)" stroke-width="5"/>
+          <rect x="70" y="66" width="160" height="72" rx="30" fill="#0E1116"/>
+          <circle class="eye" cx="115" cy="102" r="17"/><circle class="eye" cx="185" cy="102" r="17"/>
+          <g stroke="var(--ink)" stroke-width="5" stroke-linecap="round"><path d="M118 160 H182 M124 172 H176"/></g>
+          <g class="air" stroke="var(--accent)" stroke-width="4" stroke-linecap="round" fill="none"><path d="M128 190 q-6 10 0 20 M150 190 q-6 10 0 20 M172 190 q-6 10 0 20"/></g>
+        </svg>
+        <div>
+          <div class="cues" role="group" aria-label="Reminders">
+            <button type="button" style="--c:#3D8BFF" data-line="Water time. Two big sips."><i></i>Hydrate<small>Every 45 minutes</small></button>
+            <button type="button" style="--c:#FF9A3D" data-line="Long session. Grab a snack."><i></i>Snack<small>Long sessions only</small></button>
+            <button type="button" style="--c:#A86BFF" data-line="Sit up tall, shoulders back."><i></i>Sit up<small>A gentle one</small></button>
+            <button type="button" style="--c:#22B357" data-line="Time for a break! Stretch your body."><i></i>Take a break<small>After an hour of play</small></button>
+          </div>
+          <p class="said" aria-live="polite" id="said"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ps-section" id="model">
+    <div class="wrap">
+      <div class="ps-head">
+        <span class="ps-stage"><i>4</i>3D model in Solidcraft</span>
+        <h2>The real enclosure</h2>
+        <p>A first-pass CAD model, with every dimension taken from real, cheap parts. Drag to spin it.</p>
+      </div>
+      <div class="ps-grid side">
+        <div>
+          <div class="ps-viewer">
+            <model-viewer id="enclosure" src="../4-model/model.glb" alt="3D model of the Gamer Guardian enclosure" camera-controls auto-rotate shadow-intensity="0.6" interaction-prompt="none" camera-orbit="30deg 75deg auto"></model-viewer>
+          </div>
+          <div class="ps-views" role="group" aria-label="Views">
+            <button type="button" data-target="#enclosure" data-orbit="30deg 75deg auto" aria-pressed="true">Three-quarter</button>
+            <button type="button" data-target="#enclosure" data-orbit="0deg 85deg auto" aria-pressed="false">Front</button>
+            <button type="button" data-target="#enclosure" data-orbit="90deg 85deg auto" aria-pressed="false">Speaker side</button>
+            <button type="button" data-target="#enclosure" data-orbit="180deg 80deg auto" aria-pressed="false">Back</button>
+          </div>
+        </div>
+        <ol class="ps-callouts">
+          <li><b>Face cap</b><span>Holds the board, the visor, the PIR hole, the mic port and the three breeze slots of the mouth.</span></li>
+          <li><b>Rear shell with ears</b><span>Blower intake underneath, speaker grille on the right, USB-C at the back.</span></li>
+          <li><b>Smoked visor</b><span>A 44 × 24 mm acrylic lens with a hole for the PIR dome, because acrylic blocks infrared.</span></li>
+          <li><b>Feet and rear clip</b><span>A lip over the bezel in front, a friction-hinged arm behind, and an 8 mm gap underneath for the fan's air.</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="ps-section" id="inside">
+    <div class="wrap">
+      <div class="ps-head">
+        <span class="ps-stage"><i>5</i>Electronics in KiCad</span>
+        <h2>What's inside</h2>
+        <p>One 54 × 31 mm two-layer board stands upright behind the face. The front sees out through the visor; the back carries the brain, the audio and the power.</p>
+      </div>
+      <div class="ps-stats">
+        <div class="ps-stat"><b>0 / 0</b><span>DRC violations and unrouted connections</span></div>
+        <div class="ps-stat"><b>41</b><span>Components on a routed 2-layer board</span></div>
+        <div class="ps-stat"><b>~200 mA</b><span>Typical draw from USB while it listens</span></div>
+      </div>
+      <div class="ps-viewer">
+        <div class="load"><button class="ps-btn primary" type="button" data-load-model="../5-electronics/board.glb" data-alt="3D model of the circuit board">Load the 3D board (7 MB)</button></div>
+        <span class="note">Routed in KiCad with Freerouting</span>
+      </div>
+      <div class="ps-parts">
+        <div class="ps-part"><span class="ref">U2 · ESP32-S3-WROOM-1-N16R8</span><h3>The brain</h3><p>The ESP32 that can run Espressif's speech stack, a wake word plus about 200 commands, on the chip itself.</p></div>
+        <div class="ps-part"><span class="ref">U5 · AM312</span><h3>Presence</h3><p>A tiny PIR that draws about 15 µA, on its own filtered supply so fan noise can't trigger it.</p></div>
+        <div class="ps-part"><span class="ref">U4 · ICS-43434</span><h3>Ears</h3><p>A digital MEMS mic ported through a 1 mm hole in the board to a pinhole in the face.</p></div>
+        <div class="ps-part"><span class="ref">U3 · MAX98357A</span><h3>Voice</h3><p>A class-D amp on 5 V drives a 28 mm, 1 W speaker. No codec, no filter.</p></div>
+        <div class="ps-part"><span class="ref">Q1 · AO3400A</span><h3>Breeze</h3><p>Switches the blower at 25 kHz, too high to hear, and keeps it off at boot.</p></div>
+        <div class="ps-part"><span class="ref">LED1–2 · WS2812B-2020</span><h3>Eyes</h3><p>Two 2 mm RGB LEDs on one data line, lit only when a reminder fires.</p></div>
+      </div>
+      <details class="ps-bom">
+        <summary>Full bill of materials (<span data-bom-count>…</span> lines)</summary>
+        <div class="ps-table" data-bom="../5-electronics/bom.csv">Loading the parts list…</div>
+      </details>
+      <ul class="ps-files" aria-label="Design files">
+        <li><a href="../5-electronics/gamer-companion.kicad_sch">Schematic (KiCad)</a></li>
+        <li><a href="../5-electronics/gamer-companion.kicad_pcb">Board (KiCad)</a></li>
+        <li><a href="../5-electronics/bom.csv">bom.csv</a></li>
+        <li><a href="../4-model/model.step">Enclosure (STEP)</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="ps-section" id="trail">
+    <div class="wrap">
+      <div class="ps-head">
+        <h2>How we got here</h2>
+        <p>From a random roll to a routed board in one episode.</p>
+      </div>
+      <ol class="ps-trail">
+        <li><figure><a class="frame" href="../2-concept/Gamer-Companion-Robot-Concept-Board.png"><img src="../2-concept/Gamer-Companion-Robot-Concept-Board.png" alt="Concept board of robot variations" loading="lazy"></a><figcaption><b>Concept</b>The chosen robot board</figcaption></figure></li>
+        <li><figure><a class="frame" href="../3-layout/Gamer-Companion-GA-Drawing.jpg"><img src="../3-layout/Gamer-Companion-GA-Drawing.jpg" alt="General arrangement drawing" loading="lazy"></a><figcaption><b>Layout</b>The GA drawing, rev A</figcaption></figure></li>
+        <li><figure><a class="frame" href="../4-model/iso.png"><img src="../4-model/iso.png" alt="Isometric view of the CAD model" loading="lazy"></a><figcaption><b>3D model</b>Solidcraft enclosure</figcaption></figure></li>
+        <li><figure><a class="frame" href="../5-electronics/schematic.png"><img src="../5-electronics/schematic.png" alt="The schematic" loading="lazy"></a><figcaption><b>Electronics</b>The schematic</figcaption></figure></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="ps-section" id="next">
+    <div class="wrap">
+      <div class="ps-head">
+        <h2>What we still don't know</h2>
+        <p>This is a speedrun first pass. Here's what we'd answer before anyone orders a board or cuts a mould.</p>
+      </div>
+      <ul class="ps-questions">
+        <li><span class="topic">Board</span><h3>Routed and clean, but never built</h3><p>The first prototype has to confirm the PIR's pin order, the mic hole lining up with the face port, and the fit on the posts.</p></li>
+        <li><span class="topic">Voice</span><h3>Free-form speech needs a bigger chip</h3><p>Whisper-style transcription doesn't fit in the S3's RAM. The ESP32-P4 is the upgrade path, but it needs a Wi-Fi companion chip and a bigger head.</p></li>
+        <li><span class="topic">Feel</span><h3>Can you feel the breeze at arm's length?</h3><p>Small blowers move very little air. If it isn't noticeable at 50–70 cm on a quiet duty cycle, the fix is a 40 mm fan.</p></li>
+        <li><span class="topic">Sensing</span><h3>Does the PIR see a still, seated gamer?</h3><p>PIRs detect movement, and a focused player barely moves.</p></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer class="ps-foot">
+  <div class="wrap">
+    <span>Gamer Guardian is a concept from Product Speedrun episode 002. It isn't for sale.</span>
+    <span><a href="../../../">All episodes</a> · <a href="https://github.com/donaldbell/productspeedrun/tree/main/episodes/002-jordan-pilot-episode">Files on GitHub</a></span>
+  </div>
+</footer>
+
+<script>
+// The free slot's behaviour (this episode only).
+const bot = document.getElementById("bot"), said = document.getElementById("said");
+bot.querySelectorAll(".cues button").forEach((b) => b.addEventListener("click", () => {
+  bot.querySelectorAll(".cues button").forEach((o) => o.setAttribute("aria-pressed", String(o === b)));
+  bot.style.setProperty("--cue", getComputedStyle(b).getPropertyValue("--c"));
+  bot.removeAttribute("data-cue"); void bot.offsetWidth; bot.setAttribute("data-cue", "");
+  said.textContent = "“" + b.dataset.line + "”";
+}));
+</script>
+</body>
+</html>

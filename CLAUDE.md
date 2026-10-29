@@ -70,12 +70,15 @@ The dashboard shows the schematic and board live in the browser (KiCanvas), the 
 
 ## Stage 6: Showcase page
 
-Build **`6-showcase/index.html`**: a single, self-contained, attractive product page that makes the idea feel real. It is published on the public site, so:
+Build **`6-showcase/index.html`**: a product page that makes the idea feel real. Every episode's page uses the shared series look, so the gallery reads as one show:
 
-- Use only relative paths to the episode's own files, for example `../2-concept/<file>.png`, `../4-model/model.glb`, `../5-electronics/board.glb`. Copy anything else it needs into `6-showcase/`.
-- Include: product name and pitch, the hero concept art, who it's for and the moment it's used, an interactive 3D view of the model (and the board if there is one) using `<model-viewer>` from `https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js`, a "what's inside" section drawn from the BOM and notes, and an honest "what's next" list of open questions.
-- Give it its own visual identity that fits the product's vibe from the roll. It must work on phones and in both light and dark viewing.
-- No trackers, no external forms.
+- **Start from `kit/showcase/template.html`** (read `kit/showcase/README.md` first). Copy it, then replace the words, pictures and the three accent colours (taken from the product itself). Keep the fonts, the section order, the run strip, the footer and the class names from `kit/showcase.css`.
+- **Spend the creativity in the free slot:** one interactive or explanatory moment in the product's own style (a demo, a timeline, a diagram). Keep its styles scoped to its own class names.
+- **Keep `<ps-series-bar>` as the first thing in `<body>`.** It's the strip that links back to the gallery and to the episodes either side; the public site build fills it in.
+- Use only relative paths: the episode's own files (`../2-concept/<file>.png`, `../4-model/model.glb`, `../5-electronics/board.glb`, `../5-electronics/bom.csv`) and the shared kit (`../../../kit/`). Copy anything else it needs into `6-showcase/`.
+- Load `<model-viewer>` from `https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js`. Big models (the board GLB) load on a button press (`data-load-model`).
+- Content: product name and pitch, the hero concept art, who it's for and the moment it's used, the 3D model, what's inside (from the BOM and notes), how we got here, and an honest "what we still don't know" list.
+- It must work on phones and in both light and dark viewing. No trackers, no external forms.
 
 ## Publishing
 

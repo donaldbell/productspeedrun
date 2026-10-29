@@ -330,6 +330,13 @@ const server = http.createServer(async (req, res) => {
       return serveFile(res, p, req);
     }
 
+    // Shared showcase look (kit/), used by every episode's showcase page as ../../../kit/
+    if (parts[0] === "kit") {
+      const kit = path.join(ROOT, "kit"), p = path.join(kit, ...parts.slice(1));
+      if (!inside(kit, p)) return send(res, 403, { error: "Forbidden." });
+      return serveFile(res, p, req);
+    }
+
     // Dashboard
     const p = parts.length ? path.join(DASHBOARD, ...parts) : path.join(DASHBOARD, "index.html");
     if (!inside(DASHBOARD, p) && p !== path.join(DASHBOARD, "index.html")) return send(res, 403, { error: "Forbidden." });

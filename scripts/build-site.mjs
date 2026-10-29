@@ -34,6 +34,24 @@ if (existsSync(EP)) {
 }
 episodes.sort((a, b) => (b.ep.number || 0) - (a.ep.number || 0));
 
+// Shared showcase look and the series bar (kit/), then give every showcase page a filled-in
+// <ps-series-bar> linking home and to the episodes either side.
+if (existsSync(path.join(ROOT, "kit"))) await cp(path.join(ROOT, "kit"), path.join(OUT, "kit"), { recursive: true });
+const shown = episodes.filter((e) => e.showcase).sort((a, b) => (a.ep.number || 0) - (b.ep.number || 0));
+for (const [i, e] of shown.entries()) {
+  const file = path.join(OUT, "episodes", e.slug, "6-showcase", "index.html");
+  const page = await readFile(file, "utf8");
+  const nb = (o) => (o ? `../../${enc(o.slug)}/6-showcase/` : "");
+  const name = (o) => (o ? o.ep.brief?.name || o.ep.title || "" : "");
+  const prev = shown[i - 1], next = shown[i + 1];
+  const tag = `<ps-series-bar home="../../../" number="${esc(e.ep.number || "")}" name="${esc(name(e))}" prev="${nb(prev)}" prev-name="${esc(name(prev))}" next="${nb(next)}" next-name="${esc(name(next))}"></ps-series-bar>`;
+  let out;
+  if (/<ps-series-bar[\s>]/.test(page)) out = page.replace(/<ps-series-bar[^>]*>(\s*<\/ps-series-bar>)?/, tag);
+  else out = page.replace(/<body[^>]*>/i, (m) => `${m}\n${tag}`);
+  if (!out.includes("kit/series-bar.js")) out = out.replace(/<\/head>/i, '<script type="module" src="../../../kit/series-bar.js"></script>\n</head>');
+  await writeFile(file, out);
+}
+
 const cards = episodes.map(({ slug, ep, cover, showcase }) => {
   const href = showcase ? `episodes/${enc(slug)}/6-showcase/` : cover ? `episodes/${enc(slug)}/${enc(cover)}` : null;
   const tag = ep.decision === "keep" ? '<span class="tag keep">Keep building</span>' : ep.decision === "shelve" ? '<span class="tag shelve">Shelved</span>' : `<span class="tag">In progress · stage ${esc(ep.stage || 1)}</span>`;

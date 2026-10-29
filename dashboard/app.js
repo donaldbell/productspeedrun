@@ -294,7 +294,7 @@ const BUILDERS = {
   showcase: () => {
     const vibe = rollPick("Vibe");
     return `Build the showcase page for Product Speedrun episode ${S.ep.slug}. Use the brief in episode.json, the concept art, the layout sheet, the 3D model and the electronics notes and BOM to make the product feel real and close to existing.` +
-      `${vibe ? ` Give the page a ${lower1(vibe)} feel to match the roll.` : ""}\n\nFollow the Stage 6 steps in CLAUDE.md and save it as episodes/${S.ep.slug}/6-showcase/index.html.`;
+      `${vibe ? ` Let the ${lower1(vibe)} vibe from the roll show in the accent colours and the free slot.` : ""}\n\nStart from kit/showcase/template.html so it matches the other episodes, follow the Stage 6 steps in CLAUDE.md, and save it as episodes/${S.ep.slug}/6-showcase/index.html.`;
   },
 };
 const promptText = (kind) => (S.ep.promptEdited[kind] && S.ep.prompts[kind] != null ? S.ep.prompts[kind] : BUILDERS[kind]());
