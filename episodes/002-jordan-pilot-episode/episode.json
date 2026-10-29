@@ -3,7 +3,7 @@
   "number": 2,
   "title": "Jordan Pilot Episode",
   "createdAt": "2026-10-28T16:40:31.089Z",
-  "stage": 6,
+  "stage": 7,
   "roll": [
     {
       "bucket": "Act",
@@ -51,7 +51,9 @@
     1,
     2,
     3,
-    4
+    4,
+    7
   ],
-  "decision": null
+  "decision": "keep",
+  "decidedAt": "2026-10-29T11:36:56.585Z"
 }
