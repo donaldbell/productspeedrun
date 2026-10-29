@@ -3,11 +3,11 @@
   "number": 1,
   "title": "Demo 1",
   "createdAt": "2026-10-27T21:02:07.926Z",
-  "stage": 6,
+  "stage": 7,
   "roll": [],
   "brief": {
     "name": "Backpack Defender",
-    "pitch": "A fun motion-detecting alarm for a grade schooler's backpack or locker.",
+    "pitch": "A fun motion-activated alarm for a kid's backpack or locker.\"",
     "what": "A near-field motion detecting device that can either be placed in a locker or clipped/tied to a backpack. The design is cute and draws inspiration from Japanese kawaii culture, making it appealing to kids. A selection of different alarm tones can be selected by connecting to the device directly (wireless AP mode hosted settings page). The tones range from goofy, playful, musical, robotic, and standard alarm tones. The power comes from a standard AA or AAA battery or a pair of them, for both convenience and so that teachers can easily disarm them. I imagine the device is about the size of a deck of playing cards and would be placed on it's long, wide side for use in a locker. A large (maybe playfully large) button or integrated switch makes it clear for anyone how to silence the alarm sound. This is not a serious security device, but more of a toy.",
     "does": "Makes sound when it detects motion nearby.",
     "who": "kids, school-age",
@@ -28,6 +28,15 @@
     "2-concept": "2-concept/Gemini_Generated_Image_aokq2uaokq2uaokq.jpeg",
     "3-layout": "3-layout/Gemini_Generated_Image_gxrn7ggxrn7ggxrn.jpeg"
   },
-  "done": [],
-  "decision": null
+  "done": [
+    7,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "decision": "keep",
+  "decidedAt": "2026-10-29T11:45:52.696Z"
 }
