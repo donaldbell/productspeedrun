@@ -2,7 +2,7 @@
 # Build an episode's electronics from 5-electronics/src/design.py and src/layout.py.
 #
 #   tools/kicad/build.sh episodes/002-plant-whisperer             everything (about 5-15 min, mostly routing)
-#   tools/kicad/build.sh episodes/002-plant-whisperer schematic   schematic, ERC, netlist check, BOM, schematic.png
+#   tools/kicad/build.sh episodes/002-plant-whisperer schematic   schematic, ERC, netlist check, BOM, schematic.png, SIZE.md
 #   tools/kicad/build.sh episodes/002-plant-whisperer place       ...plus the placed (unrouted) board and board.png
 #
 # Each step saves into 5-electronics/ as it goes, so the dashboard shows the schematic, then the
@@ -31,6 +31,7 @@ step "ERC"
 "$CLI" sch export netlist -o output/$P.net $P.kicad_sch
 python3 -I "$KIT/check_netlist.py" "$E" output/$P.net
 python3 -I "$KIT/make_bom.py" "$E" output/$P.net > bom.csv
+"$PY" "$KIT/size_board.py" "$E" output/$P.net || echo "(size check failed: carrying on)"
 sh "$KIT/export.sh" "$E" schematic
 [ "$MODE" = schematic ] && exit 0
 

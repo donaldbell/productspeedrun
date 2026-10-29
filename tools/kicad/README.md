@@ -18,7 +18,7 @@ Run from the repo folder.
 | Command | What it does | Time |
 |---|---|---|
 | `tools/kicad/new_board.sh episodes/<slug> <name> "<Title>"` | Starts `src/design.py` and `src/layout.py` from the template | instant |
-| `tools/kicad/build.sh episodes/<slug> schematic` | Schematic, ERC, netlist check, `bom.csv`, `schematic.png` | seconds |
+| `tools/kicad/build.sh episodes/<slug> schematic` | Schematic, ERC, netlist check, `bom.csv`, `schematic.png`, and `SIZE.md` (how much board area the parts need) | seconds |
 | `tools/kicad/build.sh episodes/<slug> place` | Also places the board and renders a quick `board.png` | under a minute |
 | `tools/kicad/build.sh episodes/<slug>` | Everything: Freerouting, DRC fix-ups, silkscreen tidy, DRC, renders, `board.glb` | 5–15 min |
 | `tools/kicad/export.sh episodes/<slug>` | Only the BOM, pictures and GLB again (after a hand edit in KiCad) | about a minute |
@@ -33,6 +33,25 @@ Each step saves as it goes, so the dashboard shows the schematic first, then the
 - Stock KiCad symbols and footprints by their library IDs. A part KiCad doesn't ship gets a `box_symbol()`. When one is drawn, move it into `parts.py` so the next episode can reuse it.
 - `NOTES` puts text on the sheet, and `OFF_BOARD` adds BOM lines for batteries, speakers and cables.
 - Copy whole blocks from `example/design.py` where they fit: the 2 × AAA boost with reverse-battery FET, the ESP32-C3 module with EN RC, strap pull-ups and USB pogo pads, the I2S amp, the PIR with its supply filter, the button, test pads, holes and fiducials.
+
+## Proven blocks
+
+Copy these rather than drawing them again. Both boards passed ERC, DRC 0 and 0 unconnected.
+
+| Block | Where |
+|---|---|
+| ESP32-C3-WROOM-02 with EN RC, strap pull-ups, USB pogo pads | `example/design.py` (episode 001) |
+| 2 × AAA → 3.3 V boost (TPS61023) with reverse-battery P-FET | `example/design.py` |
+| MAX98357A I2S amp + piezo or speaker | both episodes |
+| AM312 PIR with RC-filtered supply | both episodes |
+| ESP32-S3-WROOM-1 (N16R8) with native USB, EN RC, IO0 pad | `episodes/002-jordan-pilot-episode/5-electronics/src/design.py` |
+| USB 5 V in → AP2112K-3.3 LDO | episode 002 |
+| ICS-43434 I2S MEMS mic, WS2812B-2020 LEDs on a diode-dropped supply, low-side fan/motor PWM switch | episode 002 |
+| Double-sided placement (`BOTTOM`), `TRIM_COURTYARD` for WROOM-1's antenna zone | `episodes/002-jordan-pilot-episode/5-electronics/src/layout.py` |
+
+## Board size
+
+Most of episode 002's Stage 5 time went into a board that was too small: Stage 4 picked 48 × 26 mm before the parts were known, and Freerouting never finished on it. `build.sh … schematic` now writes `SIZE.md` with the area the parts need. Give Stage 4 that number before it fixes the enclosure, and treat it as the minimum.
 
 ## Writing `layout.py`
 
