@@ -51,7 +51,7 @@ Stages 2 and 3 can generate images in the console. Pollinations works with no se
 
 ### Stages 4–6 with Claude Code
 
-Open Claude Code in this folder. Each of those stages has a prompt written from the brief: edit it, press **Copy**, and paste it into Claude Code, which follows `CLAUDE.md` and writes into the episode's folder. The console watches the folder, so the model, schematic, board, BOM and showcase page appear on screen as they're saved.
+Open Claude Code in this folder. Stages 4 and 5 run at the same time in two Claude Code windows: paste the stage 4 prompt into one, then go straight to stage 5 and paste its prompt into a second. They share the board's measurements through the episode's `fit.json` and pass change requests through `FIT.md`. Each of those stages has a prompt written from the brief: edit it, press **Copy**, and paste it into Claude Code, which follows `CLAUDE.md` and writes into the episode's folder. The console watches the folder, so the model, schematic, board, BOM and showcase page appear on screen as they're saved.
 
 For stage 5, Claude Code only writes the parts list and placement for the new board. The kit in `tools/kicad/` does the rest: the schematic and ERC, then placement, Freerouting, DRC, renders and the 3D board. The schematic shows up within seconds, the placed board in about a minute, and the routed board after 5–15 minutes of routing.
 

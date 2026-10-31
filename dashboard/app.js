@@ -283,13 +283,14 @@ const BUILDERS = {
     return `Let's do an imaginary product for Product Speedrun episode ${S.ep.slug}${name ? `, "${name}"` : ""}. I made some concept art for the product idea. Here's what I asked for: ${describe()}\n\n` +
       `Here are the images it created: ${imgs.length ? imgs.join(" and ") : `the images in episodes/${S.ep.slug}/2-concept and 3-layout`}. Bear in mind they're just fantasy and not based on any actual technical specifications. ` +
       `Show what you can do to make a 3D model that draws from this design direction, but with some more informed ideas of the likely dimensions needed to house ${insideList()}.\n\n` +
-      `Use Solidcraft (headless) and follow the Stage 4 steps in CLAUDE.md, saving to episodes/${S.ep.slug}/4-model/ (NOTES.md first, then iso.png, model.step and model.glb).`;
+      `Use Solidcraft (headless) and follow the Stage 4 steps in CLAUDE.md, saving to episodes/${S.ep.slug}/4-model/ (NOTES.md and fit.json first, then iso.png, model.step and model.glb). Stage 5 is designing the board in another window at the same time: read the board from fit.json and check FIT.md for its requests before every export.`;
   },
   electronics: () => {
     const name = clean(S.ep.brief.name);
     return `Now the electronics for Product Speedrun episode ${S.ep.slug}${name ? `, "${name}"` : ""}. ${describe()}\n\n` +
       `Design the simplest circuit that does this, built around ${rollPick("Brain") ? `the ${rollPick("Brain")}` : "a common microcontroller module"}, sized to fit the enclosure in episodes/${S.ep.slug}/4-model/. ` +
-      `Follow the Stage 5 steps in CLAUDE.md using the shared kit in tools/kicad/ (start from its example): NOTES.md first, then src/design.py and the schematic, then src/layout.py and a routed 2-layer PCB with DRC clean, bom.csv, renders and board.glb, all in episodes/${S.ep.slug}/5-electronics/.`;
+      `Stage 4 is modelling the enclosure in another window right now, so start with the schematic and SIZE.md, and take placement from fit.json once Stage 4 has written it. ` +
+      `Follow the Stage 5 steps in CLAUDE.md using the shared kit in tools/kicad/: NOTES.md first, then src/design.py and the schematic, then src/layout.py and a routed 2-layer PCB, bom.csv, renders and board.glb, all in episodes/${S.ep.slug}/5-electronics/. You're finished when DRC is 0 violations and 0 unconnected and the fit check passes.`;
   },
   showcase: () => {
     const vibe = rollPick("Vibe");
