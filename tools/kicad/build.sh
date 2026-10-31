@@ -8,7 +8,9 @@
 # Each step saves into 5-electronics/ as it goes, so the dashboard shows the schematic, then the
 # placed board, then the routed board. Routing is retried up to ROUTE_TRIES (default 3) times if it
 # leaves anything unconnected. A full build exits with an error, after the renders, unless the final
-# DRC is 0 violations and 0 unconnected. Machine paths: KICAD_CLI, KICAD_PY, KICAD_SHARE, JAVA,
+# DRC is 0 violations and 0 unconnected. When the episode has a fit.json, FIT.md's "Fit" section is
+# regenerated from it first; check the routed board in the enclosure with tools/fit/fitcheck.py.
+# Machine paths: KICAD_CLI, KICAD_PY, KICAD_SHARE, JAVA,
 # FREEROUTING_JAR (defaults are the macOS KiCad app and ~/.local/opt/freerouting).
 set -e
 KIT=$(cd "$(dirname "$0")" && pwd)
@@ -21,6 +23,8 @@ CLI=${KICAD_CLI:-/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli}
 PY=${KICAD_PY:-/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/Current/bin/python3}
 command -v "$CLI" >/dev/null 2>&1 || { echo "kicad-cli not found at $CLI: set KICAD_CLI"; exit 1; }
 step() { printf '\n== %s\n' "$*"; }
+# fit.json (Stages 4 and 5's shared numbers): refresh FIT.md's generated "Fit" section from it
+[ -f "$E/../fit.json" ] && python3 -I "$KIT/../fit/fitmd.py" "$E/.." | sed 's/^/fit: /'
 
 step "schematic"
 python3 -I "$KIT/gen_schematic.py" "$E"

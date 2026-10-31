@@ -37,7 +37,8 @@ def use_episode(argv):
     src = os.path.join(hw, "src")
     if not os.path.isfile(os.path.join(src, "design.py")):
         raise SystemExit("no %s/design.py: start one with tools/kicad/new_board.sh" % src)
-    for p in (src, KIT):
+    # tools/fit: fitlib reads the episode's FIT.md, the numbers Stages 4 and 5 share
+    for p in (src, KIT, os.path.join(os.path.dirname(KIT), "fit")):
         if p not in sys.path:
             sys.path.insert(0, p)
     return hw

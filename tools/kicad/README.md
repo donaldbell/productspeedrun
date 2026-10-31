@@ -22,6 +22,7 @@ Run from the repo folder.
 | `tools/kicad/build.sh episodes/<slug> place` | Also places the board and renders a quick `board.png` | under a minute |
 | `tools/kicad/build.sh episodes/<slug>` | Everything: Freerouting, DRC fix-ups, silkscreen tidy, DRC, renders, `board.glb` | 5–15 min |
 | `tools/kicad/export.sh episodes/<slug>` | Only the BOM, pictures and GLB again (after a hand edit in KiCad) | about a minute |
+| `python3 tools/fit/fitcheck.py episodes/<slug>` | The routed board in the Stage 4 model: clearance check of the real parts against the enclosure, `fitcheck.md` + `fitcheck.png` (see `tools/fit/README.md`) | a few minutes |
 | `tools/kicad/selftest.sh [place]` | Rebuilds episode 001's board in a scratch folder to check the kit works on this computer; the full run fails unless DRC is 0 violations, 0 unconnected | as a build |
 | `tools/kicad/selftest.sh all blocks/<name>` | The same for one of the brain blocks below | 2–5 min |
 
@@ -65,7 +66,7 @@ Most of episode 002's Stage 5 time went into a board that was too small: Stage 4
 
 ## Writing `layout.py`
 
-Coordinates are the Stage 4 enclosure's (origin at the centre, mm, +y up), from the episode's `FIT.md` (the contract between Stages 4 and 5, see CLAUDE.md).
+Coordinates are board mm (origin at the board's centre, +y up as seen from the top face). The outline, holes and everything that lines up with the enclosure come from the episode's **`fit.json`**, which Stage 4's model reads too: `FIT = load_fit(__file__)`, then `BOARD = FIT.board_tuple()`, `HOLES = [tuple(h) for h in FIT.holes]`, `FIT.feature("pir")`, `FIT.keepout("antenna")`. Change a shared number in `fit.json`, not in `layout.py`. See `tools/fit/README.md`. The kit puts `tools/fit` on the import path, and `build.sh` refreshes `FIT.md`'s "Fit" section from `fit.json`. Episodes 001 and 002 predate `fit.json` and keep their numbers in `layout.py`.
 
 - `BOARD = (width, height, corner_radius)`. Use radius = half the width for a pill, or a square with half-width radius for a disc.
 - `HOLES` holds positions for H1, H2 and so on, and `HOLE_KEEPOUT` is the keep-out around each one (no parts, no copper).

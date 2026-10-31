@@ -1,16 +1,21 @@
 """__TITLE__ (episode __EP__): board outline and placement for tools/kicad.
 
-Coordinates: the Stage 4 enclosure's XY (origin at the centre, mm, +y toward the back), so the
-board drops onto the model's posts. Every part in design.py goes in exactly one of HOLES (H1..),
-FIXED, ROWS or PREFER; gen_pcb.py names any that are missing. See tools/kicad/example/layout.py.
+Coordinates: board mm (origin at the board's centre, +x right, +y up as seen from the top face).
+The outline, holes and everything that lines up with the enclosure come from the episode's
+fit.json, which Stage 4's model reads too (tools/fit/README.md): change them there, not here.
+Every part in design.py goes in exactly one of HOLES (H1..), FIXED, ROWS or PREFER; gen_pcb.py
+names any that are missing. See tools/kicad/example/layout.py.
 """
 import pcbnew
 
+from fitlib import load_fit
 from pcbkit import add_text, circle_rect, rect_pts, silk_circle, silk_rect  # noqa: F401
 
-BOARD = (60.0, 40.0, 4.0)                        # width, height, corner radius: from the episode's FIT.md
-HOLES = [(sx * 26.0, sy * 16.0) for sx in (-1, 1) for sy in (-1, 1)]   # H1..H4 on the enclosure posts
+FIT = load_fit(__file__)                         # ../../fit.json
+BOARD = FIT.board_tuple()                        # width, height, corner radius
+HOLES = [tuple(h) for h in FIT.holes]            # H1.. on the enclosure posts
 HOLE_KEEPOUT = 3.0
+# Line parts up with FIT.feature("<name>"), e.g. PIR_AT = FIT.feature("pir"); keep-outs with FIT.keepout("<name>").
 
 NO_PARTS = []         # extra rectangles (x0, y0, x1, y1) the auto-fitter avoids: tall parts above, antenna
 NO_COPPER = []        # (name, points[, layers]) copper keep-outs, e.g. a module's antenna on both layers
