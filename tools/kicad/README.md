@@ -23,6 +23,7 @@ Run from the repo folder.
 | `tools/kicad/build.sh episodes/<slug>` | Everything: Freerouting, DRC fix-ups, silkscreen tidy, DRC, renders, `board.glb` | 5–15 min |
 | `tools/kicad/export.sh episodes/<slug>` | Only the BOM, pictures and GLB again (after a hand edit in KiCad) | about a minute |
 | `python3 tools/fit/fitcheck.py episodes/<slug>` | The routed board in the Stage 4 model: clearance check of the real parts against the enclosure, `fitcheck.md` + `fitcheck.png` (see `tools/fit/README.md`) | a few minutes |
+| `python3 -I tools/kicad/check_models.py <board>.kicad_pcb` | Lists parts with height that have no usable 3D model. The STEP export silently drops them, so the fit check runs this first and stops if any are missing | instant |
 | `tools/kicad/selftest.sh [place]` | Rebuilds episode 001's board in a scratch folder to check the kit works on this computer; the full run fails unless DRC is 0 violations, 0 unconnected | as a build |
 | `tools/kicad/selftest.sh all blocks/<name>` | The same for one of the brain blocks below | 2–5 min |
 

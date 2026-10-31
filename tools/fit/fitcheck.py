@@ -10,7 +10,8 @@
 4. Writes 5-electronics/fitcheck.md (overlaps and near misses, in board and enclosure mm)
    and 5-electronics/fitcheck.png (the shell see-through, the board solid).
 
-Exits 1 if anything overlaps: Stage 5 isn't finished until this passes, as well as DRC. It also
+Stops first if any part with height has no usable 3D model (tools/kicad/check_models.py), since
+the STEP export silently leaves such parts out. Exits 1 if anything overlaps: Stage 5 isn't finished until this passes, as well as DRC. It also
 refreshes FIT.md's generated "Fit" section first. Scratch files go to
 5-electronics/output/fit/. Takes a few minutes (most of it the clearance check).
 """
@@ -24,6 +25,9 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from fitlib import FitError, find_episode, load_fit  # noqa: E402
 import fitmd  # noqa: E402
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "kicad"))
+import check_models  # noqa: E402
 
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 KICAD_CLI = os.environ.get("KICAD_CLI", "/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli")
@@ -73,6 +77,14 @@ def main(arg):
     if not os.path.isfile(design):
         raise SystemExit("no Stage 4 design at " + design + " (fit.json: model.design)")
     stand_ins = list(fit.model.get("stand_ins", []))
+
+    # 0. every part with height must have a 3D model, or the STEP leaves it out and the check passes without it
+    missing, _, _ = check_models.check(pcb)
+    missing = check_models.report(missing)
+    if missing:
+        raise SystemExit("%d part(s) have no usable 3D model, so the STEP export would leave them out and the fit "
+                         "check would miss them. Give each footprint a model (python3 -I tools/kicad/check_models.py "
+                         "%s)." % (len(missing), os.path.relpath(pcb, REPO)))
 
     # 1. board -> STEP, origin at the board centre. The file's stem names the inserted component.
     step = os.path.join(out, "fitcheck_board.step")

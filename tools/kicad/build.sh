@@ -59,10 +59,10 @@ while [ $t -le $TRIES ]; do
   if "$PY" "$KIT/route_pcb.py" "$E"; then
     for pass in 1 2; do
       step "DRC fix-ups $pass"
-      "$CLI" pcb drc --schematic-parity --severity-all --refill-zones --save-board --format json -o output/drc.json $P.kicad_pcb || true
+      "$CLI" pcb drc --schematic-parity --severity-all --all-track-errors --refill-zones --save-board --format json -o output/drc.json $P.kicad_pcb || true
       "$PY" "$KIT/fix_route.py" "$E" output/drc.json
     done
-    "$CLI" pcb drc --schematic-parity --severity-all --refill-zones --save-board --format json -o output/drc.json $P.kicad_pcb || true
+    "$CLI" pcb drc --schematic-parity --severity-all --all-track-errors --refill-zones --save-board --format json -o output/drc.json $P.kicad_pcb || true
     eval "$(drc_counts)"
     echo "try $t: $U unconnected, $V DRC violations"
     if [ -z "$BEST" ] || [ $((U * 1000 + V)) -lt "$BEST" ]; then
@@ -80,8 +80,8 @@ cp output/best.kicad_pcb $P.kicad_pcb
 step "silkscreen"
 "$PY" "$KIT/tidy_silk.py" "$E"
 step "DRC"
-"$CLI" pcb drc --schematic-parity --severity-all --refill-zones --save-board --format json -o output/drc.json $P.kicad_pcb || true
-"$CLI" pcb drc --schematic-parity --severity-all -o drc.rpt $P.kicad_pcb || true
+"$CLI" pcb drc --schematic-parity --severity-all --all-track-errors --refill-zones --save-board --format json -o output/drc.json $P.kicad_pcb || true
+"$CLI" pcb drc --schematic-parity --severity-all --all-track-errors -o drc.rpt $P.kicad_pcb || true
 VIOL=$(sed -n 's/^\*\* Found \([0-9]*\) DRC violations.*/\1/p' drc.rpt)
 UNCON=$(sed -n 's/^\*\* Found \([0-9]*\) unconnected pads.*/\1/p' drc.rpt)
 echo "DRC: ${VIOL:-?} violations, ${UNCON:-?} unconnected (details in drc.rpt)"
