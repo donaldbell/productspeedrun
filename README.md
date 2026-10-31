@@ -75,7 +75,7 @@ Everything here is open, and you're free to build, change, share and sell it, pr
 - **Writing, images and pages** (concept art, renders, notes, showcase pages): [CC BY 4.0](LICENSES/CC-BY-4.0.txt).
 - **Software** (the console, the KiCad kit, scripts): [MIT](LICENSES/MIT.txt).
 
-All three ask you to keep the credit and licence notices. Credit line for reuse: *Based on Product Speedrun episode NNN by Donald Bell and &lt;guest&gt;, https://donaldbell.github.io/productspeedrun/*. Each episode's guest is a co-creator and is credited on its showcase page.
+All three ask you to keep the credit and licence notices. Credit line for reuse: *Based on Product Speedrun episode NNN by Donald Bell and &lt;guest&gt;, https://donaldbell.github.io/productspeedrun/*. Each episode's guest is a co-creator, credited on its showcase page and in [CREDITS.md](CREDITS.md).
 
 The name "Product Speedrun" isn't licensed: sell what you like based on these designs, but please don't present it as an official Product Speedrun product.
 
