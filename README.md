@@ -63,6 +63,22 @@ episodes/001-plant-whisperer/
   2-concept/       3-layout/       4-model/       5-electronics/       6-showcase/
 ```
 
+## Licence
+
+Everything here is open, and you're free to build, change, share and sell it, products included:
+
+- **Hardware designs** (KiCad projects, CAD models, BOMs): [CERN-OHL-P v2](LICENSES/CERN-OHL-P-2.0.txt), the permissive CERN Open Hardware Licence.
+- **Writing, images and pages** (concept art, renders, notes, showcase pages): [CC BY 4.0](LICENSES/CC-BY-4.0.txt).
+- **Software** (the console, the KiCad kit, scripts): [MIT](LICENSES/MIT.txt).
+
+All three ask you to keep the credit and licence notices. Credit line for reuse: *Based on Product Speedrun episode NNN by Donald Bell and &lt;guest&gt;, https://donaldbell.github.io/productspeedrun/*. Each episode's guest is a co-creator and is credited on its showcase page.
+
+The name "Product Speedrun" isn't licensed: sell what you like based on these designs, but please don't present it as an official Product Speedrun product.
+
+**A request, not a requirement:** if you build or sell something based on these designs, we'd love a credit and a link back, and we'd love to hear about it.
+
+[`LICENSE`](LICENSE) has the details, including a note on AI-generated concept art.
+
 ## Public site
 
 In stage 7, **Publish to the site** commits the episode's folder and pushes it to GitHub using your own git setup, so the decision and any last changes reach the public site. You can also commit and push by hand.

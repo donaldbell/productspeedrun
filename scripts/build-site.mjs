@@ -120,7 +120,7 @@ footer a { color: var(--ink); }
 <main>
 ${episodes.length ? `<div class="grid">${cards}</div>` : '<p class="none">The first run is on its way.</p>'}
 </main>
-<footer>Every episode's files, models and KiCad projects are on <a href="https://github.com/donaldbell/productspeedrun">GitHub</a>.</footer>
+<footer>Every episode's files, models and KiCad projects are on <a href="https://github.com/donaldbell/productspeedrun">GitHub</a>, free to build, change and even sell: hardware under <a href="https://github.com/donaldbell/productspeedrun/blob/main/LICENSES/CERN-OHL-P-2.0.txt">CERN-OHL-P v2</a>, words and images under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, software under <a href="https://github.com/donaldbell/productspeedrun/blob/main/LICENSES/MIT.txt">MIT</a>. If you build something from them, we'd love a credit and to hear about it.</footer>
 </div>
 </body>
 </html>

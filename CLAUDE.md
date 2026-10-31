@@ -82,6 +82,7 @@ Build **`6-showcase/index.html`**: a product page that makes the idea feel real.
 - Use only relative paths: the episode's own files (`../2-concept/<file>.png`, `../4-model/model.glb`, `../5-electronics/board.glb`, `../5-electronics/bom.csv`) and the shared kit (`../../../kit/`). Copy anything else it needs into `6-showcase/`.
 - Load `<model-viewer>` from `https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js`. Big models (the board GLB) load on a button press (`data-load-model`).
 - Content: product name and pitch, the hero concept art, who it's for and the moment it's used, the 3D model, what's inside (from the BOM and notes), how we got here, and an honest "what we still don't know" list.
+- Keep the footer's licence line, with the episode's number and both hosts' names: the designs are open (see `LICENSE`), so the page says so and asks for credit.
 - It must work on phones and in both light and dark viewing. No trackers, no external forms.
 
 ## Publishing
