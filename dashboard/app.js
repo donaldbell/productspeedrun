@@ -56,6 +56,14 @@ function save(now) {
 const fileUrl = (rel) => `/episodes/${S.ep.slug}/${rel.split("/").map(encodeURIComponent).join("/")}`;
 const filesIn = (dir) => (S.files[dir] || []).filter((f) => !f.name.endsWith(".prompt.txt") && f.name !== ".gitkeep");
 const imagesIn = (dir) => filesIn(dir).filter((f) => IMG.test(f.name));
+// Hero renders live in 4-model as render-*.png (generated here, or dropped onto stage 4).
+const isRender = (name) => /^render-/i.test(name);
+const rendersIn = () => imagesIn("4-model").filter((f) => isRender(f.name));
+const renderRefs = () => {
+  const shots = imagesIn("4-model").filter((f) => !isRender(f.name));
+  const iso = shots.find((f) => /^iso\./i.test(f.name)) || shots[shots.length - 1];
+  return [iso && `4-model/${iso.name}`, favOrLatest("2-concept")].filter(Boolean);
+};
 const favOrLatest = (dir) => { const imgs = imagesIn(dir), fav = S.ep.favorites[dir]; return fav && imgs.some((f) => `${dir}/${f.name}` === fav) ? fav : imgs.length ? `${dir}/${imgs[imgs.length - 1].name}` : null; };
 const pickFile = (dir, re) => { const fs = filesIn(dir).filter((f) => re.test(f.name)); return fs.length ? fs[fs.length - 1] : null; };
 
@@ -292,6 +300,13 @@ const BUILDERS = {
       `Stage 4 is modelling the enclosure in another window right now, so start with the schematic and SIZE.md, and take placement from fit.json once Stage 4 has written it. ` +
       `Follow the Stage 5 steps in CLAUDE.md using the shared kit in tools/kicad/: NOTES.md first, then src/design.py and the schematic, then src/layout.py and a routed 2-layer PCB, bom.csv, renders and board.glb, all in episodes/${S.ep.slug}/5-electronics/. You're finished when DRC is 0 violations and 0 unconnected and the fit check passes.`;
   },
+  render: () => {
+    const b = S.ep.brief, name = clean(b.name), design = clean(b.design), size = clean(b.size), what = clean(b.what) || clean(b.pitch);
+    return `Create a photorealistic studio product photograph of the device in the first image.\n\n` +
+      `The first image is a CAD model${name ? ` of ${name}` : ""} and is the ground truth for shape: keep its exact proportions and every feature in the same place (buttons, windows, sensors, grilles, ports, feet). Don't add, remove or move anything.\n\n` +
+      `The second image is concept art: use it only for mood, colours and finish. Make it look like a real manufactured product${design ? ` (${lower1(design)})` : ""}, with believable plastics and materials and crisp edges${size ? `, at its real size (${lower1(size)})` : ""}.\n\n` +
+      `Setting: where it's used${what ? ` (${lower1(what.replace(/^(it'?s|it is)\s+/i, ""))})` : ""}, three-quarter view, like a product shot in a tech review. Soft studio lighting with a gentle rim light, shallow depth of field. No text, no logos, no people.`;
+  },
   showcase: () => {
     const vibe = rollPick("Vibe");
     return `Build the showcase page for Product Speedrun episode ${S.ep.slug}. Use the brief in episode.json, the concept art, the layout sheet, the 3D model and the electronics notes and BOM to make the product feel real and close to existing.` +
@@ -397,7 +412,7 @@ async function generate(dir, prompt, provider, aspect, refs) {
 }
 function setFavorite(dir, rel, quiet) {
   S.ep.favorites[dir] = rel; save(); renderSplits(); S.view?.refresh?.();
-  if (!quiet) { tone(1175, { dur: .2 }); toast("Favorite set"); }
+  if (!quiet) { tone(1175, { dur: .2 }); toast(dir === "render" ? "Hero render set: the showcase page and gallery will use it" : "Favorite set"); }
 }
 async function removeFile(dir, name) {
   try {
@@ -420,22 +435,50 @@ function fileList(dir) {
 }
 function waiting(title, sub) { return h("div", { class: "empty", style: "height:100%" }, h("div", { class: "radar" }), h("h2", { text: title }), h("p", { text: sub })); }
 
+// Stage 4: hero render (shape from the CAD screenshot, look from the concept art)
+function renderCard() {
+  const pb = promptBox("render", { label: "Hero render prompt", copyNote: "Prompt copied. Paste it into Gemini with the model screenshot and the concept art, then drag the render onto this stage.", rows: 7 });
+  const refs = renderRefs();
+  const ready = Object.entries(S.config.providers).filter(([, p]) => p.ready && p.refs);
+  const sel = h("select", { id: "provider-render", "aria-label": "Image generator" },
+    ready.map(([k, p]) => h("option", { value: k, text: p.label, selected: k === S.prefs.provider })));
+  const gen = h("button", { type: "button", class: "btn primary", text: "Generate render", disabled: !refs.length,
+    onclick: () => generate("4-model", pb.ta.value, sel.value, "4:3", refs) });
+  const developing = Object.values(S.developing).some((j) => j.dir === "4-model");
+  const renders = rendersIn().slice().reverse(), fav = S.ep.favorites.render;
+  return h("div", { class: "render-card" },
+    h("div", { class: "label", text: "Hero render" }),
+    h("p", { class: "hint", text: refs.length
+      ? `References: ${refs.map((r) => r.split("/").pop()).join(" + ")}. Shape from the model, look from the concept.`
+      : "Waits for the model's iso.png screenshot." }),
+    pb.box,
+    ready.length ? h("div", { class: "row" }, sel, gen)
+      : h("p", { class: "hint", text: "Copy the prompt into Gemini with those two images, then drag the render onto this stage. (Add a Gemini key in .env to generate here.)" }),
+    developing ? h("p", { class: "hint", text: "Developing a render…" }) : null,
+    renders.length ? h("div", { class: "thumbs" }, renders.map((f) => {
+      const rel = `4-model/${f.name}`;
+      return h("div", { class: "render-thumb" + (fav === rel ? " fav" : "") },
+        h("img", { src: fileUrl(rel), alt: f.name, onclick: () => openLightbox("4-model", rel) }),
+        h("button", { type: "button", text: fav === rel ? "★ Hero" : "☆ Use as hero", onclick: () => setFavorite("render", rel) }));
+    })) : null);
+}
+
 // Stage 4: 3D model
 function viewModel() {
   const el = h("div", { class: "stage-view s4" });
   const draw = (fresh = new Set()) => {
     el.replaceChildren();
-    const glb = pickFile("4-model", /\.(glb|gltf)$/i), shots = imagesIn("4-model");
+    const glb = pickFile("4-model", /\.(glb|gltf)$/i), shots = imagesIn("4-model").filter((f) => !isRender(f.name));
     const wrap = h("div", { class: "model-wrap" });
     if (glb) wrap.append(h("model-viewer", { class: fresh.has(`4-model/${glb.name}`) ? "arrive-in" : null, src: fileUrl(`4-model/${glb.name}`) + `?v=${glb.mtime}`, "camera-controls": true, "auto-rotate": true, "shadow-intensity": "1", exposure: "1.1", "interaction-prompt": "none", alt: "3D model" }));
     else wrap.append(waiting("Waiting for the model", "Claude Code and Solidcraft are up. The model appears here the moment it's saved."));
-    el.append(wrap, h("div", { class: "panel-col" }, handoffCard(4),
+    el.append(wrap, h("div", { class: "panel-col" }, handoffCard(4), renderCard(),
       shots.length ? h("div", { class: "label", text: "Screenshots" }) : null,
       shots.length ? h("div", { class: "thumbs" }, shots.map((f) => h("img", { src: fileUrl(`4-model/${f.name}`), alt: f.name, onclick: () => openLightbox("4-model", `4-model/${f.name}`) }))) : null,
       h("div", { class: "label", text: "Files" }), fileList("4-model")));
   };
   draw();
-  return { el, refresh: draw };
+  return { el, refresh: draw, gallery: () => draw() };
 }
 
 // Stage 5: electronics
@@ -577,7 +620,8 @@ document.addEventListener("drop", async (e) => {
   const files = [...(e.dataTransfer?.files || [])]; if (!files.length) return;
   const added = new Set();
   for (const f of files) {
-    try { const r = await api(`/episodes/${S.ep.slug}/files/${dir}?name=${encodeURIComponent(f.name)}`, { method: "POST", body: f }); added.add(r.file); }
+    const name = dir === "4-model" && IMG.test(f.name) && !/^(render-|iso\.|progress-)/i.test(f.name) ? "render-" + f.name : f.name;
+    try { const r = await api(`/episodes/${S.ep.slug}/files/${dir}?name=${encodeURIComponent(name)}`, { method: "POST", body: f }); added.add(r.file); }
     catch (err) { toast(`${f.name}: ${err.message}`, true); }
   }
   if (added.size) { toast(`Added ${added.size} file${added.size === 1 ? "" : "s"}`); await reloadFiles(added); }
@@ -608,6 +652,10 @@ async function reloadFiles(fresh = new Set()) {
   for (const d of ["2-concept", "3-layout"]) if (!imagesIn(d).some((f) => `${d}/${f.name}` === S.ep.favorites[d])) {
     const newest = [...changed].filter((r) => r.startsWith(d + "/") && IMG.test(r)).pop();
     if (newest) { S.ep.favorites[d] = newest; save(); }
+  }
+  if (!rendersIn().some((f) => `4-model/${f.name}` === S.ep.favorites.render)) {
+    const newest = [...changed].filter((r) => r.startsWith("4-model/render-") && IMG.test(r)).pop();
+    if (newest) { S.ep.favorites.render = newest; save(); }
   }
   renderSplits();
   if (changed.size) S.view?.refresh?.(changed);

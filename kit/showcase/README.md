@@ -18,7 +18,7 @@ Everything else stays as the template has it: the fonts, the section order, the 
 ## Section order
 
 1. `<ps-series-bar>`: always first.
-2. Hero (`.ps-hero`): the roll, name, pitch, a short lede, four facts, the hero concept art.
+2. Hero (`.ps-hero`): the roll, name, pitch, a short lede, four facts, and the hero image: the hosts' hero render (`favorites.render` in `episode.json`, a file in `../4-model/`) when there is one, otherwise the favourite concept art.
 3. Run strip (`.ps-run`): the seven stages with thumbnails, linked to their sections. Stage 7 shows the verdict.
 4. Who it's for (`.ps-person` × 2, `.ps-moment`): the user, the buyer if different, and the moment it's used.
 5. The free slot (`.ps-section.tint` + `.ps-free`).

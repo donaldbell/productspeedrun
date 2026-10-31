@@ -33,6 +33,8 @@ Use the Solidcraft MCP server in **headless** mode (`solidcraft-cli mcp`; if it 
 5. Export **STEP** (`model.step`) and **OBJ or STL** (`model.obj` / `model.stl`).
 6. Convert the mesh to **`4-model/model.glb`** for the web viewer, for example with Python: `pip install trimesh` then `trimesh.load("model.obj").export("model.glb")`. Scale to meters if the viewer shows it huge (Solidcraft works in mm: multiply by 0.001). **Colours:** glTF's `baseColorFactor` (and `emissiveFactor`) are linear, not sRGB, so convert hex colours first (`c/12.92` if `c ≤ 0.04045`, else `((c+0.055)/1.055)^2.4`) and write the exact floats back after trimesh, which rounds them to 8 bits. Otherwise the model renders washed out. Start from `episodes/002-jordan-pilot-episode/4-model/make_glb.py`, which does both.
 
+Images named `render-*.png` in `4-model/` are the hosts' hero renders (made in the console's stage 4 from your `iso.png` and the concept art). Leave them alone, and keep `iso.png` a clean three-quarter view of the whole product, since it's the shape reference for those renders.
+
 Before every export, re-read `FIT.md` and take in any change requests from Stage 5. They're already in `fit.json`, so rebuild, re-export, then mark the request done.
 
 ## Stages 4 and 5 work together
@@ -81,7 +83,8 @@ Build **`6-showcase/index.html`**: a product page that makes the idea feel real.
 - **Keep `<ps-series-bar>` as the first thing in `<body>`.** It's the strip that links back to the gallery and to the episodes either side; the public site build fills it in.
 - Use only relative paths: the episode's own files (`../2-concept/<file>.png`, `../4-model/model.glb`, `../5-electronics/board.glb`, `../5-electronics/bom.csv`) and the shared kit (`../../../kit/`). Copy anything else it needs into `6-showcase/`.
 - Load `<model-viewer>` from `https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js`. Big models (the board GLB) load on a button press (`data-load-model`).
-- Content: product name and pitch, the hero concept art, who it's for and the moment it's used, the 3D model, what's inside (from the BOM and notes), how we got here, and an honest "what we still don't know" list.
+- **Hero image:** if `episode.json` has `favorites.render` (the hero render the hosts picked in stage 4), use it as the hero image, linked as `../4-model/<file>`, with a caption saying it's an AI render of the CAD model. The concept art then moves down to "who it's for" or "how we got here". With no render, the favourite concept art is the hero.
+- Content: product name and pitch, the hero image, who it's for and the moment it's used, the 3D model, what's inside (from the BOM and notes), how we got here, and an honest "what we still don't know" list.
 - Keep the footer's licence line, with the episode's number and both hosts' names: the designs are open (see `LICENSE`), so the page says so and asks for credit.
 - It must work on phones and in both light and dark viewing. No trackers, no external forms.
 

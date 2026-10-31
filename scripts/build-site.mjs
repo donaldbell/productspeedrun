@@ -24,7 +24,7 @@ if (existsSync(EP)) {
     const dir = path.join(EP, d.name);
     let ep; try { ep = JSON.parse(await readFile(path.join(dir, "episode.json"), "utf8")); } catch { continue; }
     await cp(dir, path.join(OUT, "episodes", d.name), { recursive: true, filter: (src) => !/[\\/]\.(trash|git)([\\/]|$)/.test(src) });
-    let cover = ep.favorites?.["2-concept"] || ep.favorites?.["3-layout"];
+    let cover = [ep.favorites?.render, ep.favorites?.["2-concept"], ep.favorites?.["3-layout"]].find((c) => c && existsSync(path.join(dir, c)));
     if (!cover) for (const sd of ["2-concept", "3-layout", "4-model"]) {
       try { const f = (await readdir(path.join(dir, sd))).find((n) => IMG.test(n)); if (f) { cover = `${sd}/${f}`; break; } } catch {}
     }

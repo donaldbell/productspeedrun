@@ -314,3 +314,12 @@ body.idle { cursor: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01s !important; animation-iteration-count: 1 !important; transition-duration: .01s !important; }
 }
+
+/* Stage 4 hero render */
+.render-card { border: 1px solid var(--line); border-radius: 12px; padding: 1.2vh 1vw; display: grid; gap: 1vh; }
+.render-card textarea.prompt { min-height: 14vh; }
+.render-thumb { display: grid; gap: .4vh; }
+.render-thumb img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 8px; border: 1px solid var(--line); cursor: zoom-in; }
+.render-thumb.fav img { border-color: var(--stage); box-shadow: 0 0 0 2px var(--stage); }
+.render-thumb button { font: inherit; font-size: 12px; background: none; border: 0; color: var(--muted); cursor: pointer; text-align: left; padding: 0; }
+.render-thumb.fav button { color: var(--stage); }

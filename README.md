@@ -45,6 +45,10 @@ Drag files from anywhere onto stages 2–6 to add them to that stage's folder.
 
 The brief in stage 1 (what it is, what it does, what's inside, design language, a reference product and rough size) writes starting prompts for the concept art (stage 2), the CAD-style layout sheet (stage 3), and Claude Code in stages 4–6. Edit any prompt freely: edited prompts are kept, and **Rebuild** rewrites one from the brief. **Copy** puts it on the clipboard for Gemini, ChatGPT or Claude Code. Style buttons in stages 2 and 3 swap the drawing style.
 
+### Hero render
+
+Stage 4 has a **Hero render** card. Once the model's `iso.png` screenshot exists, it writes a prompt for a photorealistic product shot that takes its shape from the CAD screenshot and its look from the favourite concept art. Press **Generate render** (needs a Gemini or OpenAI key), or **Copy** the prompt into Gemini with those two images and drag the result onto stage 4. Renders are saved as `4-model/render-*.png`; mark one **Use as hero** and the showcase page and the public gallery use it as the episode's main image.
+
 ### Image generation
 
 Stages 2 and 3 can generate images in the console. Pollinations works with no setup (free, best effort). For better results and the ability to refine from a reference image, copy `.env.example` to `.env`, add a Gemini or OpenAI API key, and restart `npm start`. Keys stay on your computer: the browser never sees them. Each generated image is saved next to a `.prompt.txt` recording the prompt.

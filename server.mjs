@@ -311,9 +311,9 @@ const server = http.createServer(async (req, res) => {
         // Generate: POST /api/episodes/:slug/generate {stageDir, provider, prompt, refs, aspect}
         if (parts[3] === "generate" && req.method === "POST") {
           const b = await readJson(req);
-          if (!["2-concept", "3-layout"].includes(b.stageDir)) return send(res, 400, { error: "Images are generated into 2-concept or 3-layout." });
+          if (!["2-concept", "3-layout", "4-model"].includes(b.stageDir)) return send(res, 400, { error: "Images are generated into 2-concept, 3-layout or 4-model (hero renders)." });
           const { buf, ext } = await generate(b, slug);
-          const p = await uniquePath(path.join(dir, b.stageDir), `${b.provider}-${stamp()}${ext}`);
+          const p = await uniquePath(path.join(dir, b.stageDir), `${b.stageDir === "4-model" ? "render-" : ""}${b.provider}-${stamp()}${ext}`);
           await writeFile(p, buf);
           await writeFile(p + ".prompt.txt", `${b.provider}${PROVIDERS[b.provider].model ? " / " + PROVIDERS[b.provider].model : ""}\nrefs: ${(b.refs || []).join(", ") || "none"}\n\n${b.prompt}\n`);
           return send(res, 201, { file: `${b.stageDir}/${path.basename(p)}` });
