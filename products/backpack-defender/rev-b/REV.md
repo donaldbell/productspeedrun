@@ -62,6 +62,7 @@ The hosts' goals and feedback are in `rev.json`; Claude Code records what change
   - Our own synth is ~8 KB with no dependencies.
   - `test/render_sounds.sh` renders every sound to `7-firmware/preview/*.wav` for listening.
 - **Hardware request** posted in `FIT.md`: 47–100 µF bulk on VBAT (7→5). Done on the board, see below.
+- **Alarm sounds are now Phil Burk's Mobileer ringtones**: six host picks (Ring and Ting, Fiver Echo, Steel Drum, Up and Down, Echo Echo, Für Elise). They play on his ME1000 engine (vendored in `7-firmware/lib/mobileer/`, Apache-2.0) at 22.05 kHz with 16 voices, and the four chirps were redone as MIDI on the same engine. That replaces the custom synth's 28 sounds. *Why:* the hosts disliked the custom synth's sounds.
 
 ## Results
 
@@ -75,15 +76,15 @@ The hosts' goals and feedback are in `rev.json`; Claude Code records what change
   - The closest gaps are bottom plate to board 0.11 mm, eye light pipe to LED 0.20 mm, button to SW1 0.20 mm, base to the switch lever 0.27 mm, and speaker to board 0.28 mm.
   - It took two fixes to get there: my SW1 model's pins reached into a cell (the real leads are clipped), and KiCad's LED model is 1.1 mm tall.
 - **Firmware:** `pio run` builds with 0 warnings for both envs.
-  - Board: 837,720 B flash (42.6 % of the 1.9 MB app slot) and 43,300 B static RAM (13.2 %).
-  - The 32 rendered sounds all pass `test/render_sounds.sh`.
+  - Board, with the Mobileer engine: 855,440 B flash (43.5 % of the 1.9 MB app slot) and 49,100 B static RAM (15.0 %). The custom synth build was 837,720 B / 43,300 B.
+  - The 10 sounds all pass `test/render_sounds.sh`, which renders them with the same engine and data as the firmware.
   - Not yet run on hardware.
 
 ## Still open
 
 - **Part numbers to confirm before ordering:** the LCSC numbers I added are KT-0603W white LED C2290 and 47 Ω C23182. The TS-1212-4.3 MPN for SW1 also needs checking against a real low-profile 12 mm switch.
 - **White LEDs from 3.3 V:** with a white LED's Vf around 2.9 V there is little headroom, so the brightness depends on the LED batch. Try it on the bench; a 5 V rail isn't worth adding for this.
-- **Firmware on hardware:** it has only been compiled. Still to check on the bench: the deep-sleep wake on IO0-high / IO1-low, the sleep current (the boost's quiescent draw is the unknown), the captive portal on iOS and Android, and every sound through the real 20 mm speaker. The melodies were written out by ear. See `7-firmware/NOTES.md`.
+- **Firmware on hardware:** it has only been compiled. Still to check on the bench: the deep-sleep wake on IO0-high / IO1-low, the sleep current (the boost's quiescent draw is the unknown), the captive portal on iOS and Android, the Mobileer sounds through the real 20 mm speaker, and the engine's real CPU use on the C3. It is estimated at ~20–35 % with all 16 voices, and the firmware logs it after every alarm. See `7-firmware/NOTES.md`.
 - **Wires:** the PIR and speaker wires, and the cell-contact wires to J1, need routing and strain relief inside the case.
 - **Thinner still:** the next step down (about 18 mm) means a flat LiPo (e.g. 502535) plus USB-C charging instead of AAA. That trades away the "teacher pulls the batteries" disarm, which the power switch now partly covers.
 - **Light pipes:** clear PC/PMMA rods, glued in or a two-shot moulding. The real LED and pipe need a brightness test in daylight.

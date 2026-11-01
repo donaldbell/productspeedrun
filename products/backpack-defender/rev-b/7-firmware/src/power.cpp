@@ -97,6 +97,7 @@ Wake sleepNow(const SleepPlan &plan) {
     if (c == 'r') ESP.restart();
     if (c == 's') runSetupMode();
     if (c == 'v') Serial.printf("battery %u mV\n", batteryMv());
+    if (c == 'c') audioLogStats();       // engine CPU use of the last sound
     if (c == '+' || c == '-') {          // browse the sound library on the bench
       settings.sound = (settings.sound + (c == '+' ? 1 : soundCount() - 1)) % soundCount();
       Serial.printf("sound %d: %s\n", settings.sound, soundInfo(settings.sound).name);

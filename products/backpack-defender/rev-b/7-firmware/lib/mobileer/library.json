@@ -1,0 +1,13 @@
+{
+  "name": "mobileer",
+  "version": "2.32.0",
+  "description": "Phil Burk's Mobileer ME1000 MIDI ringtone synthesizer (fixed-point), vendored from philburk/mobileer-synth",
+  "license": "Apache-2.0",
+  "repository": {"type": "git", "url": "https://github.com/philburk/mobileer-synth"},
+  "frameworks": "*",
+  "platforms": "*",
+  "build": {
+    "srcDir": "src",
+    "includeDir": "src"
+  }
+}

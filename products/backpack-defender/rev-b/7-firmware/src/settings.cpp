@@ -18,7 +18,7 @@ void settingsClamp(Settings &s) {
 void settingsLoad() {
   Preferences p;
   settings = DEFAULTS;
-  settings.sound = soundFind("siren");
+  settings.sound = 0;                     // the first sound in the library (an old key falls back here too)
   if (p.begin("bd", true)) {
     int i = soundFind(p.getString("sound", soundInfo(settings.sound).key).c_str());
     if (i >= 0) settings.sound = i;

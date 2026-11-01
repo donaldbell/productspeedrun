@@ -97,6 +97,7 @@ static SleepPlan alarm(uint16_t mv) {
     if (buttonPressed() || serialPoll() == 'b') {
       Serial.println("[alarm] silenced");
       silenceFeedback();
+      audioLogStats();
       return cooldown();
     }
     if (quiet) {
@@ -111,6 +112,7 @@ static SleepPlan alarm(uint16_t mv) {
     delay(4);
   }
   audioStop();
+  audioLogStats();
   lightsOff();
   return holdoff();
 }
@@ -172,7 +174,7 @@ void setup() {
                   settings.rainbow ? " (rainbow)" : "", settings.brightness, settings.volume, settings.alarmSecs,
                   settings.cooldownSecs);
 #if BD_SIM_SLEEP
-    Serial.println("Simulated sleep: p = PIR, b = button, s = setup mode, + / - = try sounds, v = battery, r = restart");
+    Serial.println("Simulated sleep: p = PIR, b = button, s = setup mode, + / - = try sounds, c = engine CPU, v = battery, r = restart");
     delay(1500);                         // time to open the monitor (or hold BOOT for setup)
 #endif
   }
