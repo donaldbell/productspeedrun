@@ -780,6 +780,13 @@ function revPrompt(key) {
   if (key === "cad") return `${head}\n\nThe hosts' feedback on the enclosure:\n${fb || "(none yet)"}\n\nUse Solidcraft in headless mode, as in Stage 4. Change the existing model (4-model/build_model.py and model.solidcraft, reading fit.json through tools/fit/fitlib.py) rather than starting over. If there's no fit.json yet, create it from the current numbers first. If a change moves anything the board lines up with, update fit.json and post a request in FIT.md for the electronics. Save progress screenshots as you go, then save model.solidcraft and re-export iso.png, model.step, model.stl and model.glb (linear colours, as in Stage 4).`;
   if (key === "electronics") return `${head}\n\nThe hosts' feedback on the electronics:\n${fb || "(none yet)"}\n\nUse KiCad through the shared kit in tools/kicad/, as in Stage 5. Change the existing design (5-electronics/src/design.py and layout.py) rather than starting over; if the board predates src/, port it to the kit first. Keep fit.json in step with the enclosure and post requests in FIT.md. Finish with DRC 0 violations and 0 unconnected and a passing fit check, and explain part changes in 5-electronics/NOTES.md and REV.md.`;
   if (key === "code") return `${head}\n\nWrite first-pass firmware as a PlatformIO project in ${where}7-firmware/ for the board in ${where}5-electronics/${brain ? ` (the ${brain})` : ""}. Take the pins from 5-electronics/src/design.py and generate include/pins.h from the board's nets so code and board can't disagree.\n\nWhat it should do: ${fb || clean(b.does) || "the behaviour in the brief"}\n\nStub what can't be tested without hardware, make \`pio run\` build cleanly, and write 7-firmware/NOTES.md: flash and RAM use, libraries, and anything the hardware should change (post those as requests in FIT.md too).`;
+  if (key === "both") return `${r.product} Rev ${L}: enclosure and electronics changes for Product Speedrun, in one session. Work only in ${where}, a copy of ${r.basedOn}, and follow "Revisions" in CLAUDE.md. Record what you change, and why, in ${where}REV.md.` +
+    (goals ? `\n\nGoals for Rev ${L}: ${goals}` : "") +
+    `\n\nThe hosts' feedback on the enclosure:\n${String(r.feedback.cad || "").trim() || "(none)"}\n\nThe hosts' feedback on the electronics:\n${String(r.feedback.electronics || "").trim() || "(none)"}\n\n` +
+    `Do both yourself, in this order: (1) decide any part or layout changes and update fit.json first (create it from the current numbers if there isn't one), since both sides read it; ` +
+    `(2) change the enclosure with Solidcraft in headless mode, as in Stage 4 (edit 4-model/build_model.py and model.solidcraft rather than starting over; progress screenshots, then iso.png, model.step, model.stl and model.glb with linear colours); ` +
+    `(3) change the board with KiCad through tools/kicad/, as in Stage 5 (edit 5-electronics/src/design.py and layout.py; port to the kit first if the board predates src/). Start routing in the background while you finish the enclosure if you can; ` +
+    `(4) run the fit check. Finish with DRC 0 violations and 0 unconnected and a passing fit check, and explain part changes in 5-electronics/NOTES.md and REV.md.`;
   return `${head}\n\nBuild ${where}6-showcase/index.html from kit/showcase/template.html (the kit is ../../../../kit/ from there) for Rev ${L}. Show this revision's model, board and firmware, add a revision timeline (Rev A from episode ${String(r.number).padStart(3, "0")}, then each revision's headline changes from REV.md), and keep the open-questions list honest.\n\nThe hosts' notes for the page:\n${fb || "(none)"}`;
 }
 function mountRev() {
@@ -864,6 +871,13 @@ function mountRev() {
       h("p", { class: "hint", text: `Rev ${r.letter} of ${r.product}, copied from ${r.basedOn}. Work in products/${r.productSlug}/${r.rev}/.` }),
       h("div", { class: "field-row" }, field("Goals for this revision", "goals", 2, "e.g. detect a still gamer reliably; first firmware"), field("Guest", "guest", 0, "Who's revisiting it with you?")),
       TRACKS.map(trackCard),
+      h("div", { class: "rev-both" },
+        h("p", { class: "hint", text: "Small or linked changes? One Claude Code window can do the CAD and electronics together, which saves juggling windows during the show." }),
+        h("button", { type: "button", class: "btn", text: "Copy one prompt for CAD + Electronics", onclick: async () => {
+          const text = revPrompt("both");
+          try { await navigator.clipboard.writeText(text); toast("Combined prompt copied. Paste it into one Claude Code window."); }
+          catch { toast("Copy failed: open the CAD and Electronics prompts and copy them instead.", true); }
+        } })),
       h("div", { class: "row", style: "justify-content:space-between" },
         h("button", { type: "button", class: "btn ghost", text: "← Back to the episode", onclick: () => exitRev() }), publishBtn)));
   work.append(el);
