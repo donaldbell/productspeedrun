@@ -17,7 +17,7 @@ def srgb_to_linear(hexc):
 here = os.path.dirname(os.path.abspath(__file__))
 VISIBLE = {"Lid": "#8fe0c9", "Base": "#ffe08a", "Bottom Plate": "#cdbdf2", "Battery Door": "#cdbdf2",
            "Silence Button": "#ff8f87", "Eye L": "#3b3552", "Eye R": "#3b3552", "Smile": "#3b3552",
-           "Cheek L": "#ffadc4", "Cheek R": "#ffadc4", "PIR Dome": "#b39ddb",
+           "PIR Dome": "#b39ddb",
            "Eye Light L": "#ffffff", "Eye Light R": "#ffffff",
            "Name Field": "#ffffff", "Name Text": "#ffffff"}
 # bodies exported into one GLB part (the text extrude makes one body per glyph piece)

@@ -100,3 +100,4 @@ Build notes:
 - `make_glb.py` exports the 12 glyph bodies of the text as one "Name Text" part.
 - The name plate's text and field are separate sketches, because `exclude_profiles` was ignored and gave a duplicate field body.
 - A full build takes about 45 s.
+- The pink cheeks are removed (`CHEEKS = []`, at the hosts' request). The face is eyes + smile only. The lid has no cheek pockets.

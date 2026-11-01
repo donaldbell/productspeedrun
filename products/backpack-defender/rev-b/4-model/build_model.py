@@ -58,7 +58,7 @@ FACE_DEPTH  = 0.6
 EYES        = [(-19.0, 5.0), (-3.0, 5.0)]
 EYE_R, HILITE_R = 4.0, 1.3            # the highlight dots are now light pipes over LED_XY
 PIPE_R, PIPE_HOLE_R, PIPE_BOSS_R = 1.28, 1.35, 2.2
-CHEEKS      = [(-24.5, -2.0), (2.5, -2.0)]
+CHEEKS      = []                 # Rev B: hosts dropped the pink cheek dimples (Rev A: (-24.5, -2), (2.5, -2))
 CHEEK_R     = 2.8
 FONT        = "/System/Library/Fonts/Supplemental/Arial Rounded Bold.ttf"
 INLAY       = 0.4                     # name plate inlay depth (pad print in production)
@@ -294,7 +294,7 @@ c("solid.revolve", axis="y", operation="new", name="AM312 PIR", body_name="PIR D
 stage("colour")
 COLOURS = {"Lid": "#8fe0c9", "Base": "#ffe08a", "Bottom Plate": "#cdbdf2", "Battery Door": "#cdbdf2",
            "Silence Button": "#ff8f87", "Eye L": "#3b3552", "Eye R": "#3b3552", "Smile": "#3b3552",
-           "Cheek L": "#ffadc4", "Cheek R": "#ffadc4", "PIR Dome": "#b39ddb",
+           "PIR Dome": "#b39ddb",
            "Eye Light L": "#ffffff", "Eye Light R": "#ffffff", "Name Field": "#ffffff", "Name Text": "#ffffff",
            "PCB": "#2e7d4f", "AAA Cells": "#3a3a3a", "ESP32-C3-WROOM-02": "#c0c4c8", "Tact Switch": "#222222", "Switch Plunger": "#555555",
            "Speaker": "#c9a227", "MAX98357A": "#111111", "Eye LED L": "#fff8d0", "Eye LED R": "#fff8d0", "Power Switch": "#222222", "Power Switch Lever": "#333333"}

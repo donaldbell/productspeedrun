@@ -382,26 +382,6 @@
    }
   },
   {
-   "command": "sketch.circle.center",
-   "params": {
-    "center": [
-     -24.5,
-     -2.0
-    ],
-    "radius": 2.8
-   }
-  },
-  {
-   "command": "sketch.circle.center",
-   "params": {
-    "center": [
-     2.5,
-     -2.0
-    ],
-    "radius": 2.8
-   }
-  },
-  {
    "command": "sketch.finish",
    "params": {}
   },
@@ -432,18 +412,6 @@
       "point": [
        -11.0,
        -6.9
-      ]
-     },
-     {
-      "point": [
-       -24.5,
-       -2.0
-      ]
-     },
-     {
-      "point": [
-       2.5,
-       -2.0
       ]
      }
     ]
@@ -1671,26 +1639,6 @@
    }
   },
   {
-   "command": "sketch.circle.center",
-   "params": {
-    "center": [
-     -24.5,
-     -2.0
-    ],
-    "radius": 2.8
-   }
-  },
-  {
-   "command": "sketch.circle.center",
-   "params": {
-    "center": [
-     2.5,
-     -2.0
-    ],
-    "radius": 2.8
-   }
-  },
-  {
    "command": "sketch.finish",
    "params": {}
   },
@@ -1746,44 +1694,6 @@
       "point": [
        -11.0,
        -6.9
-      ]
-     }
-    ]
-   }
-  },
-  {
-   "command": "solid.extrude",
-   "params": {
-    "sketch": "Face Inlays",
-    "distance": 0.6,
-    "direction": "negative",
-    "operation": "new",
-    "name": "Cheek L",
-    "body_name": "Cheek L",
-    "profiles": [
-     {
-      "point": [
-       -24.5,
-       -2.0
-      ]
-     }
-    ]
-   }
-  },
-  {
-   "command": "solid.extrude",
-   "params": {
-    "sketch": "Face Inlays",
-    "distance": 0.6,
-    "direction": "negative",
-    "operation": "new",
-    "name": "Cheek R",
-    "body_name": "Cheek R",
-    "profiles": [
-     {
-      "point": [
-       2.5,
-       -2.0
       ]
      }
     ]
@@ -2217,24 +2127,6 @@
      "Smile"
     ],
     "color": "#3b3552"
-   }
-  },
-  {
-   "command": "appearance.assign",
-   "params": {
-    "bodies": [
-     "Cheek L"
-    ],
-    "color": "#ffadc4"
-   }
-  },
-  {
-   "command": "appearance.assign",
-   "params": {
-    "bodies": [
-     "Cheek R"
-    ],
-    "color": "#ffadc4"
    }
   },
   {
