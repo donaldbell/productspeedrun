@@ -65,6 +65,7 @@ While Claude Code builds this week's model and board, the show revisits an older
 
 - The latest model, board and fit check on the left, with the open questions from the last revision's notes. **+ CAD**, **+ Electronics** and **+ Code** add a question to that track's feedback.
 - Goals and guest for this revision, then a card per track: **CAD**, **Electronics**, **Code** (firmware, usually done off air in VS Code with PlatformIO) and **Showcase**. Type feedback and the card writes the Claude Code prompt; **Copy prompt** and paste it into Claude Code. **Mark done** when a track is finished.
+- **Hero render:** each revision gets its own photoreal render, made the same way as in stage 4 but from the revision's new `iso.png`, with the previous revision's hero as the style reference so the look stays consistent. **Generate render**, or **Copy prompt** into Gemini and drag the result onto the workbench. Mark one **Use as hero** and the revision's showcase page and the gallery card use it.
 - **Publish Rev B to the site** commits and pushes the revision. The gallery card then shows the latest revision and links every revision's page.
 
 The episode itself stays as aired (Rev A). Revisions go B, C, D… and **Start Rev C** asks for a second click so you don't start one by accident.

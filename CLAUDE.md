@@ -97,7 +97,7 @@ products/<product>/rev-b/
   rev.json        # owned by the console: goals, guest, the hosts' feedback per track, done tracks. Never edit it.
   REV.md          # yours: changelog (what changed and why), results, still open
   fit.json  FIT.md
-  4-model/        # copied from the previous revision: change it, don't start over
+  4-model/        # copied from the previous revision: change it, don't start over (render-*.png are the hosts' hero renders for this revision)
   5-electronics/  # copied from the previous revision: change it, don't start over
   6-showcase/     # this revision's page
   7-firmware/     # PlatformIO project (from Rev B on)
@@ -114,7 +114,7 @@ The hosts write feedback per track in the console, which turns it into a prompt 
 
 Firmware (track "code", usually done off air in VS Code with PlatformIO, after the CAD and electronics changes): a PlatformIO project in `7-firmware/` for the revision's board. Generate `include/pins.h` from `5-electronics/src/design.py` so code and board can't disagree, stub what needs real hardware, and make `pio run` build cleanly. Record flash and RAM use, libraries and anything the hardware should change in `7-firmware/NOTES.md`, and post hardware changes as requests in `FIT.md`.
 
-Showcase (track "showcase"): build `6-showcase/index.html` from `kit/showcase/template.html` (the kit is `../../../../kit/` from there) for this revision, with a revision timeline (Rev A from its episode, then each revision's headline changes from `REV.md`). Rev A's images can be linked from `../../../../episodes/<slug>/`. The public site links the product's gallery card to its latest revision page.
+Showcase (track "showcase"): build `6-showcase/index.html` from `kit/showcase/template.html` (the kit is `../../../../kit/` from there) for this revision, with the revision's hero render as the hero image when `rev.json` has `hero` (a path in this revision folder, linked as `../<hero>`; caption it as an AI render of the Rev CAD model), with a revision timeline (Rev A from its episode, then each revision's headline changes from `REV.md`). Rev A's images can be linked from `../../../../episodes/<slug>/`. The public site links the product's gallery card to its latest revision page.
 
 ## Publishing
 

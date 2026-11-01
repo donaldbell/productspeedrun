@@ -67,7 +67,7 @@ if (existsSync(PRODUCTS)) {
       if (!existsSync(file)) continue;
       let r = {}; try { r = JSON.parse(await readFile(path.join(PRODUCTS, prod, rev, "rev.json"), "utf8")); } catch {}
       const letter = rev.slice(4).toUpperCase();
-      (revPages[prod] ||= []).push({ rev, letter });
+      (revPages[prod] ||= []).push({ rev, letter, hero: r.hero && existsSync(path.join(PRODUCTS, prod, rev, r.hero)) ? `products/${prod}/${rev}/${r.hero}` : null });
       const page = await readFile(file, "utf8");
       const tag = `<ps-series-bar home="../../../../" number="${esc(r.number || "")}" name="${esc((r.product || prod) + " Rev " + letter)}"></ps-series-bar>`;
       let out = /<ps-series-bar[\s>]/.test(page) ? page.replace(/<ps-series-bar[^>]*>(\s*<\/ps-series-bar>)?/, tag) : page.replace(/<body[^>]*>/i, (m) => `${m}\n${tag}`);
@@ -81,11 +81,12 @@ const cards = episodes.map(({ slug, ep, cover, showcase }) => {
   const revs = revPages[slugify(ep.brief?.name || ep.title)] || [], latest = revs[revs.length - 1];
   const prod = slugify(ep.brief?.name || ep.title);
   const href = latest ? `products/${enc(prod)}/${latest.rev}/6-showcase/` : showcase ? `episodes/${enc(slug)}/6-showcase/` : cover ? `episodes/${enc(slug)}/${enc(cover)}` : null;
+  const latestHero = [...revs].reverse().find((x) => x.hero)?.hero;
   const revLinks = latest ? `<p class="revs">${[showcase ? `<a href="episodes/${enc(slug)}/6-showcase/">Rev A</a>` : "Rev A", ...revs.map((x) => `<a href="products/${enc(prod)}/${x.rev}/6-showcase/">Rev ${x.letter}</a>`)].join(" · ")}</p>` : "";
   const tag = latest ? `<span class="tag keep">Rev ${latest.letter}</span>` : ep.decision === "keep" ? '<span class="tag keep">Keep building</span>' : ep.decision === "shelve" ? '<span class="tag shelve">Shelved</span>' : `<span class="tag">In progress · stage ${esc(ep.stage || 1)}</span>`;
   const roll = (ep.roll || []).map((r) => `<li>${esc(r.label)}</li>`).join("");
   return `<article class="card">
-  ${href ? `<a class="cover" href="${href}">` : '<div class="cover">'}${cover ? `<img src="episodes/${enc(slug)}/${enc(cover)}" alt="" loading="lazy">` : '<div class="blank">No art yet</div>'}${href ? "</a>" : "</div>"}
+  ${href ? `<a class="cover" href="${href}">` : '<div class="cover">'}${latestHero ? `<img src="${latestHero.split("/").map(encodeURIComponent).join("/")}" alt="" loading="lazy">` : cover ? `<img src="episodes/${enc(slug)}/${enc(cover)}" alt="" loading="lazy">` : '<div class="blank">No art yet</div>'}${href ? "</a>" : "</div>"}
   <div class="body">
     <div class="meta"><span>#${esc(String(ep.number || "").padStart(3, "0"))}</span>${tag}</div>
     <h2>${href ? `<a href="${href}">` : ""}${esc(ep.brief?.name || ep.title)}${href ? "</a>" : ""}</h2>

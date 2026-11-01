@@ -610,14 +610,23 @@ $("lightbox").addEventListener("click", closeLb);
 
 /* ---------- drag and drop ---------- */
 let dragDepth = 0;
-const dropDir = () => S.ep && STAGES[S.ep.stage - 1].dir;
-document.addEventListener("dragenter", (e) => { if (!e.dataTransfer?.types?.includes("Files") || !dropDir()) return; dragDepth++; $("dropTarget").textContent = STAGES[S.ep.stage - 1].name; $("dropveil").hidden = false; });
+const dropDir = () => (S.rev ? "rev" : S.ep && STAGES[S.ep.stage - 1].dir);
+document.addEventListener("dragenter", (e) => { if (!e.dataTransfer?.types?.includes("Files") || !dropDir()) return; dragDepth++; $("dropTarget").textContent = S.rev ? `Rev ${S.rev.rev.letter} hero renders` : STAGES[S.ep.stage - 1].name; $("dropveil").hidden = false; });
 document.addEventListener("dragleave", () => { if (--dragDepth <= 0) { dragDepth = 0; $("dropveil").hidden = true; } });
 document.addEventListener("dragover", (e) => { if (dropDir()) e.preventDefault(); });
 document.addEventListener("drop", async (e) => {
   e.preventDefault(); dragDepth = 0; $("dropveil").hidden = true;
   const dir = dropDir(); if (!dir) return toast("Drop files on stages 2 to 6.", true);
   const files = [...(e.dataTransfer?.files || [])]; if (!files.length) return;
+  if (dir === "rev") {
+    const r = S.rev.rev; let n = 0;
+    for (const f of files.filter((f) => IMG.test(f.name))) {
+      try { await api(`/revisions/${r.productSlug}/${r.rev}/files/4-model?name=${encodeURIComponent(/^render-/i.test(f.name) ? f.name : "render-" + f.name)}`, { method: "POST", body: f }); n++; }
+      catch (err) { toast(`${f.name}: ${err.message}`, true); }
+    }
+    if (n) { toast(`Added ${n} render${n === 1 ? "" : "s"}`); revFilesChanged(); } else toast("Drop images here to add hero renders.", true);
+    return;
+  }
   const added = new Set();
   for (const f of files) {
     const name = dir === "4-model" && IMG.test(f.name) && !/^(render-|iso\.|progress-)/i.test(f.name) ? "render-" + f.name : f.name;
@@ -747,6 +756,9 @@ async function revFilesChanged() {
     const r = await api(`/revisions/${S.rev.rev.productSlug}/${S.rev.rev.rev}`).catch(() => null);
     if (!r || !S.rev) return;
     S.rev.files = r.files; sfx.arrive(); S.rev.drawViewer?.(); S.rev.drawQuestions?.();
+    const rv = S.rev.rev, renders = revFiles("4-model").filter((f) => /^render-/i.test(f.name) && IMG.test(f.name));
+    if (renders.length && !renders.some((f) => `4-model/${f.name}` === rv.hero)) { rv.hero = `4-model/${renders[renders.length - 1].name}`; saveRev(); }
+    S.rev.drawHero?.();
   }, 600);
 }
 // Open questions from the revision's notes: list items under "open questions", "still open" or "what's next" headings.
@@ -787,7 +799,69 @@ function revPrompt(key) {
     `(2) change the enclosure with Solidcraft in headless mode, as in Stage 4 (edit 4-model/build_model.py and model.solidcraft rather than starting over; progress screenshots, then iso.png, model.step, model.stl and model.glb with linear colours); ` +
     `(3) change the board with KiCad through tools/kicad/, as in Stage 5 (edit 5-electronics/src/design.py and layout.py; port to the kit first if the board predates src/). Start routing in the background while you finish the enclosure if you can; ` +
     `(4) run the fit check. Finish with DRC 0 violations and 0 unconnected and a passing fit check, and explain part changes in 5-electronics/NOTES.md and REV.md.`;
-  return `${head}\n\nBuild ${where}6-showcase/index.html from kit/showcase/template.html (the kit is ../../../../kit/ from there) for Rev ${L}. Show this revision's model, board and firmware, add a revision timeline (Rev A from episode ${String(r.number).padStart(3, "0")}, then each revision's headline changes from REV.md), and keep the open-questions list honest.\n\nThe hosts' notes for the page:\n${fb || "(none)"}`;
+  return `${head}\n\nBuild ${where}6-showcase/index.html from kit/showcase/template.html (the kit is ../../../../kit/ from there) for Rev ${L}. Show this revision's model, board and firmware, use this revision's hero render as the hero image if rev.json names one, add a revision timeline (Rev A from episode ${String(r.number).padStart(3, "0")}, then each revision's headline changes from REV.md), and keep the open-questions list honest.\n\nThe hosts' notes for the page:\n${fb || "(none)"}`;
+}
+// A new hero render for this revision: shape from the revision's iso.png, look from the previous hero.
+function revRenderPrompt() {
+  const r = S.rev.rev, b = S.ep?.brief || {}, design = clean(b.design), size = clean(b.size), what = clean(b.what) || clean(b.pitch);
+  return `Create a photorealistic studio product photograph of the device in the first image: ${r.product}, revision ${r.letter}.\n\n` +
+    `The first image is the updated CAD model and is the ground truth for shape: keep its exact proportions and every feature in the same place (buttons, windows, sensors, grilles, ports, feet). Don't add, remove or move anything.\n\n` +
+    (r.previousHero
+      ? `The second image is the product photo of the previous revision: match its materials, colours, lighting and setting so the two read as the same product, but follow the first image wherever the shape or features have changed.\n\n`
+      : `The second image is concept art: use it only for mood, colours and finish. Make it look like a real manufactured product${design ? ` (${lower1(design)})` : ""}, with believable plastics and materials and crisp edges${size ? `, at its real size (${lower1(size)})` : ""}.\n\n`) +
+    `Setting: where it's used${what ? ` (${lower1(what.replace(/^(it'?s|it is)\s+/i, ""))})` : ""}, three-quarter view, like a product shot in a tech review. Soft studio lighting with a gentle rim light, shallow depth of field. No text, no logos, no people.`;
+}
+function revRenderRefs() {
+  const r = S.rev.rev, iso = revPick("4-model", /^iso\.png$/i);
+  const style = r.previousHero || (favOrLatest("2-concept") ? `/episodes/${S.ep.slug}/${favOrLatest("2-concept")}` : null);
+  return [iso && `/products/${r.productSlug}/${r.rev}/4-model/${iso.name}`, style].filter(Boolean);
+}
+function heroCard() {
+  const r = S.rev.rev; r.prompts = r.prompts || {}; r.promptEdited = r.promptEdited || {};
+  const box = h("section", { class: "rev-card" });
+  const ta = h("textarea", { class: "prompt", rows: 7, "aria-label": "Hero render prompt" });
+  const sync = () => { if (!(r.promptEdited.render && r.prompts.render != null)) ta.value = revRenderPrompt(); };
+  if (r.promptEdited.render && r.prompts.render != null) ta.value = r.prompts.render; else sync();
+  ta.addEventListener("input", () => { r.prompts.render = ta.value; r.promptEdited.render = true; saveRev(); });
+  const ready = Object.entries(S.config.providers).filter(([, p]) => p.ready && p.refs);
+  const sel = h("select", { "aria-label": "Image generator" }, ready.map(([k, p]) => h("option", { value: k, text: p.label, selected: k === S.prefs.provider })));
+  const thumbs = h("div", { class: "thumbs" });
+  const draw = () => {
+    const refs = revRenderRefs(), renders = revFiles("4-model").filter((f) => /^render-/i.test(f.name) && IMG.test(f.name)).reverse();
+    refsLine.textContent = refs.length > 1 ? `References: this revision's iso.png + ${r.previousHero ? "the previous hero render" : "the favourite concept art"}.` : "Waits for this revision's iso.png (the CAD track saves it).";
+    gen.disabled = refs.length < 2 || !ready.length || box.dataset.busy === "1";
+    thumbs.replaceChildren(...renders.map((f) => {
+      const rel = `4-model/${f.name}`;
+      return h("div", { class: "render-thumb" + (r.hero === rel ? " fav" : "") },
+        h("img", { src: revUrl(rel), alt: f.name, onclick: () => window.open(revUrl(rel), "_blank") }),
+        h("button", { type: "button", text: r.hero === rel ? "★ Hero" : "☆ Use as hero", onclick: () => { r.hero = rel; saveRev(); draw(); toast("Hero render set for this revision's page"); } }));
+    }));
+  };
+  const refsLine = h("p", { class: "hint" });
+  const gen = h("button", { type: "button", class: "btn primary", text: "Generate render", onclick: async () => {
+    box.dataset.busy = "1"; gen.textContent = "Developing…"; draw();
+    try {
+      const x = await api(`/revisions/${r.productSlug}/${r.rev}/generate`, { method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ provider: sel.value, prompt: ta.value, refs: revRenderRefs(), aspect: "4:3" }) });
+      const fresh = await api(`/revisions/${r.productSlug}/${r.rev}`); S.rev.files = fresh.files;
+      if (!r.hero) { r.hero = x.file; saveRev(); }
+    } catch (e) { toast(e.message, true); }
+    box.dataset.busy = ""; gen.textContent = "Generate render"; draw();
+  } });
+  box.append(
+    h("div", { class: "row", style: "justify-content:space-between" }, h("h3", { text: "Hero render" }),
+      h("button", { type: "button", class: "btn", text: "Copy prompt", onclick: async () => {
+        try { await navigator.clipboard.writeText(ta.value); toast("Prompt copied. Paste it into Gemini with the two reference images, then drag the render onto this screen."); }
+        catch { ta.select(); toast("Copy failed. The text is selected: press Cmd+C.", true); }
+      } })),
+    refsLine,
+    h("details", null, h("summary", { text: "Prompt" }),
+      h("div", { class: "row", style: "justify-content:flex-end" }, h("button", { type: "button", class: "btn ghost", text: "Rebuild prompt", onclick: () => { r.promptEdited.render = false; delete r.prompts.render; saveRev(); sync(); } })), ta),
+    ready.length ? h("div", { class: "row" }, sel, gen) : h("p", { class: "hint", text: "Copy the prompt into Gemini with those two images, then drag the render onto this screen." }),
+    thumbs);
+  S.rev.drawHero = draw;
+  draw();
+  return box;
 }
 function mountRev() {
   const work = $("work"); work.replaceChildren();
@@ -870,7 +944,7 @@ function mountRev() {
     h("div", { class: "panel-col" },
       h("p", { class: "hint", text: `Rev ${r.letter} of ${r.product}, copied from ${r.basedOn}. Work in products/${r.productSlug}/${r.rev}/.` }),
       h("div", { class: "field-row" }, field("Goals for this revision", "goals", 2, "e.g. detect a still gamer reliably; first firmware"), field("Guest", "guest", 0, "Who's revisiting it with you?")),
-      TRACKS.map(trackCard),
+      trackCard(TRACKS[0]), trackCard(TRACKS[1]),
       h("div", { class: "rev-both" },
         h("p", { class: "hint", text: "Small or linked changes? One Claude Code window can do the CAD and electronics together, which saves juggling windows during the show." }),
         h("button", { type: "button", class: "btn", text: "Copy one prompt for CAD + Electronics", onclick: async () => {
@@ -878,6 +952,7 @@ function mountRev() {
           try { await navigator.clipboard.writeText(text); toast("Combined prompt copied. Paste it into one Claude Code window."); }
           catch { toast("Copy failed: open the CAD and Electronics prompts and copy them instead.", true); }
         } })),
+      trackCard(TRACKS[2]), heroCard(), trackCard(TRACKS[3]),
       h("div", { class: "row", style: "justify-content:space-between" },
         h("button", { type: "button", class: "btn ghost", text: "← Back to the episode", onclick: () => exitRev() }), publishBtn)));
   work.append(el);

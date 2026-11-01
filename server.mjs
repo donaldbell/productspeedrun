@@ -168,7 +168,10 @@ async function listShelf() {
   }
   return out;
 }
-const SKIP_COPY = /(^|[\\/])(output|\.trash|__pycache__|[^\\/]*-backups|fp-info-cache|[^\\/]*\.kicad_prl)([\\/]|$)/;
+async function prevHero(dir, product, rev) {
+  try { const j = JSON.parse(await readFile(path.join(dir, "rev.json"), "utf8")); return j.hero ? `/products/${product}/${rev}/${j.hero}` : j.previousHero || null; } catch { return null; }
+}
+const SKIP_COPY = /(^|[\\/])(output|\.trash|__pycache__|[^\\/]*-backups|fp-info-cache|[^\\/]*\.kicad_prl|render-[^\\/]*)([\\/]|$)/;
 async function createRevision(episode) {
   const ep = await loadEpisode(episode);
   if (ep.decision !== "keep") throw Object.assign(new Error("Only products marked “keep building” go on the shelf."), { code: 400 });
@@ -187,7 +190,8 @@ async function createRevision(episode) {
   for (const d of ["6-showcase", "7-firmware"]) { await mkdir(path.join(dir, d), { recursive: true }); await writeFile(path.join(dir, d, ".gitkeep"), ""); }
   const L = letter.toUpperCase();
   const r = { product: name, productSlug: product, rev, letter: L, episode, number: ep.number, basedOn: baseRel, createdAt: new Date().toISOString(),
-    guest: "", goals: "", feedback: { cad: "", electronics: "", code: "", showcase: "" }, promptEdited: {}, prompts: {}, done: [] };
+    guest: "", goals: "", feedback: { cad: "", electronics: "", code: "", showcase: "" }, promptEdited: {}, prompts: {}, done: [], hero: null,
+    previousHero: prev.length ? await prevHero(path.join(PRODUCTS, product, prev[prev.length - 1]), product, prev[prev.length - 1]) : (ep.favorites?.render ? `/episodes/${episode}/${ep.favorites.render}` : null) };
   await writeFile(path.join(dir, "rev.json"), JSON.stringify(r, null, 2) + "\n");
   await writeFile(path.join(dir, "REV.md"), `# ${name} Rev ${L}\n\nBased on \`${baseRel}\` (${prev.length ? "Rev " + prev[prev.length - 1].slice(4).toUpperCase() : "Rev A, episode " + String(ep.number).padStart(3, "0")}).\nThe hosts' goals and feedback are in \`rev.json\`; Claude Code records what changed below.\n\n## Changelog\n\n## Results\n\n## Still open\n`);
   return r;
@@ -195,8 +199,14 @@ async function createRevision(episode) {
 
 // ---------- image generation ----------
 async function refToInline(slug, rel) {
-  const p = path.join(epDir(slug), rel);
-  if (!inside(epDir(slug), p)) throw Object.assign(new Error("Bad reference path."), { code: 400 });
+  let p;
+  if (String(rel).startsWith("/")) {
+    p = path.join(ROOT, ...String(rel).split("/").filter(Boolean).map(decodeURIComponent));
+    if (!inside(EPISODES, p) && !inside(PRODUCTS, p)) throw Object.assign(new Error("Bad reference path."), { code: 400 });
+  } else {
+    p = path.join(epDir(slug), rel);
+    if (!inside(epDir(slug), p)) throw Object.assign(new Error("Bad reference path."), { code: 400 });
+  }
   const buf = await readFile(p);
   return { buf, mime: MIME[path.extname(p).toLowerCase()] || "image/png", name: path.basename(p) };
 }
@@ -376,6 +386,24 @@ const server = http.createServer(async (req, res) => {
           return send(res, 200, { ok: true });
         }
         if (parts[4] === "publish" && req.method === "POST") return send(res, 200, await publishRev(product, rev));
+        // Upload: POST /api/revisions/:product/:rev/files/:dir?name=   (raw body)
+        if (parts[4] === "files" && req.method === "POST") {
+          const sd = parts[5]; if (!REV_DIRS.includes(sd)) return send(res, 400, { error: "Unknown revision folder." });
+          const buf = await readBody(req);
+          await mkdir(path.join(dir, sd), { recursive: true });
+          const p = await uniquePath(path.join(dir, sd), safeName(url.searchParams.get("name")));
+          await writeFile(p, buf);
+          return send(res, 201, { file: `${sd}/${path.basename(p)}` });
+        }
+        // Hero render: POST /api/revisions/:product/:rev/generate {provider, prompt, refs (repo-rooted paths), aspect}
+        if (parts[4] === "generate" && req.method === "POST") {
+          const b = await readJson(req);
+          const { buf, ext } = await generate(b, null);
+          const p = await uniquePath(path.join(dir, "4-model"), `render-${b.provider}-${stamp()}${ext}`);
+          await writeFile(p, buf);
+          await writeFile(p + ".prompt.txt", `${b.provider}${PROVIDERS[b.provider].model ? " / " + PROVIDERS[b.provider].model : ""}\nrefs: ${(b.refs || []).join(", ") || "none"}\n\n${b.prompt}\n`);
+          return send(res, 201, { file: `4-model/${path.basename(p)}` });
+        }
         return send(res, 404, { error: "Unknown revision route." });
       }
 
