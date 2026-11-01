@@ -4,6 +4,8 @@ Things to add once the show as it is becomes routine.
 
 ## Firmware sketch (a quick check inside Stage 5)
 
+Now partly in place: firmware is the "Code" track of every revision from Rev B (see "Revisions" in CLAUDE.md). What's left here is running it inside a Rev A episode, and the Wokwi idea.
+
 A rough first pass at the code, run in a third Claude Code window once the schematic exists, to find hardware problems that only show up in code before the board is routed: a library that needs a different pin, RAM or flash that doesn't fit (episode 002's "can Whisper run on an S3?"), peripherals that clash.
 
 - An Arduino or PlatformIO project that sets up every part on the board and stubs the main behaviour. Done means "it compiles", with flash and RAM use reported.
