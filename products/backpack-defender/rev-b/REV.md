@@ -39,6 +39,7 @@ The hosts' goals and feedback are in `rev.json`; Claude Code records what change
   - Data on IO20, power on IO21 (both freed from UART0). IO8 was avoided because its boot pull-up would leak into the unpowered LED.
   - Boost switch node pre-routed (`PREROUTE`), as in Rev A, after Freerouting missed it three times.
   - *Why:* hosts: "a small, colour changing LED on the PCB near the button to help illuminate it from inside". The colour and a rainbow colour-wheel option are picked on the same AP-mode settings page as the alarm sound (see `7-firmware/BRIEF.md`).
+- **VBAT bulk capacitance:** C12/C13, 2 × 47 µF X5R 1206, beside C1 and U1's input (about 80 µF in total, roughly 60 µF left after DC-bias derating at 3 V). *Why:* firmware request 7→5: Wi-Fi bursts in setup mode and speaker peaks on tired AAA cells could brown out the C3. DRC 0 / 0 and fit check PASS afterwards. The firmware still builds (both envs), and `pins.h` is unchanged.
 - **Two kit improvements** (`tools/kicad/`, noted in its README): `CUTOUTS` for round holes through a board, and a 47 Ω resistor entry. The kit's `selftest.sh place` still passes.
 - **Back to the enclosure:** fit.json `power_switch` moved to (31.8, −6) for the real switch, the module moved 0.7 mm toward the front, and the eye light pipes now stop 1.4 mm above the board. The enclosure was rebuilt for all three. Logged as done in `FIT.md`.
 
@@ -60,7 +61,7 @@ The hosts' goals and feedback are in `rev.json`; Claude Code records what change
     - arduino-audio-tools builds, at 284 KB, but uses float maths and the C3 has no FPU.
   - Our own synth is ~8 KB with no dependencies.
   - `test/render_sounds.sh` renders every sound to `7-firmware/preview/*.wav` for listening.
-- **Hardware request** posted in `FIT.md`: 47–100 µF bulk on VBAT (7→5, open).
+- **Hardware request** posted in `FIT.md`: 47–100 µF bulk on VBAT (7→5). Done on the board, see below.
 
 ## Results
 

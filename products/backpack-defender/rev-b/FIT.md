@@ -55,4 +55,5 @@ One line each, newest last: `- [open] 5→4: …`. The other stage marks it `[do
 - [done] 5→4: eye light pipes end 1.4 mm above the board (was 1.0): KiCad's 0603 LED model is 1.1 mm tall.
 - Rev B board: DRC 0 / 0 unconnected, fit check PASS (0 overlaps; closest 0.11 mm, bottom plate to board).
 - [done] 4→5 and 5→4: new `button_led` (18, 9.2), top face: WS2812B-2020 under the clear button. It has a stand-in in the model ("Button LED"). Fit check PASS.
-- [open] 7→5: **VBAT bulk capacitance** (firmware track, `fit.json` unchanged): add 47–100 µF at U1's input beside C1 (10 µF). Wi-Fi TX bursts in setup mode (~0.6 A from 2 V cells) and speaker peaks on tired AAA cells could brown out the C3. The firmware already limits the AP to 8.5 dBm and the amp to ~0.5 W, and skips sound below 1.9 V. Details in `7-firmware/NOTES.md`.
+- [done] 7→5: **VBAT bulk capacitance** (firmware track, `fit.json` unchanged): add 47–100 µF at U1's input beside C1 (10 µF). Wi-Fi TX bursts in setup mode (~0.6 A from 2 V cells) and speaker peaks on tired AAA cells could brown out the C3. The firmware already limits the AP to 8.5 dBm and the amp to ~0.5 W, and skips sound below 1.9 V. Details in `7-firmware/NOTES.md`.
+  - Done: C12/C13 2 × 47 µF X5R 1206 (CL31A476MQHNNNE, LCSC C96123, to confirm) on VBAT beside C1 and U1. Routed DRC 0 / 0, fit check PASS.

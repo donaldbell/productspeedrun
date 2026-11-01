@@ -144,6 +144,7 @@ CAPS = {
     "4.7uF": ("C19666", "CL10A475KO8NNNC", FP_0603C, "Capacitor, ceramic, 4.7 uF 16 V X5R 0603"),
     "10uF": ("C15850", "CL21A106KAYNNNE", FP_0805C, "Capacitor, ceramic, 10 uF 25 V X5R 0805"),
     "22uF": ("C45783", "CL21A226MAQNNNE", FP_0805C, "Capacitor, ceramic, 22 uF 25 V X5R 0805"),
+    "47uF": ("C96123", "CL31A476MQHNNNE", "Capacitor_SMD:C_1206_3216Metric", "Capacitor, ceramic, 47 uF 6.3 V X5R 1206 (bulk on a battery rail)"),
 }
 RES = {"0": ("C21189", "0603WAF0000T5E"), "47": ("C23182", "0603WAF470JT5E"), "100": ("C22775", "0603WAF1000T5E"), "1k": ("C21190", "0603WAF1001T5E"),
        "3.9k": ("C23018", "0603WAF3901T5E"),

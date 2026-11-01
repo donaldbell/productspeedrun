@@ -140,3 +140,4 @@ The changelog is in `../REV.md`, and the requests are in `../FIT.md`.
 - DRC: 0 violations, 0 unconnected (Freerouting got it on the first try).
 - Fit check: PASS, 0 overlaps. The closest gap is 0.11 mm, bottom plate to board (`fitcheck.md`, `fitcheck.png`).
 - The solder-wire pads J1/J3/J4 have no 3D model. They're DNP, so the check only warns.
+- **VBAT bulk** (firmware request): C12/C13, 2 × 47 µF 1206, beside C1 and U1's input. DRC 0 / 0, fit check PASS.

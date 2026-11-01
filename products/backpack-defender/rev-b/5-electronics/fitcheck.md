@@ -9,7 +9,7 @@ Board placed at enclosure x -35.0..35.0, y -22.5..22.5, z 13.6..15.1.
 ## Close (under 0.3 mm)
 
 - Bottom Plate to backpack-defender_PCB: 0.11 mm
-- Eye Light L to LED_0603_1608Metric: 0.20 mm
+- Eye Light R to LED_0603_1608Metric: 0.20 mm
 - Silence Button to SW_PUSH-12mm_H4.3: 0.20 mm
 - Base to SW_Slide_SPDT_Angled_CK_OS102011MA1Q (3): 0.27 mm
 - Speaker to backpack-defender_PCB: 0.28 mm

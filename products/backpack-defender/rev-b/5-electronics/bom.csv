@@ -3,6 +3,7 @@ C1 C5 C8 C9,4,10uF,"Capacitor, ceramic, 10 uF 25 V X5R 0805",C_0805_2012Metric,C
 C2 C3,2,22uF,"Capacitor, ceramic, 22 uF 25 V X5R 0805",C_0805_2012Metric,CL21A226MAQNNNE
 C4 C6 C10 C11,4,100nF,"Capacitor, ceramic, 100 nF 50 V X7R 0603",C_0603_1608Metric,CC0603KRX7R9BB104
 C7,1,1uF,"Capacitor, ceramic, 1 uF 50 V X5R 0603",C_0603_1608Metric,CL10A105KB8NNNC
+C12 C13,2,47uF,"Capacitor, ceramic, 47 uF 6.3 V X5R 1206 (bulk on a battery rail)",C_1206_3216Metric,CL31A476MQHNNNE
 D1 D2,2,White,"LED white 0603, under the left eye's light pipe",LED_0603_1608Metric,KT-0603W
 L1,1,1uH,"Inductor, power, 1 uH, 9 A sat, 7 x 6.6 mm",L_Changjiang_FXL0624,FXL0624-1R0-M
 LED1,1,WS2812B-2020,"RGB LED 2 x 2 mm, addressable, under the clear button",LED_WS2812B-2020_PLCC4_2.0x2.0mm,WS2812B-2020

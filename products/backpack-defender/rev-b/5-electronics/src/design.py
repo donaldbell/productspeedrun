@@ -33,6 +33,8 @@ part("SW2", "Switch:SW_SPDT", "POWER", "Button_Switch_THT:SW_Slide_SPDT_Angled_C
 part("Q1", "Transistor_FET:AO3401A", "AO3401A", "Package_TO_SOT_SMD:SOT-23", "C15127", "AO3401A", at(22, 19),
      {"1": "GND", "2": "VBAT", "3": "BAT_IN"}, "P-MOSFET -30 V -4 A SOT-23: reverse-battery guard, drain to the cells, gate to GND")
 cap("C1", "10uF", at(30, 25), "VBAT", "GND")
+cap("C12", "47uF", at(30, 10), "VBAT", "GND")          # bulk (firmware request 7->5): Wi-Fi bursts and speaker
+cap("C13", "47uF", at(34, 10), "VBAT", "GND")          # peaks on tired AAA cells must not brown out the C3
 part("L1", "Device:L", "1uH", "Inductor_SMD:L_Changjiang_FXL0624", "C524602", "FXL0624-1R0-M", at(38, 16),
      {"1": "VBAT", "2": "BOOST_SW"}, "Inductor, power, 1 uH, 9 A sat, 7 x 6.6 mm")
 part("U1", BOOST, "TPS61023DRLR", "Package_TO_SOT_SMD:SOT-563", "C919459", "TPS61023DRLR", at(44, 22),
@@ -131,7 +133,7 @@ for i, (net, xy) in enumerate((("BAT_RAW", at(4, 31)), ("GND", at(8, 31)), ("VBA
 NOTES += [
     (at(4, 3), "POWER: 2 x AAA (2.0-3.2 V) on J1 -> SW2 slide switch (off = cells disconnected) -> Q1 AO3401A\n"
                "reverse-battery guard (gate to GND) -> VBAT -> U1 TPS61023 boost, always on (EN tied to VIN).\n"
-               "3V3 = 0.595 V x (1 + R1/R2) = 0.595 x (1 + 1M/220k) = 3.30 V. L1 1 uH.\n"
+               "C12/C13 2 x 47 uF bulk on VBAT. 3V3 = 0.595 V x (1 + R1/R2) = 0.595 x (1 + 1M/220k) = 3.30 V. L1 1 uH.\n"
                "VBAT_SENSE = VBAT / 2 (R3/R4 1M, ~1.5 uA) -> IO3 (ADC1_CH3)."),
     (at(4, 52), "MCU: ESP32-C3-WROOM-02 on the board's BOTTOM face (frees the top for the eye LEDs), PCB antenna\n"
                 "on the back edge, copper-free underneath. IO0 PIR_OUT and IO1 BTN wake it from deep sleep.\n"

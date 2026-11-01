@@ -78,6 +78,7 @@ PREFER = [
     # power path: reverse-battery FET and the boost, front-left, over the cells (top face)
     ("Q1", -26.0, -9.0, 90), ("C1", -23.0, -10.0, 90), ("L1", -20.5, -15.5, 0), ("U1", -15.0, -14.0, 0),
     ("C2", -12.6, -17.0, 90), ("C3", -15.0, -19.5, 0), ("R1", -15.0, -10.8, 0), ("R2", -15.0, -12.4, 0),
+    ("C12", -20.0, -10.2, 90), ("C13", -18.0, -10.2, 90),        # VBAT bulk, beside C1 and U1's input
     ("R3", -22.0, -4.0, 0), ("R4", -22.0, -5.8, 0), ("C4", -18.5, -4.9, 90),
     # module decoupling at pin 1 and EN RC / straps, bottom face: mirrored there, so pin 1 is on the module's +x side
     ("C6", 4.0, 20.0, 0), ("C5", 4.0, 17.8, 0), ("R5", 6.6, 15.0, 90), ("C7", 8.4, 15.0, 90),

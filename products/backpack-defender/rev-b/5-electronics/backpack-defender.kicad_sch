@@ -4569,6 +4569,264 @@
 		(uuid "9cccd56b-7810-5162-b1c3-4635b3b8b75e")
 	)
 	(symbol
+		(lib_id "Device:C")
+		(at 76.2 25.4 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "d4b060cf-d439-599c-8972-8cf5fe227cc7")
+		(property "Reference" "C12"
+			(at 78.74 24.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "47uF"
+			(at 78.74 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric"
+			(at 76.2 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 76.2 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Capacitor, ceramic, 47 uF 6.3 V X5R 1206 (bulk on a battery rail)"
+			(at 76.2 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C96123"
+			(at 76.2 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CL31A476MQHNNNE"
+			(at 76.2 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "f3a87528-8b7c-545c-afa4-8ff497bf8759")
+		)
+		(pin "2"
+			(uuid "ff76a0e4-76b9-563d-9738-37898cab3193")
+		)
+		(instances
+			(project "backpack-defender"
+				(path "/32348d4b-e49a-52e8-960a-0778149f763b"
+					(reference "C12")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 76.2 21.59)
+			(xy 76.2 19.05)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "22f032b9-35c5-5fce-bc5f-81e405e7af96")
+	)
+	(label "VBAT"
+		(at 76.2 19.05 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "acc94c76-e4d1-5e75-8eeb-dafc6d7e8245")
+	)
+	(wire
+		(pts
+			(xy 76.2 29.21)
+			(xy 76.2 31.75)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "854d8427-7a4a-58d3-bd0e-618d5eb9d707")
+	)
+	(label "GND"
+		(at 76.2 31.75 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "986c31ff-56ee-59c8-95cc-faf7dcbb2292")
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 86.36 25.4 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "22404c02-8fe8-5df1-89c5-16c292c85ae4")
+		(property "Reference" "C13"
+			(at 88.9 24.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "47uF"
+			(at 88.9 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric"
+			(at 86.36 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 86.36 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Capacitor, ceramic, 47 uF 6.3 V X5R 1206 (bulk on a battery rail)"
+			(at 86.36 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C96123"
+			(at 86.36 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "CL31A476MQHNNNE"
+			(at 86.36 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "4e0fbb98-a1c9-5251-b828-91ffc18942fa")
+		)
+		(pin "2"
+			(uuid "86932f00-80f4-5014-abf8-8d5558c9e15d")
+		)
+		(instances
+			(project "backpack-defender"
+				(path "/32348d4b-e49a-52e8-960a-0778149f763b"
+					(reference "C13")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 86.36 21.59)
+			(xy 86.36 19.05)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4c7528ed-dc81-5450-a82e-f7905bd878e9")
+	)
+	(label "VBAT"
+		(at 86.36 19.05 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "0e56c259-f43d-5f26-b9a7-2c92adebb310")
+	)
+	(wire
+		(pts
+			(xy 86.36 29.21)
+			(xy 86.36 31.75)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "65381120-9015-5834-950d-6836b4b43c4a")
+	)
+	(label "GND"
+		(at 86.36 31.75 270)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "17712ac7-c2ce-574f-bc13-d72c3de3b55e")
+	)
+	(symbol
 		(lib_id "Device:L")
 		(at 96.52 40.64 0)
 		(unit 1)
@@ -11671,7 +11929,7 @@
 		)
 		(uuid "a1713ac2-d4c6-5657-9d94-68442d875136")
 	)
-	(text "POWER: 2 x AAA (2.0-3.2 V) on J1 -> SW2 slide switch (off = cells disconnected) -> Q1 AO3401A\nreverse-battery guard (gate to GND) -> VBAT -> U1 TPS61023 boost, always on (EN tied to VIN).\n3V3 = 0.595 V x (1 + R1/R2) = 0.595 x (1 + 1M/220k) = 3.30 V. L1 1 uH.\nVBAT_SENSE = VBAT / 2 (R3/R4 1M, ~1.5 uA) -> IO3 (ADC1_CH3)."
+	(text "POWER: 2 x AAA (2.0-3.2 V) on J1 -> SW2 slide switch (off = cells disconnected) -> Q1 AO3401A\nreverse-battery guard (gate to GND) -> VBAT -> U1 TPS61023 boost, always on (EN tied to VIN).\nC12/C13 2 x 47 uF bulk on VBAT. 3V3 = 0.595 V x (1 + R1/R2) = 0.595 x (1 + 1M/220k) = 3.30 V. L1 1 uH.\nVBAT_SENSE = VBAT / 2 (R3/R4 1M, ~1.5 uA) -> IO3 (ADC1_CH3)."
 		(exclude_from_sim no)
 		(at 10.16 7.62 0)
 		(effects
