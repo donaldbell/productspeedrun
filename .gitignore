@@ -7,3 +7,5 @@ _site/
 **/fp-info-cache
 **/*.kicad_prl
 **/~*.lck
+**/.pio/
+**/.vscode/

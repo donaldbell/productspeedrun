@@ -52,9 +52,37 @@ for (const [i, e] of shown.entries()) {
   await writeFile(file, out);
 }
 
+// Revisions (products/<product>/rev-b/ …): copy them, give their pages the series bar, and point
+// each product's gallery card at its latest revision page.
+const slugify = (t) => String(t || "").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
+  .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 50) || "untitled";
+const PRODUCTS = path.join(ROOT, "products");
+const revPages = {};   // product slug -> [{ rev, letter }]
+if (existsSync(PRODUCTS)) {
+  await cp(PRODUCTS, path.join(OUT, "products"), { recursive: true, filter: (src) => !/[\\/](\.trash|\.git|output|__pycache__)([\\/]|$)/.test(src) });
+  for (const prod of await readdir(PRODUCTS)) {
+    let revs = []; try { revs = (await readdir(path.join(PRODUCTS, prod))).filter((n) => /^rev-[b-z]$/.test(n)).sort(); } catch { continue; }
+    for (const rev of revs) {
+      const file = path.join(OUT, "products", prod, rev, "6-showcase", "index.html");
+      if (!existsSync(file)) continue;
+      let r = {}; try { r = JSON.parse(await readFile(path.join(PRODUCTS, prod, rev, "rev.json"), "utf8")); } catch {}
+      const letter = rev.slice(4).toUpperCase();
+      (revPages[prod] ||= []).push({ rev, letter });
+      const page = await readFile(file, "utf8");
+      const tag = `<ps-series-bar home="../../../../" number="${esc(r.number || "")}" name="${esc((r.product || prod) + " Rev " + letter)}"></ps-series-bar>`;
+      let out = /<ps-series-bar[\s>]/.test(page) ? page.replace(/<ps-series-bar[^>]*>(\s*<\/ps-series-bar>)?/, tag) : page.replace(/<body[^>]*>/i, (m) => `${m}\n${tag}`);
+      if (!out.includes("kit/series-bar.js")) out = out.replace(/<\/head>/i, '<script type="module" src="../../../../kit/series-bar.js"></script>\n</head>');
+      await writeFile(file, out);
+    }
+  }
+}
+
 const cards = episodes.map(({ slug, ep, cover, showcase }) => {
-  const href = showcase ? `episodes/${enc(slug)}/6-showcase/` : cover ? `episodes/${enc(slug)}/${enc(cover)}` : null;
-  const tag = ep.decision === "keep" ? '<span class="tag keep">Keep building</span>' : ep.decision === "shelve" ? '<span class="tag shelve">Shelved</span>' : `<span class="tag">In progress · stage ${esc(ep.stage || 1)}</span>`;
+  const revs = revPages[slugify(ep.brief?.name || ep.title)] || [], latest = revs[revs.length - 1];
+  const prod = slugify(ep.brief?.name || ep.title);
+  const href = latest ? `products/${enc(prod)}/${latest.rev}/6-showcase/` : showcase ? `episodes/${enc(slug)}/6-showcase/` : cover ? `episodes/${enc(slug)}/${enc(cover)}` : null;
+  const revLinks = latest ? `<p class="revs">${[showcase ? `<a href="episodes/${enc(slug)}/6-showcase/">Rev A</a>` : "Rev A", ...revs.map((x) => `<a href="products/${enc(prod)}/${x.rev}/6-showcase/">Rev ${x.letter}</a>`)].join(" · ")}</p>` : "";
+  const tag = latest ? `<span class="tag keep">Rev ${latest.letter}</span>` : ep.decision === "keep" ? '<span class="tag keep">Keep building</span>' : ep.decision === "shelve" ? '<span class="tag shelve">Shelved</span>' : `<span class="tag">In progress · stage ${esc(ep.stage || 1)}</span>`;
   const roll = (ep.roll || []).map((r) => `<li>${esc(r.label)}</li>`).join("");
   return `<article class="card">
   ${href ? `<a class="cover" href="${href}">` : '<div class="cover">'}${cover ? `<img src="episodes/${enc(slug)}/${enc(cover)}" alt="" loading="lazy">` : '<div class="blank">No art yet</div>'}${href ? "</a>" : "</div>"}
@@ -63,6 +91,7 @@ const cards = episodes.map(({ slug, ep, cover, showcase }) => {
     <h2>${href ? `<a href="${href}">` : ""}${esc(ep.brief?.name || ep.title)}${href ? "</a>" : ""}</h2>
     ${ep.brief?.pitch ? `<p>${esc(ep.brief.pitch)}</p>` : ""}
     ${roll ? `<ul class="roll">${roll}</ul>` : ""}
+    ${revLinks}
   </div>
 </article>`;
 }).join("\n");
@@ -104,6 +133,7 @@ h2 a { color: inherit; text-decoration: none; } h2 a:hover { text-decoration: un
 .body p { margin: 0; color: var(--muted); }
 .roll { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .roll li { font-size: 12px; border: 1px solid var(--line); border-radius: 999px; padding: 2px 9px; }
+.revs { margin: 0; font-size: 13px; color: var(--muted); } .revs a { color: var(--ink); }
 .none { color: var(--muted); border: 1px dashed var(--line); border-radius: 16px; padding: 32px; }
 a:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
 footer { margin-top: 48px; color: var(--muted); font-size: 13px; }

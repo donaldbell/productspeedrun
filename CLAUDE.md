@@ -88,6 +88,33 @@ Build **`6-showcase/index.html`**: a product page that makes the idea feel real.
 - Keep the footer's licence line, with the episode's number and both hosts' names: the designs are open (see `LICENSE`), so the page says so and asks for credit.
 - It must work on phones and in both light and dark viewing. No trackers, no external forms.
 
+## Revisions (Rev B and later)
+
+Products the hosts mark "keep building" go on the shelf and come back for revisions. The episode is **Rev A** and stays exactly as aired: never change an episode folder for a revision. Each later revision is its own folder, made by the console's **Start Rev B** button:
+
+```
+products/<product>/rev-b/
+  rev.json        # owned by the console: goals, guest, the hosts' feedback per track, done tracks. Never edit it.
+  REV.md          # yours: changelog (what changed and why), results, still open
+  fit.json  FIT.md
+  4-model/        # copied from the previous revision: change it, don't start over
+  5-electronics/  # copied from the previous revision: change it, don't start over
+  6-showcase/     # this revision's page
+  7-firmware/     # PlatformIO project (from Rev B on)
+```
+
+The hosts write feedback per track in the console, which turns it into a prompt that names the folder. For every track:
+
+- **Work only in that revision folder.** Read `rev.json` (goals and the feedback for every track, since they affect each other) and the previous revision's notes first.
+- **Change, don't redo.** Edit the copied `build_model.py`, `design.py`, `layout.py` and `fit.json`. If the revision predates `fit.json` or the kit's `src/`, port it first (episode 001's board is `tools/kicad/example/`), then make the changes.
+- **Same contract between enclosure and board** as in "Stages 4 and 5 work together", same finish line for electronics: DRC 0 / 0 unconnected and a passing fit check.
+- **Log it in `REV.md`** as you go: one changelog line per change, with the reason (usually a host comment or an open question it answers). Move answered questions out of "Still open".
+- **Commit** with a message like `gamer-guardian rev B: radar presence sensor, head 3 mm narrower`.
+
+Firmware (track "code", usually done off air in VS Code with PlatformIO, after the CAD and electronics changes): a PlatformIO project in `7-firmware/` for the revision's board. Generate `include/pins.h` from `5-electronics/src/design.py` so code and board can't disagree, stub what needs real hardware, and make `pio run` build cleanly. Record flash and RAM use, libraries and anything the hardware should change in `7-firmware/NOTES.md`, and post hardware changes as requests in `FIT.md`.
+
+Showcase (track "showcase"): build `6-showcase/index.html` from `kit/showcase/template.html` (the kit is `../../../../kit/` from there) for this revision, with a revision timeline (Rev A from its episode, then each revision's headline changes from `REV.md`). Rev A's images can be linked from `../../../../episodes/<slug>/`. The public site links the product's gallery card to its latest revision page.
+
 ## Publishing
 
 Pushing to `main` rebuilds the public site (`scripts/build-site.mjs`, `.github/workflows/site.yml`): a gallery of all episodes plus each episode's showcase page and assets.

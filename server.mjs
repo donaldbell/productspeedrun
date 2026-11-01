@@ -6,7 +6,7 @@
 // "file changed" events so whatever Claude Code writes shows up on screen.
 
 import http from "node:http";
-import { readFile, writeFile, mkdir, readdir, stat, rename } from "node:fs/promises";
+import { readFile, writeFile, mkdir, readdir, stat, rename, cp } from "node:fs/promises";
 import { existsSync, watch, createReadStream, readFileSync } from "node:fs";
 import path from "node:path";
 import { execFile } from "node:child_process";
@@ -14,6 +14,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const EPISODES = path.join(ROOT, "episodes");
+const PRODUCTS = path.join(ROOT, "products");   // revisions: products/<product>/rev-b/, rev-c/ …
 const DASHBOARD = path.join(ROOT, "dashboard");
 const PORT = Number(process.env.PORT) || 4321;
 
@@ -32,6 +33,7 @@ const PROVIDERS = {
 };
 
 export const STAGE_DIRS = ["2-concept", "3-layout", "4-model", "5-electronics", "6-showcase"];
+export const REV_DIRS = ["4-model", "5-electronics", "6-showcase", "7-firmware"];
 const MIME = {
   ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".mjs": "text/javascript; charset=utf-8",
   ".css": "text/css; charset=utf-8", ".json": "application/json; charset=utf-8", ".svg": "image/svg+xml",
@@ -86,10 +88,11 @@ async function loadEpisode(slug) {
   try { return JSON.parse(await readFile(path.join(epDir(slug), "episode.json"), "utf8")); }
   catch (e) { if (e.code === 404) throw e; throw Object.assign(new Error("Episode not found."), { code: 404 }); }
 }
-async function listFiles(slug) {
+async function listFiles(slug) { return listDirFiles(epDir(slug), STAGE_DIRS); }
+async function listDirFiles(root, dirs) {
   const out = {};
-  for (const d of STAGE_DIRS) {
-    const dir = path.join(epDir(slug), d); out[d] = [];
+  for (const d of dirs) {
+    const dir = path.join(root, d); out[d] = [];
     async function walk(sub) {
       let entries = [];
       try { entries = await readdir(path.join(dir, sub), { withFileTypes: true }); } catch { return; }
@@ -113,7 +116,7 @@ async function listEpisodes() {
     if (!e.isDirectory() || !SLUG_RE.test(e.name)) continue;
     try {
       const ep = JSON.parse(await readFile(path.join(EPISODES, e.name, "episode.json"), "utf8"));
-      out.push({ slug: e.name, number: ep.number, title: ep.title, decision: ep.decision || null, stage: ep.stage || 1, createdAt: ep.createdAt });
+      out.push({ slug: e.name, number: ep.number, title: ep.title, product: ep.brief?.name || "", decision: ep.decision || null, stage: ep.stage || 1, createdAt: ep.createdAt });
     } catch {}
   }
   return out.sort((a, b) => (b.number || 0) - (a.number || 0));
@@ -133,6 +136,61 @@ async function createEpisode(title) {
   await writeFile(path.join(dir, "episode.json"), JSON.stringify(ep, null, 2) + "\n");
   for (const d of STAGE_DIRS) await writeFile(path.join(dir, d, ".gitkeep"), "");
   return ep;
+}
+
+// ---------- revisions (Rev B, C, …) of "keep building" products ----------
+// Rev A is the episode folder, untouched. Each later revision is products/<product>/rev-<x>/,
+// a copy of the previous revision's model and electronics plus rev.json (owned by the console),
+// REV.md (goals and changelog, written by Claude Code) and 7-firmware/.
+const REV_RE = /^rev-[b-z]$/;
+const LETTERS = "abcdefghijklmnopqrstuvwxyz";
+function revDir(product, rev) {
+  if (!SLUG_RE.test(product) || !REV_RE.test(rev)) throw Object.assign(new Error("Unknown revision."), { code: 404 });
+  return path.join(PRODUCTS, product, rev);
+}
+async function loadRev(product, rev) {
+  try { return JSON.parse(await readFile(path.join(revDir(product, rev), "rev.json"), "utf8")); }
+  catch (e) { if (e.code === 404) throw e; throw Object.assign(new Error("Revision not found."), { code: 404 }); }
+}
+async function revsOf(product) {
+  try { return (await readdir(path.join(PRODUCTS, product))).filter((n) => REV_RE.test(n)).sort(); } catch { return []; }
+}
+async function listShelf() {
+  const out = [];
+  for (const e of await listEpisodes()) {
+    if (e.decision !== "keep") continue;
+    const ep = await loadEpisode(e.slug);
+    const name = ep.brief?.name || ep.title, product = slugify(name);
+    const revs = [];
+    for (const r of await revsOf(product)) { try { const j = await loadRev(product, r); revs.push({ rev: r, letter: j.letter, createdAt: j.createdAt, done: j.done || [] }); } catch {} }
+    const img = ep.favorites?.render || ep.favorites?.["2-concept"] || null;
+    out.push({ episode: e.slug, number: e.number, name, product, pitch: ep.brief?.pitch || "", image: img ? `/episodes/${e.slug}/${img}` : null, revs });
+  }
+  return out;
+}
+const SKIP_COPY = /(^|[\\/])(output|\.trash|__pycache__|[^\\/]*-backups|fp-info-cache|[^\\/]*\.kicad_prl)([\\/]|$)/;
+async function createRevision(episode) {
+  const ep = await loadEpisode(episode);
+  if (ep.decision !== "keep") throw Object.assign(new Error("Only products marked “keep building” go on the shelf."), { code: 400 });
+  const name = ep.brief?.name || ep.title, product = slugify(name);
+  const prev = await revsOf(product);
+  const letter = LETTERS[(prev.length ? LETTERS.indexOf(prev[prev.length - 1].slice(4)) : 0) + 1];
+  const rev = `rev-${letter}`, dir = revDir(product, rev);
+  const base = prev.length ? path.join(PRODUCTS, product, prev[prev.length - 1]) : epDir(episode);
+  const baseRel = path.relative(ROOT, base).split(path.sep).join("/");
+  await mkdir(dir, { recursive: true });
+  for (const d of ["4-model", "5-electronics"]) {
+    if (existsSync(path.join(base, d))) await cp(path.join(base, d), path.join(dir, d), { recursive: true, filter: (src) => !SKIP_COPY.test(path.relative(base, src)) });
+    else await mkdir(path.join(dir, d), { recursive: true });
+  }
+  for (const f of ["fit.json", "FIT.md"]) if (existsSync(path.join(base, f))) await cp(path.join(base, f), path.join(dir, f));
+  for (const d of ["6-showcase", "7-firmware"]) { await mkdir(path.join(dir, d), { recursive: true }); await writeFile(path.join(dir, d, ".gitkeep"), ""); }
+  const L = letter.toUpperCase();
+  const r = { product: name, productSlug: product, rev, letter: L, episode, number: ep.number, basedOn: baseRel, createdAt: new Date().toISOString(),
+    guest: "", goals: "", feedback: { cad: "", electronics: "", code: "", showcase: "" }, promptEdited: {}, prompts: {}, done: [] };
+  await writeFile(path.join(dir, "rev.json"), JSON.stringify(r, null, 2) + "\n");
+  await writeFile(path.join(dir, "REV.md"), `# ${name} Rev ${L}\n\nBased on \`${baseRel}\` (${prev.length ? "Rev " + prev[prev.length - 1].slice(4).toUpperCase() : "Rev A, episode " + String(ep.number).padStart(3, "0")}).\nThe hosts' goals and feedback are in \`rev.json\`; Claude Code records what changed below.\n\n## Changelog\n\n## Results\n\n## Still open\n`);
+  return r;
 }
 
 // ---------- image generation ----------
@@ -227,11 +285,43 @@ async function publishEpisode(slug) {
   return { ok: true, pushed: true, message: staged ? "Published. The site updates in a minute or two." : "Nothing new to commit. Pushed anything that was waiting." };
 }
 
+async function publishRev(product, rev) {
+  const rel = path.relative(ROOT, revDir(product, rev)).split(path.sep).join("/");
+  if (!(await git(["rev-parse", "--is-inside-work-tree"])).ok) throw Object.assign(new Error("This folder isn't a git repository."), { code: 400 });
+  const r = await loadRev(product, rev);
+  await git(["add", "--", rel]);
+  const staged = !(await git(["diff", "--cached", "--quiet", "--", rel])).ok;
+  if (staged) {
+    const c = await git(["commit", "-m", `${product} rev ${r.letter}: ${(r.done || []).length ? "done: " + r.done.join(", ") : "in progress"}`, "--", rel]);
+    if (!c.ok) throw Object.assign(new Error("git commit failed: " + c.out.split("\n").slice(-2).join(" ")), { code: 500 });
+  }
+  let p = await git(["push"]);
+  if (!p.ok && /rejected|fetch first|non-fast-forward/i.test(p.out)) {
+    const pull = await git(["pull", "--rebase", "--autostash"]);
+    if (!pull.ok) throw Object.assign(new Error("Couldn't merge changes from GitHub. Open a terminal in the repo and run git pull."), { code: 500 });
+    p = await git(["push"]);
+  }
+  if (!p.ok) throw Object.assign(new Error("git push failed: " + p.out.split("\n").slice(-2).join(" ")), { code: 500 });
+  return { ok: true, message: staged ? "Published. The site updates in a minute or two." : "Nothing new to commit. Pushed anything that was waiting." };
+}
+
 // ---------- live events ----------
 const clients = new Set();
 let pending = new Map(), flushT = null;
 function broadcast(evt) { const line = `data: ${JSON.stringify(evt)}\n\n`; for (const res of clients) res.write(line); }
 function startWatcher() {
+  mkdir(PRODUCTS, { recursive: true }).then(() => {
+    try {
+      watch(PRODUCTS, { recursive: true }, (_type, file) => {
+        if (!file) return;
+        const parts = file.split(path.sep);
+        if (parts.length < 3 || parts.some((p) => p.startsWith(".") || p === "node_modules" || p === "output")) return;
+        pending.set("p:" + file, { rev: `${parts[0]}/${parts[1]}`, dir: parts[2], name: parts.slice(3).join("/") || null });
+        clearTimeout(flushT);
+        flushT = setTimeout(() => { for (const e of pending.values()) broadcast({ type: "change", ...e }); pending.clear(); }, 250);
+      });
+    } catch {}
+  }).catch(() => {});
   try {
     watch(EPISODES, { recursive: true }, (_type, file) => {
       if (!file) return;
@@ -273,6 +363,20 @@ const server = http.createServer(async (req, res) => {
       if (parts[1] === "events") {
         res.writeHead(200, { "Content-Type": "text/event-stream", "Cache-Control": "no-store", Connection: "keep-alive" });
         res.write("retry: 2000\n\n"); clients.add(res); req.on("close", () => clients.delete(res)); return;
+      }
+
+      if (parts[1] === "shelf" && req.method === "GET") return send(res, 200, await listShelf());
+      if (parts[1] === "revisions") {
+        if (parts.length === 2 && req.method === "POST") { const b = await readJson(req); return send(res, 201, await createRevision(String(b.episode || ""))); }
+        const product = parts[2], rev = parts[3], dir = revDir(product, rev);
+        if (parts.length === 4 && req.method === "GET") return send(res, 200, { rev: await loadRev(product, rev), files: await listDirFiles(dir, REV_DIRS) });
+        if (parts.length === 4 && req.method === "PUT") {
+          const r = await readJson(req); r.productSlug = product; r.rev = rev;
+          await writeFile(path.join(dir, "rev.json"), JSON.stringify(r, null, 2) + "\n");
+          return send(res, 200, { ok: true });
+        }
+        if (parts[4] === "publish" && req.method === "POST") return send(res, 200, await publishRev(product, rev));
+        return send(res, 404, { error: "Unknown revision route." });
       }
 
       if (parts[1] === "episodes") {
@@ -320,6 +424,14 @@ const server = http.createServer(async (req, res) => {
         }
       }
       return send(res, 404, { error: "Unknown API route." });
+    }
+
+    // Revision files: /products/<product>/rev-b/…
+    if (parts[0] === "products") {
+      const p = path.join(PRODUCTS, ...parts.slice(1));
+      if (!inside(PRODUCTS, p)) return send(res, 403, { error: "Forbidden." });
+      if (existsSync(p) && (await stat(p)).isDirectory()) return serveFile(res, path.join(p, "index.html"), req);
+      return serveFile(res, p, req);
     }
 
     // Episode files (images, models, KiCad files, the showcase page)

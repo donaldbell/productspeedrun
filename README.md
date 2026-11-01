@@ -59,6 +59,16 @@ Open Claude Code in this folder. Stages 4 and 5 run at the same time in two Clau
 
 For stage 5, Claude Code only writes the parts list and placement for the new board. The kit in `tools/kicad/` does the rest: the schematic and ERC, then placement, Freerouting, DRC, renders and the 3D board. The schematic shows up within seconds, the placed board in about a minute, and the routed board after 5–15 minutes of routing.
 
+## Back on the bench: revisions
+
+While Claude Code builds this week's model and board, the show revisits an older product. Products marked **Keep building** in stage 7 wait on the shelf at the bottom of the Episodes menu (E). **Start Rev B** copies the product's latest model and electronics into `products/<product>/rev-b/` and opens the revision workbench:
+
+- The latest model, board and fit check on the left, with the open questions from the last revision's notes. **+ CAD**, **+ Electronics** and **+ Code** add a question to that track's feedback.
+- Goals and guest for this revision, then a card per track: **CAD**, **Electronics**, **Code** (firmware, usually done off air in VS Code with PlatformIO) and **Showcase**. Type feedback and the card writes the Claude Code prompt; **Copy prompt** and paste it into Claude Code. **Mark done** when a track is finished.
+- **Publish Rev B to the site** commits and pushes the revision. The gallery card then shows the latest revision and links every revision's page.
+
+The episode itself stays as aired (Rev A). Revisions go B, C, D… and **Start Rev C** asks for a second click so you don't start one by accident.
+
 ## Episode folders
 
 ```

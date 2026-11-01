@@ -91,7 +91,7 @@ function toast(msg, isErr) { const t = $("toast"); t.textContent = msg; t.classL
 
 /* ---------- navigation ---------- */
 function goStage(n, { silent } = {}) {
-  if (!S.ep) return;
+  if (!S.ep || S.rev) return;
   n = Math.max(1, Math.min(7, n));
   if (n !== S.ep.stage) { S.ep.stage = n; save(); if (!silent) sfx.stage(); }
   document.body.dataset.stage = n;
@@ -202,7 +202,7 @@ function viewRoll() {
       ? h("input", { id: "brief-" + key, class: key === "name" ? "name" : null, type: "text", value: ep.brief[key] || "", autocomplete: "off" })
       : h("textarea", { id: "brief-" + key, rows: 1 }, ep.brief[key] || "");
     const fit = () => { if (input.tagName === "TEXTAREA") { input.style.height = "auto"; input.style.height = input.scrollHeight + 2 + "px"; } };
-    input.addEventListener("input", () => { ep.brief[key] = input.value; save(); fit(); if (key === "name") renderSplits(); });
+    input.addEventListener("input", () => { ep.brief[key] = input.value; save(); fit(); if (key === "name") { renderSplits(); setHudTitle(); } });
     requestAnimationFrame(fit);
     return h("label", { class: "field" }, h("span", { class: "label", text: label }), input);
   };
@@ -628,6 +628,13 @@ document.addEventListener("drop", async (e) => {
 });
 
 /* ---------- loading and live updates ---------- */
+// The HUD names the episode by its product once the brief has one; the working title is the fallback.
+function setHudTitle() {
+  if (!S.ep) return;
+  const name = String(S.ep.brief?.name || "").trim() || S.ep.title;
+  $("epTitle").textContent = name;
+  document.title = `${name} · Product Speedrun`;
+}
 async function loadEpisode(slug) {
   const r = await api(`/episodes/${slug}`);
   S.ep = r.episode; S.files = r.files;
@@ -636,8 +643,8 @@ async function loadEpisode(slug) {
   S.ep.prompts = S.ep.prompts || {}; S.ep.promptEdited = S.ep.promptEdited || {};
   local.set("last", slug);
   $("epNum").textContent = "#" + String(S.ep.number || "").padStart(3, "0");
-  $("epTitle").textContent = S.ep.title;
-  document.title = `${S.ep.title} · Product Speedrun`;
+  exitRev(true);
+  setHudTitle();
   goStage(S.ep.stage || 1, { silent: true });
 }
 async function reloadFiles(fresh = new Set()) {
@@ -667,6 +674,7 @@ function listen() {
   const es = new EventSource("/api/events");
   es.onmessage = (m) => {
     let e; try { e = JSON.parse(m.data); } catch { return; }
+    if (e.rev) { if (S.rev && e.rev === `${S.rev.rev.productSlug}/${S.rev.rev.rev}` && e.dir !== "rev.json") revFilesChanged(); return; }
     if (!S.ep || e.slug !== S.ep.slug || !e.dir || e.dir === "episode.json") return;
     clearTimeout(reloadT);
     reloadT = setTimeout(async () => {
@@ -675,6 +683,178 @@ function listen() {
       if (external?.length) { sfx.arrive(); toast("New: " + external.slice(0, 3).map((r) => r.split("/").pop()).join(", ")); }
     }, 600);
   };
+}
+
+/* ---------- the shelf and revisions (Rev B, C, …) ---------- */
+async function drawShelf() {
+  const box = $("shelfList"); if (!box) return;
+  box.replaceChildren(h("span", { class: "hint", text: "Loading…" }));
+  let shelf; try { shelf = await api("/shelf"); } catch (e) { box.replaceChildren(h("span", { class: "hint", text: e.message })); return; }
+  if (!shelf.length) { box.replaceChildren(h("span", { class: "hint", text: "Products you mark “keep building” in stage 7 wait here for their next revision." })); return; }
+  box.replaceChildren(...shelf.map((p) => {
+    const last = p.revs[p.revs.length - 1], nextL = String.fromCharCode((last ? last.letter : "A").charCodeAt(0) + 1);
+    let armed = false;
+    const start = h("button", { type: "button", class: last ? "btn ghost" : "btn primary", text: `Start Rev ${nextL}`, onclick: async (ev) => {
+      if (last && !armed) { armed = true; ev.currentTarget.textContent = `Click again to start Rev ${nextL}`; return; }
+      try { const r = await api("/revisions", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ episode: p.episode }) });
+        closeSheets(); await openRev(r.productSlug, r.rev); toast(`${p.name} Rev ${r.letter} started`); }
+      catch (err) { toast(err.message, true); }
+    } });
+    return h("div", { class: "shelf-row" },
+      p.image ? h("img", { src: p.image, alt: "" }) : h("span", { class: "blank" }),
+      h("span", { class: "nm-wrap" }, h("span", { class: "nm", text: p.name }),
+        h("span", { class: "sub", text: `#${String(p.number).padStart(3, "0")} · ` + (last ? `Rev A–${last.letter}` : "Rev A") })),
+      h("span", { class: "row" },
+        last ? h("button", { type: "button", class: "btn primary", text: `Open Rev ${last.letter}`, onclick: async () => { closeSheets(); await openRev(p.product, last.rev); } }) : null,
+        start));
+  }));
+}
+
+const revUrl = (rel) => `/products/${S.rev.rev.productSlug}/${S.rev.rev.rev}/${rel.split("/").map(encodeURIComponent).join("/")}`;
+const revFiles = (dir) => S.rev?.files?.[dir] || [];
+const revPick = (dir, re) => revFiles(dir).filter((f) => re.test(f.name)).pop();
+let revSaveT = null;
+function saveRev() {
+  clearTimeout(revSaveT);
+  const r = S.rev?.rev; if (!r) return;
+  revSaveT = setTimeout(() => api(`/revisions/${r.productSlug}/${r.rev}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(r) })
+    .catch((e) => toast("Couldn't save: " + e.message, true)), 400);
+}
+async function openRev(product, rev) {
+  const r = await api(`/revisions/${product}/${rev}`);
+  if (!S.ep || S.ep.slug !== r.rev.episode) await loadEpisode(r.rev.episode);
+  S.rev = r; S.rev.rev.feedback = { cad: "", electronics: "", code: "", showcase: "", ...(r.rev.feedback || {}) }; S.rev.rev.done = r.rev.done || [];
+  local.set("lastRev", `${product}/${rev}`);
+  document.body.classList.add("rev-mode"); document.body.dataset.stage = "rev";
+  $("epNum").textContent = "#" + String(r.rev.number || "").padStart(3, "0");
+  $("epTitle").textContent = `${r.rev.product} · Rev ${r.rev.letter}`;
+  $("stageKicker").textContent = `Rev ${r.rev.letter} · back on the bench`;
+  $("stageName").textContent = r.rev.product;
+  $("doneBtn").hidden = true;
+  document.title = `${r.rev.product} Rev ${r.rev.letter} · Product Speedrun`;
+  mountRev();
+}
+function exitRev(quiet) {
+  if (!S.rev) return;
+  S.rev = null; local.set("lastRev", null);
+  document.body.classList.remove("rev-mode");
+  if (!quiet && S.ep) { setHudTitle(); $("epNum").textContent = "#" + String(S.ep.number || "").padStart(3, "0"); goStage(S.ep.stage || 1, { silent: true }); }
+}
+async function revFilesChanged() {
+  if (!S.rev) return;
+  clearTimeout(revFilesChanged.t);
+  revFilesChanged.t = setTimeout(async () => {
+    const r = await api(`/revisions/${S.rev.rev.productSlug}/${S.rev.rev.rev}`).catch(() => null);
+    if (!r || !S.rev) return;
+    S.rev.files = r.files; sfx.arrive(); S.rev.drawViewer?.(); S.rev.drawQuestions?.();
+  }, 600);
+}
+// Open questions from the revision's notes: list items under "open questions", "still open" or "what's next" headings.
+function openQuestions(md) {
+  const out = []; let on = false, level = 0;
+  for (const line of String(md || "").split(/\r?\n/)) {
+    const hd = /^(#+)\s+(.*)/.exec(line);
+    if (hd) { if (on && hd[1].length <= level) on = false; if (/open question|still open|what's next|what we still/i.test(hd[2])) { on = true; level = hd[1].length; } continue; }
+    const li = on && /^[-*]\s+(.*)/.exec(line);
+    if (li) {
+      const b = /\*\*(.+?)\*\*/.exec(li[1]);
+      let t = (b ? b[1] : li[1].replace(/[*_`]/g, "").split(/(?<=[.!?])\s/)[0]).replace(/[:.]+$/, "").trim();
+      if (t) out.push(t.length > 140 ? t.slice(0, 137) + "…" : t);
+    }
+  }
+  return out;
+}
+const TRACKS = [
+  { key: "cad", name: "CAD", hint: "What should change in the enclosure?" },
+  { key: "electronics", name: "Electronics", hint: "What should change on the board or in the parts?" },
+  { key: "code", name: "Code", hint: "What should the first firmware do? Best after the CAD and electronics changes are in.", offAir: true },
+  { key: "showcase", name: "Showcase", hint: "Anything to show or say on this revision's page?" },
+];
+function revPrompt(key) {
+  const r = S.rev.rev, b = S.ep?.brief || {}, where = `products/${r.productSlug}/${r.rev}/`, L = r.letter;
+  const fb = String(r.feedback[key] || "").trim(), goals = String(r.goals || "").trim();
+  const what = { cad: "enclosure changes", electronics: "electronics changes", code: "first firmware", showcase: "showcase page" }[key];
+  const head = `${r.product} Rev ${L}: ${what} for Product Speedrun. Work only in ${where}, a copy of ${r.basedOn}, and follow "Revisions" in CLAUDE.md. Record what you change, and why, in ${where}REV.md.` +
+    (goals ? `\n\nGoals for Rev ${L}: ${goals}` : "");
+  const brain = rollPick("Brain");
+  if (key === "cad") return `${head}\n\nThe hosts' feedback on the enclosure:\n${fb || "(none yet)"}\n\nChange the existing model (4-model/build_model.py, reading fit.json through tools/fit/fitlib.py) rather than starting over. If there's no fit.json yet, create it from the current numbers first. If a change moves anything the board lines up with, update fit.json and post a request in FIT.md for the electronics. Save progress screenshots as you go, then re-export iso.png, model.step and model.glb.`;
+  if (key === "electronics") return `${head}\n\nThe hosts' feedback on the electronics:\n${fb || "(none yet)"}\n\nChange the existing design (5-electronics/src/design.py and layout.py) with the kit in tools/kicad/, rather than starting over; if the board predates src/, port it to the kit first. Keep fit.json in step with the enclosure and post requests in FIT.md. Finish with DRC 0 violations and 0 unconnected and a passing fit check, and explain part changes in 5-electronics/NOTES.md and REV.md.`;
+  if (key === "code") return `${head}\n\nWrite first-pass firmware as a PlatformIO project in ${where}7-firmware/ for the board in ${where}5-electronics/${brain ? ` (the ${brain})` : ""}. Take the pins from 5-electronics/src/design.py and generate include/pins.h from the board's nets so code and board can't disagree.\n\nWhat it should do: ${fb || clean(b.does) || "the behaviour in the brief"}\n\nStub what can't be tested without hardware, make \`pio run\` build cleanly, and write 7-firmware/NOTES.md: flash and RAM use, libraries, and anything the hardware should change (post those as requests in FIT.md too).`;
+  return `${head}\n\nBuild ${where}6-showcase/index.html from kit/showcase/template.html (the kit is ../../../../kit/ from there) for Rev ${L}. Show this revision's model, board and firmware, add a revision timeline (Rev A from episode ${String(r.number).padStart(3, "0")}, then each revision's headline changes from REV.md), and keep the open-questions list honest.\n\nThe hosts' notes for the page:\n${fb || "(none)"}`;
+}
+function mountRev() {
+  const work = $("work"); work.replaceChildren();
+  const r = S.rev.rev;
+  const viewer = h("div", { class: "rev-viewer" }), qs = h("div", { class: "rev-qs" });
+  let tab = local.get("rev-tab", "model");
+  const drawViewer = () => {
+    viewer.replaceChildren();
+    const glb = revPick("4-model", /\.(glb|gltf)$/i), board = revPick("5-electronics", /^board\.png$/i) || revPick("5-electronics", /\.png$/i);
+    const fit = revPick("5-electronics", /^fitcheck\.png$/i), iso = revPick("4-model", /^iso\.png$/i);
+    const tabs = [["model", "Model"], ["board", "Board"], ["fit", "Fit check"]];
+    const body = h("div", { class: "rev-view-body" });
+    viewer.append(h("div", { class: "row tabs" }, tabs.map(([k, t]) => h("button", { type: "button", class: "btn", "aria-pressed": String(tab === k), text: t, onclick: () => { tab = k; local.set("rev-tab", k); drawViewer(); } }))), body);
+    if (tab === "model" && glb) body.append(h("model-viewer", { src: revUrl(`4-model/${glb.name}`) + `?v=${glb.mtime}`, "camera-controls": true, "auto-rotate": true, "shadow-intensity": "1", exposure: "1.1", "interaction-prompt": "none", alt: "3D model" }));
+    else if (tab === "model" && iso) body.append(h("img", { src: revUrl(`4-model/${iso.name}`) + `?v=${iso.mtime}`, alt: "Model" }));
+    else if (tab === "board" && board) body.append(h("img", { src: revUrl(`5-electronics/${board.name}`) + `?v=${board.mtime}`, alt: "Board" }));
+    else if (tab === "fit" && fit) body.append(h("img", { src: revUrl(`5-electronics/${fit.name}`) + `?v=${fit.mtime}`, alt: "Fit check" }));
+    else body.append(waiting("Nothing here yet", tab === "fit" ? "The fit check appears after the electronics run." : "It appears here as soon as Claude Code saves it."));
+  };
+  const cards = {};
+  const drawQuestions = async () => {
+    const md = (await Promise.all(["5-electronics/NOTES.md", "4-model/NOTES.md", "REV.md"].map((f) => fetch(revUrl(f)).then((x) => (x.ok ? x.text() : "")).catch(() => "")))).join("\n");
+    const list = [...new Set(openQuestions(md))];
+    qs.replaceChildren(h("div", { class: "label", text: "Open questions from the last revision" }),
+      list.length ? h("ul", { class: "qs" }, list.map((q) => h("li", null, h("span", { text: q }),
+        h("span", { class: "row add" }, TRACKS.slice(0, 3).map((t) => h("button", { type: "button", class: "btn ghost", text: "+ " + t.name, title: `Add to the ${t.name} feedback`, onclick: () => cards[t.key].add(q) })))))) :
+        h("p", { class: "hint", text: "None found in the notes." }));
+  };
+  S.rev.drawViewer = drawViewer; S.rev.drawQuestions = drawQuestions;
+  const field = (label, key, rows, ph) => {
+    const ta = h(rows ? "textarea" : "input", { id: "rev-" + key, rows: rows || null, type: rows ? null : "text", placeholder: ph || null });
+    ta.value = r[key] || "";
+    ta.addEventListener("input", () => { r[key] = ta.value; saveRev(); Object.values(cards).forEach((c) => c.sync()); });
+    return h("label", { class: "field" }, h("span", { class: "label", text: label }), ta);
+  };
+  const trackCard = (t) => {
+    const fb = h("textarea", { id: "fb-" + t.key, rows: 4, placeholder: t.hint });
+    fb.value = r.feedback[t.key] || "";
+    const prompt = h("textarea", { class: "prompt", rows: 7, readonly: true, "aria-label": `${t.name} prompt for Claude Code` });
+    const sync = () => { prompt.value = revPrompt(t.key); };
+    fb.addEventListener("input", () => { r.feedback[t.key] = fb.value; saveRev(); sync(); });
+    const doneBtn = h("button", { type: "button", class: "btn ghost", onclick: () => {
+      r.done = r.done.includes(t.key) ? r.done.filter((x) => x !== t.key) : [...r.done, t.key]; saveRev(); paintDone();
+    } });
+    const card = h("section", { class: "rev-card" },
+      h("div", { class: "row", style: "justify-content:space-between" },
+        h("h3", { text: t.name }, t.offAir ? h("span", { class: "tag", text: "off air · VS Code" }) : null),
+        h("span", { class: "row" }, doneBtn,
+          h("button", { type: "button", class: "btn", text: "Copy prompt", onclick: async () => {
+            try { await navigator.clipboard.writeText(prompt.value); toast(t.offAir ? "Prompt copied. Paste it into Claude Code in VS Code." : "Prompt copied. Paste it into Claude Code."); }
+            catch { prompt.select(); toast("Copy failed. The text is selected: press Cmd+C.", true); }
+          } }))),
+      fb, h("details", null, h("summary", { text: "Prompt" }), prompt));
+    const paintDone = () => { const d = r.done.includes(t.key); doneBtn.textContent = d ? "✓ Done" : "Mark done"; card.classList.toggle("is-done", d); };
+    sync(); paintDone();
+    cards[t.key] = { el: card, sync, add(q) { fb.value = (fb.value.trim() ? fb.value.trim() + "\n" : "") + "- " + q; r.feedback[t.key] = fb.value; saveRev(); sync(); toast(`Added to ${t.name}`); } };
+    return card;
+  };
+  const publishBtn = h("button", { type: "button", class: "btn publish", text: `Publish Rev ${r.letter} to the site`, onclick: async (ev) => {
+    const b = ev.currentTarget; b.disabled = true; b.textContent = "Publishing…";
+    try { const x = await api(`/revisions/${r.productSlug}/${r.rev}/publish`, { method: "POST" }); toast(x.message); }
+    catch (e) { toast(e.message, true); }
+    b.disabled = false; b.textContent = `Publish Rev ${r.letter} to the site`;
+  } });
+  const el = h("div", { class: "stage-view revw" },
+    h("div", { class: "rev-left" }, viewer, qs),
+    h("div", { class: "panel-col" },
+      h("p", { class: "hint", text: `Rev ${r.letter} of ${r.product}, copied from ${r.basedOn}. Work in products/${r.productSlug}/${r.rev}/.` }),
+      h("div", { class: "field-row" }, field("Goals for this revision", "goals", 2, "e.g. detect a still gamer reliably; first firmware"), field("Guest", "guest", 0, "Who's revisiting it with you?")),
+      TRACKS.map(trackCard),
+      h("div", { class: "row", style: "justify-content:space-between" },
+        h("button", { type: "button", class: "btn ghost", text: "← Back to the episode", onclick: () => exitRev() }), publishBtn)));
+  work.append(el);
+  drawViewer(); drawQuestions();
 }
 
 /* ---------- sheets: episodes and settings ---------- */
@@ -689,10 +869,37 @@ document.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("cli
 document.querySelectorAll(".sheet").forEach((s) => s.addEventListener("click", (e) => { if (e.target === s) closeSheets(); }));
 async function drawEpisodes() {
   const list = $("epList"); list.replaceChildren(h("span", { class: "hint", text: "Loading…" }));
+  drawShelf();
   try { S.episodes = await api("/episodes"); } catch (e) { list.replaceChildren(h("span", { class: "hint", text: e.message })); return; }
-  list.replaceChildren(...(S.episodes.length ? S.episodes.map((e) => h("button", { type: "button", onclick: async () => { closeSheets(); await loadEpisode(e.slug); } },
-    h("span", { class: "tag", text: "#" + String(e.number).padStart(3, "0") }), h("span", { class: "nm", text: e.title }),
-    h("span", { class: "tag " + (e.decision || ""), text: e.decision === "keep" ? "Keep" : e.decision === "shelve" ? "Shelved" : `Stage ${e.stage}` }))) : [h("span", { class: "hint", text: "No episodes yet." })]));
+  list.replaceChildren(...(S.episodes.length ? S.episodes.map(episodeRow) : [h("span", { class: "hint", text: "No episodes yet." })]));
+}
+// One episode in the list: product name first, working title under it, and a rename button.
+function episodeRow(e) {
+  const row = h("div", { class: "ep-row" });
+  const open = h("button", { type: "button", class: "ep-open", onclick: async () => { closeSheets(); await loadEpisode(e.slug); } },
+    h("span", { class: "tag", text: "#" + String(e.number).padStart(3, "0") }),
+    h("span", { class: "nm-wrap" }, h("span", { class: "nm", text: e.product || e.title }), e.product && e.product !== e.title ? h("span", { class: "sub", text: e.title }) : null),
+    h("span", { class: "tag " + (e.decision || ""), text: e.decision === "keep" ? "Keep" : e.decision === "shelve" ? "Shelved" : `Stage ${e.stage}` }));
+  const ren = h("button", { type: "button", class: "btn ghost ren", title: "Rename this episode", text: "Rename", onclick: () => {
+    const input = h("input", { type: "text", class: "ren-input", value: e.title, "aria-label": "Episode title" });
+    const done = async (keep) => {
+      const title = input.value.trim();
+      if (keep && title && title !== e.title) {
+        try {
+          const r = await api(`/episodes/${e.slug}`); r.episode.title = title.slice(0, 120);
+          await api(`/episodes/${e.slug}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(r.episode) });
+          if (S.ep?.slug === e.slug) { S.ep.title = r.episode.title; setHudTitle(); }
+          toast("Renamed");
+        } catch (err) { toast(err.message, true); }
+      }
+      drawEpisodes();
+    };
+    input.addEventListener("keydown", (ev) => { if (ev.key === "Enter") done(true); if (ev.key === "Escape") { ev.stopPropagation(); done(false); } });
+    input.addEventListener("blur", () => done(true));
+    row.replaceChildren(input); input.focus(); input.select();
+  } });
+  row.append(open, ren);
+  return row;
 }
 $("newEp").addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -728,11 +935,12 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") { closeSheets(); document.activeElement?.blur?.(); return; }
   if (typing() || e.metaKey || e.ctrlKey || e.altKey) return;
   const k = e.key.toLowerCase();
+  if (S.rev) { if (k === "e") { e.preventDefault(); openSheet("episodes"); } else if (k === ",") { e.preventDefault(); openSheet("settings"); } else if (k === "f") { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.().catch(() => {}); } return; }
   if (e.key === "ArrowRight") goStage((S.ep?.stage || 1) + 1);
   else if (e.key === "ArrowLeft") goStage((S.ep?.stage || 1) - 1);
   else if (k === "n") split();
-  else if (k === "e") openSheet("episodes");
-  else if (k === ",") openSheet("settings");
+  else if (k === "e") { e.preventDefault(); openSheet("episodes"); }
+  else if (k === ",") { e.preventDefault(); openSheet("settings"); }
   else if (k === "f") { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.().catch(() => {}); }
   else if (/^[1-7]$/.test(k)) goStage(Number(k));
 });
@@ -750,4 +958,6 @@ let idleT; document.addEventListener("mousemove", () => { document.body.classLis
   const last = local.get("last", null);
   const pick = S.episodes.find((e) => e.slug === last) || S.episodes[0];
   if (pick) await loadEpisode(pick.slug); else { mountStage(); renderSplits(); }
+  const lastRev = local.get("lastRev", null);
+  if (lastRev) { const [prod, rv] = lastRev.split("/"); await openRev(prod, rv).catch(() => local.set("lastRev", null)); }
 })();
