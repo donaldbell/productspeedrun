@@ -1,0 +1,19 @@
+Ref,Qty,Value,Description,Footprint,MPN
+BZ1,1,PS1240P02BT,"Piezo transducer (externally driven) 12.2 mm, ~4 kHz resonance",Buzzer_TDK_PS1240P02BT_D12.2mm_H6.5mm,PS1240P02BT
+C1 C5 C8 C9,4,10uF,"Capacitor, ceramic, 10 uF 25 V X5R 0805",C_0805_2012Metric,CL21A106KAYNNNE
+C2 C3,2,22uF,"Capacitor, ceramic, 22 uF 25 V X5R 0805",C_0805_2012Metric,CL21A226MAQNNNE
+C4 C6 C10,3,100nF,"Capacitor, ceramic, 100 nF 50 V X7R 0603",C_0603_1608Metric,CC0603KRX7R9BB104
+C7,1,1uF,"Capacitor, ceramic, 1 uF 50 V X5R 0603",C_0603_1608Metric,CL10A105KB8NNNC
+L1,1,1uH,"Inductor, power, 1 uH, 9 A sat, 7 x 6.6 mm",L_Changjiang_FXL0624,FXL0624-1R0-M
+Q1,1,AO3401A,"P-MOSFET -30 V -4 A SOT-23: reverse-battery guard, drain to the cells, gate to GND",SOT-23,AO3401A
+R1 R3 R4,3,1M,"Resistor, 1 %, 0603, 1M",R_0603_1608Metric,0603WAF1004T5E
+R2,1,220k,"Resistor, 1 %, 0603, 220k",R_0603_1608Metric,0603WAF2203T5E
+R5 R6 R7 R8,4,10k,"Resistor, 1 %, 0603, 10k",R_0603_1608Metric,0603WAF1002T5E
+R9 R11,2,100k,"Resistor, 1 %, 0603, 100k",R_0603_1608Metric,0603WAF1003T5E
+R10 R12 R13,3,100,"Resistor, 1 %, 0603, 100",R_0603_1608Metric,0603WAF1000T5E
+SW1,1,SILENCE,"Tactile switch 12 x 12 x 7.3 mm THT, under the big silence button",SW_PUSH-12mm,TS-1212-7.3 (12x12x7.3 THT)
+U1,1,TPS61023DRLR,"Synchronous boost converter 0.5-5.5 V in, 3.7 A switch, SOT-563",SOT-563,TPS61023DRLR
+U2,1,ESP32-C3-WROOM-02-N4,"ESP32-C3 Wi-Fi/BLE module, 4 MB flash, PCB antenna, 18 x 20 x 3.2 mm",ESP32-C3-WROOM-02,ESP32-C3-WROOM-02-N4
+U3,1,MAX98357AETE+T,"I2S class-D mono amplifier, TQFN-16 3 x 3 mm",TQFN-16-1EP_3x3mm_P0.5mm_EP1.23x1.23mm_ThermalVias,MAX98357AETE+T
+U4,1,AM312,"Mini PIR motion sensor, Fresnel dome through the lid",PinHeader_1x03_P2.54mm_Vertical,AM312
+BT1,1,2xAAA holder,"Battery holder, 2 x AAA side by side, wire leads (~52 x 25 x 12 mm), soldered to J1",off-board,generic 2xAAA holder with leads

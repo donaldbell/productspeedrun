@@ -1,0 +1,20 @@
+{
+  "board": {"size": [70, 45], "corner_r": 9, "thickness": 1.6, "faces": "both",
+            "origin": [0, 0, 15.1], "x_axis": [1, 0, 0], "y_axis": [0, 1, 0], "posts_face": "bottom"},
+  "holes": [[-31, -17], [31, -17], [-31, 5], [31, 17]],
+  "hole_d": 2.2,
+  "features": {
+    "button":       {"at": [18, 0], "face": "top", "size": [12, 12], "note": "big silence button over SW1, now a 12 x 12 x 4.3 low-profile tact switch (Rev A: 7.3)"},
+    "pir":          {"at": [-26, 13], "face": "top", "size": [10.8, 10.8], "note": "Ø10.8 board cutout: the AM312 drops through it onto a boss in the bottom plate (its base 1.9 below the board's underside); legs reach the board by 3 short wires"},
+    "speaker":      {"at": [0, -11], "face": "top", "size": [21, 21], "note": "Ø20 x 4 mm 8 Ω micro speaker (replaces the BZ1 piezo) on a 0.3 mm foam pad, held down by the lid: no parts in this Ø21 circle; two wire pads beside it"},
+    "eye_led_l":    {"at": [-17.6, 6.4], "face": "top", "size": [1.6, 0.8], "note": "white 0603 LED under the left eye's highlight light pipe (pipe ends 1.0 above the board); flashes with the alarm"},
+    "eye_led_r":    {"at": [-1.6, 6.4], "face": "top", "size": [1.6, 0.8], "note": "white 0603 LED under the right eye's highlight light pipe"},
+    "power_switch": {"at": [32.8, -6], "face": "bottom", "size": [4.4, 8.6], "note": "right-angle SPDT slide switch, body flush with the +x edge, actuator out through the base's right end at enclosure z 11.7; in series with battery +"},
+    "module":       {"at": [-7, 12.5], "face": "bottom", "size": [18, 20], "note": "suggested: U2 ESP32-C3-WROOM-02 moves to the bottom face so the eye LEDs get the top; antenna end on the +y edge, clear of the cells"},
+    "amp":          {"at": [12, -12.5], "face": "top", "size": [3, 3], "note": "U3 MAX98357A, now driving the speaker"},
+    "cells":        {"at": [0, -9.75], "face": "bottom", "size": [52, 23], "note": "2 x AAA in a cradle in the bottom plate, 0.9 mm below the bottom face: no parts here, THT leads clipped to 0.5"}
+  },
+  "keepouts": {"antenna": [-18, 16, 4, 22.5]},
+  "model": {"design": "4-model/model.solidcraft",
+            "stand_ins": ["PCB", "ESP32-C3-WROOM-02", "Tact Switch", "Switch Plunger", "MAX98357A", "Eye LED L", "Eye LED R", "Power Switch"]}
+}
