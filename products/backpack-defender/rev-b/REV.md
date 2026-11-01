@@ -42,6 +42,26 @@ The hosts' goals and feedback are in `rev.json`; Claude Code records what change
 - **Two kit improvements** (`tools/kicad/`, noted in its README): `CUTOUTS` for round holes through a board, and a 47 Ω resistor entry. The kit's `selftest.sh place` still passes.
 - **Back to the enclosure:** fit.json `power_switch` moved to (31.8, −6) for the real switch, the module moved 0.7 mm toward the front, and the eye light pipes now stop 1.4 mm above the board. The enclosure was rebuilt for all three. Logged as done in `FIT.md`.
 
+### Firmware (track "code", 2026-11-01)
+
+- **New PlatformIO project in `7-firmware/`** (Arduino-ESP32 2.0.17, `espressif32@6.12.0`), from `7-firmware/BRIEF.md`. It has two envs: `backpack-defender` (the board) and `devkit` (an ESP32-C3-DevKitM-1 stand-in: WS2812 on GPIO8, BOOT as the button, simulated sleep, serial `p` / `b` for the PIR / button). *Why:* CLAUDE.md "Revisions → Firmware".
+- **`include/pins.h` is generated from `5-electronics/src/design.py`** before every build (`scripts/gen_pins.py`). It holds the pins, the board's pulls on each one and the VBAT divider ratio. `config.h` stops the build if a pull it relies on disappears. *Why:* so the code and the board can't disagree.
+- **State machine:**
+  - power-on chirp → armed deep sleep (PIR / button / daily timer)
+  - alarm (sound, eyes flashing with the loudness, button colour or rainbow) → hold-off
+  - silence → cool-down
+  - battery checks: a sad chirp below 2.1 V, lights only below 1.9 V
+  - setup mode when the button is held at power-on
+- **Setup page:** a SoftAP `BackpackDefender-XXXX` with a captive portal for kids. It has sound tiles with on-device preview, colour swatches plus Rainbow with a live LED preview, brightness, volume, alarm length and quiet time, all saved to NVS. *Why:* brief; hosts: "a small, colour changing LED … colour wheel option".
+- **Sound library: 28 alarm sounds** in Rev A's five families (14 synth effects, 14 melodies: public-domain tunes or our own), from a small fixed-point synth: square/pulse/triangle/saw/sine/organ/noise, FM bell, plucked string. *Why:* hosts: "a more interesting library of sounds and melodies … from existing I2S synth and sound libraries".
+  - **Libraries tried on the C3:**
+    - ESP8266Audio 2.4.1 doesn't build here (it needs IDF 5).
+    - ESP8266Audio 1.9.7 builds, at 240 KB.
+    - arduino-audio-tools builds, at 284 KB, but uses float maths and the C3 has no FPU.
+  - Our own synth is ~8 KB with no dependencies.
+  - `test/render_sounds.sh` renders every sound to `7-firmware/preview/*.wav` for listening.
+- **Hardware request** posted in `FIT.md`: 47–100 µF bulk on VBAT (7→5, open).
+
 ## Results
 
 - **Model:** `4-model/model.solidcraft` has 36 bodies: the enclosure and visible parts, plus 12 electronics stand-ins listed in `fit.json` `model.stand_ins` (the speaker, cells and PIR stay in for the fit check). It was exported as `model.step`, `model.stl` and `model.glb` (13 coloured parts, 99.5 × 51 × 26 mm including the loop and the button/dome), and rendered to `iso.png`. Progress shots: `progress-05.png` (shell + lid), `-06` (first full build), `-07` (back with the name plate), `-08` (side profile), `-09` (face without cheeks).
@@ -53,18 +73,17 @@ The hosts' goals and feedback are in `rev.json`; Claude Code records what change
 - **Fit check** (real routed board in the enclosure): **PASS**, 0 overlaps, re-run after the button LED was added.
   - The closest gaps are bottom plate to board 0.11 mm, eye light pipe to LED 0.20 mm, button to SW1 0.20 mm, base to the switch lever 0.27 mm, and speaker to board 0.28 mm.
   - It took two fixes to get there: my SW1 model's pins reached into a cell (the real leads are clipped), and KiCad's LED model is 1.1 mm tall.
+- **Firmware:** `pio run` builds with 0 warnings for both envs.
+  - Board: 837,720 B flash (42.6 % of the 1.9 MB app slot) and 43,300 B static RAM (13.2 %).
+  - The 32 rendered sounds all pass `test/render_sounds.sh`.
+  - Not yet run on hardware.
 
 ## Still open
 
 - **Part numbers to confirm before ordering:** the LCSC numbers I added are KT-0603W white LED C2290 and 47 Ω C23182. The TS-1212-4.3 MPN for SW1 also needs checking against a real low-profile 12 mm switch.
 - **White LEDs from 3.3 V:** with a white LED's Vf around 2.9 V there is little headroom, so the brightness depends on the LED batch. Try it on the bench; a 5 V rail isn't worth adding for this.
-- **Firmware:** `7-firmware/BRIEF.md` sums up what the firmware must do (pins, states, settings page, sounds) for the code track.
+- **Firmware on hardware:** it has only been compiled. Still to check on the bench: the deep-sleep wake on IO0-high / IO1-low, the sleep current (the boost's quiescent draw is the unknown), the captive portal on iOS and Android, and every sound through the real 20 mm speaker. The melodies were written out by ear. See `7-firmware/NOTES.md`.
 - **Wires:** the PIR and speaker wires, and the cell-contact wires to J1, need routing and strain relief inside the case.
-- **Sound library** (for the code track): the hosts want "a more interesting library of sounds and melodies … from existing I2S synth and sound libraries". The MAX98357A + speaker can play real audio now. Candidates to try in `7-firmware/`, not yet checked for ESP32-C3 support:
-  - ESP8266Audio (WAV/MP3/MIDI/RTTTL over I2S)
-  - pschatzmann's arduino-audio-tools, with its STK instruments
-  - Mozzi (synth voices)
-  - RTTTL ringtone collections for melodies
 - **Thinner still:** the next step down (about 18 mm) means a flat LiPo (e.g. 502535) plus USB-C charging instead of AAA. That trades away the "teacher pulls the batteries" disarm, which the power switch now partly covers.
 - **Light pipes:** clear PC/PMMA rods, glued in or a two-shot moulding. The real LED and pipe need a brightness test in daylight.
 - **Speaker sealing:** the foam ring between the speaker and the lid is assumed, not modelled. A back volume (the space under the speaker) might help bass; check by ear on a prototype.
