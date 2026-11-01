@@ -17,13 +17,15 @@ from env import kicad_share
 
 CX, CY = 100.0, 100.0
 BW = BH = BR = None
+CUTOUTS = []          # layout.CUTOUTS: round holes through the board, [(x, y, r)] (a sensor passing through)
 LAYOUT = None
 
 
 def configure(layout):
-    global BW, BH, BR, LAYOUT
+    global BW, BH, BR, LAYOUT, CUTOUTS
     LAYOUT = layout
     BW, BH, BR = (float(v) for v in layout.BOARD)
+    CUTOUTS = [tuple(float(v) for v in c) for c in getattr(layout, "CUTOUTS", [])]
     assert BR <= min(BW, BH) / 2 + 1e-9, "corner radius larger than half the board"
 
 
@@ -56,7 +58,10 @@ def board_pts(inset=0.0):
 
 
 def inside_outline(x, y, inset):
-    """True if (x, y) is at least `inset` inside the board outline."""
+    """True if (x, y) is at least `inset` inside the board outline (and that far from any cutout)."""
+    for cx, cy, cr in CUTOUTS:
+        if math.hypot(x - cx, y - cy) < cr + inset:
+            return False
     hx, hy = BW / 2 - BR, BH / 2 - BR
     dx, dy = max(abs(x) - hx, 0), max(abs(y) - hy, 0)
     if dx > 0 and dy > 0:
@@ -296,9 +301,12 @@ def silk_rect(board, a, b, layer=None, width=0.12):
 
 
 def add_outline(board):
-    """The rounded-rectangle outline on Edge.Cuts: up to four lines and four arcs (a disc is just arcs)."""
+    """The rounded-rectangle outline on Edge.Cuts: up to four lines and four arcs (a disc is just arcs),
+    plus a circle for each layout.CUTOUTS hole."""
     hx, hy = BW / 2, BH / 2
     L = pcbnew.Edge_Cuts
+    for cx, cy, cr in CUTOUTS:
+        add_shape(board, L, 0.1, pcbnew.SHAPE_T_CIRCLE, c=(cx, cy), r=cr)
     if BR <= 0:
         for a, b in (((-hx, hy), (hx, hy)), ((hx, hy), (hx, -hy)), ((hx, -hy), (-hx, -hy)), ((-hx, -hy), (-hx, hy))):
             add_shape(board, L, 0.1, pcbnew.SHAPE_T_SEGMENT, a=a, b=b)
