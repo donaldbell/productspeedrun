@@ -34,6 +34,11 @@ The hosts' goals and feedback are in `rev.json`; Claude Code records what change
 - **SW1 is 12 × 12 × 4.3** low profile, with its own 3D model (`lib/3d/`, made in SolidCraft, because KiCad ships only an 8.5 mm one). *Why:* the thinner case.
 - **U2 module on the bottom face**, so the top is free for the eye LEDs.
 - **J2 is a Tag-Connect TC2030 pad.** Rev A's 8.5 mm header model would hit the lid.
+- **Colour-changing button glow:** LED1, a WS2812B-2020 addressable RGB LED (the kind on ESP32-C3 dev boards), sits under the clear button beside SW1.
+  - Q3 (AO3401A) cuts its supply when it's off, because a dark WS2812 draws ~1 mA.
+  - Data on IO20, power on IO21 (both freed from UART0). IO8 was avoided because its boot pull-up would leak into the unpowered LED.
+  - Boost switch node pre-routed (`PREROUTE`), as in Rev A, after Freerouting missed it three times.
+  - *Why:* hosts: "a small, colour changing LED on the PCB near the button to help illuminate it from inside". The colour and a rainbow colour-wheel option are picked on the same AP-mode settings page as the alarm sound (see `7-firmware/BRIEF.md`).
 - **Two kit improvements** (`tools/kicad/`, noted in its README): `CUTOUTS` for round holes through a board, and a 47 Ω resistor entry. The kit's `selftest.sh place` still passes.
 - **Back to the enclosure:** fit.json `power_switch` moved to (31.8, −6) for the real switch, the module moved 0.7 mm toward the front, and the eye light pipes now stop 1.4 mm above the board. The enclosure was rebuilt for all three. Logged as done in `FIT.md`.
 
@@ -43,9 +48,9 @@ The hosts' goals and feedback are in `rev.json`; Claude Code records what change
 - **Clearance check, all bodies:** no overlaps (86 pairs measured). The smallest gaps are button to lid 0.085 mm (same as Rev A), speaker to the lid's inner round 0.175 mm, PIR dome to lid 0.2 mm, eye light pipes to LEDs 0.2 mm, and SW1 plunger to button 0.3 mm.
 - **Board:**
   - ERC: 0 violations.
-  - DRC: **0 violations, 0 unconnected** (routed on the first try).
+  - DRC: **0 violations, 0 unconnected**, including the button LED (with the boost pre-route).
   - SIZE.md asks for 2391 mm². The 70 × 45 board has about 3080 mm².
-- **Fit check** (real routed board in the enclosure): **PASS**, 0 overlaps.
+- **Fit check** (real routed board in the enclosure): **PASS**, 0 overlaps, re-run after the button LED was added.
   - The closest gaps are bottom plate to board 0.11 mm, eye light pipe to LED 0.20 mm, button to SW1 0.20 mm, base to the switch lever 0.27 mm, and speaker to board 0.28 mm.
   - It took two fixes to get there: my SW1 model's pins reached into a cell (the real leads are clipped), and KiCad's LED model is 1.1 mm tall.
 
@@ -53,6 +58,7 @@ The hosts' goals and feedback are in `rev.json`; Claude Code records what change
 
 - **Part numbers to confirm before ordering:** the LCSC numbers I added are KT-0603W white LED C2290 and 47 Ω C23182. The TS-1212-4.3 MPN for SW1 also needs checking against a real low-profile 12 mm switch.
 - **White LEDs from 3.3 V:** with a white LED's Vf around 2.9 V there is little headroom, so the brightness depends on the LED batch. Try it on the bench; a 5 V rail isn't worth adding for this.
+- **Firmware:** `7-firmware/BRIEF.md` sums up what the firmware must do (pins, states, settings page, sounds) for the code track.
 - **Wires:** the PIR and speaker wires, and the cell-contact wires to J1, need routing and strain relief inside the case.
 - **Sound library** (for the code track): the hosts want "a more interesting library of sounds and melodies … from existing I2S synth and sound libraries". The MAX98357A + speaker can play real audio now. Candidates to try in `7-firmware/`, not yet checked for ESP32-C3 support:
   - ESP8266Audio (WAV/MP3/MIDI/RTTTL over I2S)

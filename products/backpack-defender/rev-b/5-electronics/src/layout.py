@@ -25,6 +25,7 @@ BTN_AT = f("button")
 PSW_AT = f("power_switch")                       # body centre (bottom face)
 MOD_AT = f("module")                             # body centre (bottom face); the pad field sits 3.1 mm toward -y
 AMP_AT = f("amp")
+BTN_LED = f("button_led")
 cx, cy = f("cells")
 cw, ch = FIT.features["cells"]["size"]
 CELLS = (cx - cw / 2, cy - ch / 2, cx + cw / 2, cy + ch / 2)
@@ -56,6 +57,7 @@ FIXED = {
     "SW2": (PSW_AT[0], PSW_AT[1] + 2.0, 90),
     "D1": (LED_L[0], LED_L[1], 0),
     "D2": (LED_R[0], LED_R[1], 0),
+    "LED1": (BTN_LED[0], BTN_LED[1], 0),
     "FID1": (-24.0, -20.5, 0),
     "FID2": (27.0, 18.5, 0),
     "FID3": (24.0, -20.0, 0),
@@ -84,6 +86,8 @@ PREFER = [
     ("R9", 10.0, 6.0, 90), ("J2", 18.0, 15.0, 0),
     # eye LED driver between the eyes
     ("Q2", -9.6, 3.6, 0), ("R14", -14.2, 6.4, 90), ("R15", -5.0, 6.4, 90), ("R16", -9.6, 0.8, 0),
+    # button glow: LED1's supply switch, gate pull-up, data resistor and decoupling, beside it
+    ("C11", 21.0, 9.2, 90), ("Q3", 13.5, 10.5, 0), ("R17", 13.5, 13.4, 0), ("R18", 15.0, 8.4, 90),
     # PIR supply filter beside J4
     ("R10", -27.5, -3.0, 90), ("C8", -27.5, 1.0, 90),
     # amp beside the speaker, its decoupling on the VDD side
@@ -95,9 +99,16 @@ PREFER = [
 MODEL_SUBST = {
     "SW1": "${KIPRJMOD}/lib/3d/SW_PUSH-12mm_H4.3.step",      # 12 x 12 x 4.3 (KiCad ships only an 8.5 mm one)
     "U3": "${KICAD10_3DMODEL_DIR}/Package_DFN_QFN.3dshapes/TQFN-16-1EP_3x3mm_P0.5mm_EP1.6x1.6mm.step",
+    # no WS2812B-2020 model ships with KiCad: a slightly larger PLCC4 RGB stands in (as in episode 002)
+    "LED1": "${KICAD10_3DMODEL_DIR}/LED_SMD.3dshapes/LED_RGB_Wuerth-PLCC4_3.2x2.8mm_150141M173100.step",
 }
 POWER_NETS = ("/BAT_RAW", "/BAT_IN", "/VBAT", "/BOOST_SW", "/3V3")   # wider tracks (0.5 mm)
-PREROUTE = []
+# The boost's switch pin (U1.5) faces away from L1 and Freerouting keeps missing it (Rev A had the same
+# problem): leave east, drop to the bottom (only the GND pour there, over the cells), run west under U1 and
+# come up through a via inside L1's big pad 2. Absolute points: re-check if U1 or L1 move.
+PREROUTE = [
+    ("U1.5", 0.3, (-12.9, -14.0), "via", 0.5, (-17.47, -14.0), (-17.47, -14.6), "via", "L1.2"),
+]
 GND_VIA_PADS = ["U2"]
 
 

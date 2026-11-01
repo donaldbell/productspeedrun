@@ -1,17 +1,18 @@
 Ref,Qty,Value,Description,Footprint,MPN
 C1 C5 C8 C9,4,10uF,"Capacitor, ceramic, 10 uF 25 V X5R 0805",C_0805_2012Metric,CL21A106KAYNNNE
 C2 C3,2,22uF,"Capacitor, ceramic, 22 uF 25 V X5R 0805",C_0805_2012Metric,CL21A226MAQNNNE
-C4 C6 C10,3,100nF,"Capacitor, ceramic, 100 nF 50 V X7R 0603",C_0603_1608Metric,CC0603KRX7R9BB104
+C4 C6 C10 C11,4,100nF,"Capacitor, ceramic, 100 nF 50 V X7R 0603",C_0603_1608Metric,CC0603KRX7R9BB104
 C7,1,1uF,"Capacitor, ceramic, 1 uF 50 V X5R 0603",C_0603_1608Metric,CL10A105KB8NNNC
 D1 D2,2,White,"LED white 0603, under the left eye's light pipe",LED_0603_1608Metric,KT-0603W
 L1,1,1uH,"Inductor, power, 1 uH, 9 A sat, 7 x 6.6 mm",L_Changjiang_FXL0624,FXL0624-1R0-M
-Q1,1,AO3401A,"P-MOSFET -30 V -4 A SOT-23: reverse-battery guard, drain to the cells, gate to GND",SOT-23,AO3401A
+LED1,1,WS2812B-2020,"RGB LED 2 x 2 mm, addressable, under the clear button",LED_WS2812B-2020_PLCC4_2.0x2.0mm,WS2812B-2020
+Q1 Q3,2,AO3401A,"P-MOSFET -30 V -4 A SOT-23: reverse-battery guard, drain to the cells, gate to GND",SOT-23,AO3401A
 Q2,1,AO3400A,N-MOSFET 30 V 5.7 A SOT-23: switches both eye LEDs from IO10,SOT-23,AO3400A
 R1 R3 R4,3,1M,"Resistor, 1 %, 0603, 1M",R_0603_1608Metric,0603WAF1004T5E
 R2,1,220k,"Resistor, 1 %, 0603, 220k",R_0603_1608Metric,0603WAF2203T5E
 R5 R6 R7 R8,4,10k,"Resistor, 1 %, 0603, 10k",R_0603_1608Metric,0603WAF1002T5E
-R9 R11 R16,3,100k,"Resistor, 1 %, 0603, 100k",R_0603_1608Metric,0603WAF1003T5E
-R10,1,100,"Resistor, 1 %, 0603, 100",R_0603_1608Metric,0603WAF1000T5E
+R9 R11 R16 R17,4,100k,"Resistor, 1 %, 0603, 100k",R_0603_1608Metric,0603WAF1003T5E
+R10 R18,2,100,"Resistor, 1 %, 0603, 100",R_0603_1608Metric,0603WAF1000T5E
 R14 R15,2,47,"Resistor, 1 %, 0603, 47",R_0603_1608Metric,0603WAF470JT5E
 SW1,1,SILENCE,"Tactile switch 12 x 12 x 4.3 mm THT (low profile), under the big silence button",SW_PUSH-12mm,TS-1212-4.3 (12x12x4.3 THT)
 SW2,1,POWER,"Slide switch SPDT right-angle THT, 4 mm lever out through the case's right end: disconnects the cells",SW_Slide_SPDT_Angled_CK_OS102011MA1Q,OS102011MA1QN1

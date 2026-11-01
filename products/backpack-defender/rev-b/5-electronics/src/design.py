@@ -8,6 +8,8 @@ Ported from Rev A (episode 001, now tools/kicad/example/design.py), then changed
   - U4 AM312 is now off-board (it drops through the board cutout): J4 wire pads
   - SW1 is a 12 x 12 x 4.3 mm low-profile tact switch (thinner case)
   - J2 programming pads are a Tag-Connect TC2030 footprint (no header to hit the lid)
+  - LED1 addressable RGB LED under the clear button, power-switched by Q3 (hosts: "a small, colour
+    changing LED near the button to help illuminate it from inside")
 Sheet layout: one block per corner of an A3 sheet, at() in 2.54 mm grid units.
 """
 from schkit import *  # noqa: F401,F403
@@ -15,7 +17,7 @@ from parts import max98357a, tps61023
 
 setup("backpack-defender", lib="backpack", title="Backpack Defender", company="Product Speedrun 001",
       rev="B", date="2026-11-01",
-      comments=["ESP32-C3 + 2xAAA boost + power switch + MAX98357A + speaker + AM312 PIR + eye LEDs"],
+      comments=["ESP32-C3 + 2xAAA boost + power switch + MAX98357A + speaker + AM312 PIR + eye LEDs + RGB button glow"],
       ns="6a3f1c2e-0b7d-4e19-9a51-bacc9ac0de01")
 
 BOOST, AMP = tps61023(), max98357a()
@@ -55,7 +57,7 @@ part("U2", "RF_Module:ESP32-C3-WROOM-02", "ESP32-C3-WROOM-02-N4", "RF_Module:ESP
      "ESP32-C3-WROOM-02-N4", at(26, 84),
      {"1": "3V3", "2": "EN", "18": "PIR_OUT", "17": "BTN", "16": "IO2", "15": "VBAT_SENSE",
       "3": "I2S_BCLK", "4": "I2S_LRCLK", "5": "I2S_DIN", "6": "AMP_SD", "7": "IO8", "8": "IO9", "10": "EYE_LED",
-      "11": None, "12": None, "13": "USB_DN", "14": "USB_DP", "9": "GND", "19": "GND"},
+      "11": "RGB_DATA", "12": "RGB_PWR_N", "13": "USB_DN", "14": "USB_DP", "9": "GND", "19": "GND"},
      "ESP32-C3 Wi-Fi/BLE module, 4 MB flash, PCB antenna, 18 x 20 x 3.2 mm")
 cap("C5", "10uF", at(6, 60), "3V3", "GND")
 cap("C6", "100nF", at(10, 60), "3V3", "GND")
@@ -88,6 +90,18 @@ part("Q2", "Transistor_FET:AO3400A", "AO3400A", "Package_TO_SOT_SMD:SOT-23", "C2
      {"1": "EYE_LED", "2": "GND", "3": "EYE_K"}, "N-MOSFET 30 V 5.7 A SOT-23: switches both eye LEDs from IO10")
 res("R16", "100k", at(86, 46), "EYE_LED", "GND")        # LEDs off while the module boots or sleeps
 
+# --- Button glow (top-right, lower): one addressable RGB LED under the clear dichroic button, like the
+#     colour LED on ESP32-C3 dev boards. Q3 cuts its power when it's off: a WS2812 draws ~1 mA dark,
+#     far more than the armed deep-sleep budget. Data on IO20, power switch on IO21 (UART0 pins, free:
+#     logs go over native USB). IO8 is avoided: its strap pull-up would back-power the LED when it's off.
+part("Q3", "Transistor_FET:AO3401A", "AO3401A", "Package_TO_SOT_SMD:SOT-23", "C15127", "AO3401A", at(100, 84),
+     {"1": "RGB_PWR_N", "2": "3V3", "3": "VLED"}, "P-MOSFET SOT-23: high-side switch for the button LED's supply")
+res("R17", "100k", at(92, 84), "3V3", "RGB_PWR_N")       # LED unpowered unless IO21 pulls low
+res("R18", "100", at(108, 90), "RGB_DATA", "LED_DIN")    # series R on the data line
+cap("C11", "100nF", at(112, 96), "VLED", "GND")
+part("LED1", "LED:WS2812B-2020", "WS2812B-2020", "LED_SMD:LED_WS2812B-2020_PLCC4_2.0x2.0mm", "C965555", "WS2812B-2020",
+     at(120, 92), {"1": None, "2": "GND", "3": "LED_DIN", "4": "VLED"}, "RGB LED 2 x 2 mm, addressable, under the clear button")
+
 # --- I2S amp and speaker pads (bottom-right)
 part("U3", AMP, "MAX98357AETE+T", "Package_DFN_QFN:TQFN-16-1EP_3x3mm_P0.5mm_EP1.23x1.23mm_ThermalVias",
      "", "MAX98357AETE+T", at(94, 68),
@@ -110,7 +124,7 @@ for i in range(3):
 
 # --- power flags (nets fed only by connectors / passive pins)
 for i, (net, xy) in enumerate((("BAT_RAW", at(4, 31)), ("GND", at(8, 31)), ("VBAT", at(12, 31)), ("PIR_VCC", at(16, 31)),
-                               ("BAT_IN", at(20, 31))), 1):
+                               ("BAT_IN", at(20, 31)), ("VLED", at(24, 31))), 1):
     part("#FLG%02d" % i, "power:PWR_FLAG", "PWR_FLAG", "", "", "", xy, {"1": net}, power=True)
 
 
@@ -127,6 +141,9 @@ NOTES += [
                 "RC-filtered supply (R10/C8): PIRs false-trigger on boost / class-D / Wi-Fi ripple."),
     (at(80, 28), "EYES: D1/D2 white 0603 under the light pipes in the eye highlights, R14/R15 47R from 3V3, Q2 low side\n"
                  "on IO10 (R16 holds it off at boot). Flash them with the alarm (LEDC PWM for a soft pulse)."),
+    (at(104, 102), "BUTTON GLOW: LED1 WS2812B-2020 under the clear button on VLED, switched by Q3 from IO21 (low = on;\n"
+                 "R17 keeps it off), data on IO20 through R18. Run at 3.3 V (below its 3.7 V spec, as on ESP32-C3 dev\n"
+                 "boards): dim blue, which suits a soft glow. Colour or rainbow wheel picked on the AP-mode settings page."),
     (at(80, 50), "SOUND: MAX98357A (mono, left channel when SD_MODE is driven high; R11 keeps it off otherwise).\n"
                  "GAIN_SLOT open = 9 dB. Drives the 20 mm 8 ohm speaker on J3 directly (Rev A's piezo resistors gone)."),
 ]

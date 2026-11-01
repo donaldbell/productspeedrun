@@ -20,11 +20,12 @@ Generated from `fit.json`: edit that file, then run `python3 tools/fit/fitmd.py 
 | eye_led_r | (−1.6, 6.4) | top | (−1.6, 6.4, 15.1) | 1.6 × 0.8 mm. white 0603 LED under the right eye's highlight light pipe |
 | power_switch | (31.8, −6) | bottom | (31.8, −6, 13.5) | 4.4 × 8.6 mm. C&K OS102011MA1Q right-angle slide switch (body centre); its 4 mm lever leaves the body face at x 34, centre 2.6 mm below the board (enclosure z 10.9), tip flush with the base's outer wall in a thumb pocket; in series with battery + |
 | module | (−7, 11.8) | bottom | (−7, 11.8, 13.5) | 18 × 20 mm. suggested: U2 ESP32-C3-WROOM-02 moves to the bottom face so the eye LEDs get the top; antenna end on the +y edge, clear of the cells |
+| button_led | (18, 9.2) | top | (18, 9.2, 15.1) | 2.2 × 2.2 mm. WS2812B-2020 RGB LED inside the clear button's footprint (9.2 mm from its centre, beside SW1), lighting it from below |
 | amp | (12, −12.5) | top | (12, −12.5, 15.1) | 3 × 3 mm. U3 MAX98357A, now driving the speaker |
 | cells | (0, −9.75) | bottom | (0, −9.75, 13.5) | 52 × 23 mm. 2 x AAA in a cradle in the bottom plate, 0.9 mm below the bottom face: no parts here, THT leads clipped to 0.5 |
 
 - **Keep-outs** (board x0, y0, x1, y1): antenna (−18, 15.3, 4, 22.5).
-- **Fit check** (`python3 tools/fit/fitcheck.py episodes/rev-b`): the real board in `4-model/model.solidcraft`, without Stage 4's stand-ins PCB, ESP32-C3-WROOM-02, Tact Switch, Switch Plunger, MAX98357A, Eye LED L, Eye LED R, Power Switch, Power Switch Lever.
+- **Fit check** (`python3 tools/fit/fitcheck.py episodes/rev-b`): the real board in `4-model/model.solidcraft`, without Stage 4's stand-ins PCB, ESP32-C3-WROOM-02, Tact Switch, Switch Plunger, MAX98357A, Eye LED L, Eye LED R, Power Switch, Power Switch Lever, Button LED.
 
 <!-- fit:end -->
 
@@ -53,3 +54,4 @@ One line each, newest last: `- [open] 5→4: …`. The other stage marks it `[do
 - [done] 5→4: `module` (−7, 12.5) → (−7, 11.8) and `keepouts.antenna` 0.7 mm lower: the module's silkscreen sat 0.1 mm past the board edge.
 - [done] 5→4: eye light pipes end 1.4 mm above the board (was 1.0): KiCad's 0603 LED model is 1.1 mm tall.
 - Rev B board: DRC 0 / 0 unconnected, fit check PASS (0 overlaps; closest 0.11 mm, bottom plate to board).
+- [done] 4→5 and 5→4: new `button_led` (18, 9.2), top face: WS2812B-2020 under the clear button. It has a stand-in in the model ("Button LED"). Fit check PASS.

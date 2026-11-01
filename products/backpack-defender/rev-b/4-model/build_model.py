@@ -39,6 +39,7 @@ LED_XY      = [xy("eye_led_l"), xy("eye_led_r")]
 PSW_XY      = xy("power_switch")
 MOD_XY      = xy("module")
 AMP_XY      = xy("amp")
+BLED_XY     = xy("button_led")
 POSTS       = [tuple(FIT.to_enclosure(h)[:2]) for h in FIT.holes + FIT.rests]
 PIR_CUT_R   = FIT.features["pir"]["size"][0] / 2
 
@@ -278,6 +279,7 @@ c("solid.box", length=12, width=12, height=SW_H - 1.0, center=[bx, by, zt + (SW_
 c("solid.cylinder", radius=3.5, height=1.0, base=[bx, by, zt + SW_H - 1.0], operation="new", body_name="Switch Plunger", name="SW1 plunger")
 c("solid.cylinder", radius=SPK_R, height=SPK_T, base=[SPK_XY[0], SPK_XY[1], zt + SPK_FOAM], operation="new", body_name="Speaker", name="Speaker 20x4")
 c("solid.box", length=3, width=3, height=0.8, center=[AMP_XY[0], AMP_XY[1], zt + 0.4], operation="new", body_name="MAX98357A", name="U3 MAX98357A")
+c("solid.box", length=2.2, width=2.2, height=0.9, center=[BLED_XY[0], BLED_XY[1], zt + 0.45], operation="new", body_name="Button LED", name="LED1 RGB under the button")
 for nm, p in zip(["Eye LED L", "Eye LED R"], LED_XY):
     c("solid.box", length=1.6, width=0.8, height=0.8, center=[p[0], p[1], zt + 0.4], operation="new", body_name=nm, name=nm)
 c("solid.box", length=4.4, width=8.6, height=4.7, center=[PSW_XY[0], PSW_XY[1], PCB_Z - 2.35], operation="new", body_name="Power Switch", name="SW2 body (bottom)")
@@ -297,7 +299,7 @@ COLOURS = {"Lid": "#8fe0c9", "Base": "#ffe08a", "Bottom Plate": "#cdbdf2", "Batt
            "PIR Dome": "#b39ddb",
            "Eye Light L": "#ffffff", "Eye Light R": "#ffffff", "Name Field": "#ffffff", "Name Text": "#ffffff",
            "PCB": "#2e7d4f", "AAA Cells": "#3a3a3a", "ESP32-C3-WROOM-02": "#c0c4c8", "Tact Switch": "#222222", "Switch Plunger": "#555555",
-           "Speaker": "#c9a227", "MAX98357A": "#111111", "Eye LED L": "#fff8d0", "Eye LED R": "#fff8d0", "Power Switch": "#222222", "Power Switch Lever": "#333333"}
+           "Speaker": "#c9a227", "MAX98357A": "#111111", "Eye LED L": "#fff8d0", "Eye LED R": "#fff8d0", "Power Switch": "#222222", "Power Switch Lever": "#333333", "Button LED": "#f4f4f4"}
 TEXT_BODIES = ["Name Text"] + [f"Name Text ({i})" for i in range(2, 13)]   # the text extrude makes one body per glyph piece: 12 for "PROPERTY OF:"
 for t in TEXT_BODIES[1:]:
     COLOURS[t] = COLOURS["Name Text"]

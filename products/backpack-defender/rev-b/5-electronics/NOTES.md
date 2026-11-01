@@ -125,6 +125,15 @@ The changelog is in `../REV.md`, and the requests are in `../FIT.md`.
 - IO10 drives the eye LEDs (active high).
 - "Setup" is now: hold the big button while sliding the power switch on (Rev A said "while putting the batteries in").
 - Switching off cuts the cells, so the deep-sleep current only matters while armed.
+- **Button glow (LED1):** this is a WS2812B-2020 (one pixel).
+  - IO21 low powers it through Q3. IO20 is its data line (RMT, e.g. Adafruit NeoPixel or FastLED).
+  - Keep IO21 high, or let R17 hold Q3 off, before deep sleep: a dark WS2812 still draws ~1 mA.
+  - Drive it gently (about 5–15 % brightness is plenty under a clear button). At 3.3 V the blue is dimmer than the red.
+- **Settings page (AP mode):** the same page where the kid picks the alarm sound also gets a **button colour** picker:
+  - a palette of colours, plus a **rainbow** option that slowly cycles the colour wheel (HSV hue sweep)
+  - a preview that lights the LED live as you choose
+  - Save the choice to NVS beside the sound choice.
+  - Suggested behaviour: a soft glow (or slow breathe) while armed is optional because of battery life; full colour or rainbow during the alarm, alongside the white eye flashes; a brief flash on button press as feedback.
 
 **Results (Rev B):**
 - ERC: 0 violations.
