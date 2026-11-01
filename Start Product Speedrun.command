@@ -35,12 +35,19 @@ if lsof -ti tcp:$PORT >/dev/null 2>&1; then
 fi
 
 # 2. Get the latest updates (keeps going if there's no internet).
+#    Commits made on this Mac (Claude Code, the Publish buttons) are replayed on top of GitHub's,
+#    and uncommitted changes are set aside and put back. If the two clash, nothing is changed.
 echo "  Checking for updates…"
-if git pull --ff-only --quiet 2>/tmp/psr-pull.log; then
+if git pull --rebase --autostash --quiet 2>/tmp/psr-pull.log; then
   echo "  Up to date."
+  if [ -n "$(git log --oneline @{u}..HEAD 2>/dev/null)" ]; then
+    if git push --quiet 2>>/tmp/psr-pull.log; then echo "  Sent this Mac's new commits to GitHub."; fi
+  fi
 else
+  git rebase --abort >/dev/null 2>&1
   echo "  Couldn't update right now, so starting the version you have."
-  echo "  (Details: $(tail -1 /tmp/psr-pull.log))"
+  echo "  (Details: $(grep -v '^$' /tmp/psr-pull.log | tail -1))"
+  echo "  If this keeps happening, ask Claude: it's usually the same file changed here and on GitHub."
 fi
 echo ""
 
