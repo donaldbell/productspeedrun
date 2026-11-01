@@ -819,8 +819,20 @@ function mountRev() {
   const trackCard = (t) => {
     const fb = h("textarea", { id: "fb-" + t.key, rows: 4, placeholder: t.hint });
     fb.value = r.feedback[t.key] || "";
-    const prompt = h("textarea", { class: "prompt", rows: 7, readonly: true, "aria-label": `${t.name} prompt for Claude Code` });
-    const sync = () => { prompt.value = revPrompt(t.key); };
+    // The prompt follows the feedback as you type. Edit it directly and your edits are kept until you press Rebuild.
+    r.prompts = r.prompts || {}; r.promptEdited = r.promptEdited || {};
+    const prompt = h("textarea", { class: "prompt", rows: 7, "aria-label": `${t.name} prompt for Claude Code` });
+    const state = h("span", { class: "hint" });
+    const sync = () => {
+      const edited = !!r.promptEdited[t.key] && r.prompts[t.key] != null;
+      if (!edited) prompt.value = revPrompt(t.key);
+      state.textContent = edited ? "Edited by hand: Rebuild to write it from the feedback again." : "Updates as you type the feedback.";
+    };
+    if (r.promptEdited[t.key] && r.prompts[t.key] != null) prompt.value = r.prompts[t.key];
+    prompt.addEventListener("input", () => { r.prompts[t.key] = prompt.value; r.promptEdited[t.key] = true; saveRev(); sync(); });
+    const rebuild = h("button", { type: "button", class: "btn ghost", text: "Rebuild prompt", title: "Write the prompt from the feedback again (drops hand edits)", onclick: () => {
+      r.promptEdited[t.key] = false; delete r.prompts[t.key]; saveRev(); sync(); toast(`${t.name} prompt rebuilt`);
+    } });
     fb.addEventListener("input", () => { r.feedback[t.key] = fb.value; saveRev(); sync(); });
     const doneBtn = h("button", { type: "button", class: "btn ghost", onclick: () => {
       r.done = r.done.includes(t.key) ? r.done.filter((x) => x !== t.key) : [...r.done, t.key]; saveRev(); paintDone();
@@ -833,7 +845,8 @@ function mountRev() {
             try { await navigator.clipboard.writeText(prompt.value); toast(t.offAir ? "Prompt copied. Paste it into Claude Code in VS Code." : "Prompt copied. Paste it into Claude Code."); }
             catch { prompt.select(); toast("Copy failed. The text is selected: press Cmd+C.", true); }
           } }))),
-      fb, h("details", null, h("summary", { text: "Prompt" }), prompt));
+      fb, h("details", { open: local.get("rev-prompts-open", false) || null, ontoggle: (e) => local.set("rev-prompts-open", e.currentTarget.open) },
+        h("summary", { text: "Prompt" }), h("div", { class: "row", style: "justify-content:space-between" }, state, rebuild), prompt));
     const paintDone = () => { const d = r.done.includes(t.key); doneBtn.textContent = d ? "✓ Done" : "Mark done"; card.classList.toggle("is-done", d); };
     sync(); paintDone();
     cards[t.key] = { el: card, sync, add(q) { fb.value = (fb.value.trim() ? fb.value.trim() + "\n" : "") + "- " + q; r.feedback[t.key] = fb.value; saveRev(); sync(); toast(`Added to ${t.name}`); } };
