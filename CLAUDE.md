@@ -107,6 +107,7 @@ The hosts write feedback per track in the console, which turns it into a prompt 
 
 - **Work only in that revision folder.** Read `rev.json` (goals and the feedback for every track, since they affect each other) and the previous revision's notes first.
 - **Change, don't redo.** Edit the copied `build_model.py`, `design.py`, `layout.py` and `fit.json`. If the revision predates `fit.json` or the kit's `src/`, port it first (episode 001's board is `tools/kicad/example/`), then make the changes.
+- **Same tools and outputs as Rev A:** Solidcraft in headless mode for the enclosure (follow the Stage 4 steps for screenshots, `model.solidcraft`, exports and the GLB's colours) and KiCad through `tools/kicad/` for the board (the Stage 5 steps).
 - **Same contract between enclosure and board** as in "Stages 4 and 5 work together", same finish line for electronics: DRC 0 / 0 unconnected and a passing fit check.
 - **Log it in `REV.md`** as you go: one changelog line per change, with the reason (usually a host comment or an open question it answers). Move answered questions out of "Still open".
 - **Commit** with a message like `gamer-guardian rev B: radar presence sensor, head 3 mm narrower`.
