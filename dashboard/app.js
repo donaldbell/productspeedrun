@@ -451,6 +451,7 @@ function renderCard() {
     h("p", { class: "hint", text: refs.length
       ? `References: ${refs.map((r) => r.split("/").pop()).join(" + ")}. Shape from the model, look from the concept.`
       : "Waits for the model's iso.png screenshot." }),
+    refStrip(refs.map((x) => `/episodes/${S.ep.slug}/${x}`), ["1 · CAD model (shape)", "2 · concept art (look)"]),
     pb.box,
     ready.length ? h("div", { class: "row" }, sel, gen)
       : h("p", { class: "hint", text: "Copy the prompt into Gemini with those two images, then drag the render onto this stage. (Add a Gemini key in .env to generate here.)" }),
@@ -816,6 +817,18 @@ function revRenderRefs() {
   const style = r.previousHero || (favOrLatest("2-concept") ? `/episodes/${S.ep.slug}/${favOrLatest("2-concept")}` : null);
   return [iso && `/products/${r.productSlug}/${r.rev}/4-model/${iso.name}`, style].filter(Boolean);
 }
+// The reference images for a render, ready to drag into Gemini or ChatGPT, or to show in Finder.
+// paths are repo-rooted ("/episodes/…" or "/products/…").
+function refStrip(paths, labels) {
+  if (!paths.length) return null;
+  const enc = (p) => p.split("/").map((x, i) => (i ? encodeURIComponent(x) : x)).join("/");
+  return h("div", { class: "ref-strip" },
+    paths.map((p, i) => h("figure", null,
+      h("img", { src: enc(p), alt: labels[i] || "", draggable: "true", title: "Drag into Gemini or ChatGPT" }),
+      h("figcaption", null, h("span", { text: labels[i] || p.split("/").pop() }),
+        h("button", { type: "button", class: "btn ghost", text: "Show in Finder", onclick: () => api("/reveal", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ path: p }) }).catch((e) => toast(e.message, true)) })))),
+    h("p", { class: "hint", text: "Drag these straight into Gemini or ChatGPT in another window, or use Show in Finder." }));
+}
 function heroCard() {
   const r = S.rev.rev; r.prompts = r.prompts || {}; r.promptEdited = r.promptEdited || {};
   const box = h("section", { class: "rev-card" });
@@ -830,6 +843,7 @@ function heroCard() {
     const refs = revRenderRefs(), renders = revFiles("4-model").filter((f) => /^render-/i.test(f.name) && IMG.test(f.name)).reverse();
     refsLine.textContent = refs.length > 1 ? `References: this revision's iso.png + ${r.previousHero ? "the previous hero render" : "the favourite concept art"}.` : "Waits for this revision's iso.png (the CAD track saves it).";
     gen.disabled = refs.length < 2 || !ready.length || box.dataset.busy === "1";
+    strip.replaceChildren(refStrip(refs, ["1 · new CAD model (shape)", r.previousHero ? "2 · previous hero (look)" : "2 · concept art (look)"]) || "");
     thumbs.replaceChildren(...renders.map((f) => {
       const rel = `4-model/${f.name}`;
       return h("div", { class: "render-thumb" + (r.hero === rel ? " fav" : "") },
@@ -837,7 +851,7 @@ function heroCard() {
         h("button", { type: "button", text: r.hero === rel ? "★ Hero" : "☆ Use as hero", onclick: () => { r.hero = rel; saveRev(); draw(); toast("Hero render set for this revision's page"); } }));
     }));
   };
-  const refsLine = h("p", { class: "hint" });
+  const refsLine = h("p", { class: "hint" }), strip = h("div");
   const gen = h("button", { type: "button", class: "btn primary", text: "Generate render", onclick: async () => {
     box.dataset.busy = "1"; gen.textContent = "Developing…"; draw();
     try {
@@ -854,7 +868,7 @@ function heroCard() {
         try { await navigator.clipboard.writeText(ta.value); toast("Prompt copied. Paste it into Gemini with the two reference images, then drag the render onto this screen."); }
         catch { ta.select(); toast("Copy failed. The text is selected: press Cmd+C.", true); }
       } })),
-    refsLine,
+    refsLine, strip,
     h("details", null, h("summary", { text: "Prompt" }),
       h("div", { class: "row", style: "justify-content:flex-end" }, h("button", { type: "button", class: "btn ghost", text: "Rebuild prompt", onclick: () => { r.promptEdited.render = false; delete r.prompts.render; saveRev(); sync(); } })), ta),
     ready.length ? h("div", { class: "row" }, sel, gen) : h("p", { class: "hint", text: "Copy the prompt into Gemini with those two images, then drag the render onto this screen." }),

@@ -376,6 +376,14 @@ const server = http.createServer(async (req, res) => {
       }
 
       if (parts[1] === "shelf" && req.method === "GET") return send(res, 200, await listShelf());
+      // Reveal a file in Finder: POST /api/reveal {path: "/episodes/…" or "/products/…"} (macOS)
+      if (parts[1] === "reveal" && req.method === "POST") {
+        const b = await readJson(req);
+        const p = path.join(ROOT, ...String(b.path || "").split("/").filter(Boolean).map(decodeURIComponent));
+        if ((!inside(EPISODES, p) && !inside(PRODUCTS, p)) || !existsSync(p)) return send(res, 404, { error: "File not found." });
+        execFile("open", ["-R", p], () => {});
+        return send(res, 200, { ok: true });
+      }
       if (parts[1] === "revisions") {
         if (parts.length === 2 && req.method === "POST") { const b = await readJson(req); return send(res, 201, await createRevision(String(b.episode || ""))); }
         const product = parts[2], rev = parts[3], dir = revDir(product, rev);

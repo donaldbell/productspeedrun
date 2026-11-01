@@ -361,3 +361,9 @@ body.rev-mode .console { grid-template-columns: 1fr; }
 .rev-card textarea.prompt { margin-top: .8vh; min-height: 18vh; font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px; }
 .ep-list .ep-row > .ren { display: inline-flex; grid-template-columns: none; background: transparent; padding: 6px 12px; border-radius: 999px; }
 .rev-both { border: 1px dashed var(--line); border-radius: 12px; padding: 1vh 1vw; display: grid; gap: .8vh; justify-items: start; }
+.ref-strip { display: grid; grid-template-columns: 1fr 1fr; gap: .8vh .6vw; }
+.ref-strip .hint { grid-column: 1 / -1; }
+.ref-strip figure { margin: 0; display: grid; gap: .4vh; }
+.ref-strip img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 8px; border: 1px solid var(--line); background: #fff; cursor: grab; }
+.ref-strip figcaption { display: flex; justify-content: space-between; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+.ref-strip figcaption .btn { font-size: 11px; padding: 3px 8px; }
