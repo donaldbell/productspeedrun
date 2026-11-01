@@ -16,7 +16,7 @@ def srgb_to_linear(hexc):
 
 here = os.path.dirname(os.path.abspath(__file__))
 VISIBLE = {"Lid": "#8fe0c9", "Base": "#ffe08a", "Bottom Plate": "#cdbdf2", "Battery Door": "#cdbdf2",
-           "Silence Button": "#ff8f87", "Eye L": "#3b3552", "Eye R": "#3b3552", "Smile": "#3b3552",
+           "Silence Button": "#eef3ff", "Eye L": "#3b3552", "Eye R": "#3b3552", "Smile": "#3b3552",
            "PIR Dome": "#b39ddb",
            "Eye Light L": "#ffffff", "Eye Light R": "#ffffff",
            "Name Field": "#ffffff", "Name Text": "#ffffff"}
@@ -50,6 +50,27 @@ n = struct.unpack("<I", b[12:16])[0]
 gltf = json.loads(b[20:20 + n])
 for mat in gltf["materials"]:
     mat["pbrMetallicRoughness"]["baseColorFactor"] = [round(v, 6) for v in srgb_to_linear(VISIBLE[mat["name"]])] + [1.0]
+
+# Rev B: the silence button is clear plastic with a dichroic (iridescent) finish. glTF's transmission,
+# IOR and iridescence extensions describe exactly that, and <model-viewer> renders them; a viewer
+# without them falls back to a pale, nearly white button. With no thickness texture the film is
+# iridescenceThicknessMaximum thick everywhere: 380 nm gives a soap-bubble magenta/green shift.
+SPECIAL = {"Silence Button": {
+    "pbr": {"metallicFactor": 0.0, "roughnessFactor": 0.06},
+    "extensions": {"KHR_materials_transmission": {"transmissionFactor": 0.9},
+                   "KHR_materials_ior": {"ior": 1.5},
+                   "KHR_materials_iridescence": {"iridescenceFactor": 1.0, "iridescenceIor": 1.8,
+                                                 "iridescenceThicknessMinimum": 100, "iridescenceThicknessMaximum": 380}}}}
+used = set(gltf.get("extensionsUsed", []))
+for mat in gltf["materials"]:
+    sp = SPECIAL.get(mat["name"])
+    if sp:
+        mat["pbrMetallicRoughness"].update(sp["pbr"])
+        mat.setdefault("extensions", {}).update(sp["extensions"])
+        mat["doubleSided"] = True
+        used.update(sp["extensions"])
+if used:
+    gltf["extensionsUsed"] = sorted(used)
 js = json.dumps(gltf, separators=(",", ":")).encode()
 js += b" " * (-len(js) % 4)
 rest = b[20 + n:]

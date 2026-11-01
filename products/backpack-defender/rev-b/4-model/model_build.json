@@ -2099,7 +2099,8 @@
     "bodies": [
      "Silence Button"
     ],
-    "color": "#ff8f87"
+    "color": "#eef3ff",
+    "opacity": 0.8
    }
   },
   {

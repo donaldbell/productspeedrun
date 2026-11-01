@@ -293,7 +293,7 @@ c("solid.revolve", axis="y", operation="new", name="AM312 PIR", body_name="PIR D
 # 9. Kawaii pastel finish (enclosure) and readable colours for the stand-ins
 stage("colour")
 COLOURS = {"Lid": "#8fe0c9", "Base": "#ffe08a", "Bottom Plate": "#cdbdf2", "Battery Door": "#cdbdf2",
-           "Silence Button": "#ff8f87", "Eye L": "#3b3552", "Eye R": "#3b3552", "Smile": "#3b3552",
+           "Silence Button": "#eef3ff", "Eye L": "#3b3552", "Eye R": "#3b3552", "Smile": "#3b3552",
            "PIR Dome": "#b39ddb",
            "Eye Light L": "#ffffff", "Eye Light R": "#ffffff", "Name Field": "#ffffff", "Name Text": "#ffffff",
            "PCB": "#2e7d4f", "AAA Cells": "#3a3a3a", "ESP32-C3-WROOM-02": "#c0c4c8", "Tact Switch": "#222222", "Switch Plunger": "#555555",
@@ -301,8 +301,9 @@ COLOURS = {"Lid": "#8fe0c9", "Base": "#ffe08a", "Bottom Plate": "#cdbdf2", "Batt
 TEXT_BODIES = ["Name Text"] + [f"Name Text ({i})" for i in range(2, 13)]   # the text extrude makes one body per glyph piece: 12 for "PROPERTY OF:"
 for t in TEXT_BODIES[1:]:
     COLOURS[t] = COLOURS["Name Text"]
+OPACITY = {"Silence Button": 0.8}   # clear dichroic / glitter button (Rev B): see-through in the CAD view
 for body, col in COLOURS.items():
-    c("appearance.assign", bodies=[body], color=col)
+    c("appearance.assign", bodies=[body], color=col, **({"opacity": OPACITY[body]} if body in OPACITY else {}))
 
 if __name__ == "__main__":
     upto = int(sys.argv[sys.argv.index("--upto") + 1]) if "--upto" in sys.argv else len(stage_marks)

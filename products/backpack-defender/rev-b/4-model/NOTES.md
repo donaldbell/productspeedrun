@@ -101,3 +101,4 @@ Build notes:
 - The name plate's text and field are separate sketches, because `exclude_profiles` was ignored and gave a duplicate field body.
 - A full build takes about 45 s.
 - The pink cheeks are removed (`CHEEKS = []`, at the hosts' request). The face is eyes + smile only. The lid has no cheek pockets.
+- Silence button: clear dichroic/glitter (hosts' sample: holographic arcade buttons). In SolidCraft it's `#eef3ff` at 80 % opacity, so `iso.png` reads as a frosted dome. `make_glb.py` gives it KHR_materials_transmission + ior + iridescence (380 nm film), which model-viewer renders as a clear dome with a lavender/cyan/gold sheen. The geometry is unchanged, so the board and the fit are unaffected.
