@@ -103,7 +103,7 @@ c("sketch.circle.center", center=list(PIR_XY), radius=PIR_R + 0.2)
 c("sketch.finish")
 c("solid.extrude", distance=8, operation="cut", targets=["Lid"], name="Lid Openings", profiles="all")
 
-PIPE_BOT = Z_PCB_TOP + 1.0            # light pipe ends 1 mm above the board (0603 LED is 0.8 tall)
+PIPE_BOT = Z_PCB_TOP + 1.4            # light pipe ends 1.4 mm above the board (KiCad's 0603 LED model is 1.1 tall)
 c("sketch.create", **XY(z_in + 0.3), name="Light Pipe Bosses")   # start 0.3 inside the lid so the join overlaps
 for p in LED_XY:
     c("sketch.circle.center", center=list(p), radius=PIPE_BOSS_R)
@@ -173,15 +173,17 @@ ho_mid = [[(hole[i][0] + hole[(i + 1) % 3][0]) / 2, (hole[i][1] + hole[(i + 1) %
 c("solid.fillet", body="Loop", edges=[[round(x, 4), round(y, 4), z] for x, y in lo_mid + ho_mid for z in (LOOP_T, 0.0)], radius=1.2, name="Loop Edge Rounds")
 c("solid.combine", target="Base", tools=["Loop"], operation="join", name="Join Loop")
 
-# power switch: a slot through the right end, inside a shallow thumb pocket
-PSW_Z = PCB_Z - 1.8                               # actuator centre: middle of a 3.6 mm switch body hung under the board
+# power switch: a slot through the right end, inside a shallow thumb pocket. The switch is a C&K OS102011MA1Q
+# hung under the board: its 4 mm lever (centre 2.6 below the board, 2 tall) ends flush with the outer wall and
+# slides over 7.6 mm of y between its two positions.
+PSW_Z = PCB_Z - 2.6                               # lever centre
 py0 = PSW_XY[1]
 c("sketch.create", plane={"origin": [L / 2 - 0.6, 0, 0], "x_dir": [0, 1, 0], "y_dir": [0, 0, 1]}, name="Switch Pocket")
-c("sketch.rectangle.rounded", p0=[py0 - 5.0, PSW_Z - 1.9], p1=[py0 + 5.0, PSW_Z + 1.9], radius=1.8)
+c("sketch.rectangle.rounded", p0=[py0 - 5.6, PSW_Z - 2.1], p1=[py0 + 5.6, PSW_Z + 2.1], radius=1.8)
 c("sketch.finish")
 c("solid.extrude", distance=2, operation="cut", targets=["Base"], name="Switch Pocket")
 c("sketch.create", plane={"origin": [L / 2 - 3.5, 0, 0], "x_dir": [0, 1, 0], "y_dir": [0, 0, 1]}, name="Switch Slot")
-c("sketch.rectangle.rounded", p0=[py0 - 3.5, PSW_Z - 1.2], p1=[py0 + 3.5, PSW_Z + 1.2], radius=1.1)
+c("sketch.rectangle.rounded", p0=[py0 - 4.4, PSW_Z - 1.3], p1=[py0 + 4.4, PSW_Z + 1.3], radius=1.2)
 c("sketch.finish")
 c("solid.extrude", distance=5, operation="cut", targets=["Base"], name="Switch Slot")
 
@@ -256,9 +258,6 @@ for i, p in enumerate(face_pts):
 for nm, p in zip(["Eye Light L", "Eye Light R"], LED_XY):
     c("solid.cylinder", radius=PIPE_R, height=round(z_top - PIPE_BOT, 4), base=[p[0], p[1], PIPE_BOT], operation="new", body_name=nm, name=nm)
 
-# 7. Power slider cap on the switch actuator (sits 0.6 below the wall surface, in the thumb pocket)
-c("solid.box", length=2.3, width=4.0, height=2.0, center=[L / 2 - 1.85, py0 - 0.8, PSW_Z], operation="new", body_name="Power Slider", name="Power Slider")
-
 # 8. Electronics stand-ins, positions from fit.json (fit check only; not in the GLB)
 stage("electronics")
 zt = Z_PCB_TOP
@@ -281,7 +280,8 @@ c("solid.cylinder", radius=SPK_R, height=SPK_T, base=[SPK_XY[0], SPK_XY[1], zt +
 c("solid.box", length=3, width=3, height=0.8, center=[AMP_XY[0], AMP_XY[1], zt + 0.4], operation="new", body_name="MAX98357A", name="U3 MAX98357A")
 for nm, p in zip(["Eye LED L", "Eye LED R"], LED_XY):
     c("solid.box", length=1.6, width=0.8, height=0.8, center=[p[0], p[1], zt + 0.4], operation="new", body_name=nm, name=nm)
-c("solid.box", length=4.4, width=8.6, height=3.6, center=[PSW_XY[0], PSW_XY[1], PCB_Z - 1.8], operation="new", body_name="Power Switch", name="Power Switch (bottom)")
+c("solid.box", length=4.4, width=8.6, height=4.7, center=[PSW_XY[0], PSW_XY[1], PCB_Z - 2.35], operation="new", body_name="Power Switch", name="SW2 body (bottom)")
+c("solid.box", length=4.0, width=2.0, height=2.0, center=[PSW_XY[0] + 2.2 + 2.0, PSW_XY[1] - 1.0, PSW_Z], operation="new", body_name="Power Switch Lever", name="SW2 lever")
 # AM312: Ø10 body with a domed lens, one revolved profile, standing on the PIR boss through the board cutout
 zd = PIR_APEX - PIR_R
 c("sketch.create", plane={"origin": [PIR_XY[0], PIR_XY[1], 0], "x_dir": [1, 0, 0], "y_dir": [0, 0, 1]}, name="PIR Profile")
@@ -296,9 +296,8 @@ COLOURS = {"Lid": "#8fe0c9", "Base": "#ffe08a", "Bottom Plate": "#cdbdf2", "Batt
            "Silence Button": "#ff8f87", "Eye L": "#3b3552", "Eye R": "#3b3552", "Smile": "#3b3552",
            "Cheek L": "#ffadc4", "Cheek R": "#ffadc4", "PIR Dome": "#b39ddb",
            "Eye Light L": "#ffffff", "Eye Light R": "#ffffff", "Name Field": "#ffffff", "Name Text": "#ffffff",
-           "Power Slider": "#ff8f87",
            "PCB": "#2e7d4f", "AAA Cells": "#3a3a3a", "ESP32-C3-WROOM-02": "#c0c4c8", "Tact Switch": "#222222", "Switch Plunger": "#555555",
-           "Speaker": "#c9a227", "MAX98357A": "#111111", "Eye LED L": "#fff8d0", "Eye LED R": "#fff8d0", "Power Switch": "#222222"}
+           "Speaker": "#c9a227", "MAX98357A": "#111111", "Eye LED L": "#fff8d0", "Eye LED R": "#fff8d0", "Power Switch": "#222222", "Power Switch Lever": "#333333"}
 TEXT_BODIES = ["Name Text"] + [f"Name Text ({i})" for i in range(2, 13)]   # the text extrude makes one body per glyph piece: 12 for "PROPERTY OF:"
 for t in TEXT_BODIES[1:]:
     COLOURS[t] = COLOURS["Name Text"]

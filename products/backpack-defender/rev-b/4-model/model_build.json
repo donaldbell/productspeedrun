@@ -305,7 +305,7 @@
   {
    "command": "solid.extrude",
    "params": {
-    "distance": 4.3,
+    "distance": 3.9,
     "direction": "negative",
     "operation": "join",
     "targets": [
@@ -484,7 +484,7 @@
   {
    "command": "solid.extrude",
    "params": {
-    "distance": 6.7,
+    "distance": 6.3,
     "direction": "negative",
     "operation": "cut",
     "targets": [
@@ -984,12 +984,12 @@
    "command": "sketch.rectangle.rounded",
    "params": {
     "p0": [
-     -11.0,
-     9.799999999999999
+     -11.6,
+     8.8
     ],
     "p1": [
-     -1.0,
-     13.6
+     -0.40000000000000036,
+     13.0
     ],
     "radius": 1.8
    }
@@ -1036,14 +1036,14 @@
    "command": "sketch.rectangle.rounded",
    "params": {
     "p0": [
-     -9.5,
-     10.5
+     -10.4,
+     9.6
     ],
     "p1": [
-     -2.5,
-     12.899999999999999
+     -1.5999999999999996,
+     12.200000000000001
     ],
-    "radius": 1.1
+    "radius": 1.2
    }
   },
   {
@@ -1793,11 +1793,11 @@
    "command": "solid.cylinder",
    "params": {
     "radius": 1.28,
-    "height": 6.4,
+    "height": 6.0,
     "base": [
      -17.6,
      6.4,
-     16.1
+     16.5
     ],
     "operation": "new",
     "body_name": "Eye Light L",
@@ -1808,31 +1808,15 @@
    "command": "solid.cylinder",
    "params": {
     "radius": 1.28,
-    "height": 6.4,
+    "height": 6.0,
     "base": [
      -1.6,
      6.4,
-     16.1
+     16.5
     ],
     "operation": "new",
     "body_name": "Eye Light R",
     "name": "Eye Light R"
-   }
-  },
-  {
-   "command": "solid.box",
-   "params": {
-    "length": 2.3,
-    "width": 4.0,
-    "height": 2.0,
-    "center": [
-     36.15,
-     -6.8,
-     11.7
-    ],
-    "operation": "new",
-    "body_name": "Power Slider",
-    "name": "Power Slider"
    }
   },
   {
@@ -1953,7 +1937,7 @@
     "height": 3.2,
     "center": [
      -7.0,
-     12.5,
+     11.8,
      11.9
     ],
     "operation": "new",
@@ -2060,15 +2044,31 @@
    "params": {
     "length": 4.4,
     "width": 8.6,
-    "height": 3.6,
+    "height": 4.7,
     "center": [
-     32.8,
+     31.8,
      -6.0,
-     11.7
+     11.15
     ],
     "operation": "new",
     "body_name": "Power Switch",
-    "name": "Power Switch (bottom)"
+    "name": "SW2 body (bottom)"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 4.0,
+    "width": 2.0,
+    "height": 2.0,
+    "center": [
+     36.0,
+     -7.0,
+     10.9
+    ],
+    "operation": "new",
+    "body_name": "Power Switch Lever",
+    "name": "SW2 lever"
    }
   },
   {
@@ -2286,15 +2286,6 @@
    "command": "appearance.assign",
    "params": {
     "bodies": [
-     "Power Slider"
-    ],
-    "color": "#ff8f87"
-   }
-  },
-  {
-   "command": "appearance.assign",
-   "params": {
-    "bodies": [
      "PCB"
     ],
     "color": "#2e7d4f"
@@ -2379,6 +2370,15 @@
      "Power Switch"
     ],
     "color": "#222222"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Power Switch Lever"
+    ],
+    "color": "#333333"
    }
   },
   {

@@ -99,3 +99,35 @@ Cost-down options: **NS4168** (SOP-8 I2S class-D, ~$0.15) instead of the MAX9835
 - **Antenna:** the PCB antenna sits ~5 mm from the plastic wall, with no metal nearby except the cells under the front half. Good enough for a SoftAP at arm's length. Not tuned.
 - **Stage 4 follow-ups:** the model's ESP stand-in (24 × 16) should become the WROOM-02 (18 × 20) at x −8.5, y 12.4 (antenna on the back edge). The button flange preload is noted above.
 - **Before any order:** run the BoardRepo checks and design review, as was done for the bollard board.
+
+## Rev B (2026-11-01)
+
+The changelog is in `../REV.md`, and the requests are in `../FIT.md`.
+
+**Ported to the kit.** `src/design.py` and `src/layout.py` were copied from `tools/kicad/example/` (this board's Rev A) and changed there. Everything shared comes from `../fit.json`: outline, holes, button, PIR cutout, speaker circle, eye LEDs, power switch, module and cell zone. The old `tools/` folder here (Rev A's own generator scripts) is no longer used; the kit replaces it.
+
+**What changed on the board:**
+
+| Change | Parts | Why |
+|---|---|---|
+| Power switch, in series with battery + before Q1 | SW2 C&K OS102011MA1Q right-angle THT slide on the **bottom** face; its 4 mm lever comes out through the base's right end | Hosts: "a physical on/off switch that disconnects power" |
+| Piezo → speaker | BZ1, R12, R13 removed; J3 solder pads for a 20 mm 8 Ω speaker (off-board LS1), driven straight from U3 | Hosts: "change from piezo to a small speaker" |
+| White eye LEDs | D1/D2 KT-0603W under the eye light pipes, R14/R15 47 Ω from 3V3, Q2 AO3400A low side on **IO10** (was unused), R16 100k keeps them off at boot | Hosts: "white LEDs … flash when the alarm goes off" |
+| PIR off-board | U4 AM312 now passes through a Ø10.8 board cutout onto a boss in the case; J4 pads, wired | Thinner case (keeps the dome 3.5 mm proud) |
+| Low-profile button switch | SW1 12 × 12 × 4.3 (custom 3D model `lib/3d/SW_PUSH-12mm_H4.3.step`, made in SolidCraft from `lib/3d/sw_push_12mm_h4.3.json`, because KiCad ships only an 8.5 mm one) | Thinner case |
+| Module to the bottom face | U2 at (−7, 11.8) body centre, mirrored (pin 1 on its +x side); antenna on the back edge | Frees the top for the eye LEDs |
+| Programming pads | J2 is a Tag-Connect TC2030-IDC-NL footprint (pads only) | Rev A's 1 × 6 header model was 8.5 mm tall and hit the lid in the fit check |
+| Board 1 mm lower | origin z 15.1, H3 moved to (−31, 5) | Thinner case; PIR cutout |
+
+**Kit changes made for this board** (in `tools/kicad/`, noted in its README): `CUTOUTS = [(x, y, r)]` for round holes through the board (drawn on Edge.Cuts; vias, stitching and silk keep clear), and a 47 Ω entry in `schkit.RES`.
+
+**Firmware notes for the code track:**
+- IO10 drives the eye LEDs (active high).
+- "Setup" is now: hold the big button while sliding the power switch on (Rev A said "while putting the batteries in").
+- Switching off cuts the cells, so the deep-sleep current only matters while armed.
+
+**Results (Rev B):**
+- ERC: 0 violations.
+- DRC: 0 violations, 0 unconnected (Freerouting got it on the first try).
+- Fit check: PASS, 0 overlaps. The closest gap is 0.11 mm, bottom plate to board (`fitcheck.md`, `fitcheck.png`).
+- The solder-wire pads J1/J3/J4 have no 3D model. They're DNP, so the check only warns.
