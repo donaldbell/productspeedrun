@@ -17,14 +17,17 @@ KIT=$(cd "$(dirname "$0")" && pwd)
 [ -n "$1" ] || { echo "usage: $0 <episode folder> [schematic|place|all]"; exit 2; }
 MODE=${2:-all}
 E=$(cd "$1" && pwd)
-case "$E" in */5-electronics) ;; *) E="$E/5-electronics" ;; esac
+# a board folder holding src/ (5-electronics, or 5-electronics/<board> for a multi-board product)
+[ -d "$E/src" ] || case "$E" in */5-electronics) ;; *) E="$E/5-electronics" ;; esac
 cd "$E"
 CLI=${KICAD_CLI:-/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli}
 PY=${KICAD_PY:-/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/Current/bin/python3}
 command -v "$CLI" >/dev/null 2>&1 || { echo "kicad-cli not found at $CLI: set KICAD_CLI"; exit 1; }
 step() { printf '\n== %s\n' "$*"; }
 # fit.json (Stages 4 and 5's shared numbers): refresh FIT.md's generated "Fit" section from it
-[ -f "$E/../fit.json" ] && python3 -I "$KIT/../fit/fitmd.py" "$E/.." | sed 's/^/fit: /'
+for F in "$E/../fit.json" "$E/../../fit.json"; do
+  [ -f "$F" ] && { python3 -I "$KIT/../fit/fitmd.py" "$(dirname "$F")" | sed 's/^/fit: /'; break; }
+done
 
 step "schematic"
 python3 -I "$KIT/gen_schematic.py" "$E"

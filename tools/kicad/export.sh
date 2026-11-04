@@ -7,7 +7,8 @@
 set -e
 KIT=$(cd "$(dirname "$0")" && pwd)
 E=$(cd "$1" && pwd)
-case "$E" in */5-electronics) ;; *) E="$E/5-electronics" ;; esac
+# a board folder holding src/ (5-electronics, or 5-electronics/<board> for a multi-board product)
+[ -d "$E/src" ] || case "$E" in */5-electronics) ;; *) E="$E/5-electronics" ;; esac
 cd "$E"
 WHAT=${2:-all}
 CLI=${KICAD_CLI:-/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli}

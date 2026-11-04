@@ -11,7 +11,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from fitlib import FitError, find_episode, load_fit  # noqa: E402
+from fitlib import FitError, board_names, find_episode, load_fit  # noqa: E402
 
 START = "<!-- fit:start: generated from fit.json by tools/fit/fitmd.py. Edit fit.json, not this section -->"
 END = "<!-- fit:end -->"
@@ -44,7 +44,7 @@ def pt(p):
     return "(" + ", ".join(f1(v) for v in p) + ")"
 
 
-def section(fit, slug):
+def section(fit, slug, head="## Fit"):
     w, h = fit.size
     corners = [fit.to_enclosure((sx * w / 2, sy * h / 2)) for sx in (-1, 1) for sy in (-1, 1)]
     corners += [fit.to_enclosure((sx * w / 2, sy * h / 2), -fit.thickness) for sx in (-1, 1) for sy in (-1, 1)]
@@ -52,7 +52,7 @@ def section(fit, slug):
                      for i, a in enumerate("xyz"))
     faces = {"top": "parts on the top face", "both": "parts on both faces"}.get(fit.board.get("faces", "top"), fit.board.get("faces"))
     look = AXES.get(tuple(int(round(v)) for v in fit.normal), pt(fit.normal))
-    lines = [START, "## Fit", "",
+    lines = [START, head, "",
              "Generated from `fit.json`: edit that file, then run `python3 tools/fit/fitmd.py episodes/%s` "
              "(the kit's build and the fit check also do it). Board positions are board mm (origin at the board "
              "centre, +x right and +y up as seen from the top face); enclosure positions are the enclosure's mm "
@@ -82,20 +82,25 @@ def section(fit, slug):
             "%s %s" % (k, pt(v)) for k, v in fit.keepouts.items()) + "."]
     m = fit.model
     if m:
-        lines.append("- **Fit check** (`python3 tools/fit/fitcheck.py episodes/%s`): the real board in `%s`, without Stage 4's stand-ins %s." % (
-            slug, m.get("design", "4-model/model.solidcraft"), ", ".join(m.get("stand_ins", [])) or "(none listed)"))
+        lines.append("- **Fit check** (`python3 tools/fit/fitcheck.py episodes/%s%s`): the real board in `%s`, without Stage 4's stand-ins %s." % (
+            slug, "/5-electronics/" + fit.name if fit.name else "", m.get("design", "4-model/model.solidcraft"), ", ".join(m.get("stand_ins", [])) or "(none listed)"))
     lines += ["", END]
     return "\n".join(lines)
 
 
 def write(episode):
     ep = find_episode(episode)
-    fit = load_fit(ep)
     slug = os.path.basename(ep)
     if os.path.basename(os.path.dirname(ep)) == "units":  # a unit of a multi-unit product
-        slug = "%s, unit %s" % (os.path.basename(os.path.dirname(os.path.dirname(ep))), slug)
+        slug = "%s/units/%s" % (os.path.basename(os.path.dirname(os.path.dirname(ep))), slug)   # so "episodes/<slug>" commands still work
     path = os.path.join(ep, "FIT.md")
-    sec = section(fit, slug)
+    names = board_names(ep)
+    if names:
+        parts = [section(load_fit(ep, board=n), slug, "### Board: %s (`5-electronics/%s/`)" % (n, n)) for n in names]
+        sec = "\n".join([START, "## Fit", "", "This product has %d boards, each with its own entry under `boards` in `fit.json`." % len(names), ""]
+                        + [p[len(START) + 1:-len(END) - 1] for p in parts] + [END])
+    else:
+        sec = section(load_fit(ep), slug)
     if not os.path.isfile(path):
         title = "# %s: fit between enclosure and board\n\nThe contract between Stage 4 (`4-model/`) and Stage 5 (`5-electronics/`). The numbers live in `fit.json`; this file holds the generated summary, the rules and the request log.\n" % slug
         text = "\n".join([title, sec, "", RULES, REQUESTS])

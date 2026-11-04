@@ -20,8 +20,11 @@ HOME = os.path.expanduser("~")
 
 
 def hw_dir(arg):
-    """The episode's 5-electronics folder, from either the episode folder or 5-electronics itself."""
+    """The board folder: the episode's 5-electronics folder (from the episode folder or 5-electronics
+    itself), or for a product with several boards, 5-electronics/<board> (any folder holding src/)."""
     p = os.path.abspath(arg)
+    if os.path.isdir(os.path.join(p, "src")):
+        return p
     if os.path.basename(p) != "5-electronics":
         p = os.path.join(p, "5-electronics")
     if not os.path.isdir(p):

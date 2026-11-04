@@ -1,0 +1,240 @@
+{
+  "boards": {
+    "sensor": {
+      "board": {
+        "size": [
+          44,
+          20
+        ],
+        "corner_r": 3,
+        "thickness": 1.6,
+        "faces": "both",
+        "origin": [
+          -40,
+          0,
+          9.8
+        ],
+        "x_axis": [
+          1,
+          0,
+          0
+        ],
+        "y_axis": [
+          0,
+          1,
+          0
+        ],
+        "posts_face": "bottom"
+      },
+      "holes": [
+        [
+          -19.5,
+          -7
+        ],
+        [
+          19.5,
+          -7
+        ]
+      ],
+      "hole_d": 2.2,
+      "features": {
+        "mic": {
+          "at": [
+            -19.5,
+            5
+          ],
+          "face": "top",
+          "size": [
+            3.5,
+            2.65
+          ],
+          "note": "ICS-43434 I2S MEMS mic (bottom port: port hole through the board) facing the front grille chamber; foam gasket ring between board and grille"
+        },
+        "status_led": {
+          "at": [
+            -20,
+            8
+          ],
+          "face": "top",
+          "size": [
+            1.6,
+            0.8
+          ],
+          "note": "green 0603 LED under the front light pipe (pipe ends 1.4 above the board); the pipe's window is the slit beside the grille"
+        },
+        "button": {
+          "at": [
+            6,
+            0
+          ],
+          "face": "top",
+          "size": [
+            6,
+            6
+          ],
+          "note": "6 x 6 x 4.3 tact switch under the \u00d812 top cap: press = test / pair, hold 3 s = on / off"
+        },
+        "usb": {
+          "at": [
+            18.5,
+            0
+          ],
+          "face": "top",
+          "size": [
+            8.9,
+            7.3
+          ],
+          "note": "USB-C 16P top-mount receptacle, mouth flush with the +x board edge, centre 1.6 above the top face; port opening in the back of the shell"
+        }
+      },
+      "model": {
+        "design": "4-model/model.solidcraft",
+        "stand_ins": [
+          "S PCB",
+          "S Mic",
+          "S Status LED",
+          "S Tact Switch",
+          "S USB-C"
+        ]
+      },
+      "keepouts": {
+        "antenna": [
+          -15.5,
+          3.5,
+          -2.5,
+          10
+        ]
+      }
+    },
+    "receiver": {
+      "board": {
+        "size": [
+          30,
+          30
+        ],
+        "corner_r": 8,
+        "thickness": 1.6,
+        "faces": "both",
+        "origin": [
+          25,
+          0,
+          7.4
+        ],
+        "x_axis": [
+          1,
+          0,
+          0
+        ],
+        "y_axis": [
+          0,
+          1,
+          0
+        ],
+        "posts_face": "bottom"
+      },
+      "holes": [
+        [
+          -10.5,
+          10.5
+        ],
+        [
+          10.5,
+          -10.5
+        ]
+      ],
+      "hole_d": 2.2,
+      "features": {
+        "usb": {
+          "at": [
+            -12.5,
+            0
+          ],
+          "face": "top",
+          "size": [
+            8.9,
+            7.3
+          ],
+          "note": "USB-C 16P top-mount, mouth at the -x edge (9 o'clock), centre 1.6 above the top face; washable band, so the port gets a silicone plug in the model"
+        },
+        "button": {
+          "at": [
+            13,
+            0
+          ],
+          "face": "top",
+          "size": [
+            3.5,
+            4.5
+          ],
+          "note": "right-angle side-push tact switch, plunger facing +x (3 o'clock), centre 1.5 above the top face: the 'I'm awake' button"
+        },
+        "glow_led": {
+          "at": [
+            0,
+            -5
+          ],
+          "face": "top",
+          "size": [
+            2.2,
+            2.2
+          ],
+          "note": "WS2812B-2020 under the 20 x 20 frosted lens: intensity colour + wake pulse"
+        },
+        "link_led": {
+          "at": [
+            0,
+            -11.6
+          ],
+          "face": "top",
+          "size": [
+            1.6,
+            0.8
+          ],
+          "note": "green 0603 LED under the \u00d81.6 link light pipe at 6 o'clock (pipe ends 1.4 above the board: KiCad's 0603 LED model is 1.1 tall)"
+        },
+        "lra": {
+          "at": [
+            8,
+            -3
+          ],
+          "face": "bottom",
+          "size": [
+            10,
+            10
+          ],
+          "note": "off-board: \u00d810 x 2.7 ERM coin motor (was LRA: the ERM needs only a MOSFET, no LRA driver IC) glued to the back plate (skin side), top 0.7 below the bottom face, 2 wires to pads; no bottom-face parts over it"
+        },
+        "battery": {
+          "at": [
+            -4.5,
+            0
+          ],
+          "face": "bottom",
+          "size": [
+            20,
+            25
+          ],
+          "note": "off-board: 402025 LiPo (~150 mAh) on the back plate, 0.3 below the bottom face (foam pad: it also supports the board's left half); no bottom-face parts; Stage 5 wants 0603 passives on the bottom face too, so the cell needs ~1.0 mm below the bottom face, not 0.3"
+        }
+      },
+      "model": {
+        "design": "4-model/model.solidcraft",
+        "stand_ins": [
+          "R PCB",
+          "R USB-C",
+          "R Side Switch",
+          "R Glow LED",
+          "R Link LED"
+        ]
+      },
+      "keepouts": {
+        "antenna": [
+          -6.8,
+          9.4,
+          6.8,
+          15
+        ]
+      }
+    }
+  }
+}

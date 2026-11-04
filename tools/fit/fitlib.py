@@ -25,6 +25,11 @@ Keys (tools/fit/README.md has a full example):
     features  {name: {"at": [x, y], "face": "top" | "bottom", "note": ...}}  what the two sides line up
     keepouts  {name: [x0, y0, x1, y1]}
     model     {"design": "4-model/model.solidcraft", "stand_ins": [body names]}  for fitcheck.py
+
+Two or more boards (a product made of separate devices, episode 003): put each board's keys under
+{"boards": {"<name>": {...same keys...}}}. Each board's electronics live in 5-electronics/<name>/
+(src/design.py, src/layout.py), and load_fit() picks the board from that path; Stage 4 passes it:
+load_fit(__file__, board="sensor"). Each board's model.design may name its own .solidcraft file.
 """
 import json
 import math
@@ -69,8 +74,8 @@ def _dot(a, b):
 
 
 class Fit:
-    def __init__(self, data, path):
-        self.data, self.path = data, path
+    def __init__(self, data, path, name=None):
+        self.data, self.path, self.name = data, path, name
         self.episode = os.path.dirname(path)
         b = data.get("board")
         if not b:
@@ -139,8 +144,28 @@ def fit_path(anywhere):
     return os.path.join(find_episode(anywhere), "fit.json")
 
 
-def load_fit(anywhere):
-    """Read the episode's fit.json. `anywhere` is any file or folder inside the episode."""
+def board_from_path(anywhere):
+    """The board name in a path like .../5-electronics/<name>/..., or None."""
+    parts = os.path.abspath(anywhere).split(os.sep)
+    if "5-electronics" in parts:
+        i = len(parts) - 1 - parts[::-1].index("5-electronics")
+        if i + 1 < len(parts) and parts[i + 1] not in ("src", "output", "lib") and "." not in parts[i + 1]:
+            return parts[i + 1]
+    return None
+
+
+def board_names(anywhere):
+    """The board names in a multi-board fit.json, or [] for a single-board one."""
+    path = fit_path(anywhere)
+    if not os.path.isfile(path):
+        return []
+    return list(json.load(open(path)).get("boards", {}))
+
+
+def load_fit(anywhere, board=None):
+    """Read the episode's fit.json. `anywhere` is any file or folder inside the episode. For a
+    multi-board fit.json ("boards": {name: {...}}), `board` names the board, else it comes from a
+    5-electronics/<name>/ path."""
     path = fit_path(anywhere)
     if not os.path.isfile(path):
         raise FitError("no fit.json in %s: Stage 4 starts it (see tools/fit/README.md)" % os.path.dirname(path))
@@ -148,4 +173,13 @@ def load_fit(anywhere):
         data = json.load(open(path))
     except json.JSONDecodeError as e:
         raise FitError("%s isn't valid JSON: %s" % (path, e))
+    if "boards" in data:
+        name = board or board_from_path(anywhere)
+        if not name:
+            raise FitError("fit.json has several boards (%s): say which (load_fit(..., board=...))" % ", ".join(data["boards"]))
+        if name not in data["boards"]:
+            raise FitError("fit.json has no board %r (it has: %s)" % (name, ", ".join(data["boards"])))
+        return Fit(data["boards"][name], path, name)
+    if board:
+        raise FitError("fit.json has one board, so there's no board %r" % board)
     return Fit(data, path)

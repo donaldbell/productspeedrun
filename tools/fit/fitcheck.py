@@ -2,6 +2,8 @@
 """Check the routed board against the enclosure: the real board, not stand-in boxes.
 
   python3 tools/fit/fitcheck.py episodes/<slug>            (from the repo folder)
+  python3 tools/fit/fitcheck.py episodes/<slug>/5-electronics/<board>   one board of several
+                                     (a multi-board fit.json; with only the episode, every board in turn)
 
 1. Exports the episode's .kicad_pcb as STEP (parts included) with its origin at the board centre.
 2. Takes a copy of the Stage 4 design (fit.json: model.design), removes Stage 4's electronics
@@ -23,7 +25,7 @@ import subprocess
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from fitlib import FitError, find_episode, load_fit  # noqa: E402
+from fitlib import FitError, board_from_path, board_names, find_episode, load_fit  # noqa: E402
 import fitmd  # noqa: E402
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "kicad"))
@@ -63,9 +65,20 @@ def solidcraft(script, out, inp=None, save=None, label=""):
 
 def main(arg):
     ep = find_episode(arg)
-    fit = load_fit(ep)
+    names = board_names(ep)
+    if names and not board_from_path(arg):
+        worst = 0
+        for n in names:
+            print("\n== fit check: board %s" % n, flush=True)
+            worst = max(worst, check(ep, n))
+        return worst
+    return check(ep, board_from_path(arg) if names else None)
+
+
+def check(ep, name):
+    fit = load_fit(ep, board=name)
     fitmd.write(ep)
-    hw = os.path.join(ep, "5-electronics")
+    hw = os.path.join(ep, "5-electronics", *([name] if name else []))
     out = os.path.join(hw, "output", "fit")
     os.makedirs(out, exist_ok=True)
     pcbs = [p for p in glob.glob(os.path.join(hw, "*.kicad_pcb"))]
@@ -144,7 +157,7 @@ def main(arg):
     lines = ["# Fit check: %s in the enclosure" % project, "",
              "Real board (KiCad STEP export, parts included) placed in `%s` where `fit.json` puts it, with Stage 4's "
              "stand-ins removed (%s). Re-run with `python3 tools/fit/fitcheck.py %s`." % (
-                 os.path.relpath(design, ep), ", ".join(stand_ins) or "none", os.path.relpath(ep, REPO)), "",
+                 os.path.relpath(design, ep), ", ".join(stand_ins) or "none", os.path.relpath(hw if name else ep, REPO)), "",
              "**Result: %s**: %d overlaps, %d gaps under %.1f mm, %d pairs the checker couldn't measure." % (
                  ("PASS" if not clr.get("unchecked") else "PASS, with pairs not measured") if not overlaps else "FAIL", len(overlaps), len(near), NEAR, len(clr.get("unchecked", []))), "",
              "Board placed at enclosure x %.1f..%.1f, y %.1f..%.1f, z %.1f..%.1f." % (
