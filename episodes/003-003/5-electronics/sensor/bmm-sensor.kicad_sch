@@ -3664,6 +3664,197 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Switch:SW_SPDT"
+			(pin_names
+				(offset 0)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "SW"
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "SW_SPDT"
+				(at 0 -5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 -7.62 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Switch, single pole double throw"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "switch single-pole double-throw spdt ON-ON"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "SW_SPDT_0_1"
+				(circle
+					(center -2.032 0)
+					(radius 0.4572)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.651 0.254)
+						(xy 1.651 2.286)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 2.032 2.54)
+					(radius 0.4572)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 2.032 -2.54)
+					(radius 0.4572)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "SW_SPDT_1_1"
+				(rectangle
+					(start -3.175 3.81)
+					(end 3.175 -3.81)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(pin passive line
+					(at 5.08 2.54 180)
+					(length 2.54)
+					(name "A"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "B"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 5.08 -2.54 180)
+					(length 2.54)
+					(name "C"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Transistor_FET:AO3401A"
 			(pin_names
 				(hide yes)
@@ -5171,7 +5362,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "4.7k"
+		(property "Value" "3.9k"
 			(at 93.98 77.47 0)
 			(effects
 				(font
@@ -5198,7 +5389,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Resistor, 1 %, 0603, 4.7k"
+		(property "Description" "Resistor, 1 %, 0603, 3.9k"
 			(at 91.44 76.2 0)
 			(effects
 				(font
@@ -5207,7 +5398,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C23162"
+		(property "LCSC" "C23018"
 			(at 91.44 76.2 0)
 			(effects
 				(font
@@ -5216,7 +5407,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "0603WAF4701T5E"
+		(property "MPN" "0603WAF3901T5E"
 			(at 91.44 76.2 0)
 			(effects
 				(font
@@ -5978,7 +6169,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "LDO 3.3 V 600 mA, SOT-23-5, always on (the button's long press puts the C6 in deep sleep)"
+		(property "Description" "LDO 3.3 V 600 mA, SOT-23-5, enabled by the power switch"
 			(at 182.88 45.72 0)
 			(effects
 				(font
@@ -6061,7 +6252,7 @@
 		)
 		(uuid "c9d43c00-0ee3-5fce-a295-e73fb60586ec")
 	)
-	(label "VSYS"
+	(label "LDO_EN"
 		(at 172.72 45.72 180)
 		(effects
 			(font
@@ -6116,6 +6307,150 @@
 			(justify left bottom)
 		)
 		(uuid "a9c2da8a-2b4a-516c-be39-80bfbce15900")
+	)
+	(symbol
+		(lib_id "Switch:SW_SPDT")
+		(at 213.36 25.4 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "1351ac1f-4fbc-504b-9cbd-56a0ce2ce3d0")
+		(property "Reference" "SW2"
+			(at 215.9 24.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "POWER"
+			(at 215.9 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Button_Switch_SMD:SW_SPDT_PCM12"
+			(at 213.36 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 213.36 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Slide switch SPDT right-angle SMD (C&K PCM12): on = LDO enabled, off = EN to GND"
+			(at 213.36 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MPN" "PCM12SMTR"
+			(at 213.36 25.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "bdd56cc4-7c7b-514d-bae1-91bfaf006f65")
+		)
+		(pin "2"
+			(uuid "d2548f13-9e1c-5ea7-b0f5-d100ef1597b5")
+		)
+		(pin "3"
+			(uuid "9d4947c7-7a20-5a9f-94ec-476faa64c5f6")
+		)
+		(instances
+			(project "bmm-sensor"
+				(path "/18b4c35d-ff28-53be-92e0-7a4b88a75d1d"
+					(reference "SW2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 218.44 22.86)
+			(xy 220.98 22.86)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4252950b-c058-5ff5-86e2-e38f9d1b5c45")
+	)
+	(label "VSYS"
+		(at 220.98 22.86 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "f8f8c9fd-8a5c-5cf6-9ebd-54db1b4906e1")
+	)
+	(wire
+		(pts
+			(xy 208.28 25.4)
+			(xy 205.74 25.4)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "218f561f-abea-5d68-9d5d-209bf6e77085")
+	)
+	(label "LDO_EN"
+		(at 205.74 25.4 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "64bb310f-6779-5b27-a8c2-b9241ba4fa6d")
+	)
+	(wire
+		(pts
+			(xy 218.44 27.94)
+			(xy 220.98 27.94)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "eadbb616-464b-5f2c-9e51-4a5181b60a8c")
+	)
+	(label "GND"
+		(at 220.98 27.94 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "578ae50e-de11-5f03-8304-8458cdb5ebc9")
 	)
 	(symbol
 		(lib_id "Device:C")
@@ -8895,7 +9230,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "BUTTON"
+		(property "Value" "I'M AWAKE"
 			(at 256.54 128.27 0)
 			(effects
 				(font
@@ -8922,7 +9257,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Tact switch 6 x 6 mm SMD under the top cap: press = test / pair, hold = on / off"
+		(property "Description" "Tact switch 6 x 6 x 5 mm SMD under the top cap: tap = I'm awake, hold = test / pair"
 			(at 254 127 0)
 			(effects
 				(font
@@ -9615,7 +9950,7 @@
 		)
 		(uuid "675ddcbc-a4d7-54d8-b86f-b665e2f6515d")
 	)
-	(text "POWER: USB-C (5.1k CC) -> U1 MCP73831 charges the LiPo at 210 mA (R3 4.7k).\nPower path: USB -> D1 -> VSYS; USB unplugged -> R4 pulls Q1's gate low -> VBAT -> VSYS.\nU2 AP2112K-3.3 from VSYS. VBAT_SENSE = VBAT / 2 -> IO0, CHG_STAT -> IO21 (internal pull-up; the module side facing the charger)."
+	(text "POWER: USB-C (5.1k CC) -> U1 MCP73831 charges the 2000 mAh LiPo at 256 mA (R3 3.9k).\nPower path: USB -> D1 -> VSYS; USB unplugged -> R4 pulls Q1's gate low -> VBAT -> VSYS.\nU2 AP2112K-3.3 from VSYS, EN from SW2 (off = EN to GND). VBAT_SENSE = VBAT / 2 -> IO0, CHG_STAT -> IO21 (internal pull-up; the module side facing the charger)."
 		(exclude_from_sim no)
 		(at 10.16 7.62 0)
 		(effects
@@ -9637,7 +9972,7 @@
 		)
 		(uuid "db79c44a-1c02-5525-9153-5b802a8ea435")
 	)
-	(text "BUTTON on IO7 (LP GPIO, internal pull-up: wakes the C6). STATUS LED green on IO3.\nIO8 pulled high (R8); IO9 internal pull-up, TP1 pulls it low for recovery. USB on IO12/IO13."
+	(text "I'M AWAKE button on IO7 (LP GPIO, internal pull-up). STATUS LED green on IO3.\nIO8 pulled high (R8); IO9 internal pull-up, TP1 pulls it low for recovery. USB on IO12/IO13."
 		(exclude_from_sim no)
 		(at 203.2 152.4 0)
 		(effects

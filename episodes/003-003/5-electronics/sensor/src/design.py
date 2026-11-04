@@ -1,10 +1,12 @@
 """BMM Sensor (episode 003, Baby Monitor Monitor): the listening puck's parts and nets for tools/kicad.
 
-One flat board in the puck, top face up. USB-C powers it (it usually lives plugged in next to the
-baby monitor) and charges a LiPo backup through an MCP73831; a Schottky + P-FET power path runs the
-board from USB when it's there and from the cell when it isn't. AP2112K makes 3.3 V for an
-ESP32-C6-MINI-1, which reads an ICS-43434 I2S mic, turns the sound level into 0-3 and sends it to
-the receiver over ESP-NOW. One top button (test / pair, hold = on / off), one green status LED.
+One flat board in the bean, top face up. USB-C is the main power input (it usually lives plugged in
+next to the baby monitor) and charges a 2000 mAh 103450 LiPo through an MCP73831, so it also runs
+unplugged for a night or two (camping). A Schottky + P-FET power path runs the board from USB when
+it's there and from the cell when it isn't. A slide switch on the back drives the AP2112K's enable:
+off = no 3.3 V, but the cell still charges. The ESP32-C6-MINI-1 reads an ICS-43434 I2S mic, turns
+the sound level into 0-3 and sends it to the watch over ESP-NOW. The top button is "I'm awake"
+(tap = stop the watch buzzing, hold = test / pair); one green status LED.
 """
 from schkit import *  # noqa: F401,F403
 
@@ -28,7 +30,7 @@ cap("C1", "4.7uF", at(30, 22), "VBUS", "GND")
 part("U1", "Battery_Management:MCP73831-2-OT", "MCP73831T-2ACI/OT", "Package_TO_SOT_SMD:SOT-23-5", "C424093",
      "MCP73831T-2ACI/OT", at(40, 18), {"4": "VBUS", "3": "VBAT", "1": "CHG_STAT", "5": "PROG", "2": "GND"},
      "Li-ion/LiPo linear charger 4.2 V, SOT-23-5")
-res("R3", "4.7k", at(36, 30), "PROG", "GND")            # 1000 V / 4.7k = 210 mA (~0.5 C for a 400 mAh cell)
+res("R3", "3.9k", at(36, 30), "PROG", "GND")            # 1000 V / 3.9k = 256 mA: ~8 h for 2000 mAh, kept low for the SOT-23-5's heat
 cap("C2", "4.7uF", at(52, 26), "VBAT", "GND")
 part("J2", "Connector_Generic:Conn_01x02", "LiPo", WIRE2, "", "", at(52, 36), {"1": "VBAT", "2": "GND"},
      "Solder pads for the LiPo's leads (+ = pin 1); cell has its own protection PCB", dnp=True)
@@ -39,8 +41,10 @@ part("Q1", "Transistor_FET:AO3401A", "AO3401A", "Package_TO_SOT_SMD:SOT-23", "C1
      {"1": "VBUS", "2": "VSYS", "3": "VBAT"}, "P-MOSFET -30 V -4 A SOT-23: battery into the system rail when USB is absent")
 res("R4", "100k", at(52, 6), "VBUS", "GND")             # gate pull-down: Q1 on when USB is unplugged
 part("U2", "Regulator_Linear:AP2112K-3.3", "AP2112K-3.3TRG1", "Package_TO_SOT_SMD:SOT-23-5", "C51118", "AP2112K-3.3TRG1",
-     at(72, 18), {"1": "VSYS", "3": "VSYS", "2": "GND", "4": None, "5": "3V3"},
-     "LDO 3.3 V 600 mA, SOT-23-5, always on (the button's long press puts the C6 in deep sleep)")
+     at(72, 18), {"1": "VSYS", "3": "LDO_EN", "2": "GND", "4": None, "5": "3V3"},
+     "LDO 3.3 V 600 mA, SOT-23-5, enabled by the power switch")
+part("SW2", "Switch:SW_SPDT", "POWER", "Button_Switch_SMD:SW_SPDT_PCM12", "", "PCM12SMTR", at(84, 10),
+     {"1": "VSYS", "2": "LDO_EN", "3": "GND"}, "Slide switch SPDT right-angle SMD (C&K PCM12): on = LDO enabled, off = EN to GND")
 cap("C3", "10uF", at(66, 26), "VSYS", "GND")
 cap("C4", "10uF", at(82, 22), "3V3", "GND")
 res("R5", "1M", at(60, 40), "VBAT", "VBAT_SENSE")       # VBAT / 2, ~2 uA
@@ -72,8 +76,8 @@ part("U4", "Sensor_Audio:ICS-43434", "ICS-43434", "Sensor_Audio:InvenSense_ICS-4
      "I2S MEMS microphone, bottom port over a 1 mm hole through the board, L/R low = left slot")
 cap("C9", "100nF", at(122, 18), "3V3", "GND")
 # SD is tri-stated between slots: the C6 holds IO2 with its internal pull-down (no resistor)
-part("SW1", "Switch:SW_Push", "BUTTON", "Button_Switch_SMD:SW_Push_1TS009xxxx-xxxx-xxxx_6x6x5mm", "", "1TS009A-1800-5000-CT",
-     at(100, 50), {"1": "BTN", "2": "GND"}, "Tact switch 6 x 6 mm SMD under the top cap: press = test / pair, hold = on / off")
+part("SW1", "Switch:SW_Push", "I'M AWAKE", "Button_Switch_SMD:SW_Push_1TS009xxxx-xxxx-xxxx_6x6x5mm", "", "1TS009A-1800-5000-CT",
+     at(100, 50), {"1": "BTN", "2": "GND"}, "Tact switch 6 x 6 x 5 mm SMD under the top cap: tap = I'm awake, hold = test / pair")
 
 # --- Output: green status LED (bottom-right)
 res("R9", "1k", at(100, 72), "LED_IO", "LED_A")
@@ -90,16 +94,16 @@ for i, (net, xy) in enumerate((("VBUS", at(4, 34)), ("GND", at(8, 34)), ("VSYS",
     part("#FLG%02d" % i, "power:PWR_FLAG", "PWR_FLAG", "", "", "", xy, {"1": net}, power=True)
 
 NOTES += [
-    (at(4, 3), "POWER: USB-C (5.1k CC) -> U1 MCP73831 charges the LiPo at 210 mA (R3 4.7k).\n"
+    (at(4, 3), "POWER: USB-C (5.1k CC) -> U1 MCP73831 charges the 2000 mAh LiPo at 256 mA (R3 3.9k).\n"
                "Power path: USB -> D1 -> VSYS; USB unplugged -> R4 pulls Q1's gate low -> VBAT -> VSYS.\n"
-               "U2 AP2112K-3.3 from VSYS. VBAT_SENSE = VBAT / 2 -> IO0, CHG_STAT -> IO21 (internal pull-up; the module side facing the charger)."),
+               "U2 AP2112K-3.3 from VSYS, EN from SW2 (off = EN to GND). VBAT_SENSE = VBAT / 2 -> IO0, CHG_STAT -> IO21 (internal pull-up; the module side facing the charger)."),
     (at(80, 3), "MIC: ICS-43434 on IO4 / IO5 / IO2 (SCK / WS / SD: the module's side facing the mic), bottom port through the board to the front grille.\n"
                 "Firmware: 16 kHz I2S, RMS over 250 ms, three thresholds -> level 0-3 sent over ESP-NOW."),
-    (at(80, 60), "BUTTON on IO7 (LP GPIO, internal pull-up: wakes the C6). STATUS LED green on IO3.\n"
+    (at(80, 60), "I'M AWAKE button on IO7 (LP GPIO, internal pull-up). STATUS LED green on IO3.\n"
                  "IO8 pulled high (R8); IO9 internal pull-up, TP1 pulls it low for recovery. USB on IO12/IO13."),
 ]
 
 OFF_BOARD += [
-    ("BT1", "LiPo 400 mAh", "LiPo 3.7 V ~400 mAh with protection PCB, 602530 (6 x 25 x 30 mm), leads soldered to J2",
-     "off-board", "generic 602530"),
+    ("BT1", "LiPo 2000 mAh", "LiPo 3.7 V ~2000 mAh with protection PCB, 103450 (10 x 34 x 50 mm), leads soldered to J2",
+     "off-board", "generic 103450"),
 ]

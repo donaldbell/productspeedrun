@@ -8,14 +8,15 @@ J1,1,USB-C,"USB-C receptacle, USB 2.0, 16 pin, top mount: power, charging and fl
 LED1,1,green,LED green 0603: status under the front light pipe,LED_0603_1608Metric,KT-0603G
 Q1,1,AO3401A,P-MOSFET -30 V -4 A SOT-23: battery into the system rail when USB is absent,SOT-23,AO3401A
 R1 R2,2,5.1k,"Resistor, 1 %, 0603, 5.1k",R_0603_1608Metric,0603WAF5101T5E
-R3,1,4.7k,"Resistor, 1 %, 0603, 4.7k",R_0603_1608Metric,0603WAF4701T5E
+R3,1,3.9k,"Resistor, 1 %, 0603, 3.9k",R_0603_1608Metric,0603WAF3901T5E
 R4,1,100k,"Resistor, 1 %, 0603, 100k",R_0603_1608Metric,0603WAF1003T5E
 R5 R6,2,1M,"Resistor, 1 %, 0603, 1M",R_0603_1608Metric,0603WAF1004T5E
 R7 R8,2,10k,"Resistor, 1 %, 0603, 10k",R_0603_1608Metric,0603WAF1002T5E
 R9,1,1k,"Resistor, 1 %, 0603, 1k",R_0603_1608Metric,0603WAF1001T5E
-SW1,1,BUTTON,"Tact switch 6 x 6 mm SMD under the top cap: press = test / pair, hold = on / off",SW_Push_1TS009xxxx-xxxx-xxxx_6x6x5mm,1TS009A-1800-5000-CT
+SW1,1,I'M AWAKE,"Tact switch 6 x 6 x 5 mm SMD under the top cap: tap = I'm awake, hold = test / pair",SW_Push_1TS009xxxx-xxxx-xxxx_6x6x5mm,1TS009A-1800-5000-CT
+SW2,1,POWER,"Slide switch SPDT right-angle SMD (C&K PCM12): on = LDO enabled, off = EN to GND",SW_SPDT_PCM12,PCM12SMTR
 U1,1,MCP73831T-2ACI/OT,"Li-ion/LiPo linear charger 4.2 V, SOT-23-5",SOT-23-5,MCP73831T-2ACI/OT
-U2,1,AP2112K-3.3TRG1,"LDO 3.3 V 600 mA, SOT-23-5, always on (the button's long press puts the C6 in deep sleep)",SOT-23-5,AP2112K-3.3TRG1
+U2,1,AP2112K-3.3TRG1,"LDO 3.3 V 600 mA, SOT-23-5, enabled by the power switch",SOT-23-5,AP2112K-3.3TRG1
 U3,1,ESP32-C6-MINI-1-N4,"ESP32-C6 Wi-Fi 6 / BLE 5 / 802.15.4 module (ESP-NOW), 4 MB flash, PCB antenna, 13.2 x 16.6 x 2.4 mm",ESP32-C6-MINI-1,ESP32-C6-MINI-1-N4
 U4,1,ICS-43434,"I2S MEMS microphone, bottom port over a 1 mm hole through the board, L/R low = left slot",InvenSense_ICS-43434-6_3.5x2.65mm,ICS-43434
-BT1,1,LiPo 400 mAh,"LiPo 3.7 V ~400 mAh with protection PCB, 602530 (6 x 25 x 30 mm), leads soldered to J2",off-board,generic 602530
+BT1,1,LiPo 2000 mAh,"LiPo 3.7 V ~2000 mAh with protection PCB, 103450 (10 x 34 x 50 mm), leads soldered to J2",off-board,generic 103450

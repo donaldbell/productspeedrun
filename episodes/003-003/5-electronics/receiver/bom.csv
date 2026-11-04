@@ -3,17 +3,16 @@ C1 C2,2,4.7uF,"Capacitor, ceramic, 4.7 uF 16 V X5R 0603",C_0603_1608Metric,CL10A
 C3 C5 C8,3,10uF,"Capacitor, ceramic, 10 uF 25 V X5R 0805",C_0805_2012Metric,CL21A106KAYNNNE
 C4 C6 C9,3,100nF,"Capacitor, ceramic, 100 nF 50 V X7R 0603",C_0603_1608Metric,CC0603KRX7R9BB104
 C7,1,1uF,"Capacitor, ceramic, 1 uF 50 V X5R 0603",C_0603_1608Metric,CL10A105KB8NNNC
-D1,1,1N5819WS,Schottky 40 V 1 A SOD-323: flyback across the motor,D_SOD-323,1N5819WS
-J1,1,USB-C,"USB-C receptacle, USB 2.0, 16 pin, top mount: charging and flashing (ESP32-C6 native USB)",USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal,USB4105-GF-A
+D1 D2,2,1N5819WS,Schottky 40 V 1 A SOD-323: flyback across the motor,D_SOD-323,1N5819WS
 LED1,1,WS2812B-2020,RGB LED 2 x 2 mm: the face's glow,LED_WS2812B-2020_PLCC4_2.0x2.0mm,WS2812B-2020
 LED2,1,green,LED green 0603: link indicator under the front light pipe,LED_0603_1608Metric,KT-0603G
+P1,1,POGO +,"Spring (pogo) pin, SMD, bottom face: + charge contact on the back plate",TestPoint_Pad_D2.0mm,Mill-Max 0907 SMD spring pin (~5 mm)
+P2,1,POGO -,"Spring (pogo) pin, SMD, bottom face: - charge contact on the back plate",TestPoint_Pad_D2.0mm,Mill-Max 0907 SMD spring pin (~5 mm)
 Q1,1,AO3400A,N-MOSFET 30 V 5.7 A SOT-23: low-side PWM switch for the ERM motor,SOT-23,AO3400A
-R1 R2,2,5.1k,"Resistor, 1 %, 0603, 5.1k",R_0603_1608Metric,0603WAF5101T5E
-R3 R6 R7,3,10k,"Resistor, 1 %, 0603, 10k",R_0603_1608Metric,0603WAF1002T5E
-R4 R5,2,1M,"Resistor, 1 %, 0603, 1M",R_0603_1608Metric,0603WAF1004T5E
-R8,1,100k,"Resistor, 1 %, 0603, 100k",R_0603_1608Metric,0603WAF1003T5E
-R9,1,1k,"Resistor, 1 %, 0603, 1k",R_0603_1608Metric,0603WAF1001T5E
-SW1,1,AWAKE,"Right-angle side-push tact switch 3.5 x 2.9 mm, under the side button",Panasonic_EVQPUJ_EVQPUA,EVQ-PUJ02K
+R1 R4 R5,3,10k,"Resistor, 1 %, 0603, 10k",R_0603_1608Metric,0603WAF1002T5E
+R2 R3,2,1M,"Resistor, 1 %, 0603, 1M",R_0603_1608Metric,0603WAF1004T5E
+R6,1,100k,"Resistor, 1 %, 0603, 100k",R_0603_1608Metric,0603WAF1003T5E
+R7,1,1k,"Resistor, 1 %, 0603, 1k",R_0603_1608Metric,0603WAF1001T5E
 U1,1,MCP73831T-2ACI/OT,"Li-ion/LiPo linear charger 4.2 V, SOT-23-5",SOT-23-5,MCP73831T-2ACI/OT
 U2,1,AP2112K-3.3TRG1,"LDO 3.3 V 600 mA, SOT-23-5, EN tied to VIN (always on; the C6 deep-sleeps)",SOT-23-5,AP2112K-3.3TRG1
 U3,1,ESP32-C6-MINI-1-N4,"ESP32-C6 Wi-Fi 6 / BLE 5 / 802.15.4 module (ESP-NOW), 4 MB flash, PCB antenna, 13.2 x 16.6 x 2.4 mm",ESP32-C6-MINI-1,ESP32-C6-MINI-1-N4

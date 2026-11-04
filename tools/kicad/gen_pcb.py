@@ -137,8 +137,16 @@ def main(netlist):
             fp.SetDNP(c["dnp"])
             fp.SetExcludedFromBOM(True)
             fp.SetExcludedFromPosFiles(True)
+        else:      # a few stock footprints (test pads used as pogo-pin pads) come excluded: match the symbol
+            fp.SetExcludedFromBOM(False)
+            fp.SetExcludedFromPosFiles(False)
         if ref in subst:
-            fp.Models()[0].m_Filename = subst[ref]
+            if len(fp.Models()):
+                fp.Models()[0].m_Filename = subst[ref]
+            else:                              # footprints with no model at all (test pads as pogo pins)
+                m = pcbnew.FP_3DMODEL()
+                m.m_Filename = subst[ref]
+                fp.Models().append(m)
         if ref[0] in "HF":
             fp.Reference().SetVisible(False)   # holes and fiducials need no label
         board.Add(fp)

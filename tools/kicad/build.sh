@@ -87,7 +87,9 @@ step "DRC"
 "$CLI" pcb drc --schematic-parity --severity-all --all-track-errors -o drc.rpt $P.kicad_pcb || true
 VIOL=$(sed -n 's/^\*\* Found \([0-9]*\) DRC violations.*/\1/p' drc.rpt)
 UNCON=$(sed -n 's/^\*\* Found \([0-9]*\) unconnected pads.*/\1/p' drc.rpt)
-echo "DRC: ${VIOL:-?} violations, ${UNCON:-?} unconnected (details in drc.rpt)"
+PARITY=$(sed -n 's/^\*\* Found \([0-9]*\) Footprint errors.*/\1/p' drc.rpt)
+VIOL=$(( ${VIOL:-1} + ${PARITY:-0} ))   # schematic parity (footprint vs symbol) counts as a violation too
+echo "DRC: ${VIOL:-?} violations (incl. ${PARITY:-?} schematic parity), ${UNCON:-?} unconnected (details in drc.rpt)"
 step "renders and 3D"
 sh "$KIT/export.sh" "$E" board
 echo ""
