@@ -119,7 +119,7 @@ def write(episode):
             else:
                 k = text.find("\n## ")
                 text = (text[:k + 1] + sec + "\n" + text[k:]) if k >= 0 else (text.rstrip() + "\n\n" + sec + "\n")
-    tmp = path + ".tmp"
+    tmp = "%s.%d.tmp" % (path, os.getpid())     # per process: two boards may be checked at once
     open(tmp, "w").write(text)
     os.replace(tmp, path)
     return path

@@ -17,5 +17,10 @@
   },
   "promptEdited": {},
   "prompts": {},
-  "done": []
+  "done": [
+    "cad",
+    "electronics",
+    "code"
+  ],
+  "hero": "4-model/render-Mint-Aqua-Gadget-with-Glitter-Button.png"
 }

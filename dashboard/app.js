@@ -307,6 +307,8 @@ window.addEventListener("message", (e) => {
   if (e.origin !== ROLLER_ORIGIN || !S.ep) return;
   const d = e.data;
   if (!d || d.source !== "rpg" || !["roll", "lockin"].includes(d.type) || !Array.isArray(d.ingredients)) return;
+  // A finished episode (decided keep or shelve) keeps the roll it aired with.
+  if (S.ep.decision || S.rev) { if (d.type === "lockin") toast("This episode is finished, so its roll stays as aired. Start a new episode to roll.", true); return; }
   S.ep.roll = d.ingredients.slice(0, 12).map((i) => ({ bucket: String(i.bucket || ""), group: String(i.group || ""), label: String(i.label || "").slice(0, 80) })).filter((i) => i.label);
   save(); renderSplits(); S.view?.onRoll?.();
   if (d.type === "lockin") { sfx.arrive(); toast("Roll locked in"); }
