@@ -44,6 +44,7 @@ Copy these rather than drawing them again. Every board here passed ERC, DRC 0 an
 | Block | Where |
 |---|---|
 | ESP32-C3-WROOM-02 with EN RC, strap pull-ups, USB pogo pads | `example/design.py` (episode 001) |
+| ESP32-C6-MINI-1 (13.2 × 16.6 mm, ESP-NOW / BLE / Thread), native USB on USB-C, MCP73831 LiPo charger, Schottky + P-FET USB/battery power path, ERM motor low-side switch | `episodes/003-003/5-electronics/{sensor,receiver}/src/design.py` |
 | 2 × AAA → 3.3 V boost (TPS61023) with reverse-battery P-FET | `example/design.py` |
 | MAX98357A I2S amp + piezo or speaker | both episodes |
 | AM312 PIR with RC-filtered supply | both episodes |
@@ -60,6 +61,27 @@ The blocks are small boards of their own (`design.py` + `layout.py`), not part o
 - Pico: the `RaspberryPi_Pico_Debug` symbol adds the SWD pads D1–D3; its AGND and GND pins are both power outputs, so ERC wants a part between them (R2 0R, or a ferrite). Keep the micro-USB end on a board edge.
 - nRF52840: use the module's outer pad rows. Their 0.8 mm pitch leaves no room for a track to reach the inner row, so P0.18 (nRESET, inner only) gets a track inward under the module. No `POWER_NETS` on module pins. A blank module needs SWD for its first flash.
 - Pi HAT: `BOTTOM = ["J1"]` with `ROWS` pin 1 at (-24.13, 22.98) puts the socket's pins exactly on the Pi's header. Check against the current HAT+ spec before ordering.
+
+## Products with several boards
+
+A product made of separate devices (episode 003: a sensor puck and a wristband) gets one kit project per board, each in its own folder under `5-electronics/`:
+
+```
+episodes/<slug>/5-electronics/<board>/src/design.py, src/layout.py    one per board
+tools/kicad/new_board.sh episodes/<slug>/5-electronics/sensor bmm-sensor "BMM Sensor"
+tools/kicad/build.sh episodes/<slug>/5-electronics/sensor [schematic|place]
+python3 tools/fit/fitcheck.py episodes/<slug>/5-electronics/sensor     (or the episode: every board)
+```
+
+Any folder holding `src/` is a board folder to `build.sh`, `export.sh` and the Python scripts. `fit.json` holds one entry per board under `"boards"`, named like the folders; `load_fit(__file__)` in `layout.py` picks its board from the path, and Stage 4 passes `load_fit(__file__, board="sensor")`. The dashboard lists files from the subfolders and shows the most recently written board.
+
+## Stand-in 3D models
+
+`models/` holds body-sized STEP stand-ins for parts KiCad ships without a model, so renders and the fit check see them. Point `MODEL_SUBST` at them with `${KIPRJMOD}`, e.g. `"U3": "${KIPRJMOD}/../../../../tools/kicad/models/ESP32-C6-MINI-1.step"` from `5-electronics/<board>/` (one `../` less for a single-board episode).
+
+| Model | Part |
+|---|---|
+| `ESP32-C6-MINI-1.step` | ESP32-C6-MINI-1(U): 13.2 × 16.6 × 0.8 module PCB + 12.2 × 10.2 × 1.6 shield, origin as KiCad's `RF_Module:ESP32-C6-MINI-1` footprint (episode 003) |
 
 ## Board size
 
@@ -78,6 +100,7 @@ Coordinates are board mm (origin at the board's centre, +y up as seen from the t
 - `TRIM_COURTYARD` lists refs whose stock courtyard is replaced by their body outline (Fab layer + 0.25 mm), for modules like the ESP32-S3-WROOM-1 whose courtyard includes an antenna clearance zone wider than a small board. It also drops the footprint's own keep-out zone, and the build turns off DRC's footprint-vs-library check for that board. Pair it with a `NO_COPPER` keep-out under the antenna.
 - `NO_PARTS` rectangles keep parts out of both faces (under tall parts, antennas). Write `(rect, "F")` or `(rect, "B")` to keep one face clear, for example under a sensor body that stands on the top face only. `NO_COPPER` keeps copper out (antenna keep-outs).
 - `CUTOUTS = [(x, y, r)]` cuts round holes through the board (Edge.Cuts circles), for a sensor that passes through it (Backpack Defender Rev B's PIR). Vias, stitching and silk keep clear of them; add the same circle, a little bigger, to `NO_PARTS` and `NO_COPPER` so parts and tracks do too.
+- Optional: `HOLE_CLEARANCE` (default 0.25 mm, copper to hole) for a stock footprint that breaks it, e.g. 0.18 for GCT USB4105's GND pads next to its locating pegs (episode 003).
 - Optional: `POWER_NETS` (0.5 mm tracks), `GND_VIA_PADS` (parts with a big ground pad), `MODEL_SUBST` (stand-in 3D models), `HIDE_TEXT`, and a `silk(board, placed)` function for extra silkscreen such as the product name on the back.
 - Optional: `PREROUTE`, fixed tracks laid before Freerouting for connections it keeps fumbling or that must be short (a boost converter's switch node). Each entry is a path: `"REF.PAD"`, then `(x, y)` points in board mm, a number to set the track width from there on (default 0.5 mm on `POWER_NETS`, else 0.25 mm), `"via"` to drop a via and carry on on the other layer, ending with `"REF.PAD"` on the same net. It starts on the first pad's layer (the bottom for a bottom-side SMD pad) and must end on a layer the last pad is on. The tracks are locked, so Freerouting routes around them. The points are absolute, so re-check them if you move the parts. The example's BOOST_SW entry is a worked case.
 

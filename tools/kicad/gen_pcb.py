@@ -56,7 +56,7 @@ def write_rules():
     pro.setdefault("board", {}).setdefault("design_settings", {}).setdefault("rules", {})
     rules = pro["board"]["design_settings"]["rules"]
     rules.update(min_resolved_spokes=1, min_clearance=0.15, min_track_width=0.15, min_copper_edge_clearance=0.3,
-                 min_hole_clearance=0.25, min_through_hole_diameter=0.2, min_via_diameter=0.5)
+                 min_hole_clearance=getattr(layout, "HOLE_CLEARANCE", 0.25), min_through_hole_diameter=0.2, min_via_diameter=0.5)
     if getattr(layout, "TRIM_COURTYARD", ()):
         # trimmed module courtyards differ from the library copy on purpose
         pro["board"]["design_settings"].setdefault("rule_severities", {})["lib_footprint_mismatch"] = "ignore"
@@ -101,7 +101,7 @@ def main(netlist):
     ds.m_MinClearance = k.mm(0.15)
     ds.m_TrackMinWidth = k.mm(0.15)
     ds.m_MinThroughDrill = k.mm(0.2)          # stock module / QFN thermal vias are often 0.2 mm
-    ds.m_HoleClearance = k.mm(0.25)
+    ds.m_HoleClearance = k.mm(getattr(layout, "HOLE_CLEARANCE", 0.25))   # layout may lower it for a stock footprint
     ds.m_CopperEdgeClearance = k.mm(0.3)
     nc = ds.m_NetSettings.GetDefaultNetclass()
     nc.SetClearance(k.mm(0.15))

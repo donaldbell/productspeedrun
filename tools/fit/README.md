@@ -61,6 +61,8 @@ A board standing upright behind a face, top face looking out through the front (
 }
 ```
 
+Several boards (separate devices, episode 003): `{"boards": {"sensor": {...}, "receiver": {...}}}`, each entry with the keys below and its origin in its own `model.design` (two entries may share one design). Electronics live in `5-electronics/<board>/`; `load_fit(path)` picks the board from such a path, otherwise pass `board=`. `fitmd.py` writes one subsection per board, and `fitcheck.py` checks one board (`episodes/<slug>/5-electronics/<board>`) or all of them (the episode folder).
+
 Keys:
 
 | Key | Meaning |
