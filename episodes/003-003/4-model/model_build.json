@@ -4,7 +4,7 @@
    "command": "parameters.add",
    "params": {
     "name": "sensor_length",
-    "expression": "52.0 mm",
+    "expression": "63.0 mm",
     "comment": "sensor long side"
    }
   },
@@ -12,7 +12,7 @@
    "command": "parameters.add",
    "params": {
     "name": "sensor_width",
-    "expression": "34.0 mm",
+    "expression": "42.8 mm",
     "comment": "sensor width (>31.7: not a small part)"
    }
   },
@@ -20,7 +20,7 @@
    "command": "parameters.add",
    "params": {
     "name": "sensor_height",
-    "expression": "24.0 mm",
+    "expression": "32.6 mm",
     "comment": "sensor height"
    }
   },
@@ -36,7 +36,7 @@
    "command": "parameters.add",
    "params": {
     "name": "sensor_top_round",
-    "expression": "9.0 mm",
+    "expression": "5.0 mm",
     "comment": "sensor top edge round"
    }
   },
@@ -52,7 +52,7 @@
    "command": "parameters.add",
    "params": {
     "name": "watch_height",
-    "expression": "13.4 mm",
+    "expression": "12.7 mm",
     "comment": "receiver case height (no lens)"
    }
   },
@@ -83,22 +83,152 @@
   {
    "command": "sketch.create",
    "params": {
-    "plane": "XY",
-    "name": "Sensor Footprint"
+    "plane": {
+     "origin": [
+      -74.0,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "Sensor Section 0"
    }
   },
   {
-   "command": "sketch.rectangle.rounded",
+   "command": "sketch.line",
    "params": {
-    "p0": [
-     -66.0,
-     -17.0
+    "points": [
+     [
+      -10.5,
+      0.0
+     ],
+     [
+      11.0,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     11.0,
+     0.0
     ],
-    "p1": [
-     -14.0,
-     17.0
+    "through": [
+     12.4142,
+     0.5858
     ],
-    "radius": 12.0
+    "end": [
+     13.0,
+     2.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      13.0,
+      2.0
+     ],
+     [
+      13.0,
+      15.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     13.0,
+     15.0
+    ],
+    "through": [
+     10.364,
+     21.364
+    ],
+    "end": [
+     4.0,
+     24.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      4.0,
+      24.0
+     ],
+     [
+      -7.5,
+      24.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -7.5,
+     24.0
+    ],
+    "through": [
+     -11.0355,
+     22.5355
+    ],
+    "end": [
+     -12.5,
+     19.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -12.5,
+      19.0
+     ],
+     [
+      -12.5,
+      2.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -12.5,
+     2.0
+    ],
+    "through": [
+     -11.9142,
+     0.5858
+    ],
+    "end": [
+     -10.5,
+     0.0
+    ]
    }
   },
   {
@@ -106,124 +236,1779 @@
    "params": {}
   },
   {
-   "command": "solid.extrude",
+   "command": "sketch.create",
    "params": {
-    "distance": "sensor_height",
+    "plane": {
+     "origin": [
+      -73.3,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "Sensor Section 1"
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -14.5,
+      0.0
+     ],
+     [
+      15.0,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     15.0,
+     0.0
+    ],
+    "through": [
+     16.4142,
+     0.5858
+    ],
+    "end": [
+     17.0,
+     2.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      17.0,
+      2.0
+     ],
+     [
+      17.0,
+      16.5
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     17.0,
+     16.5
+    ],
+    "through": [
+     13.7782,
+     24.2782
+    ],
+    "end": [
+     6.0,
+     27.5
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      6.0,
+      27.5
+     ],
+     [
+      -9.5,
+      27.5
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -9.5,
+     27.5
+    ],
+    "through": [
+     -14.4497,
+     25.4497
+    ],
+    "end": [
+     -16.5,
+     20.5
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -16.5,
+      20.5
+     ],
+     [
+      -16.5,
+      2.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -16.5,
+     2.0
+    ],
+    "through": [
+     -15.9142,
+     0.5858
+    ],
+    "end": [
+     -14.5,
+     0.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -72.0,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "Sensor Section 2"
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -16.8,
+      0.0
+     ],
+     [
+      17.3,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     17.3,
+     0.0
+    ],
+    "through": [
+     18.7142,
+     0.5858
+    ],
+    "end": [
+     19.3,
+     2.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      19.3,
+      2.0
+     ],
+     [
+      19.3,
+      17.6
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     19.3,
+     17.6
+    ],
+    "through": [
+     15.7853,
+     26.0853
+    ],
+    "end": [
+     7.3,
+     29.6
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      7.3,
+      29.6
+     ],
+     [
+      -10.8,
+      29.6
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -10.8,
+     29.6
+    ],
+    "through": [
+     -16.4569,
+     27.2569
+    ],
+    "end": [
+     -18.8,
+     21.6
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -18.8,
+      21.6
+     ],
+     [
+      -18.8,
+      2.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -18.8,
+     2.0
+    ],
+    "through": [
+     -18.2142,
+     0.5858
+    ],
+    "end": [
+     -16.8,
+     0.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -69.5,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "Sensor Section 3"
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -18.1,
+      0.0
+     ],
+     [
+      18.6,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     18.6,
+     0.0
+    ],
+    "through": [
+     20.0142,
+     0.5858
+    ],
+    "end": [
+     20.6,
+     2.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      20.6,
+      2.0
+     ],
+     [
+      20.6,
+      18.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     20.6,
+     18.0
+    ],
+    "through": [
+     16.7924,
+     27.1924
+    ],
+    "end": [
+     7.6,
+     31.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      7.6,
+      31.0
+     ],
+     [
+      -11.1,
+      31.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -11.1,
+     31.0
+    ],
+    "through": [
+     -17.464,
+     28.364
+    ],
+    "end": [
+     -20.1,
+     22.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -20.1,
+      22.0
+     ],
+     [
+      -20.1,
+      2.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -20.1,
+     2.0
+    ],
+    "through": [
+     -19.5142,
+     0.5858
+    ],
+    "end": [
+     -18.1,
+     0.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -62.0,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "Sensor Section 4"
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -18.7,
+      0.0
+     ],
+     [
+      19.4,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     19.4,
+     0.0
+    ],
+    "through": [
+     20.8142,
+     0.5858
+    ],
+    "end": [
+     21.4,
+     2.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      21.4,
+      2.0
+     ],
+     [
+      21.4,
+      18.2
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     21.4,
+     18.2
+    ],
+    "through": [
+     17.2995,
+     28.0995
+    ],
+    "end": [
+     7.4,
+     32.2
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      7.4,
+      32.2
+     ],
+     [
+      -10.7,
+      32.2
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -10.7,
+     32.2
+    ],
+    "through": [
+     -17.7711,
+     29.2711
+    ],
+    "end": [
+     -20.7,
+     22.2
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -20.7,
+      22.2
+     ],
+     [
+      -20.7,
+      2.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -20.7,
+     2.0
+    ],
+    "through": [
+     -20.1142,
+     0.5858
+    ],
+    "end": [
+     -18.7,
+     0.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -50.0,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "Sensor Section 5"
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -18.9,
+      0.0
+     ],
+     [
+      19.9,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     19.9,
+     0.0
+    ],
+    "through": [
+     21.3142,
+     0.5858
+    ],
+    "end": [
+     21.9,
+     2.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      21.9,
+      2.0
+     ],
+     [
+      21.9,
+      18.6
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     21.9,
+     18.6
+    ],
+    "through": [
+     17.7995,
+     28.4995
+    ],
+    "end": [
+     7.9,
+     32.6
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      7.9,
+      32.6
+     ],
+     [
+      -10.9,
+      32.6
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -10.9,
+     32.6
+    ],
+    "through": [
+     -17.9711,
+     29.6711
+    ],
+    "end": [
+     -20.9,
+     22.6
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -20.9,
+      22.6
+     ],
+     [
+      -20.9,
+      2.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -20.9,
+     2.0
+    ],
+    "through": [
+     -20.3142,
+     0.5858
+    ],
+    "end": [
+     -18.9,
+     0.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -36.0,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "Sensor Section 6"
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -18.8,
+      0.0
+     ],
+     [
+      19.9,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     19.9,
+     0.0
+    ],
+    "through": [
+     21.3142,
+     0.5858
+    ],
+    "end": [
+     21.9,
+     2.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      21.9,
+      2.0
+     ],
+     [
+      21.9,
+      17.6
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     21.9,
+     17.6
+    ],
+    "through": [
+     17.7995,
+     27.4995
+    ],
+    "end": [
+     7.9,
+     31.6
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      7.9,
+      31.6
+     ],
+     [
+      -10.8,
+      31.6
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -10.8,
+     31.6
+    ],
+    "through": [
+     -17.8711,
+     28.6711
+    ],
+    "end": [
+     -20.8,
+     21.6
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -20.8,
+      21.6
+     ],
+     [
+      -20.8,
+      2.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -20.8,
+     2.0
+    ],
+    "through": [
+     -20.2142,
+     0.5858
+    ],
+    "end": [
+     -18.8,
+     0.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -24.0,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "Sensor Section 7"
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -18.3,
+      0.0
+     ],
+     [
+      19.3,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     19.3,
+     0.0
+    ],
+    "through": [
+     20.7142,
+     0.5858
+    ],
+    "end": [
+     21.3,
+     2.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      21.3,
+      2.0
+     ],
+     [
+      21.3,
+      16.4
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     21.3,
+     16.4
+    ],
+    "through": [
+     17.4924,
+     25.5924
+    ],
+    "end": [
+     8.3,
+     29.4
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      8.3,
+      29.4
+     ],
+     [
+      -11.3,
+      29.4
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -11.3,
+     29.4
+    ],
+    "through": [
+     -17.664,
+     26.764
+    ],
+    "end": [
+     -20.3,
+     20.4
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -20.3,
+      20.4
+     ],
+     [
+      -20.3,
+      2.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -20.3,
+     2.0
+    ],
+    "through": [
+     -19.7142,
+     0.5858
+    ],
+    "end": [
+     -18.3,
+     0.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -16.0,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "Sensor Section 8"
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -17.7,
+      0.0
+     ],
+     [
+      18.5,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     18.5,
+     0.0
+    ],
+    "through": [
+     19.9142,
+     0.5858
+    ],
+    "end": [
+     20.5,
+     2.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      20.5,
+      2.0
+     ],
+     [
+      20.5,
+      15.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     20.5,
+     15.0
+    ],
+    "through": [
+     16.9853,
+     23.4853
+    ],
+    "end": [
+     8.5,
+     27.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      8.5,
+      27.0
+     ],
+     [
+      -11.7,
+      27.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -11.7,
+     27.0
+    ],
+    "through": [
+     -17.3569,
+     24.6569
+    ],
+    "end": [
+     -19.7,
+     19.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -19.7,
+      19.0
+     ],
+     [
+      -19.7,
+      2.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -19.7,
+     2.0
+    ],
+    "through": [
+     -19.1142,
+     0.5858
+    ],
+    "end": [
+     -17.7,
+     0.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -13.5,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "Sensor Section 9"
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -16.9,
+      0.0
+     ],
+     [
+      17.6,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     17.6,
+     0.0
+    ],
+    "through": [
+     19.0142,
+     0.5858
+    ],
+    "end": [
+     19.6,
+     2.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      19.6,
+      2.0
+     ],
+     [
+      19.6,
+      14.6
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     19.6,
+     14.6
+    ],
+    "through": [
+     16.3782,
+     22.3782
+    ],
+    "end": [
+     8.6,
+     25.6
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      8.6,
+      25.6
+     ],
+     [
+      -11.9,
+      25.6
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -11.9,
+     25.6
+    ],
+    "through": [
+     -16.8497,
+     23.5497
+    ],
+    "end": [
+     -18.9,
+     18.6
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -18.9,
+      18.6
+     ],
+     [
+      -18.9,
+      2.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -18.9,
+     2.0
+    ],
+    "through": [
+     -18.3142,
+     0.5858
+    ],
+    "end": [
+     -16.9,
+     0.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -11.8,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "Sensor Section 10"
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -15.2,
+      0.0
+     ],
+     [
+      15.8,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     15.8,
+     0.0
+    ],
+    "through": [
+     17.2142,
+     0.5858
+    ],
+    "end": [
+     17.8,
+     2.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      17.8,
+      2.0
+     ],
+     [
+      17.8,
+      14.8
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     17.8,
+     14.8
+    ],
+    "through": [
+     15.164,
+     21.164
+    ],
+    "end": [
+     8.8,
+     23.8
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      8.8,
+      23.8
+     ],
+     [
+      -12.2,
+      23.8
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -12.2,
+     23.8
+    ],
+    "through": [
+     -15.7355,
+     22.3355
+    ],
+    "end": [
+     -17.2,
+     18.8
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -17.2,
+      18.8
+     ],
+     [
+      -17.2,
+      2.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -17.2,
+     2.0
+    ],
+    "through": [
+     -16.6142,
+     0.5858
+    ],
+    "end": [
+     -15.2,
+     0.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -11.0,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "Sensor Section 11"
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -12.5,
+      0.0
+     ],
+     [
+      13.0,
+      0.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     13.0,
+     0.0
+    ],
+    "through": [
+     14.4142,
+     0.5858
+    ],
+    "end": [
+     15.0,
+     2.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      15.0,
+      2.0
+     ],
+     [
+      15.0,
+      15.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     15.0,
+     15.0
+    ],
+    "through": [
+     12.9497,
+     19.9497
+    ],
+    "end": [
+     8.0,
+     22.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      8.0,
+      22.0
+     ],
+     [
+      -11.5,
+      22.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -11.5,
+     22.0
+    ],
+    "through": [
+     -13.6213,
+     21.1213
+    ],
+    "end": [
+     -14.5,
+     19.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -14.5,
+      19.0
+     ],
+     [
+      -14.5,
+      2.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -14.5,
+     2.0
+    ],
+    "through": [
+     -13.9142,
+     0.5858
+    ],
+    "end": [
+     -12.5,
+     0.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.loft",
+   "params": {
+    "sections": [
+     {
+      "sketch": "Sensor Section 0"
+     },
+     {
+      "sketch": "Sensor Section 1"
+     },
+     {
+      "sketch": "Sensor Section 2"
+     },
+     {
+      "sketch": "Sensor Section 3"
+     },
+     {
+      "sketch": "Sensor Section 4"
+     },
+     {
+      "sketch": "Sensor Section 5"
+     },
+     {
+      "sketch": "Sensor Section 6"
+     },
+     {
+      "sketch": "Sensor Section 7"
+     },
+     {
+      "sketch": "Sensor Section 8"
+     },
+     {
+      "sketch": "Sensor Section 9"
+     },
+     {
+      "sketch": "Sensor Section 10"
+     },
+     {
+      "sketch": "Sensor Section 11"
+     }
+    ],
     "operation": "new",
-    "name": "Sensor Bean",
+    "name": "Sensor Body",
     "body_name": "Sensor Shell"
    }
   },
   {
-   "command": "solid.fillet",
+   "command": "solid.split_body",
    "params": {
-    "edges": [
-     [
+    "body": "Sensor Shell",
+    "plane": {
+     "origin": [
       -40.0,
-      17.0,
-      24.0
-     ],
-     [
-      -40.0,
-      -17.0,
-      24.0
-     ],
-     [
-      -14.0,
       0,
-      24.0
+      1.8
      ],
-     [
-      -66.0,
+     "normal": [
       0,
-      24.0
-     ],
-     [
-      -62.4853,
-      -13.4853,
-      24.0
-     ],
-     [
-      -62.4853,
-      13.4853,
-      24.0
-     ],
-     [
-      -17.5147,
-      -13.4853,
-      24.0
-     ],
-     [
-      -17.5147,
-      13.4853,
-      24.0
+      0,
+      1
      ]
-    ],
-    "radius": "sensor_top_round",
-    "name": "Sensor Top Round"
+    }
    }
   },
   {
-   "command": "solid.shell",
+   "command": "body.rename",
    "params": {
-    "faces": [
-     [
-      -40.0,
-      0,
-      0
-     ]
-    ],
-    "thickness": "sensor_wall",
-    "name": "Sensor Hollow"
-   }
-  },
-  {
-   "command": "solid.fillet",
-   "params": {
-    "edges": [
-     [
-      -40.0,
-      17.0,
-      0
-     ],
-     [
-      -40.0,
-      -17.0,
-      0
-     ],
-     [
-      -14.0,
-      0,
-      0
-     ],
-     [
-      -66.0,
-      0,
-      0
-     ],
-     [
-      -62.4853,
-      -13.4853,
-      0
-     ],
-     [
-      -62.4853,
-      13.4853,
-      0
-     ],
-     [
-      -17.5147,
-      -13.4853,
-      0
-     ],
-     [
-      -17.5147,
-      13.4853,
-      0
-     ]
-    ],
-    "radius": 1.0,
-    "name": "Sensor Bottom Round"
+    "body": "Sensor Shell (1)",
+    "name": "Sensor Base"
    }
   },
   {
@@ -231,7 +2016,1292 @@
    "params": {
     "plane": {
      "origin": [
-      -70.0,
+      -72.2,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "Sensor Cavity 0"
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -15.1462,
+      -1.0
+     ],
+     [
+      15.6462,
+      -1.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     15.6462,
+     -1.0
+    ],
+    "through": [
+     15.9997,
+     -0.8536
+    ],
+    "end": [
+     16.1462,
+     -0.5
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      16.1462,
+      -0.5
+     ],
+     [
+      16.1462,
+      17.4308
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     16.1462,
+     17.4308
+    ],
+    "through": [
+     13.4966,
+     23.8274
+    ],
+    "end": [
+     7.1,
+     26.4769
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      7.1,
+      26.4769
+     ],
+     [
+      -10.6,
+      26.4769
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -10.6,
+     26.4769
+    ],
+    "through": [
+     -14.1682,
+     24.9989
+    ],
+    "end": [
+     -15.6462,
+     21.4308
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -15.6462,
+      21.4308
+     ],
+     [
+      -15.6462,
+      -0.5
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -15.6462,
+     -0.5
+    ],
+    "through": [
+     -15.4997,
+     -0.8536
+    ],
+    "end": [
+     -15.1462,
+     -1.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -69.5,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "Sensor Cavity 1"
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -17.8,
+      -1.0
+     ],
+     [
+      18.3,
+      -1.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     18.3,
+     -1.0
+    ],
+    "through": [
+     18.6536,
+     -0.8536
+    ],
+    "end": [
+     18.8,
+     -0.5
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      18.8,
+      -0.5
+     ],
+     [
+      18.8,
+      18.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     18.8,
+     18.0
+    ],
+    "through": [
+     15.5196,
+     25.9196
+    ],
+    "end": [
+     7.6,
+     29.2
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      7.6,
+      29.2
+     ],
+     [
+      -11.1,
+      29.2
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -11.1,
+     29.2
+    ],
+    "through": [
+     -16.1912,
+     27.0912
+    ],
+    "end": [
+     -18.3,
+     22.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -18.3,
+      22.0
+     ],
+     [
+      -18.3,
+      -0.5
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -18.3,
+     -0.5
+    ],
+    "through": [
+     -18.1536,
+     -0.8536
+    ],
+    "end": [
+     -17.8,
+     -1.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -62.0,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "Sensor Cavity 2"
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -18.4,
+      -1.0
+     ],
+     [
+      19.1,
+      -1.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     19.1,
+     -1.0
+    ],
+    "through": [
+     19.4536,
+     -0.8536
+    ],
+    "end": [
+     19.6,
+     -0.5
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      19.6,
+      -0.5
+     ],
+     [
+      19.6,
+      18.2
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     19.6,
+     18.2
+    ],
+    "through": [
+     16.0267,
+     26.8267
+    ],
+    "end": [
+     7.4,
+     30.4
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      7.4,
+      30.4
+     ],
+     [
+      -10.7,
+      30.4
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -10.7,
+     30.4
+    ],
+    "through": [
+     -16.4983,
+     27.9983
+    ],
+    "end": [
+     -18.9,
+     22.2
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -18.9,
+      22.2
+     ],
+     [
+      -18.9,
+      -0.5
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -18.9,
+     -0.5
+    ],
+    "through": [
+     -18.7536,
+     -0.8536
+    ],
+    "end": [
+     -18.4,
+     -1.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -50.0,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "Sensor Cavity 3"
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -18.6,
+      -1.0
+     ],
+     [
+      19.6,
+      -1.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     19.6,
+     -1.0
+    ],
+    "through": [
+     19.9536,
+     -0.8536
+    ],
+    "end": [
+     20.1,
+     -0.5
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      20.1,
+      -0.5
+     ],
+     [
+      20.1,
+      18.6
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     20.1,
+     18.6
+    ],
+    "through": [
+     16.5267,
+     27.2267
+    ],
+    "end": [
+     7.9,
+     30.8
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      7.9,
+      30.8
+     ],
+     [
+      -10.9,
+      30.8
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -10.9,
+     30.8
+    ],
+    "through": [
+     -16.6983,
+     28.3983
+    ],
+    "end": [
+     -19.1,
+     22.6
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -19.1,
+      22.6
+     ],
+     [
+      -19.1,
+      -0.5
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -19.1,
+     -0.5
+    ],
+    "through": [
+     -18.9536,
+     -0.8536
+    ],
+    "end": [
+     -18.6,
+     -1.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -36.0,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "Sensor Cavity 4"
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -18.5,
+      -1.0
+     ],
+     [
+      19.6,
+      -1.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     19.6,
+     -1.0
+    ],
+    "through": [
+     19.9536,
+     -0.8536
+    ],
+    "end": [
+     20.1,
+     -0.5
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      20.1,
+      -0.5
+     ],
+     [
+      20.1,
+      17.6
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     20.1,
+     17.6
+    ],
+    "through": [
+     16.5267,
+     26.2267
+    ],
+    "end": [
+     7.9,
+     29.8
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      7.9,
+      29.8
+     ],
+     [
+      -10.8,
+      29.8
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -10.8,
+     29.8
+    ],
+    "through": [
+     -16.5983,
+     27.3983
+    ],
+    "end": [
+     -19.0,
+     21.6
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -19.0,
+      21.6
+     ],
+     [
+      -19.0,
+      -0.5
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -19.0,
+     -0.5
+    ],
+    "through": [
+     -18.8536,
+     -0.8536
+    ],
+    "end": [
+     -18.5,
+     -1.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -24.0,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "Sensor Cavity 5"
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -18.0,
+      -1.0
+     ],
+     [
+      19.0,
+      -1.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     19.0,
+     -1.0
+    ],
+    "through": [
+     19.3536,
+     -0.8536
+    ],
+    "end": [
+     19.5,
+     -0.5
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      19.5,
+      -0.5
+     ],
+     [
+      19.5,
+      16.4
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     19.5,
+     16.4
+    ],
+    "through": [
+     16.2196,
+     24.3196
+    ],
+    "end": [
+     8.3,
+     27.6
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      8.3,
+      27.6
+     ],
+     [
+      -11.3,
+      27.6
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -11.3,
+     27.6
+    ],
+    "through": [
+     -16.3912,
+     25.4912
+    ],
+    "end": [
+     -18.5,
+     20.4
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -18.5,
+      20.4
+     ],
+     [
+      -18.5,
+      -0.5
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -18.5,
+     -0.5
+    ],
+    "through": [
+     -18.3536,
+     -0.8536
+    ],
+    "end": [
+     -18.0,
+     -1.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -16.0,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "Sensor Cavity 6"
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -17.4,
+      -1.0
+     ],
+     [
+      18.2,
+      -1.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     18.2,
+     -1.0
+    ],
+    "through": [
+     18.5536,
+     -0.8536
+    ],
+    "end": [
+     18.7,
+     -0.5
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      18.7,
+      -0.5
+     ],
+     [
+      18.7,
+      15.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     18.7,
+     15.0
+    ],
+    "through": [
+     15.7125,
+     22.2125
+    ],
+    "end": [
+     8.5,
+     25.2
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      8.5,
+      25.2
+     ],
+     [
+      -11.7,
+      25.2
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -11.7,
+     25.2
+    ],
+    "through": [
+     -16.0841,
+     23.3841
+    ],
+    "end": [
+     -17.9,
+     19.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -17.9,
+      19.0
+     ],
+     [
+      -17.9,
+      -0.5
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -17.9,
+     -0.5
+    ],
+    "through": [
+     -17.7536,
+     -0.8536
+    ],
+    "end": [
+     -17.4,
+     -1.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -12.8,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "Sensor Cavity 7"
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -14.9,
+      -1.0
+     ],
+     [
+      15.5588,
+      -1.0
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     15.5588,
+     -1.0
+    ],
+    "through": [
+     15.9124,
+     -0.8536
+    ],
+    "end": [
+     16.0588,
+     -0.5
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      16.0588,
+      -0.5
+     ],
+     [
+      16.0588,
+      14.6824
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     16.0588,
+     14.6824
+    ],
+    "through": [
+     13.8983,
+     19.8983
+    ],
+    "end": [
+     8.6824,
+     22.0588
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      8.6824,
+      22.0588
+     ],
+     [
+      -12.0235,
+      22.0588
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -12.0235,
+     22.0588
+    ],
+    "through": [
+     -14.4111,
+     21.0699
+    ],
+    "end": [
+     -15.4,
+     18.6824
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -15.4,
+      18.6824
+     ],
+     [
+      -15.4,
+      -0.5
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -15.4,
+     -0.5
+    ],
+    "through": [
+     -15.2536,
+     -0.8536
+    ],
+    "end": [
+     -14.9,
+     -1.0
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.loft",
+   "params": {
+    "sections": [
+     {
+      "sketch": "Sensor Cavity 0"
+     },
+     {
+      "sketch": "Sensor Cavity 1"
+     },
+     {
+      "sketch": "Sensor Cavity 2"
+     },
+     {
+      "sketch": "Sensor Cavity 3"
+     },
+     {
+      "sketch": "Sensor Cavity 4"
+     },
+     {
+      "sketch": "Sensor Cavity 5"
+     },
+     {
+      "sketch": "Sensor Cavity 6"
+     },
+     {
+      "sketch": "Sensor Cavity 7"
+     }
+    ],
+    "operation": "new",
+    "name": "Sensor Cavity",
+    "body_name": "Sensor Cavity"
+   }
+  },
+  {
+   "command": "solid.combine",
+   "params": {
+    "target": "Sensor Shell",
+    "tools": [
+     "Sensor Cavity"
+    ],
+    "operation": "cut",
+    "name": "Sensor Hollow"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -82.0,
       0,
       0
      ],
@@ -254,9 +3324,9 @@
    "params": {
     "center": [
      0,
-     12.0
+     13.5
     ],
-    "radius": 7.65
+    "radius": 9.2
    }
   },
   {
@@ -266,7 +3336,7 @@
   {
    "command": "solid.extrude",
    "params": {
-    "distance": 7,
+    "distance": 14,
     "operation": "cut",
     "targets": [
      "Sensor Shell"
@@ -279,7 +3349,7 @@
    "params": {
     "plane": {
      "origin": [
-      -70.0,
+      -82.0,
       0,
       0
      ],
@@ -301,14 +3371,14 @@
    "command": "sketch.rectangle.rounded",
    "params": {
     "p0": [
-     9.0,
-     12.200000000000001
+     10.3,
+     13.9
     ],
     "p1": [
-     11.0,
-     16.6
+     11.7,
+     18.900000000000002
     ],
-    "radius": 0.9
+    "radius": 0.69
    }
   },
   {
@@ -318,7 +3388,7 @@
   {
    "command": "solid.extrude",
    "params": {
-    "distance": 8,
+    "distance": 12.6,
     "operation": "cut",
     "targets": [
      "Sensor Shell"
@@ -331,7 +3401,7 @@
    "params": {
     "plane": {
      "origin": [
-      -18.0,
+      -14.0,
       0,
       0
      ],
@@ -353,12 +3423,12 @@
    "command": "sketch.rectangle.rounded",
    "params": {
     "p0": [
-     -4.8,
-     10.229999999999999
+     -10.3,
+     14.229999999999999
     ],
     "p1": [
-     4.8,
-     14.03
+     -0.7000000000000002,
+     18.029999999999998
     ],
     "radius": 1.8
    }
@@ -370,7 +3440,7 @@
   {
    "command": "solid.extrude",
    "params": {
-    "distance": 8,
+    "distance": 12,
     "operation": "cut",
     "targets": [
      "Sensor Shell"
@@ -381,8 +3451,60 @@
   {
    "command": "sketch.create",
    "params": {
+    "plane": {
+     "origin": [
+      -14.0,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "Power Switch Slot"
+   }
+  },
+  {
+   "command": "sketch.rectangle.rounded",
+   "params": {
+    "p0": [
+     3.0,
+     14.5
+    ],
+    "p1": [
+     10.0,
+     17.5
+    ],
+    "radius": 1.3
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "distance": 12,
+    "operation": "cut",
+    "targets": [
+     "Sensor Shell"
+    ],
+    "name": "Power Switch Slot"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
     "plane": "XY",
-    "offset": 20.0,
+    "offset": 26.233333333333334,
     "name": "Sensor Button Hole"
    }
   },
@@ -403,7 +3525,7 @@
   {
    "command": "solid.extrude",
    "params": {
-    "distance": 8,
+    "distance": 10,
     "operation": "cut",
     "targets": [
      "Sensor Shell"
@@ -419,12 +3541,12 @@
      "origin": [
       -40.0,
       0,
-      9.0
+      11.0
      ],
      "normal": [
-      -0.1961,
-      0,
-      0.9806
+      -0.2418,
+      0.0774,
+      0.9672
      ]
     }
    }
@@ -447,21 +3569,18 @@
    "command": "sketch.create",
    "params": {
     "plane": "XY",
-    "name": "Sensor Bottom Plate"
+    "offset": 31.04,
+    "name": "Sensor Post 1"
    }
   },
   {
-   "command": "sketch.rectangle.rounded",
+   "command": "sketch.circle.center",
    "params": {
-    "p0": [
-     -64.05,
-     -15.049999999999999
+    "center": [
+     -63.0,
+     -7.5
     ],
-    "p1": [
-     -15.95,
-     15.049999999999999
-    ],
-    "radius": 10.049999999999999
+    "radius": 1.8
    }
   },
   {
@@ -471,28 +3590,21 @@
   {
    "command": "solid.extrude",
    "params": {
-    "distance": "sensor_wall",
-    "operation": "new",
-    "name": "Sensor Bottom Plate",
-    "body_name": "Sensor Base"
+    "distance": 16.54,
+    "direction": "negative",
+    "operation": "join",
+    "targets": [
+     "Sensor Upper"
+    ],
+    "name": "Sensor Post 1"
    }
   },
   {
    "command": "sketch.create",
    "params": {
     "plane": "XY",
-    "offset": 22.5,
-    "name": "Sensor Posts"
-   }
-  },
-  {
-   "command": "sketch.circle.center",
-   "params": {
-    "center": [
-     -59.0,
-     -7.5
-    ],
-    "radius": 1.8
+    "offset": 29.1333,
+    "name": "Sensor Post 2"
    }
   },
   {
@@ -512,21 +3624,20 @@
   {
    "command": "solid.extrude",
    "params": {
-    "distance": 12.0,
+    "distance": 14.6333,
     "direction": "negative",
     "operation": "join",
     "targets": [
      "Sensor Upper"
     ],
-    "name": "Sensor Posts",
-    "profiles": "all"
+    "name": "Sensor Post 2"
    }
   },
   {
    "command": "sketch.create",
    "params": {
     "plane": "XY",
-    "offset": 10.8,
+    "offset": 14.8,
     "name": "Sensor Stake Pins"
    }
   },
@@ -534,7 +3645,7 @@
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     -59.0,
+     -63.0,
      -7.5
     ],
     "radius": 0.95
@@ -578,14 +3689,14 @@
    "command": "sketch.rectangle.rounded",
    "params": {
     "p0": [
-     -58.0,
-     -11
+     -62.0,
+     -14
     ],
     "p1": [
-     -22.0,
-     11
+     -18.0,
+     14
     ],
-    "radius": 4
+    "radius": 5
    }
   },
   {
@@ -607,13 +3718,13 @@
    "params": {
     "plane": {
      "origin": [
-      -64.6,
+      0,
       0,
       0
      ],
      "x_dir": [
-      0,
       1,
+      0,
       0
      ],
      "y_dir": [
@@ -622,17 +3733,20 @@
       1
      ]
     },
-    "name": "Grille Disc"
+    "name": "Grille Collar Profile"
    }
   },
   {
-   "command": "sketch.circle.center",
+   "command": "sketch.rectangle.two_point",
    "params": {
-    "center": [
-     0,
-     12.0
+    "p0": [
+     -75.2,
+     21.2
     ],
-    "radius": 7.5
+    "p1": [
+     -69.5,
+     22.5
+    ]
    }
   },
   {
@@ -640,11 +3754,133 @@
    "params": {}
   },
   {
-   "command": "solid.extrude",
+   "command": "solid.revolve",
    "params": {
-    "distance": 1.2,
+    "axis": {
+     "origin": [
+      -40.0,
+      0,
+      13.5
+     ],
+     "dir": [
+      1,
+      0,
+      0
+     ]
+    },
     "operation": "new",
-    "name": "Grille Disc",
+    "name": "Grille Collar",
+    "body_name": "Grille Collar"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      0,
+      0,
+      0
+     ],
+     "x_dir": [
+      1,
+      0,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "Grille Cage Profile"
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -75.2,
+     22.7022
+    ],
+    "through": [
+     -78.0125,
+     20.7125
+    ],
+    "end": [
+     -81.0,
+     13.5
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -81.0,
+      13.5
+     ],
+     [
+      -80.0,
+      13.5
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -80.0,
+     13.5
+    ],
+    "through": [
+     -77.3054,
+     20.0054
+    ],
+    "end": [
+     -75.2,
+     21.5796
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -75.2,
+      21.5796
+     ],
+     [
+      -75.2,
+      22.7022
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.revolve",
+   "params": {
+    "axis": {
+     "origin": [
+      -40.0,
+      0,
+      13.5
+     ],
+     "dir": [
+      1,
+      0,
+      0
+     ]
+    },
+    "operation": "new",
+    "name": "Grille Cage",
     "body_name": "Sensor Grille"
    }
   },
@@ -653,7 +3889,7 @@
    "params": {
     "plane": {
      "origin": [
-      -65.6,
+      -83.0,
       0,
       0
      ],
@@ -675,180 +3911,60 @@
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     -3.0,
-     6.8038
+     -3.3,
+     7.7842
     ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     -1.0,
-     6.8038
+     -1.1,
+     7.7842
     ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     1.0,
-     6.8038
+     1.1,
+     7.7842
     ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     3.0,
-     6.8038
+     3.3,
+     7.7842
     ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     -4.0,
-     8.5359
+     -4.4,
+     9.6895
     ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     -2.0,
-     8.5359
+     -2.2,
+     9.6895
     ],
-    "radius": 0.6
-   }
-  },
-  {
-   "command": "sketch.circle.center",
-   "params": {
-    "center": [
-     0.0,
-     8.5359
-    ],
-    "radius": 0.6
-   }
-  },
-  {
-   "command": "sketch.circle.center",
-   "params": {
-    "center": [
-     2.0,
-     8.5359
-    ],
-    "radius": 0.6
-   }
-  },
-  {
-   "command": "sketch.circle.center",
-   "params": {
-    "center": [
-     4.0,
-     8.5359
-    ],
-    "radius": 0.6
-   }
-  },
-  {
-   "command": "sketch.circle.center",
-   "params": {
-    "center": [
-     -5.0,
-     10.2679
-    ],
-    "radius": 0.6
-   }
-  },
-  {
-   "command": "sketch.circle.center",
-   "params": {
-    "center": [
-     -3.0,
-     10.2679
-    ],
-    "radius": 0.6
-   }
-  },
-  {
-   "command": "sketch.circle.center",
-   "params": {
-    "center": [
-     -1.0,
-     10.2679
-    ],
-    "radius": 0.6
-   }
-  },
-  {
-   "command": "sketch.circle.center",
-   "params": {
-    "center": [
-     1.0,
-     10.2679
-    ],
-    "radius": 0.6
-   }
-  },
-  {
-   "command": "sketch.circle.center",
-   "params": {
-    "center": [
-     3.0,
-     10.2679
-    ],
-    "radius": 0.6
-   }
-  },
-  {
-   "command": "sketch.circle.center",
-   "params": {
-    "center": [
-     5.0,
-     10.2679
-    ],
-    "radius": 0.6
-   }
-  },
-  {
-   "command": "sketch.circle.center",
-   "params": {
-    "center": [
-     -6.0,
-     12.0
-    ],
-    "radius": 0.6
-   }
-  },
-  {
-   "command": "sketch.circle.center",
-   "params": {
-    "center": [
-     -4.0,
-     12.0
-    ],
-    "radius": 0.6
-   }
-  },
-  {
-   "command": "sketch.circle.center",
-   "params": {
-    "center": [
-     -2.0,
-     12.0
-    ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
@@ -856,119 +3972,119 @@
    "params": {
     "center": [
      0.0,
-     12.0
+     9.6895
     ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     2.0,
-     12.0
+     2.2,
+     9.6895
     ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     4.0,
-     12.0
+     4.4,
+     9.6895
     ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     6.0,
-     12.0
+     -5.5,
+     11.5947
     ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     -5.0,
-     13.7321
+     -3.3,
+     11.5947
     ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     -3.0,
-     13.7321
+     -1.1,
+     11.5947
     ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     -1.0,
-     13.7321
+     1.1,
+     11.5947
     ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     1.0,
-     13.7321
+     3.3,
+     11.5947
     ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     3.0,
-     13.7321
+     5.5,
+     11.5947
     ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     5.0,
-     13.7321
+     -6.6,
+     13.5
     ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     -4.0,
-     15.4641
+     -4.4,
+     13.5
     ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     -2.0,
-     15.4641
+     -2.2,
+     13.5
     ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
@@ -976,69 +4092,189 @@
    "params": {
     "center": [
      0.0,
-     15.4641
+     13.5
     ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     2.0,
-     15.4641
+     2.2,
+     13.5
     ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     4.0,
-     15.4641
+     4.4,
+     13.5
     ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     -3.0,
-     17.1962
+     6.6,
+     13.5
     ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     -1.0,
-     17.1962
+     -5.5,
+     15.4053
     ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     1.0,
-     17.1962
+     -3.3,
+     15.4053
     ],
-    "radius": 0.6
+    "radius": 0.65
    }
   },
   {
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     3.0,
-     17.1962
+     -1.1,
+     15.4053
     ],
-    "radius": 0.6
+    "radius": 0.65
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     1.1,
+     15.4053
+    ],
+    "radius": 0.65
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     3.3,
+     15.4053
+    ],
+    "radius": 0.65
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     5.5,
+     15.4053
+    ],
+    "radius": 0.65
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -4.4,
+     17.3105
+    ],
+    "radius": 0.65
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -2.2,
+     17.3105
+    ],
+    "radius": 0.65
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     0.0,
+     17.3105
+    ],
+    "radius": 0.65
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     2.2,
+     17.3105
+    ],
+    "radius": 0.65
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     4.4,
+     17.3105
+    ],
+    "radius": 0.65
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -3.3,
+     19.2158
+    ],
+    "radius": 0.65
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -1.1,
+     19.2158
+    ],
+    "radius": 0.65
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     1.1,
+     19.2158
+    ],
+    "radius": 0.65
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     3.3,
+     19.2158
+    ],
+    "radius": 0.65
    }
   },
   {
@@ -1048,7 +4284,7 @@
   {
    "command": "solid.extrude",
    "params": {
-    "distance": 4,
+    "distance": 8.3,
     "operation": "cut",
     "targets": [
      "Sensor Grille"
@@ -1087,35 +4323,35 @@
     "points": [
      [
       0,
-      15.1
+      19.8
      ],
      [
       1.6,
-      15.1
+      19.8
      ],
      [
       1.6,
-      21.4
+      27.2476
      ],
      [
       7.2,
-      21.4
+      27.2476
      ],
      [
       7.2,
-      22.1
+      27.9476
      ],
      [
       6.0,
-      22.1
+      27.9476
      ],
      [
       6.0,
-      25.4
+      32.6333
      ],
      [
       0,
-      25.4
+      32.6333
      ]
     ]
    }
@@ -1141,7 +4377,7 @@
      [
       -28.0,
       0.0,
-      25.4
+      32.6333
      ]
     ],
     "radius": 1.6,
@@ -1151,13 +4387,77 @@
   {
    "command": "solid.box",
    "params": {
-    "length": 4.1,
-    "width": 4.3,
-    "height": 4.6,
+    "length": 4.7,
+    "width": 5.2,
+    "height": 2.7,
     "center": [
-     -59.95,
-     8.45,
-     14.2
+     -12.75,
+     5.75,
+     16.0
+    ],
+    "operation": "new",
+    "body_name": "Switch Slider",
+    "name": "Switch Slider"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 1.0,
+    "width": 1.7,
+    "height": 2.0,
+    "center": [
+     -14.6,
+     5.75,
+     15.15
+    ],
+    "operation": "cut",
+    "targets": [
+     "Switch Slider"
+    ],
+    "name": "Slider Lever Notch"
+   }
+  },
+  {
+   "command": "solid.fillet",
+   "params": {
+    "body": "Switch Slider",
+    "edges": [
+     [
+      -10.4,
+      8.35,
+      16.0
+     ],
+     [
+      -10.4,
+      3.15,
+      16.0
+     ],
+     [
+      -10.4,
+      7.25,
+      17.35
+     ],
+     [
+      -10.4,
+      7.25,
+      14.65
+     ]
+    ],
+    "radius": 0.8,
+    "name": "Slider Round"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 7.5,
+    "width": 5.0,
+    "height": 2.9,
+    "center": [
+     -65.65,
+     8.8,
+     17.35
     ],
     "operation": "new",
     "body_name": "Sensor Light Pipe",
@@ -1167,13 +4467,13 @@
   {
    "command": "solid.box",
    "params": {
-    "length": 2.6,
-    "width": 1.8,
-    "height": 4.2,
+    "length": 4.4,
+    "width": 1.2,
+    "height": 4.8,
     "center": [
-     -63.0,
-     10.0,
-     14.4
+     -71.2,
+     11.0,
+     16.4
     ],
     "operation": "join",
     "targets": [
@@ -1223,42 +4523,42 @@
      [
       25.0,
       19.0,
-      13.4
+      12.7
      ],
      [
       25.0,
       -19.0,
-      13.4
+      12.7
      ],
      [
       44.0,
       0,
-      13.4
+      12.7
      ],
      [
       6.0,
       0,
-      13.4
+      12.7
      ],
      [
       8.636,
       -16.364,
-      13.4
+      12.7
      ],
      [
       8.636,
       16.364,
-      13.4
+      12.7
      ],
      [
       41.364,
       -16.364,
-      13.4
+      12.7
      ],
      [
       41.364,
       16.364,
-      13.4
+      12.7
      ]
     ],
     "radius": "watch_top_round",
@@ -1535,7 +4835,7 @@
    "command": "sketch.create",
    "params": {
     "plane": "XY",
-    "offset": 10.4,
+    "offset": 9.7,
     "name": "Lens Opening"
    }
   },
@@ -1572,7 +4872,7 @@
    "command": "sketch.create",
    "params": {
     "plane": "XY",
-    "offset": 12.100000000000001,
+    "offset": 11.4,
     "name": "Link Pipe Boss"
    }
   },
@@ -1593,7 +4893,7 @@
   {
    "command": "solid.extrude",
    "params": {
-    "distance": 2.0,
+    "distance": 1.3,
     "direction": "negative",
     "operation": "join",
     "targets": [
@@ -1606,7 +4906,7 @@
    "command": "sketch.create",
    "params": {
     "plane": "XY",
-    "offset": 13.9,
+    "offset": 13.2,
     "name": "Link Pipe Hole"
    }
   },
@@ -1627,117 +4927,13 @@
   {
    "command": "solid.extrude",
    "params": {
-    "distance": 4.7,
+    "distance": 4.0,
     "direction": "negative",
     "operation": "cut",
     "targets": [
      "Watch Case"
     ],
     "name": "Link Pipe Hole"
-   }
-  },
-  {
-   "command": "sketch.create",
-   "params": {
-    "plane": {
-     "origin": [
-      40.0,
-      0,
-      0
-     ],
-     "x_dir": [
-      0,
-      1,
-      0
-     ],
-     "y_dir": [
-      0,
-      0,
-      1
-     ]
-    },
-    "name": "Awake Button Slot"
-   }
-  },
-  {
-   "command": "sketch.rectangle.rounded",
-   "params": {
-    "p0": [
-     -3.6,
-     7.699999999999999
-    ],
-    "p1": [
-     3.6,
-     11.5
-    ],
-    "radius": 1.85
-   }
-  },
-  {
-   "command": "sketch.finish",
-   "params": {}
-  },
-  {
-   "command": "solid.extrude",
-   "params": {
-    "distance": 6,
-    "operation": "cut",
-    "targets": [
-     "Watch Case"
-    ],
-    "name": "Awake Button Slot"
-   }
-  },
-  {
-   "command": "sketch.create",
-   "params": {
-    "plane": {
-     "origin": [
-      4.0,
-      0,
-      0
-     ],
-     "x_dir": [
-      0,
-      1,
-      0
-     ],
-     "y_dir": [
-      0,
-      0,
-      1
-     ]
-    },
-    "name": "Watch USB Opening"
-   }
-  },
-  {
-   "command": "sketch.rectangle.rounded",
-   "params": {
-    "p0": [
-     -4.8,
-     7.83
-    ],
-    "p1": [
-     4.8,
-     11.63
-    ],
-    "radius": 1.8
-   }
-  },
-  {
-   "command": "sketch.finish",
-   "params": {}
-  },
-  {
-   "command": "solid.extrude",
-   "params": {
-    "distance": 6,
-    "operation": "cut",
-    "targets": [
-     "Watch Case"
-    ],
-    "name": "Watch USB Opening"
    }
   },
   {
@@ -1778,7 +4974,7 @@
    "command": "sketch.create",
    "params": {
     "plane": "XY",
-    "offset": 12.100000000000001,
+    "offset": 11.4,
     "name": "Watch Posts"
    }
   },
@@ -1809,7 +5005,7 @@
   {
    "command": "solid.extrude",
    "params": {
-    "distance": 4.0,
+    "distance": 3.3,
     "direction": "negative",
     "operation": "join",
     "targets": [
@@ -1868,7 +5064,155 @@
    "command": "sketch.create",
    "params": {
     "plane": "XY",
-    "offset": 11.700000000000001,
+    "offset": -0.5,
+    "name": "Contact Holes"
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     30.5,
+     -10.0
+    ],
+    "radius": 1.3
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     38.0,
+     -5.0
+    ],
+    "radius": 1.3
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "distance": 2.4,
+    "operation": "cut",
+    "targets": [
+     "Watch Back"
+    ],
+    "name": "Contact Holes",
+    "profiles": "all"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": -0.5,
+    "name": "Magnet Pockets"
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     24.0,
+     -13.0
+    ],
+    "radius": 1.6
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     38.0,
+     -13.0
+    ],
+    "radius": 1.6
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "distance": 1.5,
+    "operation": "cut",
+    "targets": [
+     "Watch Back"
+    ],
+    "name": "Magnet Pockets",
+    "profiles": "all"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "radius": 1.25,
+    "height": 1.4,
+    "base": [
+     30.5,
+     -10.0,
+     0
+    ],
+    "operation": "new",
+    "body_name": "Charge Contact +",
+    "name": "Charge Contact +"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "radius": 1.25,
+    "height": 1.4,
+    "base": [
+     38.0,
+     -5.0,
+     0
+    ],
+    "operation": "new",
+    "body_name": "Charge Contact -",
+    "name": "Charge Contact -"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "radius": 1.5,
+    "height": 1.0,
+    "base": [
+     24.0,
+     -13.0,
+     0
+    ],
+    "operation": "new",
+    "body_name": "Magnet A",
+    "name": "Magnet A"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "radius": 1.5,
+    "height": 1.0,
+    "base": [
+     38.0,
+     -13.0,
+     0
+    ],
+    "operation": "new",
+    "body_name": "Magnet B",
+    "name": "Magnet B"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 11.0,
     "name": "Lens"
    }
   },
@@ -1907,42 +5251,42 @@
      [
       25.0,
       9.9,
-      14.1
+      13.4
      ],
      [
       25.0,
       -9.9,
-      14.1
+      13.4
      ],
      [
       34.9,
       0,
-      14.1
+      13.4
      ],
      [
       15.1,
       0,
-      14.1
+      13.4
      ],
      [
       16.8281,
       -8.1719,
-      14.1
+      13.4
      ],
      [
       16.8281,
       8.1719,
-      14.1
+      13.4
      ],
      [
       33.1719,
       -8.1719,
-      14.1
+      13.4
      ],
      [
       33.1719,
       8.1719,
-      14.1
+      13.4
      ]
     ],
     "radius": 1.2,
@@ -1953,7 +5297,7 @@
    "command": "solid.cylinder",
    "params": {
     "radius": 0.8,
-    "height": 3.9,
+    "height": 3.2,
     "base": [
      25.0,
      -11.6,
@@ -1962,106 +5306,6 @@
     "operation": "new",
     "body_name": "Link Pipe",
     "name": "Link Pipe"
-   }
-  },
-  {
-   "command": "sketch.create",
-   "params": {
-    "plane": {
-     "origin": [
-      40.1,
-      0,
-      0
-     ],
-     "x_dir": [
-      0,
-      1,
-      0
-     ],
-     "y_dir": [
-      0,
-      0,
-      1
-     ]
-    },
-    "name": "Awake Button"
-   }
-  },
-  {
-   "command": "sketch.rectangle.rounded",
-   "params": {
-    "p0": [
-     -3.4,
-     7.8999999999999995
-    ],
-    "p1": [
-     3.4,
-     11.299999999999999
-    ],
-    "radius": 1.65
-   }
-  },
-  {
-   "command": "sketch.finish",
-   "params": {}
-  },
-  {
-   "command": "solid.extrude",
-   "params": {
-    "distance": 4.8,
-    "operation": "new",
-    "name": "Awake Button",
-    "body_name": "Awake Button"
-   }
-  },
-  {
-   "command": "sketch.create",
-   "params": {
-    "plane": {
-     "origin": [
-      5.6,
-      0,
-      0
-     ],
-     "x_dir": [
-      0,
-      1,
-      0
-     ],
-     "y_dir": [
-      0,
-      0,
-      1
-     ]
-    },
-    "name": "USB Plug"
-   }
-  },
-  {
-   "command": "sketch.rectangle.rounded",
-   "params": {
-    "p0": [
-     -4.6,
-     8.030000000000001
-    ],
-    "p1": [
-     4.6,
-     11.43
-    ],
-    "radius": 1.65
-   }
-  },
-  {
-   "command": "sketch.finish",
-   "params": {}
-  },
-  {
-   "command": "solid.extrude",
-   "params": {
-    "distance": 2.6,
-    "operation": "new",
-    "name": "USB Plug",
-    "body_name": "USB Plug"
    }
   },
   {
@@ -2130,7 +5374,7 @@
    "command": "sketch.create",
    "params": {
     "plane": "XY",
-    "offset": 8.9,
+    "offset": 12.9,
     "name": "S PCB"
    }
   },
@@ -2138,12 +5382,12 @@
    "command": "sketch.rectangle.rounded",
    "params": {
     "p0": [
-     -62.0,
-     -10.0
+     -66.0,
+     -12.0
     ],
     "p1": [
-     -18.0,
-     10.0
+     -14.0,
+     12.0
     ],
     "radius": 3.0
    }
@@ -2152,7 +5396,7 @@
    "command": "sketch.circle.center",
    "params": {
     "center": [
-     -59.0,
+     -63.0,
      -7.5
     ],
     "radius": 1.1
@@ -2255,13 +5499,13 @@
   {
    "command": "solid.box",
    "params": {
-    "length": 30,
-    "width": 25,
-    "height": 6,
+    "length": 50,
+    "width": 34,
+    "height": 10.0,
     "center": [
      -40.0,
-     0,
-     4.9
+     0.0,
+     6.9
     ],
     "operation": "new",
     "body_name": "S Battery",
@@ -2275,9 +5519,9 @@
     "width": 2.65,
     "height": 1.0,
     "center": [
-     -59.5,
+     -63.5,
      3.5,
-     11.0
+     15.0
     ],
     "operation": "new",
     "body_name": "S Mic",
@@ -2291,9 +5535,9 @@
     "width": 0.8,
     "height": 1.1,
     "center": [
-     -59.5,
+     -63.5,
      7.5,
-     11.05
+     15.05
     ],
     "operation": "new",
     "body_name": "S Status LED",
@@ -2305,11 +5549,11 @@
    "params": {
     "length": 6,
     "width": 6,
-    "height": 4.3,
+    "height": 5.0,
     "center": [
      -34.0,
      0.0,
-     12.65
+     17.0
     ],
     "operation": "new",
     "body_name": "S Tact Switch",
@@ -2323,13 +5567,45 @@
     "width": 8.9,
     "height": 3.26,
     "center": [
-     -21.675,
-     0.0,
-     12.13
+     -17.675,
+     -5.5,
+     16.13
     ],
     "operation": "new",
     "body_name": "S USB-C",
     "name": "S USB-C"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 2.6,
+    "width": 6.7,
+    "height": 1.5,
+    "center": [
+     -17.15,
+     6.5,
+     15.25
+    ],
+    "operation": "new",
+    "body_name": "S Power Switch",
+    "name": "S Power Switch"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 1.55,
+    "width": 1.3,
+    "height": 1.0,
+    "center": [
+     -15.075,
+     5.75,
+     15.3
+    ],
+    "operation": "new",
+    "body_name": "S Switch Lever",
+    "name": "S Switch Lever"
    }
   },
   {
@@ -2355,7 +5631,7 @@
     "height": 2.7,
     "base": [
      34.0,
-     -3.0,
+     3.0,
      1.4
     ],
     "operation": "new",
@@ -2364,35 +5640,33 @@
    }
   },
   {
-   "command": "solid.box",
+   "command": "solid.cylinder",
    "params": {
-    "length": 7.3,
-    "width": 8.9,
-    "height": 3.26,
-    "center": [
-     13.7,
-     0.0,
-     9.73
+    "radius": 0.75,
+    "height": 5.1,
+    "base": [
+     30.5,
+     -10.0,
+     1.4
     ],
     "operation": "new",
-    "body_name": "R USB-C",
-    "name": "R USB-C"
+    "body_name": "R Pogo +",
+    "name": "R Pogo +"
    }
   },
   {
-   "command": "solid.box",
+   "command": "solid.cylinder",
    "params": {
-    "length": 3.5,
-    "width": 4.5,
-    "height": 3.0,
-    "center": [
-     37.25,
-     0.0,
-     9.6
+    "radius": 0.75,
+    "height": 5.1,
+    "base": [
+     38.0,
+     -5.0,
+     1.4
     ],
     "operation": "new",
-    "body_name": "R Side Switch",
-    "name": "R Side Switch"
+    "body_name": "R Pogo -",
+    "name": "R Pogo -"
    }
   },
   {
@@ -2476,6 +5750,15 @@
    "command": "appearance.assign",
    "params": {
     "bodies": [
+     "Grille Collar"
+    ],
+    "color": "#c8ccd6"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
      "Sensor Button"
     ],
     "color": "#d9dce6"
@@ -2533,27 +5816,45 @@
    "command": "appearance.assign",
    "params": {
     "bodies": [
-     "Awake Button"
-    ],
-    "color": "#9d8fe0"
-   }
-  },
-  {
-   "command": "appearance.assign",
-   "params": {
-    "bodies": [
-     "USB Plug"
-    ],
-    "color": "#9d8fe0"
-   }
-  },
-  {
-   "command": "appearance.assign",
-   "params": {
-    "bodies": [
      "Band"
     ],
     "color": "#6e58a8"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Charge Contact +"
+    ],
+    "color": "#d8b04a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Charge Contact -"
+    ],
+    "color": "#d8b04a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Magnet A"
+    ],
+    "color": "#4a4a55"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Magnet B"
+    ],
+    "color": "#4a4a55"
    }
   },
   {
@@ -2641,18 +5942,45 @@
    "command": "appearance.assign",
    "params": {
     "bodies": [
-     "R USB-C"
+     "R Pogo +"
     ],
-    "color": "#b0b4b8"
+    "color": "#d8b04a"
    }
   },
   {
    "command": "appearance.assign",
    "params": {
     "bodies": [
-     "R Side Switch"
+     "R Pogo -"
+    ],
+    "color": "#d8b04a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "S Power Switch"
     ],
     "color": "#222222"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "S Switch Lever"
+    ],
+    "color": "#222222"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Switch Slider"
+    ],
+    "color": "#9d8fe0"
    }
   },
   {

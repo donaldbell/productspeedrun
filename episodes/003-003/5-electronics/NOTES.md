@@ -93,7 +93,7 @@ Read from `fit.json` (both devices are in one design, `4-model/model.solidcraft`
 
 - Watch battery life on 150 mAh (above). Measure it on a dev board before committing to the case thickness.
 - Pogo pins: pick the real part (stroke, force, ~5 mm working height) and match it to the clip charger. The back-plate contacts need gold plating and a seal.
-- The sensor's PCM12 lever is short (1.55 mm past its body, tip 0.3 mm inside the board edge). The shell needs a slider cap that reaches in to it.
+- The sensor's PCM12 lever is short (1.55 mm past its body, tip 0.3 mm inside the board edge). Stage 4's slider cap reaches in to it with a notch round the lever. Check the slide feel on the first print.
 - LCSC numbers are left blank where I couldn't confirm them (ESP32-C6-MINI-1-N4, GCT USB4105-GF-A, PCM12SMTR, 1TS009 tact, ICS-43434, pogo pins). Check stock before ordering.
 - The WS2812B-2020 runs from VBAT (3.0–4.2 V). Below ~3.5 V the blue channel dims. That's fine for a glow, but a plain pink LED may be all it needs.
 - The ERM runs from VBAT and is 3 V rated: firmware caps its duty at ~70 % on a full cell.
@@ -102,4 +102,12 @@ Read from `fit.json` (both devices are in one design, `4-model/model.solidcraft`
 
 ## Results
 
-(updated below as the fit checks finish)
+| | ERC | DRC | Fit check |
+|---|---|---|---|
+| Receiver | 0 errors, 0 warnings | 0 violations, 0 unconnected, 0 parity | **PASS**: 0 overlaps |
+| Sensor | 0 errors, 0 warnings | 0 violations, 0 unconnected, 0 parity | SENSOR_FIT |
+
+- **Receiver fit:** 3 gaps under 0.3 mm, all intended. The board rests on its posts (0.02, lifted for the check). The + pogo pin's tip is 0.09 off its back-plate contact; a real pin is compressed there, so it presses. The link light pipe is 0.23 above its LED.
+- **Sensor fit:** SENSOR_FIT_NOTE
+- **How the routing got to 0 / 0:** both boards were routed in parallel scratch copies with different Freerouting pass counts, and the clean one was kept. The sensor (`ROUTE_PASSES` 20) needed two hand pre-routes in `layout.py`: BTN, half the board's length from IO7 to the button, and MIC_SD round the mic's VDD pad. Freerouting kept leaving those open. C9's reference was moved off the mic's port hole by hand. On the receiver, P1 / P2's BOM flags were set to match their symbols, a fix that's now in `gen_pcb.py`.
+- **Kit fix found during the fit checks:** `fitmd.py` wrote `FIT.md` through a fixed `FIT.md.tmp`, so checking two boards at once crashed one of them. The temp name is now per process.

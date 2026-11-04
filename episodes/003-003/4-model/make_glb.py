@@ -1,4 +1,4 @@
-"""model.glb for the web viewer: each visible part exported from model_build.json, coloured, in metres, Y-up.
+"""model.glb for the web viewer: each visible part exported from model.solidcraft, coloured, in metres, Y-up.
 
   python3 make_glb.py        (needs solidcraft-cli and trimesh; run after build_model.py)
 """
@@ -18,19 +18,20 @@ here = os.path.dirname(os.path.abspath(__file__))
 VISIBLE = {"Sensor Upper": "#eef0f5", "Sensor Swoosh": "#b4acdc", "Sensor Base": "#8f93a6", "VHB Pad": "#d9d9d9",
            "Sensor Grille": "#2c2b35", "Sensor Button": "#d9dce6", "Sensor Light Pipe": "#7dff63",
            "Watch Case": "#e6e9f0", "Watch Back": "#b9b3d9", "Watch Lens": "#d86cff", "Link Pipe": "#7dff63",
-           "Awake Button": "#9d8fe0", "USB Plug": "#9d8fe0", "Band": "#6e58a8"}
+           "Band": "#6e58a8",
+           "Charge Contact +": "#d8b04a", "Charge Contact -": "#d8b04a", "Magnet A": "#4a4a55", "Magnet B": "#4a4a55",
+           "Switch Slider": "#9d8fe0", "Grille Collar": "#c8ccd6"}
 # PBR tweaks: pearl/NCVM shells a little glossy, lens and pipes glowing, band matte fabric
-ROUGH = {"Sensor Upper": 0.3, "Watch Case": 0.25, "Watch Lens": 0.15, "Band": 0.9, "VHB Pad": 0.8, "Sensor Grille": 0.6}
-METAL = {"Watch Case": 0.35, "Sensor Upper": 0.15}
+ROUGH = {"Grille Collar": 0.2, "Sensor Upper": 0.3, "Watch Case": 0.25, "Watch Lens": 0.15, "Band": 0.9, "VHB Pad": 0.8, "Sensor Grille": 0.6}
+METAL = {"Grille Collar": 0.9, "Watch Case": 0.35, "Sensor Upper": 0.15, "Charge Contact +": 1.0, "Charge Contact -": 1.0, "Magnet A": 0.8, "Magnet B": 0.8}
 EMISSIVE = {"Watch Lens": "#8a2bb0", "Sensor Light Pipe": "#3fbf2a", "Link Pipe": "#3fbf2a"}
 
 with tempfile.TemporaryDirectory() as tmp:
-    cmds = json.load(open(os.path.join(here, "model_build.json")))["commands"]
-    cmds += [{"command": "file.export", "params": {"path": os.path.join(tmp, f"{i}.stl"), "bodies": [b]}}
+    cmds = [{"command": "file.export", "params": {"path": os.path.join(tmp, f"{i}.stl"), "bodies": [b]}}
              for i, b in enumerate(VISIBLE)]
     script = os.path.join(tmp, "export.json")
     json.dump({"commands": cmds}, open(script, "w"))
-    subprocess.run(["solidcraft-cli", "run", script, "--quiet"], check=True, timeout=1800)
+    subprocess.run(["solidcraft-cli", "run", script, "--in", os.path.join(here, "model.solidcraft"), "--quiet"], check=True, timeout=1800)   # exports from the saved design (no rebuild)
 
     # mm -> m, and Z-up (CAD) -> Y-up (glTF)
     xf = trimesh.transformations.rotation_matrix(-math.pi / 2, [1, 0, 0]) @ np.diag([0.001, 0.001, 0.001, 1])
