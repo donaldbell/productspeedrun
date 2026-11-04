@@ -105,3 +105,7 @@ The defaults are the macOS KiCad app and Freerouting under `~/.local/opt/`. Over
 | `FREEROUTING_JAR` | newest `~/.local/opt/freerouting/freerouting-*.jar` |
 
 `schematic.png` uses `qlmanage` on macOS, or `pdftoppm` elsewhere. `board.glb` needs `trimesh` in the system `python3` (`pip3 install trimesh`).
+
+## Multi-unit products
+
+Each unit of a multi-unit product is its own board: point the kit at the unit folder instead of the episode folder, for example `tools/kicad/new_board.sh episodes/<slug>/units/rx rx "<Product> Receiver"` and `tools/kicad/build.sh episodes/<slug>/units/rx`. `new_board.sh` takes the episode number from the episode folder above `units/`. Give each unit's project its own name (`tx`, `rx`) so the KiCad files and libraries don't clash in the showcase.

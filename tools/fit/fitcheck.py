@@ -143,8 +143,8 @@ def main(arg):
     near = clr.get("near", [])
     lines = ["# Fit check: %s in the enclosure" % project, "",
              "Real board (KiCad STEP export, parts included) placed in `%s` where `fit.json` puts it, with Stage 4's "
-             "stand-ins removed (%s). Re-run with `python3 tools/fit/fitcheck.py episodes/%s`." % (
-                 os.path.relpath(design, ep), ", ".join(stand_ins) or "none", os.path.basename(ep)), "",
+             "stand-ins removed (%s). Re-run with `python3 tools/fit/fitcheck.py %s`." % (
+                 os.path.relpath(design, ep), ", ".join(stand_ins) or "none", os.path.relpath(ep, REPO)), "",
              "**Result: %s**: %d overlaps, %d gaps under %.1f mm, %d pairs the checker couldn't measure." % (
                  ("PASS" if not clr.get("unchecked") else "PASS, with pairs not measured") if not overlaps else "FAIL", len(overlaps), len(near), NEAR, len(clr.get("unchecked", []))), "",
              "Board placed at enclosure x %.1f..%.1f, y %.1f..%.1f, z %.1f..%.1f." % (

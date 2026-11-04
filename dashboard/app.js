@@ -58,14 +58,47 @@ const filesIn = (dir) => (S.files[dir] || []).filter((f) => !f.name.endsWith(".p
 const imagesIn = (dir) => filesIn(dir).filter((f) => IMG.test(f.name));
 // Hero renders live in 4-model as render-*.png (generated here, or dropped onto stage 4).
 const isRender = (name) => /^render-/i.test(name);
-const rendersIn = () => imagesIn("4-model").filter((f) => isRender(f.name));
-const renderRefs = () => {
-  const shots = imagesIn("4-model").filter((f) => !isRender(f.name));
-  const iso = shots.find((f) => /^iso\./i.test(f.name)) || shots[shots.length - 1];
-  return [iso && `4-model/${iso.name}`, favOrLatest("2-concept")].filter(Boolean);
+const rendersIn = (dir = "4-model") => imagesIn(dir).filter((f) => isRender(f.name));
+// References for a render: the CAD screenshot(s) for shape, then the favourite concept art for look.
+const renderRefs = (t) => {
+  const us = units(); t = t || renderTarget();
+  const shapes = !us.length ? [isoIn("4-model")] : t === "group" ? us.map((u) => isoIn(`units/${u.key}/4-model`)) : [isoIn(`units/${t}/4-model`)];
+  if (shapes.some((x) => !x)) return [];
+  return [...shapes, favOrLatest("2-concept")].filter(Boolean);
 };
 const favOrLatest = (dir) => { const imgs = imagesIn(dir), fav = S.ep.favorites[dir]; return fav && imgs.some((f) => `${dir}/${f.name}` === fav) ? fav : imgs.length ? `${dir}/${imgs[imgs.length - 1].name}` : null; };
 const pickFile = (dir, re) => { const fs = filesIn(dir).filter((f) => re.test(f.name)); return fs.length ? fs[fs.length - 1] : null; };
+
+/* ---------- units: products made of two or more devices ---------- */
+// A transmitter and a receiver, say: each unit has its own enclosure and board in
+// units/<key>/ (fit.json, FIT.md, 4-model/, 5-electronics/). No units = a one-piece product, as before.
+const units = () => (S.ep?.brief?.units || []).filter((u) => u && u.key);
+const unitByKey = (k) => units().find((u) => u.key === k) || null;
+const curUnit = () => { const us = units(); return us.find((u) => u.key === S.unit) || us[0] || null; };
+const unitName = (u) => clean(u?.name) || u?.key || "";
+// The folder a stage's files live in: "4-model", or "units/<key>/4-model" for a unit.
+const udir = (d, u = curUnit()) => (u && (d === "4-model" || d === "5-electronics") ? `units/${u.key}/${d}` : d);
+const stageOfDir = (d) => (String(d || "").startsWith("units/") ? d.split("/")[2] : d);
+const dirOfRel = (rel) => (rel.startsWith("units/") ? rel.split("/").slice(0, 3).join("/") : rel.split("/")[0]);
+const unitKey = (name, taken) => {
+  let base = String(name || "").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 30) || "unit";
+  let k = base, i = 2; while (taken.includes(k)) k = `${base}-${i++}`;
+  return k;
+};
+function unitTabs(onPick) {
+  const us = units(); if (!us.length) return null;
+  const cur = curUnit();
+  return h("div", { class: "unit-tabs", role: "tablist", "aria-label": "Units" }, us.map((u) => h("button", {
+    type: "button", role: "tab", "aria-selected": String(u.key === cur.key), text: unitName(u),
+    onclick: () => { S.unit = u.key; local.set("unit:" + S.ep.slug, u.key); onPick?.(); renderSplits(); },
+  })));
+}
+// Hero renders: one product shot, or for a multi-unit product a group shot (page hero, in 4-model/)
+// plus one close-up per unit (in units/<key>/4-model/). Targets: "group" or a unit key.
+const renderTarget = () => (units().length ? (S.rtarget === "group" || unitByKey(S.rtarget) ? S.rtarget : "group") : "group");
+const renderDir = (t = renderTarget()) => (t === "group" ? "4-model" : `units/${t}/4-model`);
+const renderFav = (t = renderTarget()) => (t === "group" ? "render" : "render:" + t);
+const isoIn = (dir) => { const shots = imagesIn(dir).filter((f) => !isRender(f.name)); const f = shots.find((x) => /^iso\./i.test(x.name)) || shots[shots.length - 1]; return f ? `${dir}/${f.name}` : null; };
 
 /* ---------- sound ---------- */
 let ac = null;
@@ -106,8 +139,9 @@ function autoDone(n) {
   if (n === 1) return ep.roll.length > 0 && !!String(ep.brief.name || "").trim();
   if (n === 2) return imagesIn("2-concept").length > 0;
   if (n === 3) return imagesIn("3-layout").length > 0;
-  if (n === 4) return !!pickFile("4-model", /\.(glb|gltf)$/i);
-  if (n === 5) return !!(pickFile("5-electronics", /\.kicad_(pcb|sch)$/i) || pickFile("5-electronics", /\.csv$/i));
+  const us = units().length ? units() : [null];
+  if (n === 4) return us.every((u) => !!pickFile(udir("4-model", u), /\.(glb|gltf)$/i));
+  if (n === 5) return us.every((u) => !!(pickFile(udir("5-electronics", u), /\.kicad_(pcb|sch)$/i) || pickFile(udir("5-electronics", u), /\.csv$/i)));
   if (n === 6) return !!pickFile("6-showcase", /^index\.html$/i);
   return !!ep.decision;
 }
@@ -143,11 +177,17 @@ function evidence(n) {
     const dir = STAGES[n - 1].dir, imgs = imagesIn(dir), rel = favOrLatest(dir);
     if (rel) ev.append(img(rel), h("span", { text: `${imgs.length} image${imgs.length === 1 ? "" : "s"}` }));
   }
-  if (n === 4) {
+  const us = units();
+  if ((n === 4 || n === 5) && us.length) {
+    // One line per unit: its latest picture, or a tick once its model or board is in.
+    const d = n === 4 ? "4-model" : "5-electronics";
+    const pic = us.map((u) => imagesIn(udir(d, u)).filter((f) => !isRender(f.name)).pop() && `${udir(d, u)}/${imagesIn(udir(d, u)).filter((f) => !isRender(f.name)).pop().name}`).find(Boolean);
+    if (pic) ev.append(img(pic));
+    ev.append(h("span", { text: us.map((u) => unitName(u) + (n === 4 ? (pickFile(udir(d, u), /\.(glb|gltf)$/i) ? " ✓" : "") : (pickFile(udir(d, u), /\.kicad_pcb$/i) ? " ✓" : ""))).join(" · ") }));
+  } else if (n === 4) {
     const shot = imagesIn("4-model").pop(), glb = pickFile("4-model", /\.(glb|gltf)$/i);
     if (shot) ev.append(img(`4-model/${shot.name}`)); if (glb) ev.append(h("span", { text: glb.name }));
-  }
-  if (n === 5) {
+  } else if (n === 5) {
     const shot = imagesIn("5-electronics").pop();
     if (shot) ev.append(img(`5-electronics/${shot.name}`));
     const bits = [pickFile("5-electronics", /\.kicad_sch$/i) && "schematic", pickFile("5-electronics", /\.kicad_pcb$/i) && "board", pickFile("5-electronics", /bom.*\.csv$/i) && "BOM"].filter(Boolean);
@@ -221,8 +261,47 @@ function viewRoll() {
       h("div", { class: "field-row" },
         field("size", "Rough size", "textarea"),
         field("who", "Who it's for", "textarea")),
+      unitsEditor(),
       h("p", { class: "hint", text: "These answers write the starting prompts for concept art, the layout sheet and the 3D model." })));
   return { el, refresh() {}, onRoll() { drawChips(true); } };
+}
+// Units: leave empty for a one-piece product. Add them when the product is two or more devices,
+// each with its own enclosure and board (a transmitter and a receiver, say).
+function unitsEditor() {
+  const ep = S.ep, box = h("div", { class: "units-ed" });
+  const draw = () => {
+    const us = ep.brief.units = ep.brief.units || [];
+    const nameIn = h("input", { type: "text", id: "unit-new", "aria-label": "New unit name", placeholder: "Unit name", autocomplete: "off" });
+    const add = () => {
+      const name = nameIn.value.trim(); if (!name) { nameIn.focus(); return; }
+      us.push({ key: unitKey(name, us.map((u) => u.key)), name, does: "", electronics: "", size: "" });
+      save(); draw(); renderSplits(); toast(`Unit added: ${name}`);
+    };
+    nameIn.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); add(); } });
+    const f = (u, key, label) => {
+      const ta = h("textarea", { rows: 1 }, u[key] || "");
+      const fit = () => { ta.style.height = "auto"; ta.style.height = ta.scrollHeight + 2 + "px"; };
+      ta.addEventListener("input", () => { u[key] = ta.value; save(); fit(); if (key === "name") renderSplits(); });
+      requestAnimationFrame(fit);
+      return h("label", { class: "field" }, h("span", { class: "label", text: label }), ta);
+    };
+    box.replaceChildren(
+      h("div", { class: "row", style: "justify-content:space-between" }, h("span", { class: "label", text: `Units${us.length ? ` · ${us.length}` : ""}` }),
+        h("span", { class: "hint", text: us.length ? "Each unit gets its own enclosure and board." : "One-piece product. Add units if it's two or more devices." })),
+      ...us.map((u, i) => h("div", { class: "unit-card" },
+        h("div", { class: "row", style: "justify-content:space-between" },
+          h("span", { class: "label", text: `Unit ${i + 1} · units/${u.key}/` }),
+          h("button", { type: "button", class: "btn ghost", text: "Remove", title: "Remove from the brief (its folder stays)", onclick: (e) => {
+            if (e.currentTarget.dataset.armed !== "1") { e.currentTarget.dataset.armed = "1"; e.currentTarget.textContent = "Click again"; return; }
+            us.splice(i, 1); save(); draw(); renderSplits();
+          } })),
+        f(u, "name", "Name"),
+        f(u, "does", "What this unit does"),
+        h("div", { class: "field-row" }, f(u, "electronics", "What's inside"), f(u, "size", "Rough size")))),
+      h("div", { class: "row new-unit" }, nameIn, h("button", { type: "button", class: "btn", text: "+ Add unit", onclick: add })));
+  };
+  draw();
+  return box;
 }
 window.addEventListener("message", (e) => {
   if (e.origin !== ROLLER_ORIGIN || !S.ep) return;
@@ -268,6 +347,11 @@ function describe() {
     if (size) t += ` (${size})`;
     out.push(t + ".");
   } else if (size) out.push(`It's ${lower1(size)}.`);
+  const us = units();
+  if (us.length) out.push(`It's made of ${us.length} separate units, each with its own enclosure and circuit board: ` + us.map((u) => {
+    const bits = [clean(u.does) && lower1(clean(u.does)), clean(u.electronics) && `inside: ${lower1(clean(u.electronics))}`, clean(u.size) && `about ${clean(u.size)}`].filter(Boolean);
+    return `the ${unitName(u)}${bits.length ? ` (${bits.join("; ")})` : ""}`;
+  }).join(", ") + ".");
   return out.join(" ");
 }
 function insideList() {
@@ -291,36 +375,63 @@ const BUILDERS = {
     return `Let's do an imaginary product for Product Speedrun episode ${S.ep.slug}${name ? `, "${name}"` : ""}. I made some concept art for the product idea. Here's what I asked for: ${describe()}\n\n` +
       `Here are the images it created: ${imgs.length ? imgs.join(" and ") : `the images in episodes/${S.ep.slug}/2-concept and 3-layout`}. Bear in mind they're just fantasy and not based on any actual technical specifications. ` +
       `Show what you can do to make a 3D model that draws from this design direction, but with some more informed ideas of the likely dimensions needed to house ${insideList()}.\n\n` +
-      `Use Solidcraft (headless) and follow the Stage 4 steps in CLAUDE.md, saving to episodes/${S.ep.slug}/4-model/ (NOTES.md and fit.json first, then iso.png, model.step and model.glb). Stage 5 is designing the board in another window at the same time: read the board from fit.json and check FIT.md for its requests before every export.`;
+      (units().length
+        ? `This product is ${units().length} separate units, so model ${units().length} enclosures, one per unit, following "Multi-unit products" in CLAUDE.md: ${units().map((u) => `${unitName(u)} in episodes/${S.ep.slug}/units/${u.key}/`).join(", ")}. Write episodes/${S.ep.slug}/SYSTEM.md first if it isn't there yet. Then, for each unit in turn, use Solidcraft (headless) and follow the Stage 4 steps in CLAUDE.md inside its unit folder (its own NOTES.md and fit.json first, then 4-model/iso.png, model.step and model.glb). Give the units a shared design language so they read as one product. Stage 5 is designing the boards in another window at the same time: read each board from its unit's fit.json and check that unit's FIT.md for requests before every export.`
+        : `Use Solidcraft (headless) and follow the Stage 4 steps in CLAUDE.md, saving to episodes/${S.ep.slug}/4-model/ (NOTES.md and fit.json first, then iso.png, model.step and model.glb). Stage 5 is designing the board in another window at the same time: read the board from fit.json and check FIT.md for its requests before every export.`);
   },
   electronics: () => {
     const name = clean(S.ep.brief.name);
+    if (units().length) return `Now the electronics for Product Speedrun episode ${S.ep.slug}${name ? `, "${name}"` : ""}. ${describe()}\n\n` +
+      `This product is ${units().length} separate units, so design ${units().length} boards, one per unit, following "Multi-unit products" in CLAUDE.md: ${units().map((u) => `${unitName(u)} in episodes/${S.ep.slug}/units/${u.key}/5-electronics/`).join(", ")}. ` +
+      `Start by agreeing how the units talk to each other (radio, protocol, pairing, shared parts) in episodes/${S.ep.slug}/SYSTEM.md, and use the same microcontroller family on every unit where it makes sense${rollPick("Brain") ? ` (the roll says ${rollPick("Brain")})` : ""}. ` +
+      `Stage 4 is modelling the enclosures in another window right now, so start with each unit's schematic and SIZE.md, and take placement from that unit's fit.json once Stage 4 has written it. ` +
+      `For each unit, follow the Stage 5 steps in CLAUDE.md using the shared kit in tools/kicad/, pointed at the unit folder (for example tools/kicad/build.sh episodes/${S.ep.slug}/units/${units()[0].key}). You're finished when every unit's board has DRC 0 violations and 0 unconnected and passes its fit check.`;
     return `Now the electronics for Product Speedrun episode ${S.ep.slug}${name ? `, "${name}"` : ""}. ${describe()}\n\n` +
       `Design the simplest circuit that does this, built around ${rollPick("Brain") ? `the ${rollPick("Brain")}` : "a common microcontroller module"}, sized to fit the enclosure in episodes/${S.ep.slug}/4-model/. ` +
       `Stage 4 is modelling the enclosure in another window right now, so start with the schematic and SIZE.md, and take placement from fit.json once Stage 4 has written it. ` +
       `Follow the Stage 5 steps in CLAUDE.md using the shared kit in tools/kicad/: NOTES.md first, then src/design.py and the schematic, then src/layout.py and a routed 2-layer PCB, bom.csv, renders and board.glb, all in episodes/${S.ep.slug}/5-electronics/. You're finished when DRC is 0 violations and 0 unconnected and the fit check passes.`;
   },
   render: () => {
+    if (units().length) return groupRenderPrompt();
     const b = S.ep.brief, name = clean(b.name), design = clean(b.design), size = clean(b.size), what = clean(b.what) || clean(b.pitch);
     return `Create a photorealistic studio product photograph of the device in the first image.\n\n` +
-      `The first image is a CAD model${name ? ` of ${name}` : ""} and is the ground truth for shape: keep its exact proportions and every feature in the same place (buttons, windows, sensors, grilles, ports, feet). Don't add, remove or move anything. The thin lines on the CAD model are only where its rounded edges meet flat faces, not seams: render the rounded corners as smooth, continuous curves, and the shell as one seamless moulded piece with no panel lines, part lines or grooves except where the CAD model has a real gap or recess.\n\n` +
+      `The first image is a CAD model${name ? ` of ${name}` : ""} and is the ground truth for shape: keep its exact proportions and every feature in the same place (buttons, windows, sensors, grilles, ports, feet). Don't add, remove or move anything. ${SEAMLESS}\n\n` +
       `The second image is concept art: use it only for mood, colours and finish. Make it look like a real manufactured product${design ? ` (${lower1(design)})` : ""}, with believable plastics and materials and crisp edges${size ? `, at its real size (${lower1(size)})` : ""}.\n\n` +
       `Setting: where it's used${what ? ` (${lower1(what.replace(/^(it'?s|it is)\s+/i, ""))})` : ""}, three-quarter view, like a product shot in a tech review. Soft studio lighting with a gentle rim light, shallow depth of field. No text, no logos, no people.`;
   },
   showcase: () => {
     const vibe = rollPick("Vibe");
+    if (units().length) return `Build the showcase page for Product Speedrun episode ${S.ep.slug}. Use the brief in episode.json, the concept art, the layout sheet, SYSTEM.md, and each unit's 3D model, electronics notes and BOM (in units/<unit>/) to make the product feel real and close to existing.` +
+      `${vibe ? ` Let the ${lower1(vibe)} vibe from the roll show in the accent colours and the free slot.` : ""} It has ${units().length} units (${units().map(unitName).join(", ")}): follow "Multi-unit products" in CLAUDE.md for the page (group render as the hero, a model and parts list per unit, and how they talk to each other).\n\nStart from kit/showcase/template.html so it matches the other episodes, follow the Stage 6 steps in CLAUDE.md, and save it as episodes/${S.ep.slug}/6-showcase/index.html.`;
     return `Build the showcase page for Product Speedrun episode ${S.ep.slug}. Use the brief in episode.json, the concept art, the layout sheet, the 3D model and the electronics notes and BOM to make the product feel real and close to existing.` +
       `${vibe ? ` Let the ${lower1(vibe)} vibe from the roll show in the accent colours and the free slot.` : ""}\n\nStart from kit/showcase/template.html so it matches the other episodes, follow the Stage 6 steps in CLAUDE.md, and save it as episodes/${S.ep.slug}/6-showcase/index.html.`;
   },
 };
-const promptText = (kind) => (S.ep.promptEdited[kind] && S.ep.prompts[kind] != null ? S.ep.prompts[kind] : BUILDERS[kind]());
+// The seamless-shell line every render prompt carries: CAD screenshots show where fillets start.
+const SEAMLESS = "The thin lines on the CAD model are only where its rounded edges meet flat faces, not seams: render the rounded corners as smooth, continuous curves, and the shell as one seamless moulded piece with no panel lines, part lines or grooves except where the CAD model has a real gap or recess.";
+function groupRenderPrompt() {
+  const b = S.ep.brief, name = clean(b.name), design = clean(b.design), what = clean(b.what) || clean(b.pitch), us = units();
+  return `Create a photorealistic studio product photograph of the complete ${name || "product"} set: ${us.length} separate devices shown together.\n\n` +
+    `The first ${us.length} images are CAD models, one per device (${us.map((u, i) => `${i + 1}: the ${unitName(u)}`).join(", ")}). Each is the ground truth for that device's shape: keep its exact proportions and every feature in the same place (buttons, windows, sensors, grilles, ports, feet). Don't add, remove or move anything, and don't merge the devices. ${SEAMLESS}\n\n` +
+    `The last image is concept art: use it only for mood, colours and finish, and give all the devices the same materials so they read as one product family${design ? ` (${lower1(design)})` : ""}.\n\n` +
+    `Setting: where they're used${what ? ` (${lower1(what.replace(/^(it'?s|it is)\s+/i, ""))})` : ""}, arranged the way they'd sit in real use, at their real relative sizes${us.some((u) => clean(u.size)) ? ` (${us.filter((u) => clean(u.size)).map((u) => `${unitName(u)} ${clean(u.size)}`).join(", ")})` : ""}. Three-quarter view, like a product shot in a tech review. Soft studio lighting with a gentle rim light, shallow depth of field. No text, no logos, no people.`;
+}
+function unitRenderPrompt(key) {
+  const u = unitByKey(key) || {}, b = S.ep.brief, name = clean(b.name), design = clean(b.design);
+  return `Create a photorealistic studio product photograph of the device in the first image: the ${unitName(u)} of ${name || "the product"}${clean(u.does) ? `, which ${lower1(clean(u.does)).replace(/^(it )/i, "")}` : ""}.\n\n` +
+    `The first image is a CAD model and is the ground truth for shape: keep its exact proportions and every feature in the same place (buttons, windows, sensors, grilles, ports, feet). Don't add, remove or move anything. ${SEAMLESS}\n\n` +
+    `The second image is concept art: use it only for mood, colours and finish. Make it look like a real manufactured product${design ? ` (${lower1(design)})` : ""}, with believable plastics and materials and crisp edges${clean(u.size) ? `, at its real size (${clean(u.size)})` : ""}.\n\n` +
+    `Setting: where it's used, three-quarter view, a close-up product shot like one in a tech review. Soft studio lighting with a gentle rim light, shallow depth of field. No text, no logos, no people.`;
+}
+const builderFor = (kind) => (kind.startsWith("render:") ? () => unitRenderPrompt(kind.slice(7)) : BUILDERS[kind]);
+const promptText = (kind) => (S.ep.promptEdited[kind] && S.ep.prompts[kind] != null ? S.ep.prompts[kind] : builderFor(kind)());
 
 // An editable prompt with Copy and Rebuild. Untouched prompts keep following the brief.
 function promptBox(kind, { label, copyNote, rows = 9 } = {}) {
   const ta = h("textarea", { class: "prompt", id: "prompt-" + kind, rows, spellcheck: "true" });
   ta.value = promptText(kind);
   ta.addEventListener("input", () => { S.ep.prompts[kind] = ta.value; S.ep.promptEdited[kind] = true; save(); });
-  const rebuild = () => { S.ep.promptEdited[kind] = false; delete S.ep.prompts[kind]; ta.value = BUILDERS[kind](); save(); };
+  const rebuild = () => { S.ep.promptEdited[kind] = false; delete S.ep.prompts[kind]; ta.value = builderFor(kind)(); save(); };
   const box = h("div", { class: "prompt-box" },
     h("div", { class: "row", style: "justify-content:space-between" }, h("span", { class: "label", text: label || "Prompt" }),
       h("span", { class: "row" },
@@ -330,7 +441,7 @@ function promptBox(kind, { label, copyNote, rows = 9 } = {}) {
           catch { ta.select(); toast("Copy failed. The text is selected: press Cmd+C.", true); }
         } }))),
     ta);
-  return { box, ta, rebuild, sync() { if (!S.ep.promptEdited[kind]) ta.value = BUILDERS[kind](); } };
+  return { box, ta, rebuild, sync() { if (!S.ep.promptEdited[kind]) ta.value = builderFor(kind)(); } };
 }
 
 // Stages 2 and 3: image lab
@@ -412,7 +523,7 @@ async function generate(dir, prompt, provider, aspect, refs) {
 }
 function setFavorite(dir, rel, quiet) {
   S.ep.favorites[dir] = rel; save(); renderSplits(); S.view?.refresh?.();
-  if (!quiet) { tone(1175, { dur: .2 }); toast(dir === "render" ? "Hero render set: the showcase page and gallery will use it" : "Favorite set"); }
+  if (!quiet) { tone(1175, { dur: .2 }); toast(dir === "render" ? "Hero render set: the showcase page and gallery will use it" : dir.startsWith("render:") ? `Close-up set for the ${unitName(unitByKey(dir.slice(7)))}` : "Favorite set"); }
 }
 async function removeFile(dir, name) {
   try {
@@ -435,32 +546,38 @@ function fileList(dir) {
 }
 function waiting(title, sub) { return h("div", { class: "empty", style: "height:100%" }, h("div", { class: "radar" }), h("h2", { text: title }), h("p", { text: sub })); }
 
-// Stage 4: hero render (shape from the CAD screenshot, look from the concept art)
-function renderCard() {
-  const pb = promptBox("render", { label: "Hero render prompt", copyNote: "Prompt copied. Paste it into Gemini with the model screenshot and the concept art, then drag the render onto this stage.", rows: 7 });
-  const refs = renderRefs();
+// Stage 4: hero render (shape from the CAD screenshot, look from the concept art).
+// Multi-unit products: a group shot (the page hero) plus a close-up per unit.
+function renderCard(redraw) {
+  const us = units(), t = renderTarget(), dir = renderDir(t), favKey = renderFav(t);
+  const kind = t === "group" ? "render" : "render:" + t;
+  const pb = promptBox(kind, { label: "Hero render prompt", copyNote: "Prompt copied. Paste it into Gemini with the reference images, then drag the render onto this stage.", rows: 7 });
+  const refs = renderRefs(t);
   const ready = Object.entries(S.config.providers).filter(([, p]) => p.ready && p.refs);
   const sel = h("select", { id: "provider-render", "aria-label": "Image generator" },
     ready.map(([k, p]) => h("option", { value: k, text: p.label, selected: k === S.prefs.provider })));
   const gen = h("button", { type: "button", class: "btn primary", text: "Generate render", disabled: !refs.length,
-    onclick: () => generate("4-model", pb.ta.value, sel.value, "4:3", refs) });
-  const developing = Object.values(S.developing).some((j) => j.dir === "4-model");
-  const renders = rendersIn().slice().reverse(), fav = S.ep.favorites.render;
+    onclick: () => generate(dir, pb.ta.value, sel.value, "4:3", refs) });
+  const developing = Object.values(S.developing).some((j) => j.dir === dir);
+  const renders = rendersIn(dir).slice().reverse(), fav = S.ep.favorites[favKey];
+  const labels = [...(us.length && t === "group" ? us.map((u, i) => `${i + 1} · ${unitName(u)} CAD (shape)`) : ["1 · CAD model (shape)"]), `${(us.length && t === "group" ? us.length : 1) + 1} · concept art (look)`];
+  const targets = us.length ? h("div", { class: "unit-tabs small", role: "tablist", "aria-label": "Render" }, [["group", "Group shot"], ...us.map((u) => [u.key, unitName(u)])].map(([k, label]) =>
+    h("button", { type: "button", role: "tab", "aria-selected": String(k === t), text: label, onclick: () => { S.rtarget = k; redraw?.(); } }))) : null;
   return h("div", { class: "render-card" },
-    h("div", { class: "label", text: "Hero render" }),
+    h("div", { class: "label", text: "Hero render" }), targets,
     h("p", { class: "hint", text: refs.length
-      ? `References: ${refs.map((r) => r.split("/").pop()).join(" + ")}. Shape from the model, look from the concept.`
-      : "Waits for the model's iso.png screenshot." }),
-    refStrip(refs.map((x) => `/episodes/${S.ep.slug}/${x}`), ["1 · CAD model (shape)", "2 · concept art (look)"]),
+      ? (t === "group" && us.length ? "Every unit's CAD screenshot for shape, the concept for look. This one is the page hero." : `References: ${refs.map((r) => r.split("/").pop()).join(" + ")}. Shape from the model, look from the concept.`)
+      : (us.length && t === "group" ? "Waits for every unit's iso.png screenshot." : "Waits for the model's iso.png screenshot.") }),
+    refStrip(refs.map((x) => `/episodes/${S.ep.slug}/${x}`), labels),
     pb.box,
     ready.length ? h("div", { class: "row" }, sel, gen)
-      : h("p", { class: "hint", text: "Copy the prompt into Gemini with those two images, then drag the render onto this stage. (Add a Gemini key in .env to generate here.)" }),
+      : h("p", { class: "hint", text: "Copy the prompt into Gemini with those images, then drag the render onto this stage. (Add a Gemini key in .env to generate here.)" }),
     developing ? h("p", { class: "hint", text: "Developing a render…" }) : null,
     renders.length ? h("div", { class: "thumbs" }, renders.map((f) => {
-      const rel = `4-model/${f.name}`;
+      const rel = `${dir}/${f.name}`;
       return h("div", { class: "render-thumb" + (fav === rel ? " fav" : "") },
-        h("img", { src: fileUrl(rel), alt: f.name, onclick: () => openLightbox("4-model", rel) }),
-        h("button", { type: "button", text: fav === rel ? "★ Hero" : "☆ Use as hero", onclick: () => setFavorite("render", rel) }));
+        h("img", { src: fileUrl(rel), alt: f.name, onclick: () => openLightbox(dir, rel) }),
+        h("button", { type: "button", text: fav === rel ? "★ Hero" : "☆ Use as hero", onclick: () => setFavorite(favKey, rel) }));
     })) : null);
 }
 
@@ -469,14 +586,16 @@ function viewModel() {
   const el = h("div", { class: "stage-view s4" });
   const draw = (fresh = new Set()) => {
     el.replaceChildren();
-    const glb = pickFile("4-model", /\.(glb|gltf)$/i), shots = imagesIn("4-model").filter((f) => !isRender(f.name));
+    const D = udir("4-model"), u = curUnit();
+    const glb = pickFile(D, /\.(glb|gltf)$/i), shots = imagesIn(D).filter((f) => !isRender(f.name));
     const wrap = h("div", { class: "model-wrap" });
-    if (glb) wrap.append(h("model-viewer", { class: fresh.has(`4-model/${glb.name}`) ? "arrive-in" : null, src: fileUrl(`4-model/${glb.name}`) + `?v=${glb.mtime}`, "camera-controls": true, "auto-rotate": true, "shadow-intensity": "1", exposure: "1.1", "interaction-prompt": "none", alt: "3D model" }));
-    else wrap.append(waiting("Waiting for the model", "Claude Code and Solidcraft are up. The model appears here the moment it's saved."));
-    el.append(wrap, h("div", { class: "panel-col" }, handoffCard(4), renderCard(),
-      shots.length ? h("div", { class: "label", text: "Screenshots" }) : null,
-      shots.length ? h("div", { class: "thumbs" }, shots.map((f) => h("img", { src: fileUrl(`4-model/${f.name}`), alt: f.name, onclick: () => openLightbox("4-model", `4-model/${f.name}`) }))) : null,
-      h("div", { class: "label", text: "Files" }), fileList("4-model")));
+    if (glb) wrap.append(h("model-viewer", { class: fresh.has(`${D}/${glb.name}`) ? "arrive-in" : null, src: fileUrl(`${D}/${glb.name}`) + `?v=${glb.mtime}`, "camera-controls": true, "auto-rotate": true, "shadow-intensity": "1", exposure: "1.1", "interaction-prompt": "none", alt: u ? `3D model: ${unitName(u)}` : "3D model" }));
+    else wrap.append(waiting(u ? `Waiting for the ${unitName(u)}` : "Waiting for the model", "Claude Code and Solidcraft are up. The model appears here the moment it's saved."));
+    if (u) wrap.prepend(unitTabs(() => draw()));
+    el.append(wrap, h("div", { class: "panel-col" }, handoffCard(4), renderCard(() => draw()),
+      shots.length ? h("div", { class: "label", text: u ? `Screenshots · ${unitName(u)}` : "Screenshots" }) : null,
+      shots.length ? h("div", { class: "thumbs" }, shots.map((f) => h("img", { src: fileUrl(`${D}/${f.name}`), alt: f.name, onclick: () => openLightbox(D, `${D}/${f.name}`) }))) : null,
+      h("div", { class: "label", text: u ? `Files · ${unitName(u)}` : "Files" }), fileList(D)));
   };
   draw();
   return { el, refresh: draw, gallery: () => draw() };
@@ -500,12 +619,13 @@ function viewElectronics() {
   const el = h("div", { class: "stage-view s5" });
   let tab = local.get("e-tab", "schematic");
   const draw = async (fresh = new Set()) => {
-    const proj = pickFile("5-electronics", /\.kicad_pro$/i);
-    const schs = filesIn("5-electronics").filter((f) => /\.kicad_sch$/i.test(f.name));
+    const D = udir("5-electronics"), u = curUnit();
+    const proj = pickFile(D, /\.kicad_pro$/i);
+    const schs = filesIn(D).filter((f) => /\.kicad_sch$/i.test(f.name));
     const sch = (proj && schs.find((f) => f.name === proj.name.replace(/\.kicad_pro$/i, ".kicad_sch"))) || schs[0];
-    const pcb = pickFile("5-electronics", /\.kicad_pcb$/i);
-    const glb = pickFile("5-electronics", /\.(glb|gltf)$/i);
-    const bom = pickFile("5-electronics", /bom.*\.csv$/i) || pickFile("5-electronics", /\.csv$/i);
+    const pcb = pickFile(D, /\.kicad_pcb$/i);
+    const glb = pickFile(D, /\.(glb|gltf)$/i);
+    const bom = pickFile(D, /bom.*\.csv$/i) || pickFile(D, /\.csv$/i);
     const avail = { schematic: sch, board: pcb, "3d": glb, bom };
     if (!avail[tab]) tab = Object.keys(avail).find((k) => avail[k]) || "schematic";
     const tabs = h("div", { class: "tabs", role: "tablist" }, [["schematic", "Schematic"], ["board", "Board"], ["3d", "3D board"], ["bom", "BOM"]].map(([k, label]) =>
@@ -513,12 +633,12 @@ function viewElectronics() {
     const body = h("div", { class: "tab-body" });
     const f = avail[tab];
     if (!f) body.append(waiting("Waiting for the circuit", "Schematic, board and BOM appear here as Claude Code writes them."));
-    else if (tab === "schematic" || tab === "board") body.append(h("kicanvas-embed", { src: fileUrl(`5-electronics/${f.name}`) + `?v=${f.mtime}`, controls: "basic", theme: "kicad", class: fresh.size ? "arrive-in" : null }));
-    else if (tab === "3d") body.append(h("model-viewer", { src: fileUrl(`5-electronics/${f.name}`) + `?v=${f.mtime}`, "camera-controls": true, "auto-rotate": true, "shadow-intensity": "1", "interaction-prompt": "none", alt: "Circuit board", style: "background:radial-gradient(70% 70% at 50% 40%,#173328,#07110D)" }));
+    else if (tab === "schematic" || tab === "board") body.append(h("kicanvas-embed", { src: fileUrl(`${D}/${f.name}`) + `?v=${f.mtime}`, controls: "basic", theme: "kicad", class: fresh.size ? "arrive-in" : null }));
+    else if (tab === "3d") body.append(h("model-viewer", { src: fileUrl(`${D}/${f.name}`) + `?v=${f.mtime}`, "camera-controls": true, "auto-rotate": true, "shadow-intensity": "1", "interaction-prompt": "none", alt: "Circuit board", style: "background:radial-gradient(70% 70% at 50% 40%,#173328,#07110D)" }));
     let stats = null;
     if (bom) {
       try {
-        const rows = parseCSV(await (await fetch(fileUrl(`5-electronics/${bom.name}`) + `?v=${bom.mtime}`)).text());
+        const rows = parseCSV(await (await fetch(fileUrl(`${D}/${bom.name}`) + `?v=${bom.mtime}`)).text());
         const head = rows[0] || [], data = rows.slice(1);
         const qi = head.findIndex((c) => /^(qty|quantity|count)$/i.test(c.trim()));
         const parts = qi >= 0 ? data.reduce((a, r) => a + (parseFloat(r[qi]) || 0), 0) : data.length;
@@ -528,8 +648,8 @@ function viewElectronics() {
           h("tbody", null, data.map((r, i) => h("tr", { style: `animation-delay:${Math.min(i, 30) * 40}ms` }, head.map((_, j) => h("td", { text: r[j] || "" }))))))));
       } catch { if (tab === "bom") body.append(waiting("Couldn't read the BOM", bom.name)); }
     }
-    el.replaceChildren(h("div", { class: "view-wrap" }, tabs, body),
-      h("div", { class: "panel-col" }, stats, handoffCard(5), h("div", { class: "label", text: "Files" }), fileList("5-electronics")));
+    el.replaceChildren(h("div", { class: "view-wrap" }, u ? unitTabs(() => draw()) : null, tabs, body),
+      h("div", { class: "panel-col" }, stats, handoffCard(5), h("div", { class: "label", text: u ? `Files · ${unitName(u)}` : "Files" }), fileList(D)));
   };
   draw();
   return { el, refresh: draw };
@@ -558,18 +678,21 @@ function viewDecision() {
   const draw = () => {
     const card = (label, body, i) => h("div", { class: "card", style: `animation-delay:${i * 120}ms` }, h("div", { class: "label", text: label }), body);
     const imgOr = (rel, txt) => rel ? h("img", { src: fileUrl(rel), alt: "" }) : h("div", { class: "txt", text: txt });
-    const glb = pickFile("4-model", /\.(glb|gltf)$/i), board = pickFile("5-electronics", /\.(glb|gltf)$/i), boardShot = imagesIn("5-electronics").pop();
+    const M = udir("4-model"), E = udir("5-electronics"), u = curUnit();
+    const glb = pickFile(M, /\.(glb|gltf)$/i), board = pickFile(E, /\.(glb|gltf)$/i), boardShot = imagesIn(E).pop();
     const recap = h("div", { class: "recap" },
       card("The idea", h("div", { class: "txt" }, h("b", { text: ep.brief.name || "Untitled" }), h("br"), ep.brief.pitch || ep.roll.map((r) => r.label).join(" · ")), 0),
       card("Concept", imgOr(favOrLatest("2-concept"), "No sketch"), 1),
       card("Layout", imgOr(favOrLatest("3-layout"), "No layout"), 2),
-      card("Model", glb ? h("model-viewer", { src: fileUrl(`4-model/${glb.name}`), "auto-rotate": true, "interaction-prompt": "none", alt: "Model" }) : h("div", { class: "txt", text: "No model" }), 3),
-      card("Board", board ? h("model-viewer", { src: fileUrl(`5-electronics/${board.name}`), "auto-rotate": true, "interaction-prompt": "none", alt: "Board" }) : imgOr(boardShot && `5-electronics/${boardShot.name}`, "No board"), 4));
+      card(u ? `Model · ${unitName(u)}` : "Model", glb ? h("model-viewer", { src: fileUrl(`${M}/${glb.name}`), "auto-rotate": true, "interaction-prompt": "none", alt: "Model" }) : h("div", { class: "txt", text: "No model" }), 3),
+      card(u ? `Board · ${unitName(u)}` : "Board", board ? h("model-viewer", { src: fileUrl(`${E}/${board.name}`), "auto-rotate": true, "interaction-prompt": "none", alt: "Board" }) : imgOr(boardShot && `${E}/${boardShot.name}`, "No board"), 4));
+
     const verdict = h("div", { class: "verdict" },
       h("button", { type: "button", class: "btn big shelve", text: "Shelve it", onclick: () => decide("shelve") }),
       h("div", { class: "final-time" }, "Stages done", h("br"), h("b", { text: `${[1, 2, 3, 4, 5, 6].filter(isDone).length} / 6` }),
         h("br"), h("button", { type: "button", class: "btn publish", id: "publishBtn", text: "Publish to the site", onclick: publish })),
       h("button", { type: "button", class: "btn big keep", text: "Keep building", onclick: () => decide("keep") }));
+    if (u) verdict.prepend(unitTabs(() => draw()));
     el.replaceChildren(recap, verdict);
     if (ep.decision) el.append(h("div", { class: "stamp " + ep.decision }, h("span", { text: ep.decision === "keep" ? "Keep building" : "Shelved" })));
   };
@@ -611,8 +734,8 @@ $("lightbox").addEventListener("click", closeLb);
 
 /* ---------- drag and drop ---------- */
 let dragDepth = 0;
-const dropDir = () => (S.rev ? "rev" : S.ep && STAGES[S.ep.stage - 1].dir);
-document.addEventListener("dragenter", (e) => { if (!e.dataTransfer?.types?.includes("Files") || !dropDir()) return; dragDepth++; $("dropTarget").textContent = S.rev ? `Rev ${S.rev.rev.letter} hero renders` : STAGES[S.ep.stage - 1].name; $("dropveil").hidden = false; });
+const dropDir = () => (S.rev ? "rev" : S.ep && udir(STAGES[S.ep.stage - 1].dir));
+document.addEventListener("dragenter", (e) => { if (!e.dataTransfer?.types?.includes("Files") || !dropDir()) return; dragDepth++; $("dropTarget").textContent = S.rev ? `Rev ${S.rev.rev.letter} hero renders` : STAGES[S.ep.stage - 1].name + (S.ep.stage === 4 && units().length ? ` · ${renderTarget() === "group" ? "group shot" : unitName(unitByKey(renderTarget()))}` : curUnit() && S.ep.stage === 5 ? ` · ${unitName(curUnit())}` : ""); $("dropveil").hidden = false; });
 document.addEventListener("dragleave", () => { if (--dragDepth <= 0) { dragDepth = 0; $("dropveil").hidden = true; } });
 document.addEventListener("dragover", (e) => { if (dropDir()) e.preventDefault(); });
 document.addEventListener("drop", async (e) => {
@@ -630,8 +753,11 @@ document.addEventListener("drop", async (e) => {
   }
   const added = new Set();
   for (const f of files) {
-    const name = dir === "4-model" && IMG.test(f.name) && !/^(render-|iso\.|progress-)/i.test(f.name) ? "render-" + f.name : f.name;
-    try { const r = await api(`/episodes/${S.ep.slug}/files/${dir}?name=${encodeURIComponent(name)}`, { method: "POST", body: f }); added.add(r.file); }
+    const toRender = stageOfDir(dir) === "4-model" && IMG.test(f.name) && !/^(render-|iso\.|progress-)/i.test(f.name);
+    const name = toRender ? "render-" + f.name : f.name;
+    // Renders land where the render card points: the group shot in 4-model/, a unit's close-up in its own folder.
+    const target = toRender ? renderDir() : dir;
+    try { const r = await api(`/episodes/${S.ep.slug}/files/${target}?name=${encodeURIComponent(name)}`, { method: "POST", body: f }); added.add(r.file); }
     catch (err) { toast(`${f.name}: ${err.message}`, true); }
   }
   if (added.size) { toast(`Added ${added.size} file${added.size === 1 ? "" : "s"}`); await reloadFiles(added); }
@@ -651,6 +777,7 @@ async function loadEpisode(slug) {
   S.ep.done = S.ep.done || []; S.ep.favorites = S.ep.favorites || {}; S.ep.roll = S.ep.roll || [];
   S.ep.brief = { name: "", pitch: "", what: "", does: "", who: "", electronics: "", design: "", looksLike: "", size: "", ...(S.ep.brief || {}) };
   S.ep.prompts = S.ep.prompts || {}; S.ep.promptEdited = S.ep.promptEdited || {};
+  S.unit = local.get("unit:" + slug, null); S.rtarget = "group";
   local.set("last", slug);
   $("epNum").textContent = "#" + String(S.ep.number || "").padStart(3, "0");
   exitRev(true);
@@ -665,14 +792,16 @@ async function reloadFiles(fresh = new Set()) {
   const changed = new Set(fresh);
   for (const [d, fs] of Object.entries(S.files)) for (const f of fs) if (!before.has(`${d}/${f.name}:${f.mtime}`) && !f.name.endsWith(".prompt.txt")) changed.add(`${d}/${f.name}`);
   const cur = STAGES[S.ep.stage - 1].dir;
-  for (const rel of changed) { const d = rel.split("/")[0]; if (d !== cur) S.arrivals.add(d); }
+  for (const rel of changed) { const d = stageOfDir(dirOfRel(rel)); if (d !== cur) S.arrivals.add(d); }
   for (const d of ["2-concept", "3-layout"]) if (!imagesIn(d).some((f) => `${d}/${f.name}` === S.ep.favorites[d])) {
     const newest = [...changed].filter((r) => r.startsWith(d + "/") && IMG.test(r)).pop();
     if (newest) { S.ep.favorites[d] = newest; save(); }
   }
-  if (!rendersIn().some((f) => `4-model/${f.name}` === S.ep.favorites.render)) {
-    const newest = [...changed].filter((r) => r.startsWith("4-model/render-") && IMG.test(r)).pop();
-    if (newest) { S.ep.favorites.render = newest; save(); }
+  for (const t of ["group", ...units().map((u) => u.key)]) {
+    const d = renderDir(t), k = renderFav(t);
+    if (rendersIn(d).some((f) => `${d}/${f.name}` === S.ep.favorites[k])) continue;
+    const newest = [...changed].filter((r) => r.startsWith(d + "/render-") && IMG.test(r)).pop();
+    if (newest) { S.ep.favorites[k] = newest; save(); }
   }
   renderSplits();
   if (changed.size) S.view?.refresh?.(changed);
@@ -787,14 +916,16 @@ function revPrompt(key) {
   const r = S.rev.rev, b = S.ep?.brief || {}, where = `products/${r.productSlug}/${r.rev}/`, L = r.letter;
   const fb = String(r.feedback[key] || "").trim(), goals = String(r.goals || "").trim();
   const what = { cad: "enclosure changes", electronics: "electronics changes", code: "first firmware", showcase: "showcase page" }[key];
+  const us = units();
+  const unitsNote = us.length ? `\n\nThis product has ${us.length} units, each in its own folder with its own fit.json, FIT.md, 4-model/, 5-electronics/ and 7-firmware/: ${us.map((u) => `${where}units/${u.key}/ (${unitName(u)})`).join(", ")}. The folder names below are inside each unit's folder. Work out which unit each piece of feedback is about (ask if it isn't clear), keep ${where}SYSTEM.md in step when the units' link changes, and follow "Multi-unit products" in CLAUDE.md.` : "";
   const head = `${r.product} Rev ${L}: ${what} for Product Speedrun. Work only in ${where}, a copy of ${r.basedOn}, and follow "Revisions" in CLAUDE.md. Record what you change, and why, in ${where}REV.md.` +
-    (goals ? `\n\nGoals for Rev ${L}: ${goals}` : "");
+    unitsNote + (goals ? `\n\nGoals for Rev ${L}: ${goals}` : "");
   const brain = rollPick("Brain");
   if (key === "cad") return `${head}\n\nThe hosts' feedback on the enclosure:\n${fb || "(none yet)"}\n\nUse Solidcraft in headless mode, as in Stage 4. Change the existing model (4-model/build_model.py and model.solidcraft, reading fit.json through tools/fit/fitlib.py) rather than starting over. If there's no fit.json yet, create it from the current numbers first. If a change moves anything the board lines up with, update fit.json and post a request in FIT.md for the electronics. Save progress screenshots as you go, then save model.solidcraft and re-export iso.png, model.step, model.stl and model.glb (linear colours, as in Stage 4).`;
   if (key === "electronics") return `${head}\n\nThe hosts' feedback on the electronics:\n${fb || "(none yet)"}\n\nUse KiCad through the shared kit in tools/kicad/, as in Stage 5. Change the existing design (5-electronics/src/design.py and layout.py) rather than starting over; if the board predates src/, port it to the kit first. Keep fit.json in step with the enclosure and post requests in FIT.md. Finish with DRC 0 violations and 0 unconnected and a passing fit check, and explain part changes in 5-electronics/NOTES.md and REV.md.`;
   if (key === "code") return `${head}\n\nWrite first-pass firmware as a PlatformIO project in ${where}7-firmware/ for the board in ${where}5-electronics/${brain ? ` (the ${brain})` : ""}. Take the pins from 5-electronics/src/design.py and generate include/pins.h from the board's nets so code and board can't disagree.\n\nWhat it should do: ${fb || clean(b.does) || "the behaviour in the brief"}\n\nStub what can't be tested without hardware, make \`pio run\` build cleanly, and write 7-firmware/NOTES.md: flash and RAM use, libraries, and anything the hardware should change (post those as requests in FIT.md too).`;
   if (key === "both") return `${r.product} Rev ${L}: enclosure and electronics changes for Product Speedrun, in one session. Work only in ${where}, a copy of ${r.basedOn}, and follow "Revisions" in CLAUDE.md. Record what you change, and why, in ${where}REV.md.` +
-    (goals ? `\n\nGoals for Rev ${L}: ${goals}` : "") +
+    unitsNote + (goals ? `\n\nGoals for Rev ${L}: ${goals}` : "") +
     `\n\nThe hosts' feedback on the enclosure:\n${String(r.feedback.cad || "").trim() || "(none)"}\n\nThe hosts' feedback on the electronics:\n${String(r.feedback.electronics || "").trim() || "(none)"}\n\n` +
     `Do both yourself, in this order: (1) decide any part or layout changes and update fit.json first (create it from the current numbers if there isn't one), since both sides read it; ` +
     `(2) change the enclosure with Solidcraft in headless mode, as in Stage 4 (edit 4-model/build_model.py and model.solidcraft rather than starting over; progress screenshots, then iso.png, model.step, model.stl and model.glb with linear colours); ` +
@@ -804,6 +935,13 @@ function revPrompt(key) {
 }
 // A new hero render for this revision: shape from the revision's iso.png, look from the previous hero.
 function revRenderPrompt() {
+  if (units().length) {
+    const r = S.rev.rev, n = units().length;
+    return groupRenderPrompt().replace(/^Create a photorealistic studio product photograph of the complete (.*?) set:/, `Create a photorealistic studio product photograph of the complete $1 set, revision ${r.letter}:`)
+      .replace(/The last image is concept art: use it only for mood, colours and finish, and/, r.previousHero
+        ? `The last image is the product photo of the previous revision: match its materials, colours, lighting and setting so the two read as the same product, but follow the first ${n} images wherever a shape or feature has changed, and`
+        : "The last image is concept art: use it only for mood, colours and finish, and");
+  }
   const r = S.rev.rev, b = S.ep?.brief || {}, design = clean(b.design), size = clean(b.size), what = clean(b.what) || clean(b.pitch);
   return `Create a photorealistic studio product photograph of the device in the first image: ${r.product}, revision ${r.letter}.\n\n` +
     `The first image is the updated CAD model and is the ground truth for shape: keep its exact proportions and every feature in the same place (buttons, windows, sensors, grilles, ports, feet). Don't add, remove or move anything. The thin lines on the CAD model are only where its rounded edges meet flat faces, not seams: render the rounded corners as smooth, continuous curves, and the shell as one seamless moulded piece with no panel lines, part lines or grooves except where the CAD model has a real gap or recess.\n\n` +
@@ -813,9 +951,12 @@ function revRenderPrompt() {
     `Setting: where it's used${what ? ` (${lower1(what.replace(/^(it'?s|it is)\s+/i, ""))})` : ""}, three-quarter view, like a product shot in a tech review. Soft studio lighting with a gentle rim light, shallow depth of field. No text, no logos, no people.`;
 }
 function revRenderRefs() {
-  const r = S.rev.rev, iso = revPick("4-model", /^iso\.png$/i);
+  const r = S.rev.rev;
   const style = r.previousHero || (favOrLatest("2-concept") ? `/episodes/${S.ep.slug}/${favOrLatest("2-concept")}` : null);
-  return [iso && `/products/${r.productSlug}/${r.rev}/4-model/${iso.name}`, style].filter(Boolean);
+  const dirs = units().length ? units().map((u) => `units/${u.key}/4-model`) : ["4-model"];
+  const isos = dirs.map((d) => { const f = revPick(d, /^iso\.png$/i); return f && `/products/${r.productSlug}/${r.rev}/${d}/${f.name}`; });
+  if (isos.some((x) => !x)) return [style].filter(Boolean);
+  return [...isos, style].filter(Boolean);
 }
 // The reference images for a render, ready to drag into Gemini or ChatGPT, or to show in Finder.
 // paths are repo-rooted ("/episodes/…" or "/products/…").
@@ -841,9 +982,11 @@ function heroCard() {
   const thumbs = h("div", { class: "thumbs" });
   const draw = () => {
     const refs = revRenderRefs(), renders = revFiles("4-model").filter((f) => /^render-/i.test(f.name) && IMG.test(f.name)).reverse();
-    refsLine.textContent = refs.length > 1 ? `References: this revision's iso.png + ${r.previousHero ? "the previous hero render" : "the favourite concept art"}.` : "Waits for this revision's iso.png (the CAD track saves it).";
-    gen.disabled = refs.length < 2 || !ready.length || box.dataset.busy === "1";
-    strip.replaceChildren(refStrip(refs, ["1 · new CAD model (shape)", r.previousHero ? "2 · previous hero (look)" : "2 · concept art (look)"]) || "");
+    const us = units(), shapes = us.length || 1;
+    refsLine.textContent = refs.length > shapes ? `References: this revision's ${us.length ? "iso.png for every unit" : "iso.png"} + ${r.previousHero ? "the previous hero render" : "the favourite concept art"}.${us.length ? " A group shot of all the units." : ""}` : `Waits for this revision's iso.png${us.length ? " in every unit" : ""} (the CAD track saves it).`;
+    gen.disabled = refs.length <= shapes || !ready.length || box.dataset.busy === "1";
+    const labels = [...(us.length ? us.map((u, i) => `${i + 1} · ${unitName(u)} CAD (shape)`) : ["1 · new CAD model (shape)"]), `${shapes + 1} · ${r.previousHero ? "previous hero" : "concept art"} (look)`];
+    strip.replaceChildren((refs.length > shapes && refStrip(refs, labels)) || "");
     thumbs.replaceChildren(...renders.map((f) => {
       const rel = `4-model/${f.name}`;
       return h("div", { class: "render-thumb" + (r.hero === rel ? " fav" : "") },
@@ -884,20 +1027,23 @@ function mountRev() {
   let tab = local.get("rev-tab", "model");
   const drawViewer = () => {
     viewer.replaceChildren();
-    const glb = revPick("4-model", /\.(glb|gltf)$/i), board = revPick("5-electronics", /^board\.png$/i) || revPick("5-electronics", /\.png$/i);
-    const fit = revPick("5-electronics", /^fitcheck\.png$/i), iso = revPick("4-model", /^iso\.png$/i);
+    const M = udir("4-model"), E = udir("5-electronics");
+    const glb = revPick(M, /\.(glb|gltf)$/i), board = revPick(E, /^board\.png$/i) || revPick(E, /\.png$/i);
+    const fit = revPick(E, /^fitcheck\.png$/i), iso = revPick(M, /^iso\.png$/i);
     const tabs = [["model", "Model"], ["board", "Board"], ["fit", "Fit check"]];
     const body = h("div", { class: "rev-view-body" });
-    viewer.append(h("div", { class: "row tabs" }, tabs.map(([k, t]) => h("button", { type: "button", class: "btn", "aria-pressed": String(tab === k), text: t, onclick: () => { tab = k; local.set("rev-tab", k); drawViewer(); } }))), body);
-    if (tab === "model" && glb) body.append(h("model-viewer", { src: revUrl(`4-model/${glb.name}`) + `?v=${glb.mtime}`, "camera-controls": true, "auto-rotate": true, "shadow-intensity": "1", exposure: "1.1", "interaction-prompt": "none", alt: "3D model" }));
-    else if (tab === "model" && iso) body.append(h("img", { src: revUrl(`4-model/${iso.name}`) + `?v=${iso.mtime}`, alt: "Model" }));
-    else if (tab === "board" && board) body.append(h("img", { src: revUrl(`5-electronics/${board.name}`) + `?v=${board.mtime}`, alt: "Board" }));
-    else if (tab === "fit" && fit) body.append(h("img", { src: revUrl(`5-electronics/${fit.name}`) + `?v=${fit.mtime}`, alt: "Fit check" }));
+    viewer.append(h("div", { class: "row tabs" }, tabs.map(([k, t]) => h("button", { type: "button", class: "btn", "aria-pressed": String(tab === k), text: t, onclick: () => { tab = k; local.set("rev-tab", k); drawViewer(); } })),
+      units().length ? unitTabs(() => drawViewer()) : null), body);
+    if (tab === "model" && glb) body.append(h("model-viewer", { src: revUrl(`${M}/${glb.name}`) + `?v=${glb.mtime}`, "camera-controls": true, "auto-rotate": true, "shadow-intensity": "1", exposure: "1.1", "interaction-prompt": "none", alt: "3D model" }));
+    else if (tab === "model" && iso) body.append(h("img", { src: revUrl(`${M}/${iso.name}`) + `?v=${iso.mtime}`, alt: "Model" }));
+    else if (tab === "board" && board) body.append(h("img", { src: revUrl(`${E}/${board.name}`) + `?v=${board.mtime}`, alt: "Board" }));
+    else if (tab === "fit" && fit) body.append(h("img", { src: revUrl(`${E}/${fit.name}`) + `?v=${fit.mtime}`, alt: "Fit check" }));
     else body.append(waiting("Nothing here yet", tab === "fit" ? "The fit check appears after the electronics run." : "It appears here as soon as Claude Code saves it."));
   };
   const cards = {};
   const drawQuestions = async () => {
-    const md = (await Promise.all(["5-electronics/NOTES.md", "4-model/NOTES.md", "REV.md"].map((f) => fetch(revUrl(f)).then((x) => (x.ok ? x.text() : "")).catch(() => "")))).join("\n");
+    const notes = units().length ? [...units().flatMap((u) => [`units/${u.key}/5-electronics/NOTES.md`, `units/${u.key}/4-model/NOTES.md`]), "SYSTEM.md", "REV.md"] : ["5-electronics/NOTES.md", "4-model/NOTES.md", "REV.md"];
+    const md = (await Promise.all(notes.map((f) => fetch(revUrl(f)).then((x) => (x.ok ? x.text() : "")).catch(() => "")))).join("\n");
     const list = [...new Set(openQuestions(md))];
     qs.replaceChildren(h("div", { class: "label", text: "Open questions from the last revision" }),
       list.length ? h("ul", { class: "qs" }, list.map((q) => h("li", null, h("span", { text: q }),

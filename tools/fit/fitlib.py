@@ -36,12 +36,16 @@ class FitError(Exception):
 
 
 def find_episode(path):
-    """The episode folder (holding fit.json, FIT.md or episode.json) at or above path."""
+    """The episode folder (holding fit.json, FIT.md or episode.json) at or above path.
+
+    In a multi-unit product each units/<unit>/ folder is its own fit folder (fit.json, FIT.md,
+    4-model/, 5-electronics/), so a unit folder counts even before its fit.json exists."""
     p = os.path.abspath(path)
     if os.path.isfile(p):
         p = os.path.dirname(p)
     while True:
-        if any(os.path.isfile(os.path.join(p, f)) for f in ("fit.json", "FIT.md", "episode.json")):
+        if os.path.basename(os.path.dirname(p)) == "units" or \
+                any(os.path.isfile(os.path.join(p, f)) for f in ("fit.json", "FIT.md", "episode.json")):
             return p
         parent = os.path.dirname(p)
         if parent == p:

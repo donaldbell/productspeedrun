@@ -29,3 +29,7 @@ Everything else stays as the template has it: the fonts, the section order, the 
 10. Footer (`.ps-foot`): "a concept, not for sale", All episodes, Files on GitHub.
 
 Leave a section out if the episode has nothing for it (no board, for example) rather than padding it.
+
+## Multi-unit products
+
+When `brief.units` lists two or more units, it's still one page. The group render (`favorites.render`, in `../4-model/`) is the hero. In "what's inside", repeat the model viewer and parts list once per unit (`../units/<key>/4-model/model.glb`, `../units/<key>/5-electronics/bom.csv`, `board.glb`), each headed by the unit's name, with the unit's close-up render (`favorites["render:<key>"]`) if there is one. The free slot is the natural place to show how the units work together, from `SYSTEM.md`.

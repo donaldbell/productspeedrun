@@ -105,3 +105,7 @@ module = FIT.to_enclosure(FIT.feature("module"), -FIT.thickness - 1.55)    # mid
 The routed board comes from `kicad-cli pcb export step`, with the kit's board centre as origin and parts included. KiCad's STEP puts board x, y as in `layout.py`, with the board's bottom face at z 0. `fitcheck.py` measures the top face, builds the rigid move from fit.json (`Fit.placement_matrix`), lifts the board 0.02 mm off its posts (`FIT_LIFT`), and runs SolidCraft's `inspect.clearance` of every enclosure body against the board's bodies (pairs within the board are skipped). Gaps under 0.3 mm (`FIT_NEAR`) are listed, and the posts show up there at the lift distance. That catches what stand-in boxes miss: real connector bodies, tall parts, THT leads through the back, parts sitting under a post.
 
 A part's real 3D model comes from KiCad's library. A footprint with the wrong or a missing model (a pin header standing in for a PIR, say) is checked as that model, so fix the model or note it in the report.
+
+## Multi-unit products
+
+A product made of separate devices (a transmitter and a receiver, say) has one fit folder per unit: `episodes/<slug>/units/<unit>/` holds that unit's `fit.json`, `FIT.md`, `4-model/` and `5-electronics/`. Pass the unit folder wherever these tools take an episode folder (`python3 tools/fit/fitcheck.py episodes/<slug>/units/rx`). `fitlib.find_episode` stops at a unit folder, so a unit never reads the episode's or another unit's numbers. See "Multi-unit products" in CLAUDE.md.

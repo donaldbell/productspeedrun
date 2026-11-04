@@ -92,6 +92,8 @@ def write(episode):
     ep = find_episode(episode)
     fit = load_fit(ep)
     slug = os.path.basename(ep)
+    if os.path.basename(os.path.dirname(ep)) == "units":  # a unit of a multi-unit product
+        slug = "%s, unit %s" % (os.path.basename(os.path.dirname(os.path.dirname(ep))), slug)
     path = os.path.join(ep, "FIT.md")
     sec = section(fit, slug)
     if not os.path.isfile(path):

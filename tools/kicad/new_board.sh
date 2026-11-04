@@ -6,7 +6,9 @@ set -e
 KIT=$(cd "$(dirname "$0")" && pwd)
 [ -n "$3" ] || { echo "usage: $0 <episode folder> <project-name> \"Title\" [one-line summary]"; exit 2; }
 EP=$(cd "$1" && pwd)
-NUM=$(basename "$EP" | cut -d- -f1)
+# A unit of a multi-unit product (episodes/<slug>/units/<unit>) takes the episode's number.
+NUMDIR="$EP"; [ "$(basename "$(dirname "$EP")")" = "units" ] && NUMDIR=$(dirname "$(dirname "$EP")")
+NUM=$(basename "$NUMDIR" | cut -d- -f1)
 HW="$EP/5-electronics"
 mkdir -p "$HW/src"
 LIB=$(echo "$2" | cut -d- -f1)
