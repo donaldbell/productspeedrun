@@ -303,7 +303,7 @@ const BUILDERS = {
   render: () => {
     const b = S.ep.brief, name = clean(b.name), design = clean(b.design), size = clean(b.size), what = clean(b.what) || clean(b.pitch);
     return `Create a photorealistic studio product photograph of the device in the first image.\n\n` +
-      `The first image is a CAD model${name ? ` of ${name}` : ""} and is the ground truth for shape: keep its exact proportions and every feature in the same place (buttons, windows, sensors, grilles, ports, feet). Don't add, remove or move anything.\n\n` +
+      `The first image is a CAD model${name ? ` of ${name}` : ""} and is the ground truth for shape: keep its exact proportions and every feature in the same place (buttons, windows, sensors, grilles, ports, feet). Don't add, remove or move anything. The thin lines on the CAD model are only where its rounded edges meet flat faces, not seams: render the rounded corners as smooth, continuous curves, and the shell as one seamless moulded piece with no panel lines, part lines or grooves except where the CAD model has a real gap or recess.\n\n` +
       `The second image is concept art: use it only for mood, colours and finish. Make it look like a real manufactured product${design ? ` (${lower1(design)})` : ""}, with believable plastics and materials and crisp edges${size ? `, at its real size (${lower1(size)})` : ""}.\n\n` +
       `Setting: where it's used${what ? ` (${lower1(what.replace(/^(it'?s|it is)\s+/i, ""))})` : ""}, three-quarter view, like a product shot in a tech review. Soft studio lighting with a gentle rim light, shallow depth of field. No text, no logos, no people.`;
   },
@@ -806,7 +806,7 @@ function revPrompt(key) {
 function revRenderPrompt() {
   const r = S.rev.rev, b = S.ep?.brief || {}, design = clean(b.design), size = clean(b.size), what = clean(b.what) || clean(b.pitch);
   return `Create a photorealistic studio product photograph of the device in the first image: ${r.product}, revision ${r.letter}.\n\n` +
-    `The first image is the updated CAD model and is the ground truth for shape: keep its exact proportions and every feature in the same place (buttons, windows, sensors, grilles, ports, feet). Don't add, remove or move anything.\n\n` +
+    `The first image is the updated CAD model and is the ground truth for shape: keep its exact proportions and every feature in the same place (buttons, windows, sensors, grilles, ports, feet). Don't add, remove or move anything. The thin lines on the CAD model are only where its rounded edges meet flat faces, not seams: render the rounded corners as smooth, continuous curves, and the shell as one seamless moulded piece with no panel lines, part lines or grooves except where the CAD model has a real gap or recess.\n\n` +
     (r.previousHero
       ? `The second image is the product photo of the previous revision: match its materials, colours, lighting and setting so the two read as the same product, but follow the first image wherever the shape or features have changed.\n\n`
       : `The second image is concept art: use it only for mood, colours and finish. Make it look like a real manufactured product${design ? ` (${lower1(design)})` : ""}, with believable plastics and materials and crisp edges${size ? `, at its real size (${lower1(size)})` : ""}.\n\n`) +
