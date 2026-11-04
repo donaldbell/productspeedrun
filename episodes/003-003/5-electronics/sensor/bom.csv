@@ -9,10 +9,10 @@ LED1,1,green,LED green 0603: status under the front light pipe,LED_0603_1608Metr
 Q1,1,AO3401A,P-MOSFET -30 V -4 A SOT-23: battery into the system rail when USB is absent,SOT-23,AO3401A
 R1 R2,2,5.1k,"Resistor, 1 %, 0603, 5.1k",R_0603_1608Metric,0603WAF5101T5E
 R3,1,4.7k,"Resistor, 1 %, 0603, 4.7k",R_0603_1608Metric,0603WAF4701T5E
-R4 R9,2,100k,"Resistor, 1 %, 0603, 100k",R_0603_1608Metric,0603WAF1003T5E
+R4,1,100k,"Resistor, 1 %, 0603, 100k",R_0603_1608Metric,0603WAF1003T5E
 R5 R6,2,1M,"Resistor, 1 %, 0603, 1M",R_0603_1608Metric,0603WAF1004T5E
 R7 R8,2,10k,"Resistor, 1 %, 0603, 10k",R_0603_1608Metric,0603WAF1002T5E
-R10,1,1k,"Resistor, 1 %, 0603, 1k",R_0603_1608Metric,0603WAF1001T5E
+R9,1,1k,"Resistor, 1 %, 0603, 1k",R_0603_1608Metric,0603WAF1001T5E
 SW1,1,BUTTON,"Tact switch 6 x 6 mm SMD under the top cap: press = test / pair, hold = on / off",SW_Push_1TS009xxxx-xxxx-xxxx_6x6x5mm,1TS009A-1800-5000-CT
 U1,1,MCP73831T-2ACI/OT,"Li-ion/LiPo linear charger 4.2 V, SOT-23-5",SOT-23-5,MCP73831T-2ACI/OT
 U2,1,AP2112K-3.3TRG1,"LDO 3.3 V 600 mA, SOT-23-5, always on (the button's long press puts the C6 in deep sleep)",SOT-23-5,AP2112K-3.3TRG1

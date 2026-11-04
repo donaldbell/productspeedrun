@@ -7056,30 +7056,30 @@
 		)
 		(uuid "d6570457-a8d3-5bd1-bf5c-0e2f64be565e")
 	)
+	(no_connect
+		(at 55.88 190.5)
+		(uuid "15f52e88-0f8e-5ab2-aae5-ef12bbe15e8a")
+	)
 	(wire
 		(pts
-			(xy 55.88 190.5)
-			(xy 53.34 190.5)
+			(xy 55.88 193.04)
+			(xy 53.34 193.04)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "0dc27efa-c166-58f6-a70e-5e631a87e992")
+		(uuid "2877cec1-25f3-5b47-a6bd-e4ab1053e804")
 	)
-	(label "CHG_STAT"
-		(at 53.34 190.5 180)
+	(label "MIC_SD"
+		(at 53.34 193.04 180)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
 			(justify right bottom)
 		)
-		(uuid "e0d36b3f-1654-5701-98cd-6c1590de5ab4")
-	)
-	(no_connect
-		(at 55.88 193.04)
-		(uuid "d5552672-dfb2-5593-b056-a80470202334")
+		(uuid "6fe2ad85-4ea9-56e9-a130-5731697e4d30")
 	)
 	(wire
 		(pts
@@ -7092,7 +7092,7 @@
 		)
 		(uuid "a5da72df-3aab-5bcd-afa8-11b5ec8cbe1c")
 	)
-	(label "BTN"
+	(label "LED_IO"
 		(at 53.34 195.58 180)
 		(effects
 			(font
@@ -7102,38 +7102,72 @@
 		)
 		(uuid "59348caa-1b6b-5e0b-91ce-af9c319a01ff")
 	)
-	(no_connect
-		(at 55.88 198.12)
-		(uuid "c789352a-3295-5684-a368-f1088048090f")
-	)
-	(no_connect
-		(at 55.88 200.66)
-		(uuid "a2c7fe22-ed71-5b36-a222-9d4767af3383")
-	)
 	(wire
 		(pts
-			(xy 55.88 203.2)
-			(xy 53.34 203.2)
+			(xy 55.88 198.12)
+			(xy 53.34 198.12)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "2b823135-4ccd-5cb5-a163-c0734da76511")
+		(uuid "902ff4a7-f3cc-5b16-ad54-d73254825e47")
 	)
-	(label "LED_IO"
-		(at 53.34 203.2 180)
+	(label "MIC_SCK"
+		(at 53.34 198.12 180)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
 			(justify right bottom)
 		)
-		(uuid "50400ea8-6ccd-527d-aaf4-afe68bddb3de")
+		(uuid "1aba515a-b8e7-5d34-b394-913586962700")
+	)
+	(wire
+		(pts
+			(xy 55.88 200.66)
+			(xy 53.34 200.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d23acc95-ad40-5cc6-9c85-9448085c2563")
+	)
+	(label "MIC_WS"
+		(at 53.34 200.66 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "060cd722-a4ec-505a-8c9d-00ceeb370147")
 	)
 	(no_connect
-		(at 55.88 205.74)
-		(uuid "e8f65f54-c9f7-5b56-a7bf-e8310ab629fb")
+		(at 55.88 203.2)
+		(uuid "2fb5605f-ba9c-5a46-883c-e7d3001911c9")
+	)
+	(wire
+		(pts
+			(xy 55.88 205.74)
+			(xy 53.34 205.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a1bc80dc-1b03-5111-b4bd-bb8e9d246999")
+	)
+	(label "BTN"
+		(at 53.34 205.74 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "e6cb4c26-6eed-540c-8fdf-5af774807b5d")
 	)
 	(wire
 		(pts
@@ -7227,72 +7261,38 @@
 		(at 86.36 198.12)
 		(uuid "04a42159-c085-5b09-af48-c50f9067b124")
 	)
-	(wire
-		(pts
-			(xy 86.36 203.2)
-			(xy 88.9 203.2)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "436f19fa-682f-53a3-a0d1-4b4343adf482")
-	)
-	(label "MIC_SCK"
-		(at 88.9 203.2 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "1b222a2c-de54-573a-8787-ce034d6d04a9")
-	)
-	(wire
-		(pts
-			(xy 86.36 205.74)
-			(xy 88.9 205.74)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "fb0a1523-3043-5b4f-918a-fc27f193c348")
-	)
-	(label "MIC_WS"
-		(at 88.9 205.74 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "c3abc557-4c14-5db5-bbf1-32ff4848c10c")
-	)
-	(wire
-		(pts
-			(xy 86.36 208.28)
-			(xy 88.9 208.28)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "6a2098a6-c7d6-5370-8165-fffbb35578f1")
-	)
-	(label "MIC_SD"
-		(at 88.9 208.28 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "62785fbc-b1cc-5860-baeb-16ab5cb218fc")
+	(no_connect
+		(at 86.36 203.2)
+		(uuid "cdc17bd4-17a2-5d90-8997-c4805c962a6a")
 	)
 	(no_connect
-		(at 86.36 210.82)
-		(uuid "564d700d-955a-56d1-834f-752c726a8f81")
+		(at 86.36 205.74)
+		(uuid "03b0b52a-6f45-5803-b860-9101f7c4ced4")
+	)
+	(no_connect
+		(at 86.36 208.28)
+		(uuid "ddcf9550-75a3-5870-8e8a-99bf02765315")
+	)
+	(wire
+		(pts
+			(xy 86.36 210.82)
+			(xy 88.9 210.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "da6dc24d-c190-505e-8f66-56c6ef1f1403")
+	)
+	(label "CHG_STAT"
+		(at 88.9 210.82 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "6c438f9e-86a4-55be-a818-1871f911a767")
 	)
 	(no_connect
 		(at 86.36 213.36)
@@ -8878,135 +8878,6 @@
 		(uuid "e1d0c1d5-cdca-580c-8a51-3be54b32f1e7")
 	)
 	(symbol
-		(lib_id "Device:R")
-		(at 309.88 76.2 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "11890a53-2a99-593d-93ee-3eb06d758fef")
-		(property "Reference" "R9"
-			(at 312.42 74.93 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "100k"
-			(at 312.42 77.47 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 309.88 76.2 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 309.88 76.2 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor, 1 %, 0603, 100k"
-			(at 309.88 76.2 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "C25803"
-			(at 309.88 76.2 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MPN" "0603WAF1003T5E"
-			(at 309.88 76.2 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "cc01eafa-0a8f-5210-847d-c1bdc82b5554")
-		)
-		(pin "2"
-			(uuid "3c931240-f9f2-5adb-b449-f053f04a0fd3")
-		)
-		(instances
-			(project "bmm-sensor"
-				(path "/18b4c35d-ff28-53be-92e0-7a4b88a75d1d"
-					(reference "R9")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 309.88 72.39)
-			(xy 309.88 69.85)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9b043f4d-2921-5999-aded-b0cd67b3965a")
-	)
-	(label "MIC_SD"
-		(at 309.88 69.85 90)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "f3595d23-1875-5231-b519-d127ecf962f1")
-	)
-	(wire
-		(pts
-			(xy 309.88 80.01)
-			(xy 309.88 82.55)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d71d4596-68aa-531b-b91e-7380dc8cf2fe")
-	)
-	(label "GND"
-		(at 309.88 82.55 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "bfe20ba6-6a42-5ef3-892e-5a18ba077007")
-	)
-	(symbol
 		(lib_id "Switch:SW_Push")
 		(at 254 127 0)
 		(unit 1)
@@ -9134,8 +9005,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "bcc71c71-9420-525b-b7de-96a949d527f8")
-		(property "Reference" "R10"
+		(uuid "11890a53-2a99-593d-93ee-3eb06d758fef")
+		(property "Reference" "R9"
 			(at 256.54 181.61 0)
 			(effects
 				(font
@@ -9199,15 +9070,15 @@
 			)
 		)
 		(pin "1"
-			(uuid "c579b100-e6ee-5bf9-80c3-71ddbc5b1692")
+			(uuid "cc01eafa-0a8f-5210-847d-c1bdc82b5554")
 		)
 		(pin "2"
-			(uuid "16dc1074-62be-5c80-8b5c-5b4184e2fed4")
+			(uuid "3c931240-f9f2-5adb-b449-f053f04a0fd3")
 		)
 		(instances
 			(project "bmm-sensor"
 				(path "/18b4c35d-ff28-53be-92e0-7a4b88a75d1d"
-					(reference "R10")
+					(reference "R9")
 					(unit 1)
 				)
 			)
@@ -9222,7 +9093,7 @@
 			(width 0)
 			(type default)
 		)
-		(uuid "40d38c8f-12e7-5518-b22c-5fda4e07ea42")
+		(uuid "9b043f4d-2921-5999-aded-b0cd67b3965a")
 	)
 	(label "LED_IO"
 		(at 254 176.53 90)
@@ -9232,7 +9103,7 @@
 			)
 			(justify left bottom)
 		)
-		(uuid "e83df08a-8a10-57cf-ac71-bfc16150e6a7")
+		(uuid "f3595d23-1875-5231-b519-d127ecf962f1")
 	)
 	(wire
 		(pts
@@ -9243,7 +9114,7 @@
 			(width 0)
 			(type default)
 		)
-		(uuid "74f517c9-9a3a-5622-a65a-cbbce0c010a0")
+		(uuid "d71d4596-68aa-531b-b91e-7380dc8cf2fe")
 	)
 	(label "LED_A"
 		(at 254 189.23 270)
@@ -9253,7 +9124,7 @@
 			)
 			(justify right bottom)
 		)
-		(uuid "5e4d3c52-27c7-51d0-8274-9601a10ff7be")
+		(uuid "bfe20ba6-6a42-5ef3-892e-5a18ba077007")
 	)
 	(symbol
 		(lib_id "Device:LED")
@@ -9744,7 +9615,7 @@
 		)
 		(uuid "675ddcbc-a4d7-54d8-b86f-b665e2f6515d")
 	)
-	(text "POWER: USB-C (5.1k CC) -> U1 MCP73831 charges the LiPo at 210 mA (R3 4.7k).\nPower path: USB -> D1 -> VSYS; USB unplugged -> R4 pulls Q1's gate low -> VBAT -> VSYS.\nU2 AP2112K-3.3 from VSYS. VBAT_SENSE = VBAT / 2 -> IO0, CHG_STAT -> IO1 (internal pull-up)."
+	(text "POWER: USB-C (5.1k CC) -> U1 MCP73831 charges the LiPo at 210 mA (R3 4.7k).\nPower path: USB -> D1 -> VSYS; USB unplugged -> R4 pulls Q1's gate low -> VBAT -> VSYS.\nU2 AP2112K-3.3 from VSYS. VBAT_SENSE = VBAT / 2 -> IO0, CHG_STAT -> IO21 (internal pull-up; the module side facing the charger)."
 		(exclude_from_sim no)
 		(at 10.16 7.62 0)
 		(effects
@@ -9755,7 +9626,7 @@
 		)
 		(uuid "cd10870c-bd3f-5c43-bf46-b92c143b5e60")
 	)
-	(text "MIC: ICS-43434 on IO18/19/20 (SCK / WS / SD), bottom port through the board to the front grille.\nFirmware: 16 kHz I2S, RMS over 250 ms, three thresholds -> level 0-3 sent over ESP-NOW."
+	(text "MIC: ICS-43434 on IO4 / IO5 / IO2 (SCK / WS / SD: the module's side facing the mic), bottom port through the board to the front grille.\nFirmware: 16 kHz I2S, RMS over 250 ms, three thresholds -> level 0-3 sent over ESP-NOW."
 		(exclude_from_sim no)
 		(at 203.2 7.62 0)
 		(effects
@@ -9766,7 +9637,7 @@
 		)
 		(uuid "db79c44a-1c02-5525-9153-5b802a8ea435")
 	)
-	(text "BUTTON on IO3 (LP GPIO, internal pull-up: wakes the C6). STATUS LED green on IO6.\nIO8 pulled high (R8); IO9 internal pull-up, TP1 pulls it low for recovery. USB on IO12/IO13."
+	(text "BUTTON on IO7 (LP GPIO, internal pull-up: wakes the C6). STATUS LED green on IO3.\nIO8 pulled high (R8); IO9 internal pull-up, TP1 pulls it low for recovery. USB on IO12/IO13."
 		(exclude_from_sim no)
 		(at 203.2 152.4 0)
 		(effects

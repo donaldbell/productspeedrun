@@ -50,11 +50,11 @@ cap("C5", "100nF", at(66, 45), "VBAT_SENSE", "GND")
 # --- MCU: ESP32-C6-MINI-1 with EN RC and IO8 pull-up (bottom-left)
 part("U3", C6, "ESP32-C6-MINI-1-N4", "RF_Module:ESP32-C6-MINI-1", "", "ESP32-C6-MINI-1-N4", at(28, 80),
      {"3": "3V3", "8": "EN",
-      "12": "VBAT_SENSE", "13": "CHG_STAT", "5": None, "6": "BTN", "9": None, "10": None,
-      "15": "LED_IO", "16": None, "22": "IO8", "23": "IO9",
+      "12": "VBAT_SENSE", "13": None, "5": "MIC_SD", "6": "LED_IO", "9": "MIC_SCK", "10": "MIC_WS",
+      "15": None, "16": "BTN", "22": "IO8", "23": "IO9",
       "17": "USB_DN", "18": "USB_DP", "19": None, "20": None,
-      "24": "MIC_SCK", "25": "MIC_WS", "26": "MIC_SD",
-      "27": None, "28": None, "29": None, "30": None, "31": None,
+      "24": None, "25": None, "26": None,
+      "27": "CHG_STAT", "28": None, "29": None, "30": None, "31": None,
       "4": None, "7": None, "21": None, "32": None, "33": None, "34": None, "35": None,
       **gnd_pins("1", "2", "11", "14", *[str(n) for n in range(36, 54)])},
      "ESP32-C6 Wi-Fi 6 / BLE 5 / 802.15.4 module (ESP-NOW), 4 MB flash, PCB antenna, 13.2 x 16.6 x 2.4 mm")
@@ -71,12 +71,12 @@ part("U4", "Sensor_Audio:ICS-43434", "ICS-43434", "Sensor_Audio:InvenSense_ICS-4
      at(110, 24), {"1": "MIC_WS", "2": "GND", "3": "GND", "4": "MIC_SCK", "5": "3V3", "6": "MIC_SD"},
      "I2S MEMS microphone, bottom port over a 1 mm hole through the board, L/R low = left slot")
 cap("C9", "100nF", at(122, 18), "3V3", "GND")
-res("R9", "100k", at(122, 30), "MIC_SD", "GND")         # SD is tri-stated between slots
+# SD is tri-stated between slots: the C6 holds IO2 with its internal pull-down (no resistor)
 part("SW1", "Switch:SW_Push", "BUTTON", "Button_Switch_SMD:SW_Push_1TS009xxxx-xxxx-xxxx_6x6x5mm", "", "1TS009A-1800-5000-CT",
      at(100, 50), {"1": "BTN", "2": "GND"}, "Tact switch 6 x 6 mm SMD under the top cap: press = test / pair, hold = on / off")
 
 # --- Output: green status LED (bottom-right)
-res("R10", "1k", at(100, 72), "LED_IO", "LED_A")
+res("R9", "1k", at(100, 72), "LED_IO", "LED_A")
 part("LED1", "Device:LED", "green", "LED_SMD:LED_0603_1608Metric", "C72043", "KT-0603G", at(110, 76),
      {"2": "LED_A", "1": "GND"}, "LED green 0603: status under the front light pipe")
 
@@ -92,10 +92,10 @@ for i, (net, xy) in enumerate((("VBUS", at(4, 34)), ("GND", at(8, 34)), ("VSYS",
 NOTES += [
     (at(4, 3), "POWER: USB-C (5.1k CC) -> U1 MCP73831 charges the LiPo at 210 mA (R3 4.7k).\n"
                "Power path: USB -> D1 -> VSYS; USB unplugged -> R4 pulls Q1's gate low -> VBAT -> VSYS.\n"
-               "U2 AP2112K-3.3 from VSYS. VBAT_SENSE = VBAT / 2 -> IO0, CHG_STAT -> IO1 (internal pull-up)."),
-    (at(80, 3), "MIC: ICS-43434 on IO18/19/20 (SCK / WS / SD), bottom port through the board to the front grille.\n"
+               "U2 AP2112K-3.3 from VSYS. VBAT_SENSE = VBAT / 2 -> IO0, CHG_STAT -> IO21 (internal pull-up; the module side facing the charger)."),
+    (at(80, 3), "MIC: ICS-43434 on IO4 / IO5 / IO2 (SCK / WS / SD: the module's side facing the mic), bottom port through the board to the front grille.\n"
                 "Firmware: 16 kHz I2S, RMS over 250 ms, three thresholds -> level 0-3 sent over ESP-NOW."),
-    (at(80, 60), "BUTTON on IO3 (LP GPIO, internal pull-up: wakes the C6). STATUS LED green on IO6.\n"
+    (at(80, 60), "BUTTON on IO7 (LP GPIO, internal pull-up: wakes the C6). STATUS LED green on IO3.\n"
                  "IO8 pulled high (R8); IO9 internal pull-up, TP1 pulls it low for recovery. USB on IO12/IO13."),
 ]
 

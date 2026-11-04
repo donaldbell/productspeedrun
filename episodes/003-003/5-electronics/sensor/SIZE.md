@@ -4,9 +4,9 @@ From the schematic's footprints (written by `tools/kicad/size_board.py`; rerun w
 
 | | mm² |
 |---|---|
-| Parts area (30 parts) | 570 |
+| Parts area (29 parts) | 565 |
 | Big parts (none), with a 2 mm ring | 0 |
-| **Smallest comfortable board** | **1424** (e.g. 38 x 38, or 48 x 30) |
+| **Smallest comfortable board** | **1413** (e.g. 38 x 38, or 48 x 30) |
 
 Parts on both faces don't make it smaller: episode 002 needed this area with parts on both faces.
 Add about 4 mm to each side for mounting holes and posts if they sit outside the parts area. No side can be shorter than the biggest part, 17.2 mm, plus 8 mm.
