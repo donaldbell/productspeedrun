@@ -86,7 +86,7 @@ Build **`6-showcase/index.html`**: a product page that makes the idea feel real.
 - **Hero image:** if `episode.json` has `favorites.render` (the hero render the hosts picked in stage 4), use it as the hero image, linked as `../4-model/<file>`, with a caption saying it's an AI render of the CAD model. The concept art then moves down to "who it's for" or "how we got here". With no render, the favourite concept art is the hero.
 - Content: product name and pitch, the hero image, who it's for and the moment it's used, the 3D model, what's inside (from the BOM and notes), how we got here, and an honest "what we still don't know" list.
 - Keep the footer's licence line, with the episode's number and both hosts' names: the designs are open (see `LICENSE`), so the page says so and asks for credit.
-- It must work on phones and in both light and dark viewing. No trackers, no external forms.
+- It must work on phones and in both light and dark viewing. No trackers and no forms of its own: the site build adds the newsletter signup (Beehiiv) above the footer of every page, so don't add one yourself.
 
 ## Revisions (Rev B and later)
 

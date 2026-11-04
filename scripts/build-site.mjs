@@ -34,6 +34,35 @@ if (existsSync(EP)) {
 }
 episodes.sort((a, b) => (b.ep.number || 0) - (a.ep.number || 0));
 
+// Newsletter signup (Beehiiv). One block, added by the build to the gallery and to every
+// showcase page (before the page's footer), so episode folders never need to carry it.
+const BEEHIIV_FORM = "fb6aa340-96bf-486d-843d-1315f50baa10";
+const SIGNUP = `<section class="ps-signup" id="subscribe" aria-labelledby="ps-signup-h">
+<style>
+.ps-signup { --ps-ink: #1B1F27; --ps-muted: #5D6573; --ps-line: #DADEE4; --ps-panel: #F6F7F9; --ps-run: #17864D;
+  box-sizing: border-box; width: min(720px, calc(100% - 32px)); margin: 48px auto; padding: 24px clamp(16px, 4vw, 28px);
+  background: var(--ps-panel); color: var(--ps-ink); border: 1px solid var(--ps-line); border-radius: 14px;
+  font: 15px/1.5 "JetBrains Mono", ui-monospace, Menlo, monospace; text-align: center; }
+@media (prefers-color-scheme: dark) { .ps-signup { --ps-ink: #F3EFE6; --ps-muted: #8C96A8; --ps-line: #283142; --ps-panel: #141922; --ps-run: #63E39A; } }
+:root[data-theme="dark"] .ps-signup { --ps-ink: #F3EFE6; --ps-muted: #8C96A8; --ps-line: #283142; --ps-panel: #141922; --ps-run: #63E39A; }
+:root[data-theme="light"] .ps-signup { --ps-ink: #1B1F27; --ps-muted: #5D6573; --ps-line: #DADEE4; --ps-panel: #F6F7F9; --ps-run: #17864D; }
+.ps-signup h2 { margin: 0 0 6px; font: 800 clamp(22px, 4vw, 28px)/1.1 "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif; letter-spacing: -0.01em; color: var(--ps-ink); }
+.ps-signup h2 span { color: var(--ps-run); }
+.ps-signup p { margin: 0 auto 14px; max-width: 52ch; color: var(--ps-muted); }
+.ps-signup .ps-signup-form { display: flex; justify-content: center; min-height: 60px; }
+.ps-signup .ps-signup-form iframe { max-width: 100%; }
+</style>
+<h2 id="ps-signup-h">Get each run <span>by email</span></h2>
+<p>A short diary of every episode: the roll, the turns the idea took, and the board at the end. One email per episode.</p>
+<div class="ps-signup-form"><script async src="https://subscribe-forms.beehiiv.com/v3/loader.js" data-beehiiv-form="${BEEHIIV_FORM}"></script></div>
+</section>`;
+const addSignup = (page) => {
+  if (page.includes("data-beehiiv-form")) return page;
+  const at = page.toLowerCase().lastIndexOf("<footer");
+  if (at > -1) return page.slice(0, at) + SIGNUP + "\n" + page.slice(at);
+  return page.replace(/<\/body>/i, SIGNUP + "\n</body>");
+};
+
 // Shared showcase look and the series bar (kit/), then give every showcase page a filled-in
 // <ps-series-bar> linking home and to the episodes either side.
 if (existsSync(path.join(ROOT, "kit"))) await cp(path.join(ROOT, "kit"), path.join(OUT, "kit"), { recursive: true });
@@ -49,7 +78,7 @@ for (const [i, e] of shown.entries()) {
   if (/<ps-series-bar[\s>]/.test(page)) out = page.replace(/<ps-series-bar[^>]*>(\s*<\/ps-series-bar>)?/, tag);
   else out = page.replace(/<body[^>]*>/i, (m) => `${m}\n${tag}`);
   if (!out.includes("kit/series-bar.js")) out = out.replace(/<\/head>/i, '<script type="module" src="../../../kit/series-bar.js"></script>\n</head>');
-  await writeFile(file, out);
+  await writeFile(file, addSignup(out));
 }
 
 // Revisions (products/<product>/rev-b/ …): copy them, give their pages the series bar, and point
@@ -72,7 +101,7 @@ if (existsSync(PRODUCTS)) {
       const tag = `<ps-series-bar home="../../../../" number="${esc(r.number || "")}" name="${esc((r.product || prod) + " Rev " + letter)}"></ps-series-bar>`;
       let out = /<ps-series-bar[\s>]/.test(page) ? page.replace(/<ps-series-bar[^>]*>(\s*<\/ps-series-bar>)?/, tag) : page.replace(/<body[^>]*>/i, (m) => `${m}\n${tag}`);
       if (!out.includes("kit/series-bar.js")) out = out.replace(/<\/head>/i, '<script type="module" src="../../../../kit/series-bar.js"></script>\n</head>');
-      await writeFile(file, out);
+      await writeFile(file, addSignup(out));
     }
   }
 }
@@ -146,11 +175,13 @@ footer a { color: var(--ink); }
 <header>
   <h1>Product <span>Speedrun</span></h1>
   <p class="lede">We roll random ingredients, then race a product idea from brainstorm to concept art, a 3D model, a circuit board and a showcase page. Some we keep building. Some we shelve.</p>
+  <p class="lede"><a href="#subscribe" style="color:var(--run)">Get each episode by email →</a></p>
   <ol class="steps"><li>Roll &amp; brief</li><li>Concept sketches</li><li>Isometric layout</li><li>3D model</li><li>Electronics</li><li>Showcase</li><li>Keep or shelve</li></ol>
 </header>
 <main>
 ${episodes.length ? `<div class="grid">${cards}</div>` : '<p class="none">The first run is on its way.</p>'}
 </main>
+${SIGNUP}
 <footer>Every episode's files, models and KiCad projects are on <a href="https://github.com/donaldbell/productspeedrun">GitHub</a>, free to build, change and even sell: hardware under <a href="https://github.com/donaldbell/productspeedrun/blob/main/LICENSES/CERN-OHL-P-2.0.txt">CERN-OHL-P v2</a>, words and images under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, software under <a href="https://github.com/donaldbell/productspeedrun/blob/main/LICENSES/MIT.txt">MIT</a>. If you build something from them, we'd love a credit and to hear about it.</footer>
 </div>
 </body>
