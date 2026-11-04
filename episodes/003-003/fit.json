@@ -24,7 +24,7 @@
           1,
           0
         ],
-        "posts_face": "bottom"
+        "posts_face": "top"
       },
       "holes": [
         [
@@ -72,7 +72,7 @@
             6,
             6
           ],
-          "note": "6 x 6 x 4.3 tact switch under the \u00d812 top cap: press = test / pair, hold 3 s = on / off"
+          "note": "6 x 6 x 4.3 tact switch under the Ø12 top cap: press = test / pair, hold 3 s = on / off"
         },
         "usb": {
           "at": [
@@ -202,7 +202,7 @@
             1.6,
             0.8
           ],
-          "note": "green 0603 LED under the \u00d81.6 link light pipe at 6 o'clock (pipe ends 1.4 above the board: KiCad's 0603 LED model is 1.1 tall)"
+          "note": "green 0603 LED under the Ø1.6 link light pipe at 6 o'clock (pipe ends 1.4 above the board: KiCad's 0603 LED model is 1.1 tall)"
         },
         "lra": {
           "at": [
@@ -214,7 +214,7 @@
             10,
             10
           ],
-          "note": "off-board: \u00d810 x 2.7 ERM coin motor glued to the back plate (skin side), top 2.6 below the bottom face, 2 wires to pads (MOSFET drive)"
+          "note": "off-board: Ø10 x 2.7 ERM coin motor glued to the back plate (skin side), top 2.6 below the bottom face, 2 wires to pads (MOSFET drive)"
         },
         "battery": {
           "at": [
