@@ -171,7 +171,7 @@ c("solid.extrude", distance=14, operation="cut", targets=["Sensor Shell"], name=
 
 slit_in = -29.4                                                # inside the nose, behind the collar's inner end
 c("sketch.create", plane=yz_plane(SX - 42), name="Status Slit")
-c("sketch.rectangle.rounded", p0=[SLIT[0] - 0.1, SLIT[2] - 0.1], p1=[SLIT[1] + 0.1, SLIT[3] + 0.1], radius=0.69)
+c("sketch.rectangle.rounded", p0=[SLIT[0] - 0.1, SLIT[2] - 0.1], p1=[SLIT[1] + 0.1, SLIT[3] + 0.1], radius=0.3)   # small radius: the pipe's square corners sit 0.1 inside
 c("sketch.finish")
 c("solid.extrude", distance=r4(42 + slit_in), operation="cut", targets=["Sensor Shell"], name="Status Slit")
 
@@ -180,8 +180,8 @@ c("sketch.rectangle.rounded", p0=[S_USB[1] - 4.8, S_USB_Z - 1.9], p1=[S_USB[1] +
 c("sketch.finish")
 c("solid.extrude", distance=12, operation="cut", targets=["Sensor Shell"], name="Sensor USB Opening")
 c("sketch.create", plane=yz_plane(SX + 26), name="Power Switch Slot")
-sl = SLIDER_W / 2 + SLIDER_TRAVEL / 2 + 0.15
-c("sketch.rectangle.rounded", p0=[S_PSW[1] - sl, SL_Z0 - 0.15], p1=[S_PSW[1] + sl, SL_Z1 + 0.15], radius=1.3)
+sl = SLIDER_W / 2 + SLIDER_TRAVEL / 2 + 0.55          # room for the slider at either end of its travel
+c("sketch.rectangle.rounded", p0=[S_PSW[1] - sl, SL_Z0 - 0.15], p1=[S_PSW[1] + sl, SL_Z1 + 0.15], radius=0.5)
 c("sketch.finish")
 c("solid.extrude", distance=12, operation="cut", targets=["Sensor Shell"], name="Power Switch Slot")
 
