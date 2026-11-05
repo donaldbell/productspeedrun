@@ -105,9 +105,9 @@ Read from `fit.json` (both devices are in one design, `4-model/model.solidcraft`
 | | ERC | DRC | Fit check |
 |---|---|---|---|
 | Receiver | 0 errors, 0 warnings | 0 violations, 0 unconnected, 0 parity | **PASS**: 0 overlaps |
-| Sensor | 0 errors, 0 warnings | 0 violations, 0 unconnected, 0 parity | SENSOR_FIT |
+| Sensor | 0 errors, 0 warnings | 0 violations, 0 unconnected, 0 parity | **PASS**: 0 overlaps |
 
 - **Receiver fit:** 3 gaps under 0.3 mm, all intended. The board rests on its posts (0.02, lifted for the check). The + pogo pin's tip is 0.09 off its back-plate contact; a real pin is compressed there, so it presses. The link light pipe is 0.23 above its LED.
-- **Sensor fit:** SENSOR_FIT_NOTE
+- **Sensor fit:** 6 gaps under 0.3 mm, all intended or harmless. The board rests on its posts (0.02). The slider cap's notch is 0.03 off the PCM12 lever, a snug fit so it drives the lever, and its underside is 0.17 above the board. The cell is 0.18 under a bottom 0603, the button cap 0.23 above the tact, and the light pipe 0.24 above the LED. The first run failed: KiCad's PCM12 model has the lever at one end of its travel (y 5.75, not 6.5), so Stage 4 moved the slider to that end.
 - **How the routing got to 0 / 0:** both boards were routed in parallel scratch copies with different Freerouting pass counts, and the clean one was kept. The sensor (`ROUTE_PASSES` 20) needed two hand pre-routes in `layout.py`: BTN, half the board's length from IO7 to the button, and MIC_SD round the mic's VDD pad. Freerouting kept leaving those open. C9's reference was moved off the mic's port hole by hand. On the receiver, P1 / P2's BOM flags were set to match their symbols, a fix that's now in `gen_pcb.py`.
 - **Kit fix found during the fit checks:** `fitmd.py` wrote `FIT.md` through a fixed `FIT.md.tmp`, so checking two boards at once crashed one of them. The temp name is now per process.
