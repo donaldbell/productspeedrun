@@ -91,8 +91,6 @@ def section(fit, slug, head="## Fit"):
 def write(episode):
     ep = find_episode(episode)
     slug = os.path.basename(ep)
-    if os.path.basename(os.path.dirname(ep)) == "units":  # a unit of a multi-unit product
-        slug = "%s/units/%s" % (os.path.basename(os.path.dirname(os.path.dirname(ep))), slug)   # so "episodes/<slug>" commands still work
     path = os.path.join(ep, "FIT.md")
     names = board_names(ep)
     if names:

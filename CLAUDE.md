@@ -88,28 +88,28 @@ Build **`6-showcase/index.html`**: a product page that makes the idea feel real.
 - Keep the footer's licence line, with the episode's number and both hosts' names: the designs are open (see `LICENSE`), so the page says so and asks for credit.
 - It must work on phones and in both light and dark viewing. No trackers and no forms of its own: the site build adds the newsletter signup (Beehiiv) above the footer of every page, so don't add one yourself.
 
-## Multi-unit products
+## Products with several devices
 
-Some products are two or more separate devices, each with its own enclosure and board: a transmitter and a receiver, a sensor and its base station, a remote and the thing it controls. The hosts add these as **units** in Stage 1 (`brief.units` in `episode.json`: `key`, `name`, `does`, `electronics`, `size`). With no units, the product is one piece and nothing here applies.
+Some products are two or more separate devices, each with its own enclosure and board: a sensor and a wearable, a transmitter and a receiver, a remote and the thing it controls. The hosts list them as **devices** in Stage 1 (`brief.units` in `episode.json`: `key`, `name`, `does`, `electronics`, `size`; the `key` names the board's folder). With none listed, the product is one piece and nothing here applies. Episode 003 (Baby Monitor Monitor: a sensor and a wristband) is the worked example.
 
 ```
 episodes/<slug>/
-  episode.json  2-concept/  3-layout/     shared: the concept art shows the set together
-  SYSTEM.md                               how the units work together (yours, write it first)
-  4-model/                                the group hero render only (render-*.png)
-  units/<key>/                            one folder per unit, laid out like a one-piece episode
-    fit.json  FIT.md  4-model/  5-electronics/
-  6-showcase/                             one page for the whole product
+  SYSTEM.md                 how the devices work together (yours, write it first)
+  fit.json  FIT.md          one entry per board under "boards" (tools/fit/README.md)
+  4-model/                  ONE Solidcraft design holding every device; iso.png shows them all
+  5-electronics/<key>/      one kit project per board: src/design.py, src/layout.py, and its outputs
+  5-electronics/NOTES.md    notes that cover both boards (optional)
 ```
 
-- **Each unit folder is its own Stage 4/5 pair.** Everything in Stages 4 and 5 applies per unit, inside `units/<key>/`: its own `NOTES.md`, `fit.json`, `FIT.md`, model, board and fit check. The tools take the unit folder wherever the steps say episode folder, for example `tools/kicad/new_board.sh episodes/<slug>/units/rx rx "<Product> Receiver"`, `tools/kicad/build.sh episodes/<slug>/units/rx`, `python3 tools/fit/fitcheck.py episodes/<slug>/units/rx`. Requests in a unit's `FIT.md` are about that unit only.
-- **`SYSTEM.md` first.** Before modelling or drawing a schematic, write `SYSTEM.md` in the episode (or revision) folder: what each unit does, how they talk (radio and protocol, or cable and connector), pairing, what they share (microcontroller family, battery, charger, connectors) and the power budget for each. Either stage may update it; note the change in each affected unit's `FIT.md` as a request.
-- **One window per stage, as before.** The Stage 4 window models every unit, the Stage 5 window designs every board. Do the units one after another (or the next unit's schematic while one routes), not all at once.
-- **Same family on purpose.** Use one microcontroller family across the units where it makes sense, so one toolchain and one radio stack cover them, and give the enclosures a shared design language, so the set reads as one product.
-- **Stage 4 is done when every unit has its `model.glb`; Stage 5 when every unit's board is DRC 0 / 0 unconnected and passes its fit check.**
-- **Hero renders:** the hosts make a group shot (in the episode's `4-model/`, `favorites.render`, the showcase hero) and a close-up per unit (in `units/<key>/4-model/`, `favorites["render:<key>"]`).
-- **Showcase:** one page. The group render is the hero; then each unit gets its own model viewer (`../units/<key>/4-model/model.glb`), board and parts list (`../units/<key>/5-electronics/…`); the free slot shows how the units work together (from `SYSTEM.md`).
-- **Revisions** copy every unit folder and `SYSTEM.md`; each unit also gets `7-firmware/` (one PlatformIO project per unit, sharing a protocol header where the units talk to each other).
+- **`SYSTEM.md` first.** Before modelling or drawing a schematic, write `SYSTEM.md` in the episode (or revision) folder: what each device does, how they talk (radio and protocol, or cable and connector), pairing, what they share (microcontroller family, battery, charger, connectors) and each one's power budget. Either stage may update it, with a request in `FIT.md` when it changes the other side.
+- **Stage 4:** one design in `4-model/` with a set of bodies per device, laid out side by side, and one `iso.png`, `model.step` and `model.glb` covering them all. `fit.json` gets a `boards` section with one entry per board, named like the board folders; `build_model.py` reads each with `load_fit(__file__, board="<key>")`.
+- **Stage 5:** one kit project per board, in `5-electronics/<key>/`: `tools/kicad/new_board.sh episodes/<slug>/5-electronics/<key> <project> "<Product> <Device>"`, `tools/kicad/build.sh episodes/<slug>/5-electronics/<key>`. Give each project its own name (episode 003: `bmm-sensor`, `bmm-receiver`). `layout.py` picks its board from the path. The fit check takes one board (`python3 tools/fit/fitcheck.py episodes/<slug>/5-electronics/<key>`) or all of them (the episode folder).
+- **One window per stage, as before.** The Stage 5 window does the boards one after another (or the next schematic while one routes).
+- **Same family on purpose.** Use one microcontroller family across the boards where it makes sense, so one toolchain and one radio stack cover them, and give the enclosures a shared design language, so the set reads as one product.
+- **Stage 5 is finished when every board is DRC 0 / 0 unconnected and passes its fit check.**
+- **Hero render:** one group shot of all the devices (from the one `iso.png`), in `4-model/` as usual.
+- **Showcase:** one page. The model viewer shows every device; then each device gets its own board and parts list (`../5-electronics/<key>/board.glb`, `bom.csv`); the free slot shows how the devices work together (from `SYSTEM.md`).
+- **Revisions** copy all of it, including `SYSTEM.md`. Firmware is one PlatformIO project per device, in `7-firmware/<key>/`, sharing a protocol header where the devices talk to each other.
 
 ## Revisions (Rev B and later)
 
@@ -124,7 +124,7 @@ products/<product>/rev-b/
   5-electronics/  # copied from the previous revision: change it, don't start over
   6-showcase/     # this revision's page
   7-firmware/     # PlatformIO project (from Rev B on)
-  SYSTEM.md  units/<key>/{fit.json,FIT.md,4-model,5-electronics,7-firmware}   # multi-unit products only
+  SYSTEM.md       # products with several devices: boards in 5-electronics/<device>/, firmware in 7-firmware/<device>/
 ```
 
 The hosts write feedback per track in the console, which turns it into a prompt that names the folder. For every track:

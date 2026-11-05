@@ -10,9 +10,7 @@ case "$1" in
   */5-electronics/*) mkdir -p "$1"; HW=$(cd "$1" && pwd); EP=$(cd "$HW/../.." && pwd) ;;
   *) EP=$(cd "$1" && pwd); HW="$EP/5-electronics" ;;
 esac
-# A unit of a multi-unit product (episodes/<slug>/units/<unit>) takes the episode's number.
-NUMDIR="$EP"; [ "$(basename "$(dirname "$EP")")" = "units" ] && NUMDIR=$(dirname "$(dirname "$EP")")
-NUM=$(basename "$NUMDIR" | cut -d- -f1)
+NUM=$(basename "$EP" | cut -d- -f1)
 mkdir -p "$HW/src"
 LIB=$(echo "$2" | cut -d- -f1)
 UPPER=$(echo "$3" | tr '[:lower:]' '[:upper:]')

@@ -34,30 +34,8 @@ const PROVIDERS = {
 
 export const STAGE_DIRS = ["2-concept", "3-layout", "4-model", "5-electronics", "6-showcase"];
 export const REV_DIRS = ["4-model", "5-electronics", "6-showcase", "7-firmware"];
-// Multi-unit products (a transmitter and a receiver, say): each unit has its own enclosure and
-// board in units/<unit>/ (fit.json, FIT.md, 4-model/, 5-electronics/, and 7-firmware/ in revisions).
-// A product without units/ is a one-piece product and works exactly as before.
-export const UNIT_DIRS = ["4-model", "5-electronics"];
-const UNIT_RE = /^[a-z0-9][a-z0-9-]{0,40}$/;
-const UNIT_DIR_RE = /^units\/[a-z0-9][a-z0-9-]{0,40}\/(4-model|5-electronics|7-firmware)$/;
-async function unitsIn(root) {
-  try { return (await readdir(path.join(root, "units"), { withFileTypes: true })).filter((e) => e.isDirectory() && UNIT_RE.test(e.name)).map((e) => e.name).sort(); } catch { return []; }
-}
-async function unitDirs(root, sub = UNIT_DIRS) { return (await unitsIn(root)).flatMap((u) => sub.map((d) => `units/${u}/${d}`)); }
-// A stage folder in a request: "4-model", or "units/<unit>/4-model" given as three URL segments.
-function stageDirFrom(parts, i) {
-  if (parts[i] === "units") return { sd: parts.slice(i, i + 3).join("/"), rest: parts.slice(i + 3) };
-  return { sd: parts[i], rest: parts.slice(i + 1) };
-}
-async function ensureUnits(dir, units) {
-  for (const u of Array.isArray(units) ? units : []) {
-    if (!u || !UNIT_RE.test(u.key || "")) continue;
-    for (const d of UNIT_DIRS) {
-      const p = path.join(dir, "units", u.key, d);
-      if (!existsSync(p)) { await mkdir(p, { recursive: true }); await writeFile(path.join(p, ".gitkeep"), ""); }
-    }
-  }
-}
+// Products with several devices (a sensor and a wearable, say) keep one model in 4-model/ and one
+// board per device in 5-electronics/<device>/; the listing below already walks those subfolders.
 const MIME = {
   ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".mjs": "text/javascript; charset=utf-8",
   ".css": "text/css; charset=utf-8", ".json": "application/json; charset=utf-8", ".svg": "image/svg+xml",
@@ -112,7 +90,7 @@ async function loadEpisode(slug) {
   try { return JSON.parse(await readFile(path.join(epDir(slug), "episode.json"), "utf8")); }
   catch (e) { if (e.code === 404) throw e; throw Object.assign(new Error("Episode not found."), { code: 404 }); }
 }
-async function listFiles(slug) { const dir = epDir(slug); return listDirFiles(dir, [...STAGE_DIRS, ...await unitDirs(dir)]); }
+async function listFiles(slug) { return listDirFiles(epDir(slug), STAGE_DIRS); }
 async function listDirFiles(root, dirs) {
   const out = {};
   for (const d of dirs) {
@@ -211,15 +189,6 @@ async function createRevision(episode) {
     else await mkdir(path.join(dir, d), { recursive: true });
   }
   for (const f of ["fit.json", "FIT.md", "SYSTEM.md"]) if (existsSync(path.join(base, f))) await cp(path.join(base, f), path.join(dir, f));
-  for (const u of await unitsIn(base)) {
-    for (const d of UNIT_DIRS) {
-      const from = path.join(base, "units", u, d), to = path.join(dir, "units", u, d);
-      if (existsSync(from)) await cp(from, to, { recursive: true, filter: (src) => !SKIP_COPY.test(path.relative(base, src)) });
-      else await mkdir(to, { recursive: true });
-    }
-    for (const f of ["fit.json", "FIT.md"]) if (existsSync(path.join(base, "units", u, f))) await cp(path.join(base, "units", u, f), path.join(dir, "units", u, f));
-    await mkdir(path.join(dir, "units", u, "7-firmware"), { recursive: true }); await writeFile(path.join(dir, "units", u, "7-firmware", ".gitkeep"), "");
-  }
   for (const d of ["6-showcase", "7-firmware"]) { await mkdir(path.join(dir, d), { recursive: true }); await writeFile(path.join(dir, d, ".gitkeep"), ""); }
   const L = letter.toUpperCase();
   const r = { product: name, productSlug: product, rev, letter: L, episode, number: ep.number, basedOn: baseRel, createdAt: new Date().toISOString(),
@@ -359,8 +328,7 @@ function startWatcher() {
         if (!file) return;
         const parts = file.split(path.sep);
         if (parts.length < 3 || parts.some((p) => p.startsWith(".") || p === "node_modules" || p === "output")) return;
-        const u = parts[2] === "units" && parts.length > 4;
-        pending.set("p:" + file, { rev: `${parts[0]}/${parts[1]}`, dir: u ? parts.slice(2, 5).join("/") : parts[2], name: parts.slice(u ? 5 : 3).join("/") || null });
+        pending.set("p:" + file, { rev: `${parts[0]}/${parts[1]}`, dir: parts[2], name: parts.slice(3).join("/") || null });
         clearTimeout(flushT);
         flushT = setTimeout(() => { for (const e of pending.values()) broadcast({ type: "change", ...e }); pending.clear(); }, 250);
       });
@@ -371,8 +339,7 @@ function startWatcher() {
       if (!file) return;
       const parts = file.split(path.sep);
       if (parts.some((p) => p.startsWith(".") || p === "node_modules")) return;
-      const u = parts[1] === "units" && parts.length > 3;
-      pending.set(file, { slug: parts[0], dir: u ? parts.slice(1, 4).join("/") : parts[1] || null, name: parts.slice(u ? 4 : 2).join("/") || null });
+      pending.set(file, { slug: parts[0], dir: parts[1] || null, name: parts.slice(2).join("/") || null });
       clearTimeout(flushT);
       flushT = setTimeout(() => { for (const e of pending.values()) broadcast({ type: "change", ...e }); pending.clear(); }, 250);
     });
@@ -422,7 +389,7 @@ const server = http.createServer(async (req, res) => {
       if (parts[1] === "revisions") {
         if (parts.length === 2 && req.method === "POST") { const b = await readJson(req); return send(res, 201, await createRevision(String(b.episode || ""))); }
         const product = parts[2], rev = parts[3], dir = revDir(product, rev);
-        if (parts.length === 4 && req.method === "GET") return send(res, 200, { rev: await loadRev(product, rev), files: await listDirFiles(dir, [...REV_DIRS, ...await unitDirs(dir, [...UNIT_DIRS, "7-firmware"])]) });
+        if (parts.length === 4 && req.method === "GET") return send(res, 200, { rev: await loadRev(product, rev), files: await listDirFiles(dir, REV_DIRS) });
         if (parts.length === 4 && req.method === "PUT") {
           const r = await readJson(req); r.productSlug = product; r.rev = rev;
           await writeFile(path.join(dir, "rev.json"), JSON.stringify(r, null, 2) + "\n");
@@ -431,7 +398,7 @@ const server = http.createServer(async (req, res) => {
         if (parts[4] === "publish" && req.method === "POST") return send(res, 200, await publishRev(product, rev));
         // Upload: POST /api/revisions/:product/:rev/files/:dir?name=   (raw body)
         if (parts[4] === "files" && req.method === "POST") {
-          const { sd } = stageDirFrom(parts, 5); if (!REV_DIRS.includes(sd) && !UNIT_DIR_RE.test(sd)) return send(res, 400, { error: "Unknown revision folder." });
+          const sd = parts[5]; if (!REV_DIRS.includes(sd)) return send(res, 400, { error: "Unknown revision folder." });
           const buf = await readBody(req);
           await mkdir(path.join(dir, sd), { recursive: true });
           const p = await uniquePath(path.join(dir, sd), safeName(url.searchParams.get("name")));
@@ -442,11 +409,10 @@ const server = http.createServer(async (req, res) => {
         if (parts[4] === "generate" && req.method === "POST") {
           const b = await readJson(req);
           const { buf, ext } = await generate(b, null);
-          const sd = /^units\/[a-z0-9][a-z0-9-]{0,40}\/4-model$/.test(b.stageDir || "") ? b.stageDir : "4-model";
-          const p = await uniquePath(path.join(dir, sd), `render-${b.provider}-${stamp()}${ext}`);
+          const p = await uniquePath(path.join(dir, "4-model"), `render-${b.provider}-${stamp()}${ext}`);
           await writeFile(p, buf);
           await writeFile(p + ".prompt.txt", `${b.provider}${PROVIDERS[b.provider].model ? " / " + PROVIDERS[b.provider].model : ""}\nrefs: ${(b.refs || []).join(", ") || "none"}\n\n${b.prompt}\n`);
-          return send(res, 201, { file: `${sd}/${path.basename(p)}` });
+          return send(res, 201, { file: `4-model/${path.basename(p)}` });
         }
         return send(res, 404, { error: "Unknown revision route." });
       }
@@ -461,12 +427,11 @@ const server = http.createServer(async (req, res) => {
         if (parts.length === 3 && req.method === "PUT") {
           const ep = await readJson(req); ep.slug = slug;
           await writeFile(path.join(dir, "episode.json"), JSON.stringify(ep, null, 2) + "\n");
-          await ensureUnits(dir, ep.brief?.units);
           return send(res, 200, { ok: true });
         }
         // Upload: POST /api/episodes/:slug/files/:stageDir?name=foo.png  (raw body)
         if (parts[3] === "files" && req.method === "POST") {
-          const { sd } = stageDirFrom(parts, 4); if (!STAGE_DIRS.includes(sd) && !UNIT_DIR_RE.test(sd)) return send(res, 400, { error: "Unknown stage folder." });
+          const sd = parts[4]; if (!STAGE_DIRS.includes(sd)) return send(res, 400, { error: "Unknown stage folder." });
           const buf = await readBody(req);
           await mkdir(path.join(dir, sd), { recursive: true });
           const p = await uniquePath(path.join(dir, sd), safeName(url.searchParams.get("name")));
@@ -475,8 +440,8 @@ const server = http.createServer(async (req, res) => {
         }
         // Remove: DELETE /api/episodes/:slug/files/:stageDir/:name  (moves to a hidden .trash folder)
         if (parts[3] === "files" && req.method === "DELETE") {
-          const { sd, rest } = stageDirFrom(parts, 4); if (!STAGE_DIRS.includes(sd) && !UNIT_DIR_RE.test(sd)) return send(res, 400, { error: "Unknown stage folder." });
-          const p = path.join(dir, sd, ...rest);
+          const sd = parts[4]; if (!STAGE_DIRS.includes(sd)) return send(res, 400, { error: "Unknown stage folder." });
+          const p = path.join(dir, sd, ...parts.slice(5));
           if (!inside(path.join(dir, sd), p) || !existsSync(p)) return send(res, 404, { error: "File not found." });
           const trash = path.join(dir, sd, ".trash"); await mkdir(trash, { recursive: true });
           await rename(p, await uniquePath(trash, path.basename(p)));
@@ -488,9 +453,9 @@ const server = http.createServer(async (req, res) => {
         // Generate: POST /api/episodes/:slug/generate {stageDir, provider, prompt, refs, aspect}
         if (parts[3] === "generate" && req.method === "POST") {
           const b = await readJson(req);
-          if (!["2-concept", "3-layout", "4-model"].includes(b.stageDir) && !/^units\/[a-z0-9][a-z0-9-]{0,40}\/4-model$/.test(b.stageDir)) return send(res, 400, { error: "Images are generated into 2-concept, 3-layout or 4-model (hero renders)." });
+          if (!["2-concept", "3-layout", "4-model"].includes(b.stageDir)) return send(res, 400, { error: "Images are generated into 2-concept, 3-layout or 4-model (hero renders)." });
           const { buf, ext } = await generate(b, slug);
-          const p = await uniquePath(path.join(dir, b.stageDir), `${b.stageDir.endsWith("4-model") ? "render-" : ""}${b.provider}-${stamp()}${ext}`);
+          const p = await uniquePath(path.join(dir, b.stageDir), `${b.stageDir === "4-model" ? "render-" : ""}${b.provider}-${stamp()}${ext}`);
           await writeFile(p, buf);
           await writeFile(p + ".prompt.txt", `${b.provider}${PROVIDERS[b.provider].model ? " / " + PROVIDERS[b.provider].model : ""}\nrefs: ${(b.refs || []).join(", ") || "none"}\n\n${b.prompt}\n`);
           return send(res, 201, { file: `${b.stageDir}/${path.basename(p)}` });

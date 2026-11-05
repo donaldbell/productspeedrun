@@ -30,6 +30,6 @@ Everything else stays as the template has it: the fonts, the section order, the 
 
 Leave a section out if the episode has nothing for it (no board, for example) rather than padding it.
 
-## Multi-unit products
+## Products with several devices
 
-When `brief.units` lists two or more units, it's still one page. The group render (`favorites.render`, in `../4-model/`) is the hero. In "what's inside", repeat the model viewer and parts list once per unit (`../units/<key>/4-model/model.glb`, `../units/<key>/5-electronics/bom.csv`, `board.glb`), each headed by the unit's name, with the unit's close-up render (`favorites["render:<key>"]`) if there is one. The free slot is the natural place to show how the units work together, from `SYSTEM.md`.
+Still one page (episode 003 is the example). The model viewer shows `../4-model/model.glb`, which holds every device; "what's inside" then gets a board and parts list per device from `../5-electronics/<device>/` (`board.glb`, `bom.csv`), each headed by the device's name. The free slot is the natural place to show how the devices work together, from `SYSTEM.md`.
