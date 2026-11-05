@@ -87,6 +87,7 @@ Build **`6-showcase/index.html`**: a product page that makes the idea feel real.
 - Content: product name and pitch, the hero image, who it's for and the moment it's used, the 3D model, what's inside (from the BOM and notes), how we got here, and an honest "what we still don't know" list.
 - Keep the footer's licence line, with the episode's number and both hosts' names: the designs are open (see `LICENSE`), so the page says so and asks for credit.
 - It must work on phones and in both light and dark viewing. No trackers and no forms of its own: the site build adds the newsletter signup (Beehiiv) above the footer of every page, so don't add one yourself.
+- **Don't add a downloads section.** The site build adds "Build on it" near the bottom of every page: links to the GitHub folder, the 3D files, each KiCad board (with a zip), firmware when there is some, and a prompt that hands the project to any AI agent. It reads them from the folders, so keep the standard file names (`4-model/model.step`, `model.solidcraft`, `build_model.py`, the `.kicad_pro` in `5-electronics/` or `5-electronics/<device>/`, `bom.csv`, `7-firmware/platformio.ini`) and keep each stage's `NOTES.md` current, since the prompt sends agents to them.
 
 ## Products with several devices
 

@@ -33,3 +33,7 @@ Leave a section out if the episode has nothing for it (no board, for example) ra
 ## Products with several devices
 
 Still one page (episode 003 is the example). The model viewer shows `../4-model/model.glb`, which holds every device; "what's inside" then gets a board and parts list per device from `../5-electronics/<device>/` (`board.glb`, `bom.csv`), each headed by the device's name. The free slot is the natural place to show how the devices work together, from `SYSTEM.md`.
+
+## Added by the site build
+
+Two blocks are added to every page when the public site is built, so pages never include them: **Build on it** (GitHub links, the 3D and KiCad files with zips, firmware, and a copy-paste prompt for an AI agent) and the newsletter signup, both just above the footer. `scripts/build-site.mjs` makes them from the episode's folders.
