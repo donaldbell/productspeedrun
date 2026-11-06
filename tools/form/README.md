@@ -15,7 +15,7 @@ Industrial designers block out a form from three orthographic views before anyth
 
 ## Smooth curves
 
-Curves drawn from a few straight `sketch.line` segments come out faceted and boxy. Every model so far (episodes 001 to 003) did that. Before the blockout, check what Solidcraft offers for curves and record it here: look for spline, arc, three-point arc, tangent arc, sweep along a path, intersect/common in `solid.combine`, and variable-radius fillets (`solidcraft-cli --help`, the command list, or the MCP server's tool list). Where there's no spline, use many short segments (every 1–2 mm along a curve) so the facets disappear in the render.
+Curves drawn from a few straight `sketch.line` segments come out faceted and boxy. Every model so far (episodes 001 to 003) did that. Solidcraft's sketcher has splines, ellipses and conics (its v0.28.0 release notes mention snapping to them), so the shapes are there. Before the blockout, run `solidcraft-cli commands` (it prints every scriptable command) and record here which curve and form commands the script can use: spline, arc, ellipse or conic in sketches, sweep along a path, intersect/common in `solid.combine`, loft options, and variable-radius fillets. Then use them: draw silhouettes as splines through the traced points. Where there's no spline, use many short segments (every 1–2 mm along a curve) so the facets disappear in the render.
 
 ## What Solidcraft did (record new findings here)
 
