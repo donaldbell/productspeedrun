@@ -397,7 +397,7 @@ footer a { color: var(--ink); }
   <h1>Product <span>Speedrun</span></h1>
   <p class="lede">We roll random ingredients, then race a product idea from brainstorm to concept art, a 3D model, a circuit board and a showcase page. Some we keep building. Some we shelve.</p>
   <p class="lede"><a href="#subscribe" style="color:var(--run)">Get each episode by email →</a></p>
-  <ol class="steps"><li>Roll &amp; brief</li><li>Concept sketches</li><li>Isometric layout</li><li>3D model</li><li>Electronics</li><li>Showcase</li><li>Keep or shelve</li></ol>
+  <ol class="steps"><li>Roll &amp; brief</li><li>Concept sketches</li><li>Control drawing</li><li>3D model</li><li>Electronics</li><li>Showcase</li><li>Keep or shelve</li></ol>
 </header>
 <main>
 ${episodes.length ? `<div class="grid">${cards}</div>` : '<p class="none">The first run is on its way.</p>'}

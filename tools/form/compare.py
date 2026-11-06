@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Put the concept art, the layout sheet and the model side by side, so Stage 4 can check its form.
+"""Put the concept art, the control drawing and the model side by side, so Stage 4 can check its form.
 
   python3 tools/form/compare.py episodes/<slug> [--shot 4-model/blockout-02.png] [--out 4-model/compare.png]
   python3 tools/form/compare.py products/<product>/rev-b
@@ -25,13 +25,13 @@ REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 
 
 def refs(folder):
-    """[(label, path)] for the concept art and layout sheet (or the previous hero, for a revision)."""
+    """[(label, path)] for the concept art and control drawing (or the previous hero, for a revision)."""
     out = []
     ep_json = os.path.join(folder, "episode.json")
     rev_json = os.path.join(folder, "rev.json")
     if os.path.isfile(ep_json):
         fav = json.load(open(ep_json)).get("favorites", {})
-        for key, label in (("2-concept", "Concept art"), ("3-layout", "Layout sheet")):
+        for key, label in (("2-concept", "Concept art"), ("3-layout", "Control drawing")):
             if fav.get(key) and os.path.isfile(os.path.join(folder, fav[key])):
                 out.append((label, os.path.join(folder, fav[key])))
     elif os.path.isfile(rev_json):

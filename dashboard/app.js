@@ -5,7 +5,7 @@ const ROLLER_URL = ROLLER_ORIGIN + "/random-project-generator/show.html";
 const STAGES = [
   { n: 1, name: "Roll & brief", dir: null },
   { n: 2, name: "Concept sketches", dir: "2-concept" },
-  { n: 3, name: "Isometric layout", dir: "3-layout" },
+  { n: 3, name: "Control drawing", dir: "3-layout" },
   { n: 4, name: "3D model", dir: "4-model" },
   { n: 5, name: "Electronics", dir: "5-electronics" },
   { n: 6, name: "Showcase", dir: "6-showcase" },
@@ -266,7 +266,7 @@ function viewRoll() {
         field("who", "Who it's for", "textarea")),
       unitsEditor(),
       boardStylePicker(),
-      h("p", { class: "hint", text: "These answers write the starting prompts for concept art, the layout sheet and the 3D model." })));
+      h("p", { class: "hint", text: "These answers write the starting prompts for concept art, the control drawing and the 3D model." })));
   return { el, refresh() {}, onRoll() { drawChips(true); } };
 }
 // Rev A electronics: XIAO carrier (light, the default) or a full custom board.
@@ -343,10 +343,8 @@ const STYLES = {
     ["Clean vector", "a clean, flat vector product illustration"],
   ],
   "3-layout": [
-    ["Control drawing", "drawn as an industrial designer's control drawing: exact front, side and top orthographic views at the same scale, plus one three-quarter view, with clean outer silhouettes, the parting lines and colour splits drawn in, every button, grille, light and port in place, and the overall proportions dimensioned. Keep the shapes and details exactly as in the concept art. This can be black and white line art."],
-    ["Multi-view sheet", "with every view laid out on one sheet like an AutoCAD multi-view isometric layout. This can be black and white line art."],
-    ["Exploded view", "drawn as an exploded isometric view with the enclosure, circuit board, battery and other parts pulled apart along dashed guide lines. This can be black and white line art."],
-    ["Blueprint", "drawn as a blueprint-style isometric sheet, white lines on a blue grid, with dimension lines and callouts."],
+    ["Control drawing", "drawn as exact front, side and top orthographic views at the same scale, plus one three-quarter view, with clean outer silhouettes and the parting lines and colour splits drawn in. Keep every shape and detail exactly as in the concept art. This can be black and white line art."],
+    ["Blueprint", "drawn as exact front, side and top orthographic views at the same scale, plus one three-quarter view, in a blueprint style: white lines on a blue grid, with clean outer silhouettes and the parting lines and colour splits drawn in. Keep every shape and detail exactly as in the concept art."],
   ],
 };
 const clean = (t) => String(t || "").trim().replace(/\s+/g, " ").replace(/[.!?;,\s]+$/, "");
@@ -399,15 +397,23 @@ function insideList() {
   return `a PCB with ${bits.length ? bits.join(", ") : "a small microcontroller module"}, and a small LiPo battery`;
 }
 const imagePaths = () => [favOrLatest("2-concept"), favOrLatest("3-layout")].filter(Boolean).map((p) => `episodes/${S.ep.slug}/${p}`);
-const styleIndex = (dir) => S.ep.prompts[dir + ":style"] ?? 0;
+const styleIndex = (dir) => Math.min(S.ep.prompts[dir + ":style"] ?? 0, STYLES[dir].length - 1);
 
 const BUILDERS = {
   "2-concept": () => {
     const name = clean(S.ep.brief.name);
     return `I'd like a concept art design for an imaginary product${name ? ` called "${name}"` : ""}. ${describe()} Show me an artistically drawn concept image (think ${STYLES["2-concept"][styleIndex("2-concept")][1]}) of it in use, framed close enough so that I can pick up on its design.`;
   },
-  "3-layout": () =>
-    `Now take this same product concept and provide me with a CAD-style isometric layout of how it's designed, its dimensions, labels, ${STYLES["3-layout"][styleIndex("3-layout")][1]}\n\nFor reference, here's the product: ${describe()}`,
+  // The control drawing is what Stage 4 traces the form from, so it asks for the outside only:
+  // image models invent internals and numbers, and those mislead the CAD.
+  "3-layout": () => {
+    const size = clean(S.ep.brief.size), us = units();
+    return `Now turn this same product into an industrial designer's control drawing: the product ${STYLES["3-layout"][styleIndex("3-layout")][1]}\n\n` +
+      `Draw only the outside of the product: no circuit boards, batteries or other parts inside, no exploded views, and no parts list or notes. Use exactly the buttons, ports, lights, grilles and other features in the concept art, in the same places, without adding new ones. ` +
+      (size ? `Its overall size is about ${size}: label only the overall length, width and height.` : `Leave out dimension numbers.`) +
+      (us.length > 1 ? ` Draw each of the ${us.length} devices (${us.map(unitName).join(", ")}) in its own set of views.` : "") +
+      `\n\nFor reference, here's the product: ${describe()}`;
+  },
   model: () => {
     const name = clean(S.ep.brief.name), imgs = imagePaths();
     return `Let's do an imaginary product for Product Speedrun episode ${S.ep.slug}${name ? `, "${name}"` : ""}. I made some concept art for the product idea. Here's what I asked for: ${describe()}\n\n` +
@@ -443,9 +449,9 @@ const BUILDERS = {
   },
   showcase: () => {
     const vibe = rollPick("Vibe");
-    if (units().length) return `Build the showcase page for Product Speedrun episode ${S.ep.slug}. Use the brief in episode.json, the concept art, the layout sheet, SYSTEM.md, the 3D model, and each board's notes and BOM (in 5-electronics/<device>/) to make the product feel real and close to existing.` +
+    if (units().length) return `Build the showcase page for Product Speedrun episode ${S.ep.slug}. Use the brief in episode.json, the concept art, the control drawing, SYSTEM.md, the 3D model, and each board's notes and BOM (in 5-electronics/<device>/) to make the product feel real and close to existing.` +
       `${vibe ? ` Let the ${lower1(vibe)} vibe from the roll show in the accent colours and the free slot.` : ""} It has ${units().length} devices (${units().map(unitName).join(", ")}): follow "Products with several devices" in CLAUDE.md for the page (a board and parts list per device, and how they talk to each other).\n\nStart from kit/showcase/template.html so it matches the other episodes, follow the Stage 6 steps in CLAUDE.md, and save it as episodes/${S.ep.slug}/6-showcase/index.html.`;
-    return `Build the showcase page for Product Speedrun episode ${S.ep.slug}. Use the brief in episode.json, the concept art, the layout sheet, the 3D model and the electronics notes and BOM to make the product feel real and close to existing.` +
+    return `Build the showcase page for Product Speedrun episode ${S.ep.slug}. Use the brief in episode.json, the concept art, the control drawing, the 3D model and the electronics notes and BOM to make the product feel real and close to existing.` +
       `${vibe ? ` Let the ${lower1(vibe)} vibe from the roll show in the accent colours and the free slot.` : ""}\n\nStart from kit/showcase/template.html so it matches the other episodes, follow the Stage 6 steps in CLAUDE.md, and save it as episodes/${S.ep.slug}/6-showcase/index.html.`;
   },
 };
@@ -712,7 +718,7 @@ function viewDecision() {
     const recap = h("div", { class: "recap" },
       card("The idea", h("div", { class: "txt" }, h("b", { text: ep.brief.name || "Untitled" }), h("br"), ep.brief.pitch || ep.roll.map((r) => r.label).join(" · ")), 0),
       card("Concept", imgOr(favOrLatest("2-concept"), "No sketch"), 1),
-      card("Layout", imgOr(favOrLatest("3-layout"), "No layout"), 2),
+      card("Control drawing", imgOr(favOrLatest("3-layout"), "No drawing"), 2),
       card("Model", glb ? h("model-viewer", { src: fileUrl(`${M}/${glb.name}`), "auto-rotate": true, "interaction-prompt": "none", alt: "Model" }) : h("div", { class: "txt", text: "No model" }), 3),
       card(u ? `Board · ${u.name}` : "Board", board ? h("model-viewer", { src: fileUrl(`${E}/${board.name}`), "auto-rotate": true, "interaction-prompt": "none", alt: "Board" }) : imgOr(boardShot && `${E}/${boardShot.name}`, "No board"), 4));
 

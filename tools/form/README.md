@@ -6,7 +6,7 @@ How Stage 4 gets from the concept art to a model that looks like it, before any 
 
 Industrial designers block out a form from three orthographic views before anything else, and it works in any CAD tool, including one driven by script:
 
-1. **Trace the silhouettes** from the layout sheet (or the concept art) into `DESIGN.md`: the side profile, the top plan and a front section, as point lists in a 0–1 box. Use enough points for the curves: 12 to 30 per curve, closer together where the curve is tight.
+1. **Trace the silhouettes** from the control drawing (or the concept art) into `DESIGN.md`: the side profile, the top plan and a front section, as point lists in a 0–1 box. Use enough points for the curves: 12 to 30 per curve, closer together where the curve is tight.
 2. **Scale** them to the size the parts need (keep the ratios).
 3. **Extrude the side profile** across the full width and **the top plan** through the full height, and **intersect** the two bodies. That gives the form's true side and top outlines at once, including asymmetry and a crown that peaks off-centre. Intersect a third body from the front section to round the cross-section.
 4. **Soften** the edges the concept shows soft, with fillets where they work, or by lofting through cross-sections taken from the three views.
@@ -66,6 +66,6 @@ Check each command's exact parameter names with `solidcraft-cli commands` before
 
 ## Compare
 
-`python3 tools/form/compare.py episodes/<slug>` writes `4-model/compare.png`: the favourite concept art, the layout sheet and the latest blockout or iso screenshot side by side, scaled to the same height. Pass a screenshot to use another: `--shot 4-model/blockout-03.png`. For a revision: `python3 tools/form/compare.py products/<product>/rev-b` uses the previous hero render as the reference when there's no concept art in the folder.
+`python3 tools/form/compare.py episodes/<slug>` writes `4-model/compare.png`: the favourite concept art, the control drawing and the latest blockout or iso screenshot side by side, scaled to the same height. Pass a screenshot to use another: `--shot 4-model/blockout-03.png`. For a revision: `python3 tools/form/compare.py products/<product>/rev-b` uses the previous hero render as the reference when there's no concept art in the folder.
 
 Read it the way a designer would: squint, then check the silhouette, the proportions, where the visual weight sits, the parting line and colour split, then each detail. Score every signature feature in `DESIGN.md` (✓ / partly / ✗) and fix the worst first.

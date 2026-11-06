@@ -4,7 +4,7 @@ A show about racing a random product idea from brainstorm to a showcase-ready co
 
 1. **Roll & brief:** roll ingredients with the [Random Project Generator](https://donaldbell.github.io/random-project-generator/show.html) and write the brief.
 2. **Concept sketches:** AI concept art of the product in use.
-3. **Isometric layout:** an AI isometric drawing of how it could be put together.
+3. **Control drawing:** AI front, side and top views of the outside, which the 3D model traces its shape from.
 4. **3D model:** Claude Code + [Solidcraft](https://solidcraft.pro/) build a first-pass model.
 5. **Electronics:** Claude Code designs a schematic, a routed KiCad board and a BOM, using the shared kit in [`tools/kicad/`](tools/kicad/README.md).
 6. **Showcase:** Claude Code builds an interactive product page.
@@ -43,7 +43,7 @@ Drag files from anywhere onto stages 2–6 to add them to that stage's folder.
 
 ### Prompts
 
-The brief in stage 1 (what it is, what it does, what's inside, design language, a reference product and rough size) writes starting prompts for the concept art (stage 2), the CAD-style layout sheet (stage 3), and Claude Code in stages 4–6. Edit any prompt freely: edited prompts are kept, and **Rebuild** rewrites one from the brief. **Copy** puts it on the clipboard for Gemini, ChatGPT or Claude Code. Style buttons in stages 2 and 3 swap the drawing style.
+The brief in stage 1 (what it is, what it does, what's inside, design language, a reference product and rough size) writes starting prompts for the concept art (stage 2), the control drawing (stage 3), and Claude Code in stages 4–6. Edit any prompt freely: edited prompts are kept, and **Rebuild** rewrites one from the brief. **Copy** puts it on the clipboard for Gemini, ChatGPT or Claude Code. Style buttons in stages 2 and 3 swap the drawing style.
 
 ### Hero render
 
