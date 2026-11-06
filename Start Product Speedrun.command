@@ -65,6 +65,10 @@ if [ "$OPEN_CLAUDE_CODE" = "yes" ]; then
   osascript -e "tell application \"Terminal\" to do script \"cd '$FOLDER' && claude\"" >/dev/null 2>&1
 fi
 
+# Keep the Mac awake while the console runs, so Claude Code can keep working overnight
+# (the screen may still turn off). Stops by itself when this window closes.
+caffeinate -is -w $$ >/dev/null 2>&1 &
+
 echo "  Leave this window open while you work. Close it (or press Control+C) to stop the console."
 echo "  Your work is saved as you go, so stopping never loses anything."
 node server.mjs

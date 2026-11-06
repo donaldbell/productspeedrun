@@ -59,6 +59,15 @@ Open Claude Code in this folder. Stages 4 and 5 run at the same time in two Clau
 
 For stage 5, Claude Code only writes the parts list and placement for the new board. The kit in `tools/kicad/` does the rest: the schematic and ERC, then placement, Freerouting, DRC, renders and the 3D board. The schematic shows up within seconds, the placed board in about a minute, and the routed board after 5–15 minutes of routing.
 
+## Leaving it running overnight
+
+The model, board and showcase stages run after the recording. To let them finish while you sleep:
+
+- `.claude/settings.json` lets Claude Code run the project's own commands without asking each time: the board kit, the fit check, Python, Solidcraft, reading files and `git add`/`commit`. File edits in this folder are accepted too. Pushing to GitHub still asks, and it can't force-push, wipe changes, delete folders, read `.env` (your API keys) or edit the console's `episode.json` and `rev.json`. To see or change the list, type `/permissions` in Claude Code.
+- When Claude Code would normally stop to ask you something, it writes the question under "Questions for the hosts" in that stage's `NOTES.md`, takes the safer option and carries on. Each stage's `NOTES.md` starts with a summary for the morning.
+- The launcher keeps the Mac awake while the console is open (the screen can still turn off). Leave it plugged in with the lid open, since closing the lid sleeps it anyway.
+- In the morning, read the summaries, then Publish from the console.
+
 ## Back on the bench: revisions
 
 While Claude Code builds this week's model and board, the show revisits an older product. Products marked **Keep building** in stage 7 wait on the shelf at the bottom of the Episodes menu (E). **Start Rev B** copies the product's latest model and electronics into `products/<product>/rev-b/` and opens the revision workbench:

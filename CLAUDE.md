@@ -22,6 +22,14 @@ Rules for every stage:
 - **Use these file names** so the dashboard picks them up.
 - **Commit at the end of each stage** with a message like `003 stage 4: first-pass enclosure model`.
 
+## Working unattended (after the recording)
+
+Stages 4 to 6 usually run after the recording, often overnight, with nobody watching. `.claude/settings.json` lets the project's own commands run without asking (the kit, the fit check, Python, Solidcraft, git add and commit), so don't stop to ask permission for routine steps.
+
+- **When a step needs the hosts** (a visible change beyond the rules in "Stages 4 and 5 work together", or a real choice between two directions), don't wait for an answer. Write the question in the stage's `NOTES.md` under "Questions for the hosts", mark the request `[asked hosts]` in `FIT.md`, take the more conservative option (or leave that part as it is), and carry on with everything that doesn't depend on it.
+- **Commit at the end of each stage** as usual, but don't push: the hosts review in the morning and publish from the console.
+- **Finish with a short summary** at the top of the stage's `NOTES.md`: what's done, what's left, and the questions for the hosts, so the morning starts there.
+
 ## Stage 4: 3D model (Solidcraft)
 
 Use the Solidcraft MCP server in **headless** mode (`solidcraft-cli mcp`; if it isn't configured, run `claude mcp add solidcraft -- solidcraft-cli mcp`). Headless is faster than driving the desktop app, so don't use bridged mode. Save progress screenshots as you go (`4-model/progress-01.png`, `progress-02.png`, …) so the hosts can follow along on the dashboard.
