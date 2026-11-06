@@ -64,6 +64,17 @@ The hosts' goals and feedback are in `rev.json`; Claude Code records what change
 - **Hardware request** posted in `FIT.md`: 47–100 µF bulk on VBAT (7→5). Done on the board, see below.
 - **Alarm sounds are now Phil Burk's Mobileer ringtones**: six host picks (Ring and Ting, Fiver Echo, Steel Drum, Up and Down, Echo Echo, Für Elise). They play on his ME1000 engine (vendored in `7-firmware/lib/mobileer/`, Apache-2.0) at 22.05 kHz with 16 voices, and the four chirps were redone as MIDI on the same engine. That replaces the custom synth's 28 sounds. *Why:* the hosts disliked the custom synth's sounds.
 
+### Showcase (track "showcase", 2026-11-06)
+
+- **`6-showcase/index.html` built from `kit/showcase/template.html`** (kit at `../../../../kit/`), in the series look with a mint accent taken from the lid. *Why:* CLAUDE.md "Revisions → Showcase".
+- **Hero image:** the hosts' render named in `rev.json` (`4-model/render-Mint-Aqua-Gadget-with-Glitter-Button.png`), captioned as an AI render of the Rev B CAD model. Rev A's concept art moved down to "who it's for", linked from `../../../../episodes/001-demo-1/`.
+- **Free slot: "Switch it on and set it off".** A top view of the pebble with a working power switch, the six ringtone tiles and the firmware's ten colours plus Rainbow. "Reach into the backpack" sets off the alarm: it plays the firmware's own Mobileer renders (`7-firmware/preview/*.wav`), the eye dots flash with the sound's loudness and the button glows in the chosen colour. The big button silences it with the silenced chirp and three flashes. *Why:* it shows the Rev B changes that matter most to the hosts (switch, speaker, sounds, eye LEDs, button glow) using the firmware's real sounds rather than browser beeps. The page says the sounds were rendered on a Mac and that the real 60 s quiet time is shortened to 5 s.
+- **Model, board and firmware:** the Rev B `model.glb` with five views (including the back with the name plate), the board GLB on demand, six part cards for what changed, the BOM, and a firmware block (Mobileer engine, flash and RAM use, `pins.h` from `design.py`, setup page).
+- **Revision timeline** in "How we got here": Rev A (episode 001: what it was, verdict "keep building", link to its page), Rev B (headline changes from this changelog), then Rev C, not started. The run strip's stage 7 shows "Keep building" as fixed text, because `kit/showcase.js` reads the verdict from `../episode.json` and a revision folder doesn't have one.
+- **"What we still don't know"** comes from "Still open" below: nothing has been built or flashed, the speaker, the eye-LED headroom, the switch's feel, show-through on the clear button, fastening, part numbers and the LiPo trade-off.
+- **Checked** in headless Chrome: light and dark, no horizontal overflow at 375 px, and a scripted run (off → on → alarm → silence → preview) without errors.
+- **Tidied "Still open":** the hero render is done (`rev.json` `hero`) and the button LED was added on the board, so both notes came out.
+
 ## Results
 
 - **Model:** `4-model/model.solidcraft` has 36 bodies: the enclosure and visible parts, plus 12 electronics stand-ins listed in `fit.json` `model.stand_ins` (the speaker, cells and PIR stay in for the fit check). It was exported as `model.step`, `model.stl` and `model.glb` (13 coloured parts, 99.5 × 51 × 26 mm including the loop and the button/dome), and rendered to `iso.png`. Progress shots: `progress-05.png` (shell + lid), `-06` (first full build), `-07` (back with the name plate), `-08` (side profile), `-09` (face without cheeks).
@@ -90,6 +101,5 @@ The hosts' goals and feedback are in `rev.json`; Claude Code records what change
 - **Light pipes:** clear PC/PMMA rods, glued in or a two-shot moulding. The real LED and pipe need a brightness test in daylight.
 - **Speaker sealing:** the foam ring between the speaker and the lid is assumed, not modelled. A back volume (the space under the speaker) might help bass; check by ear on a prototype.
 - **Slide switch feel:** the OS102011MA1Q lever ends flush with the wall, in a 0.6 mm pocket. Check that a child's thumb can move it; if not, add a press-on cap.
-- **Clear button, what shows through:** you can see SW1 (black) and the board through a clear button. Glitter hides it best. With a dichroic finish, a white or silver disc under the button (a sticker on SW1's top, or a frosted inner face) keeps it clean. An LED under the button that lights the glitter would be a nice touch, but it needs a board change.
-- **Hero render:** the console makes it from `iso.png` and the concept art. Suggested words for its prompt: "the big round button is clear acrylic with a rainbow dichroic / iridescent finish (pink, gold, green and blue shifting with the angle, like a holographic arcade button), glossy, with fine iridescent glitter suspended inside".
+- **Clear button, what shows through:** you can see SW1 (black) and the board through a clear button. Glitter hides it best. With a dichroic finish, a white or silver disc under the button (a sticker on SW1's top, or a frosted inner face) keeps it clean.
 - **Fastening and battery door latch:** still open from Rev A.
