@@ -66,6 +66,25 @@ const addSignup = (page) => {
 // Shared showcase look and the series bar (kit/), then give every showcase page a filled-in
 // <ps-series-bar> linking home and to the episodes either side.
 if (existsSync(path.join(ROOT, "kit"))) await cp(path.join(ROOT, "kit"), path.join(OUT, "kit"), { recursive: true });
+const slugify = (t) => String(t || "").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
+  .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 50) || "untitled";
+// Every version of a product that has a page, for the series bar's Rev A · Rev B switcher:
+// product slug -> [{ letter, page }] (page relative to the site root). Rev A is the episode.
+const versions = {};
+if (existsSync(path.join(ROOT, "products"))) {
+  for (const prod of await readdir(path.join(ROOT, "products"))) {
+    let revs = []; try { revs = (await readdir(path.join(ROOT, "products", prod))).filter((n) => /^rev-[b-z]$/.test(n)).sort(); } catch { continue; }
+    revs = revs.filter((rev) => existsSync(path.join(ROOT, "products", prod, rev, "6-showcase", "index.html")));
+    if (!revs.length) continue;
+    const ep = episodes.find((e) => e.showcase && slugify(e.ep.brief?.name || e.ep.title) === prod);
+    versions[prod] = [...(ep ? [{ letter: "A", page: `episodes/${enc(ep.slug)}/6-showcase/` }] : []),
+      ...revs.map((rev) => ({ letter: rev.slice(4).toUpperCase(), page: `products/${enc(prod)}/${rev}/6-showcase/` }))];
+  }
+}
+const revAttrs = (prod, letter) => {
+  const v = versions[prod];
+  return v && v.length > 1 ? ` revs="${esc(v.map((x) => `${x.letter}:${x.page}`).join(";"))}" rev="${esc(letter)}"` : "";
+};
 const shown = episodes.filter((e) => e.showcase).sort((a, b) => (a.ep.number || 0) - (b.ep.number || 0));
 for (const [i, e] of shown.entries()) {
   const file = path.join(OUT, "episodes", e.slug, "6-showcase", "index.html");
@@ -73,7 +92,7 @@ for (const [i, e] of shown.entries()) {
   const nb = (o) => (o ? `../../${enc(o.slug)}/6-showcase/` : "");
   const name = (o) => (o ? o.ep.brief?.name || o.ep.title || "" : "");
   const prev = shown[i - 1], next = shown[i + 1];
-  const tag = `<ps-series-bar home="../../../" number="${esc(e.ep.number || "")}" name="${esc(name(e))}" prev="${nb(prev)}" prev-name="${esc(name(prev))}" next="${nb(next)}" next-name="${esc(name(next))}"></ps-series-bar>`;
+  const tag = `<ps-series-bar home="../../../" number="${esc(e.ep.number || "")}" name="${esc(name(e))}" prev="${nb(prev)}" prev-name="${esc(name(prev))}" next="${nb(next)}" next-name="${esc(name(next))}"${revAttrs(slugify(name(e)), "A")}></ps-series-bar>`;
   let out;
   if (/<ps-series-bar[\s>]/.test(page)) out = page.replace(/<ps-series-bar[^>]*>(\s*<\/ps-series-bar>)?/, tag);
   else out = page.replace(/<body[^>]*>/i, (m) => `${m}\n${tag}`);
@@ -83,8 +102,6 @@ for (const [i, e] of shown.entries()) {
 
 // Revisions (products/<product>/rev-b/ …): copy them, give their pages the series bar, and point
 // each product's gallery card at its latest revision page.
-const slugify = (t) => String(t || "").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
-  .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 50) || "untitled";
 const PRODUCTS = path.join(ROOT, "products");
 const revPages = {};   // product slug -> [{ rev, letter }]
 if (existsSync(PRODUCTS)) {
@@ -98,7 +115,7 @@ if (existsSync(PRODUCTS)) {
       const letter = rev.slice(4).toUpperCase();
       (revPages[prod] ||= []).push({ rev, letter, hero: r.hero && existsSync(path.join(PRODUCTS, prod, rev, r.hero)) ? `products/${prod}/${rev}/${r.hero}` : null });
       const page = await readFile(file, "utf8");
-      const tag = `<ps-series-bar home="../../../../" number="${esc(r.number || "")}" name="${esc((r.product || prod) + " Rev " + letter)}"></ps-series-bar>`;
+      const tag = `<ps-series-bar home="../../../../" number="${esc(r.number || "")}" name="${esc((r.product || prod) + " Rev " + letter)}"${revAttrs(prod, letter)}></ps-series-bar>`;
       let out = /<ps-series-bar[\s>]/.test(page) ? page.replace(/<ps-series-bar[^>]*>(\s*<\/ps-series-bar>)?/, tag) : page.replace(/<body[^>]*>/i, (m) => `${m}\n${tag}`);
       if (!out.includes("kit/series-bar.js")) out = out.replace(/<\/head>/i, '<script type="module" src="../../../../kit/series-bar.js"></script>\n</head>');
       await writeFile(file, addSignup(out));
