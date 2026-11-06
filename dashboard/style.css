@@ -384,3 +384,4 @@ body.rev-mode .console { grid-template-columns: 1fr; }
 .unit-card > .row .hint { flex: 1; }
 .new-unit { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .6vw; }
 .new-unit input { width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: .45em .7em; font-size: clamp(13px, 1.75vh, 21px); }
+.board-style { display: grid; gap: .8vh; border-top: 1px solid var(--line); padding-top: 1.2vh; }

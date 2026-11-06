@@ -74,6 +74,19 @@ Outputs the dashboard expects in `5-electronics/`: `<name>.kicad_pro/.kicad_sch/
 
 The dashboard shows the schematic and board live in the browser (KiCanvas), the 3D board, and the BOM table.
 
+## Rev A boards: XIAO carrier
+
+New episodes default to a **light board for Rev A**: a carrier for a Seeed XIAO dev board instead of a full custom board (`brief.boardStyle` is `"carrier"`; `"custom"` or no field means a full board, as in episodes 001 to 003). The XIAO brings the microcontroller, USB-C, regulator and, on most models, LiPo charging, so the carrier only carries what the product adds: sensors, buttons, LEDs, drivers, connectors. That keeps Stage 5 short. The enclosure still gets the full design effort in Stage 4; only the electronics are simplified, and a revision can turn the carrier into a full custom board.
+
+- **Which XIAO:** follow the roll. ESP32 → XIAO ESP32-C3 (Wi-Fi/BLE, simplest), C6 (adds Thread/Zigbee, lowest power) or S3 (more memory; the Sense version adds a camera and mic). nRF52840 → XIAO nRF52840 (the Sense version adds an IMU and a PDM mic). Pi Pico → XIAO RP2040 or RP2350. A full Raspberry Pi has no XIAO, so that product gets a full board (a Pi HAT, see `tools/kicad/README.md`). Say which one and why in `NOTES.md`.
+- **Pins:** a XIAO has 14 pins: 5V, GND, 3V3 and 11 I/O (some shared with I2C, SPI and UART). Budget them in `NOTES.md` first. If the product needs more, use an I2C expander or say it needs a full board.
+- **Mounting:** two rows of 1×7 2.54 mm female headers on the carrier, so the XIAO plugs in and can be swapped, or the XIAO's castellated pads soldered flat to the carrier where height is tight. Use a XIAO footprint from KiCad's libraries if one is installed. If not, build it from two `PinSocket_1x07_P2.54mm` rows and check the row spacing and pin 1 against Seeed's drawing. The first carrier episode adds the XIAO symbol, footprint and a 21 × 17.8 mm stand-in STEP to `tools/kicad/` (symbol in `parts.py`, stand-in in `models/`, a row in the README's blocks table), so later episodes copy it.
+- **USB-C is the product's port:** charging and programming go through the XIAO's USB-C, so it sits at a board edge, lined up with an opening in the enclosure. Add it to `fit.json` as a feature (`"usb"`) so Stage 4 cuts the hole.
+- **Battery:** the ESP32 and nRF52840 XIAOs charge a single-cell LiPo through two pads on their underside, not on the pin rows. Give the carrier a battery connector and either pads under the XIAO's battery pads or a note that the leads solder to the XIAO, and add a power switch if the product needs one.
+- **Size:** `SIZE.md` still sets the board's minimum area, with the XIAO counted as a big part. Stage 4 should plan for the XIAO's footprint plus the product's parts from the start.
+- **Same finish line:** a routed 2-layer carrier, DRC 0 / 0 unconnected, and a passing fit check, with the XIAO's stand-in in the board's 3D model.
+- **Products with several devices:** each device gets its own XIAO carrier, from the same XIAO family where it makes sense.
+
 ## Stage 6: Showcase page
 
 Build **`6-showcase/index.html`**: a product page that makes the idea feel real. Every episode's page uses the shared series look, so the gallery reads as one show:
@@ -131,6 +144,7 @@ products/<product>/rev-b/
 The hosts write feedback per track in the console, which turns it into a prompt that names the folder. For every track:
 
 - **Work only in that revision folder.** Read `rev.json` (goals and the feedback for every track, since they affect each other) and the previous revision's notes first.
+- **From a XIAO carrier to a full board.** When the hosts ask for a custom board in a revision, keep the carrier's peripherals and their nets, and replace the XIAO with the module and its power, USB and charging (episodes 001 to 003 have proven blocks for these), keeping the USB-C where the enclosure's opening is.
 - **Change, don't redo.** Edit the copied `build_model.py`, `design.py`, `layout.py` and `fit.json`. If the revision predates `fit.json` or the kit's `src/`, port it first (episode 001's board is `tools/kicad/example/`), then make the changes.
 - **Same tools and outputs as Rev A:** Solidcraft in headless mode for the enclosure (follow the Stage 4 steps for screenshots, `model.solidcraft`, exports and the GLB's colours) and KiCad through `tools/kicad/` for the board (the Stage 5 steps).
 - **Same contract between enclosure and board** as in "Stages 4 and 5 work together", same finish line for electronics: DRC 0 / 0 unconnected and a passing fit check.

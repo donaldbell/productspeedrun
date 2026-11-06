@@ -265,8 +265,25 @@ function viewRoll() {
         field("size", "Rough size", "textarea"),
         field("who", "Who it's for", "textarea")),
       unitsEditor(),
+      boardStylePicker(),
       h("p", { class: "hint", text: "These answers write the starting prompts for concept art, the layout sheet and the 3D model." })));
   return { el, refresh() {}, onRoll() { drawChips(true); } };
+}
+// Rev A electronics: XIAO carrier (light, the default) or a full custom board.
+function boardStylePicker() {
+  const ep = S.ep, box = h("div", { class: "board-style" });
+  const draw = () => {
+    const cur = ep.brief.boardStyle === "carrier" ? "carrier" : "custom", ok = !!xiao();
+    box.replaceChildren(
+      h("div", { class: "row", style: "justify-content:space-between" }, h("span", { class: "label", text: "Rev A electronics" }),
+        h("span", { class: "hint", text: !ok && cur === "carrier" ? "No XIAO for a full Raspberry Pi: this one gets a full board." : cur === "carrier" ? "Quick to design. A revision can make it a full custom board." : "The whole circuit on one custom board: slower." })),
+      h("div", { class: "row presets" }, [["carrier", "XIAO carrier board"], ["custom", "Full custom board"]].map(([k, label]) => h("button", {
+        type: "button", class: "btn", "aria-pressed": String(cur === k), text: label,
+        onclick: () => { ep.brief.boardStyle = k; save(); draw(); },
+      }))));
+  };
+  draw();
+  return box;
 }
 // Devices: leave empty for a one-piece product. Add them when the product is two or more separate
 // devices, each with its own enclosure and board (a sensor and a wearable, say).
@@ -359,8 +376,23 @@ function describe() {
   }).join(", ") + ".");
   return out.join(" ");
 }
+// Rev A electronics: a carrier board for a Seeed XIAO (quick to design, the default for new episodes)
+// or a full custom board. Episodes from before the choice existed are full custom boards.
+const carrier = () => S.ep.brief.boardStyle === "carrier" && !!xiao();
+function xiao() {
+  const brain = String(rollPick("Brain") || "");
+  if (/raspberry\s*pi(?!\s*pico)/i.test(brain) && !/pico/i.test(brain)) return null;   // no XIAO for a full Pi
+  if (/nrf/i.test(brain)) return "nRF52840";
+  if (/pico|rp2040|rp2350/i.test(brain)) return "RP2040 (or RP2350)";
+  return "ESP32 (C3, C6 or S3, whichever fits the brief)";
+}
+const XIAO_SIZE = "21 × 17.8 mm, with its USB-C on one short edge";
 function insideList() {
   const b = S.ep.brief, inside = clean(b.electronics);
+  if (carrier()) {
+    const what = inside ? lower1(inside) : [rollPick("Sense"), rollPick("Act")].filter(Boolean).map(lower1).join(", ") || "the product's sensors and controls";
+    return `a small carrier board with a Seeed XIAO ${xiao()} plugged into it (the XIAO is ${XIAO_SIZE}, which must reach an opening in the enclosure since it's the charging and programming port), carrying ${what}${/batter|lipo|coin cell|aa\b/i.test(inside) ? "" : ", plus a small LiPo battery"}`;
+  }
   if (inside) return `a PCB carrying ${lower1(inside)}${/batter|lipo|coin cell|aa\b|usb/i.test(inside) ? "" : ", plus a small LiPo battery"}`;
   const bits = [rollPick("Brain") && `the ${rollPick("Brain")} module`, rollPick("Sense"), rollPick("Act")].filter(Boolean).map(lower1);
   return `a PCB with ${bits.length ? bits.join(", ") : "a small microcontroller module"}, and a small LiPo battery`;
@@ -389,10 +421,13 @@ const BUILDERS = {
     if (units().length) return `Now the electronics for Product Speedrun episode ${S.ep.slug}${name ? `, "${name}"` : ""}. ${describe()}\n\n` +
       `This product is ${units().length} separate devices, so design ${units().length} boards, one per device, following "Products with several devices" in CLAUDE.md: ${units().map((u) => `${unitName(u)} in episodes/${S.ep.slug}/5-electronics/${u.key}/`).join(", ")}. ` +
       `Start by agreeing how the devices talk to each other (radio, protocol, pairing, shared parts) in episodes/${S.ep.slug}/SYSTEM.md, and use the same microcontroller family on every board where it makes sense${rollPick("Brain") ? ` (the roll says ${rollPick("Brain")})` : ""}. ` +
+      (carrier() ? `Keep Rev A's electronics light: each board is a carrier for a Seeed XIAO ${xiao()}, following "Rev A boards: XIAO carrier" in CLAUDE.md, so it only carries what that device adds. A device that can't take a XIAO gets a full custom board instead, with the reason in its NOTES.md. ` : "") +
       `Stage 4 is modelling the enclosures in another window right now, so start with each board's schematic and SIZE.md, and take placement from its entry under "boards" in fit.json once Stage 4 has written it. ` +
       `For each board, follow the Stage 5 steps in CLAUDE.md using the shared kit in tools/kicad/, pointed at the board's folder (for example tools/kicad/build.sh episodes/${S.ep.slug}/5-electronics/${units()[0].key}). You're finished when every board has DRC 0 violations and 0 unconnected and passes its fit check.`;
     return `Now the electronics for Product Speedrun episode ${S.ep.slug}${name ? `, "${name}"` : ""}. ${describe()}\n\n` +
-      `Design the simplest circuit that does this, built around ${rollPick("Brain") ? `the ${rollPick("Brain")}` : "a common microcontroller module"}, sized to fit the enclosure in episodes/${S.ep.slug}/4-model/. ` +
+      (carrier()
+        ? `Keep Rev A's electronics light: design a carrier board for a Seeed XIAO ${xiao()}, following "Rev A boards: XIAO carrier" in CLAUDE.md. The XIAO brings the microcontroller, USB-C and battery charging, so the carrier only carries what the product adds, sized to fit the enclosure in episodes/${S.ep.slug}/4-model/. If the product can't take a XIAO (no room, too few pins, or it needs a part no XIAO has), say why in NOTES.md and design a full custom board instead. `
+        : `Design the simplest circuit that does this, built around ${rollPick("Brain") ? `the ${rollPick("Brain")}` : "a common microcontroller module"}, sized to fit the enclosure in episodes/${S.ep.slug}/4-model/. `) +
       `Stage 4 is modelling the enclosure in another window right now, so start with the schematic and SIZE.md, and take placement from fit.json once Stage 4 has written it. ` +
       `Follow the Stage 5 steps in CLAUDE.md using the shared kit in tools/kicad/: NOTES.md first, then src/design.py and the schematic, then src/layout.py and a routed 2-layer PCB, bom.csv, renders and board.glb, all in episodes/${S.ep.slug}/5-electronics/. You're finished when DRC is 0 violations and 0 unconnected and the fit check passes.`;
   },

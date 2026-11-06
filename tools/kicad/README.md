@@ -128,3 +128,7 @@ The defaults are the macOS KiCad app and Freerouting under `~/.local/opt/`. Over
 | `FREEROUTING_JAR` | newest `~/.local/opt/freerouting/freerouting-*.jar` |
 
 `schematic.png` uses `qlmanage` on macOS, or `pdftoppm` elsewhere. `board.glb` needs `trimesh` in the system `python3` (`pip3 install trimesh`).
+
+## XIAO carrier boards (Rev A default)
+
+New episodes start with a carrier board for a Seeed XIAO instead of a full custom board (CLAUDE.md, "Rev A boards: XIAO carrier"). The XIAO symbol, footprint and stand-in STEP aren't in the kit yet: the first carrier episode adds them (symbol in `parts.py`, stand-in in `models/`, and a row in the blocks table above), checked against Seeed's drawing.
