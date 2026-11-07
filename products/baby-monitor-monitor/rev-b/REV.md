@@ -49,11 +49,12 @@ Hosts' decisions: **keep the sensor's length** (the longer battery life is a bon
   - Tap the snooze bar = "I'm awake" (a 3 min snooze, broken if the sound gets louder). Hold 3 s = test buzz + 30 s pairing offer.
   - The bar light follows the state scheme proposed in `5-electronics/NOTES.md`. The status LED is a VU meter.
 - **Watch:**
-  - Three distinct ERM patterns, rising in strength (mean drive 4 / 22 / 80 %), battery-compensated so the 3 V motor feels the same from 4.2 to 3.5 V and is never over-driven.
+  - Distinct ERM patterns, rising in strength (first pass 4 / 22 / 80 % mean drive; fussing is now glow-only, see below), battery-compensated so the 3 V motor feels the same from 4.2 to 3.5 V and is never over-driven.
   - An un-acked alert escalates one level every 45 s. It buzzes "link lost" if the sensor goes silent.
   - Radio duty-cycled (50 ms / 200 ms) with light sleep; the sensor repeats every packet so it lands in a wake window.
 - **Host test** (`7-firmware/test/run_tests.sh`): the firmware's own `detector.c` and `haptic.c` on the Mac. Louder sound gives a stronger buzz, a door slam doesn't alert, the motor stays at or under 3 V. Writing it found a real bug: the breaths in a long cry let the noise floor creep up. The floor can now only fall during an episode.
 - **`SYSTEM.md` written** (missing in Rev A and Rev B): the two devices, the ESP-NOW protocol, pairing without a watch button, and the power budget.
+- **Hosts' decisions on the firmware (round 1):** fussing now **glows only** (no motor, and no escalation into a buzz; crying still escalates to screaming after 45 s); the 3 min snooze stays; the bar light gets **no night-off option** (its visibility is a feature); link-lost buzzing stays as is until bench testing. *Why:* the hosts' answers to the questions in `7-firmware/NOTES.md`.
 - **Three optional board requests** posted in `FIT.md` (`[open] 7→5`): VBUS sense on the sensor, a switched glow-LED supply and a charger sense on the watch. All are inside only. *Why:* the firmware can't tell plugged-in from full, and the dark WS2812B costs the watch ~5–10 mAh a night.
 
 ## Results
@@ -68,7 +69,7 @@ Hosts' decisions: **keep the sensor's length** (the longer battery life is a bon
 ## Still open
 
 - The sensor still reads longer and more tube-like than the concept's pebble: the 50 mm 103450 cell sets the length (question for the hosts in `4-model/NOTES.md`). The back recess reads as a big flat panel (pass 2's inset 3.0).
-- Firmware needs a bench: sound thresholds (`7-firmware/sensor/src/levels.h`), buzz strengths (`receiver/src/haptic.c`), and the watch's real current with the radio duty-cycled (estimate ~11 mA, ~13 h on 150 mAh). Questions for the hosts (fussing buzz, snooze length, bar light at night, link-lost buzzing) are in `7-firmware/NOTES.md`.
+- Firmware needs a bench: sound thresholds (`7-firmware/sensor/src/levels.h`), buzz strengths (`receiver/src/haptic.c`), and the watch's real current with the radio duty-cycled (estimate ~11 mA, ~13 h on 150 mAh). How much to buzz when the sensor goes silent is left for bench testing (hosts).
 - No ESP-NOW encryption and no OTA code yet (the partition table is ready for OTA).
 - The status-light pipe is ~22 mm long: it crosses from the board LED at board y +7.5 to the −y cheek. If it looks dim on a real part, Stage 5 could move the LED to the −y half of the board near the front (it's near post H1 and the mic, so it's a layout question).
 - Back panel layout: the concept has the slider top-left, a "connect" button top-right and the USB-C below centre. Rev B keeps the board's USB-C and slider side by side (and no connect button, per the hosts' Rev A decision). Moving them is a Stage 5 change.

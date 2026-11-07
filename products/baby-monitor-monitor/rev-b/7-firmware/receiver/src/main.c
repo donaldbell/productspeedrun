@@ -151,12 +151,15 @@ static void update_haptics(int64_t now) {
     int want = 0;
     if (W.paired && linked(now) && W.st.alert) {
         int64_t running = (int64_t)W.st.alert_ms + (now - W.status_ms);
-        want = W.st.alert + (int)(running / BMM_ESCALATE_MS);
+        want = W.st.alert;
+        // Escalate buzzing alerts only: fussing stays glow-only however long it lasts (hosts' call).
+        if (want >= BMM_LEVEL_CRY) want += (int)(running / BMM_ESCALATE_MS);
         if (want > BMM_LEVEL_MAX) want = BMM_LEVEL_MAX;
     }
     if (want != W.playing_level) {
         if (want) {
-            ESP_LOGI(TAG, "buzz: %s%s", HAPTIC_LEVEL[want].name, want > W.st.alert ? " (escalated)" : "");
+            ESP_LOGI(TAG, "%s: %s%s", want >= BMM_LEVEL_CRY ? "buzz" : "glow", HAPTIC_LEVEL[want].name,
+                     want > W.st.alert ? " (escalated)" : "");
             haptic_play(&W.hap, &HAPTIC_LEVEL[want], now);
         } else if (W.playing_level) {
             haptic_stop(&W.hap);
@@ -196,6 +199,9 @@ static void update_lights(int64_t now) {
         c = W.glow_rgb;
         pct = (int)((W.glow_until_ms - now) * 100 / 1500);     // fade out
         if (pct > 100) pct = 100;
+    } else if (W.playing_level && !haptic_active(&W.hap)) {
+        c = levels[W.playing_level];                                        // fussing: glow only, breathing
+        pct = GLOW_BASE_PCT + bmm_breathe(now, 3000) * (60 - GLOW_BASE_PCT) / 255;
     } else if (W.playing_level) {
         c = levels[W.playing_level];
         pct = GLOW_BASE_PCT + W.motor_pct * (100 - GLOW_BASE_PCT) / 100;   // pulses with the motor
@@ -250,7 +256,7 @@ void app_main(void) {
 
     int64_t next_log = 0;
     for (;;) {
-        bool busy = haptic_active(&W.hap) || bmm_now_ms() < W.glow_until_ms || W.charging;
+        bool busy = haptic_active(&W.hap) || W.playing_level || bmm_now_ms() < W.glow_until_ms || W.charging;
         rx_item_t it;
         if (xQueueReceive(s_rx_q, &it, pdMS_TO_TICKS(busy ? 10 : 100)) == pdTRUE) {
             int64_t now = bmm_now_ms();
@@ -266,7 +272,8 @@ void app_main(void) {
         update_haptics(now);
         update_lights(now);
 #if CONFIG_PM_ENABLE
-        bool need = haptic_active(&W.hap) || now < W.glow_until_ms || now < W.link_blip_until_ms || W.charging;
+        bool need = haptic_active(&W.hap) || W.playing_level || now < W.glow_until_ms || now < W.link_blip_until_ms ||
+                    W.charging;
         if (need != holding) {
             need ? esp_pm_lock_acquire(awake) : esp_pm_lock_release(awake);
             holding = need;

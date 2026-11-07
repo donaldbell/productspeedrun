@@ -5,11 +5,11 @@
 // motor's rated 3.0 V; haptic_duty() turns it into a PWM duty for the battery's present voltage, so a
 // level feels the same on a full cell (4.2 V) as on a tired one (3.5 V) and the motor never sees more than 3 V.
 //
-// The three alert levels differ in strength, length and rhythm, so each is recognisable half asleep:
-//   1 fussing    two soft taps every 4 s
+// Alert levels (hosts, Rev B: fussing only glows, it never buzzes):
+//   1 fussing    no buzz: the face breathes soft pink
 //   2 crying     three firm pulses every 2.5 s
 //   3 screaming  long full-strength buzzes, nearly continuous
-// An alert nobody acknowledges escalates one level every BMM_ESCALATE_MS (in the watch's main loop).
+// A crying alert nobody acknowledges escalates to screaming after BMM_ESCALATE_MS (in the watch's main loop).
 #pragma once
 #include <stdbool.h>
 #include <stdint.h>

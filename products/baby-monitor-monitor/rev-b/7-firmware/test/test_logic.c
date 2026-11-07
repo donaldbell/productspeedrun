@@ -90,9 +90,12 @@ static double energy(const hpattern_t *p, int vbat_mv) {    // mean motor drive 
 
 static void test_haptics(void) {
     printf("haptics\n");
-    double e1 = energy(&HAPTIC_LEVEL[1], 3900), e2 = energy(&HAPTIC_LEVEL[2], 3900), e3 = energy(&HAPTIC_LEVEL[3], 3900);
-    CHECK(e1 > 0 && e1 < e2 && e2 < e3, "louder sound, stronger buzz: mean drive %.0f%% < %.0f%% < %.0f%%",
-          e1 * 100, e2 * 100, e3 * 100);
+    double e2 = energy(&HAPTIC_LEVEL[2], 3900), e3 = energy(&HAPTIC_LEVEL[3], 3900);
+    CHECK(e2 > 0 && e2 < e3, "louder sound, stronger buzz: mean drive crying %.0f%% < screaming %.0f%%",
+          e2 * 100, e3 * 100);
+    haptic_t f;
+    haptic_play(&f, &HAPTIC_LEVEL[1], 0);
+    CHECK(!haptic_active(&f) && haptic_tick(&f, 100) == 0, "fussing never runs the motor (glow only)");
     CHECK(haptic_duty(100, 4200, 1023) <= 1023 * 3000 / 4200 + 1, "full cell (4.2 V): 100%% = %u/1023 (3.0 V avg, motor rating)",
           haptic_duty(100, 4200, 1023));
     CHECK(haptic_duty(100, 2900, 1023) == 1023, "flat cell: 100%% saturates at full duty");
@@ -100,10 +103,10 @@ static void test_haptics(void) {
     CHECK(haptic_duty(0, 3900, 1023) == 0, "0%% = off");
 
     haptic_t h;
-    haptic_play(&h, &HAPTIC_LEVEL[1], 0);
-    CHECK(haptic_tick(&h, 10) == 100 && haptic_tick(&h, 60) == 45, "soft pulse starts with a %d ms kick, then 45%%",
+    haptic_play(&h, &HAPTIC_LEVEL[2], 0);
+    CHECK(haptic_tick(&h, 10) == 100 && haptic_tick(&h, 60) == 70, "softer pulse starts with a %d ms kick, then 70%%",
           HAPTIC_KICK_MS);
-    CHECK(haptic_tick(&h, 4000 + 60) == 45, "level patterns loop (4 s later it's pulsing again)");
+    CHECK(haptic_tick(&h, 2500 + 60) == 70, "level patterns loop (2.5 s later it's pulsing again)");
     haptic_play(&h, &HAPTIC_TEST, 0);
     CHECK(haptic_tick(&h, 60000) == 0 && !haptic_active(&h), "one-shot patterns end");
 }

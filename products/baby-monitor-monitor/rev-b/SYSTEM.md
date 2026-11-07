@@ -3,7 +3,7 @@
 | Device | Board | Does | Power |
 |---|---|---|---|
 | **Sensor** (the bean) | `5-electronics/sensor/`, ESP32-C6-MINI-1 | Sits next to the baby monitor's parent unit and listens to its speaker (ICS-43434 I2S mic). It turns the sound into a level 0–3 and decides whether the watch should buzz. The snooze bar on top is "I'm awake" (tap) and "test / pair" (hold 3 s) | USB-C most nights; 2000 mAh 103450 for unplugged nights |
-| **Watch** (the receiver) | `5-electronics/receiver/`, ESP32-C6-MINI-1 | Sealed, with no button and no USB. It buzzes an ERM coin motor at the level the sensor sends, and escalates while nobody presses "I'm awake". The face glows in the level's colour. It buzzes "link lost" if the sensor goes silent | 150 mAh 402025, charged daily on a magnetic pogo clip |
+| **Watch** (the receiver) | `5-electronics/receiver/`, ESP32-C6-MINI-1 | Sealed, with no button and no USB. Fussing only glows (soft pink); crying and screaming buzz an ERM coin motor, harder for louder sound, and crying escalates to screaming while nobody presses "I'm awake". The face glows in the level's colour. It buzzes "link lost" if the sensor goes silent | 150 mAh 402025, charged daily on a magnetic pogo clip |
 
 **Same family on purpose:** both are ESP32-C6-MINI-1-N4 with the same charger (MCP73831), LDO (AP2112K-3.3) and battery-sense divider (1M / 1M on IO0). One toolchain (ESP-IDF 5.5 in PlatformIO) and one radio stack cover both. Firmware is in `7-firmware/sensor/` and `7-firmware/receiver/`, sharing `7-firmware/common/`.
 
@@ -11,7 +11,7 @@
 
 ESP-NOW on 2.4 GHz channel 1. It needs no router, no app and no cloud. The protocol is `7-firmware/common/bmm_protocol.h`:
 
-- **Sensor → watch, STATUS:** level, alert (0 = nothing, 1–3 = buzz), flags (acked, pairing, low battery, charging), dB SPL and floor, battery, and how long the alert has run. It's sent on any change and as a heartbeat every 2 s.
+- **Sensor → watch, STATUS:** level, alert (0 = nothing, 1 = glow, 2–3 = buzz), flags (acked, pairing, low battery, charging), dB SPL and floor, battery, and how long the alert has run. It's sent on any change and as a heartbeat every 2 s.
 - **Watch → sensor, WATCH:** one reply per new STATUS, with battery, buzzing / charging / low-battery flags and RSSI. The sensor shows "watch not answering" (red bar) after 10 s without one.
 - **TEST** (hold 3 s): the watch plays each level once.
 - **The sensor decides everything** (level, alert, ack). The watch only follows, so the two can't disagree about whether to buzz.

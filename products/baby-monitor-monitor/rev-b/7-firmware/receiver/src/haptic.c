@@ -5,11 +5,9 @@
 #define N(a) (uint8_t)(sizeof(a) / sizeof((a)[0]))
 
 // TUNE on a real watch on a real wrist: these are a first guess.
-static const hstep_t L1[] = {{45, 150}, {0, 150}, {45, 150}, {0, 3550}};                     // 4.0 s
 static const hstep_t L2[] = {{70, 250}, {0, 150}, {70, 250}, {0, 150}, {70, 250}, {0, 1450}}; // 2.5 s
 static const hstep_t L3[] = {{100, 800}, {0, 200}};                                          // 1.0 s
-static const hstep_t TEST[] = {{45, 150}, {0, 150}, {45, 150}, {0, 700},                     // each level once
-                               {70, 250}, {0, 150}, {70, 250}, {0, 700},
+static const hstep_t TEST[] = {{70, 250}, {0, 150}, {70, 250}, {0, 700},
                                {100, 800}};
 static const hstep_t PAIRED[] = {{60, 80}, {0, 80}, {60, 80}, {0, 80}, {60, 80}};             // three quick ticks
 static const hstep_t LOST[] = {{80, 600}, {0, 200}, {80, 150}, {0, 200}, {80, 600}};          // long-short-long
@@ -17,7 +15,7 @@ static const hstep_t LOW_BATT[] = {{40, 100}, {0, 250}, {40, 100}};             
 
 const hpattern_t HAPTIC_LEVEL[4] = {
     {"quiet", NULL, 0, false},
-    {"fussing", L1, N(L1), true},
+    {"fussing", NULL, 0, false},       // hosts: fussing glows only, no buzz
     {"crying", L2, N(L2), true},
     {"screaming", L3, N(L3), true},
 };

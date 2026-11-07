@@ -4,7 +4,7 @@
 
 **Done:** first-pass firmware for both devices, as two PlatformIO projects (ESP-IDF 5.5 on the ESP32-C6-MINI-1) with a shared radio protocol.
 - The **sensor** turns what it hears into a level from 0 to 3.
-- The **watch** buzzes at that level, harder for louder sound, and steps up while nobody acknowledges it. The sensor's snooze bar stops it.
+- The **watch** glows for fussing, buzzes for crying and buzzes harder for screaming. A crying alert steps up while nobody acknowledges it. The sensor's snooze bar stops it.
 
 **Status:**
 - All four envs build with **0 warnings**.
@@ -16,7 +16,7 @@
 - Bench-tune the thresholds, the buzz strengths and the radio duty cycle (see "Stubbed or untested").
 - Three optional board changes are posted in `../FIT.md` as `[open] 7→5`.
 
-**Questions for the hosts** are at the end.
+**Hosts' decisions** (round 1) are at the end; one question is left for bench testing.
 
 ## Build and try it
 
@@ -118,7 +118,7 @@ Each project's `src/CMakeLists.txt` also compiles `../common/*.c`. Its `partitio
 7. acknowledged but still hearing sound (soft green)
 8. armed (dim warm white, or dim orange on a low cell)
 
-This is the scheme proposed in `5-electronics/NOTES.md`, except "off at night", which needs a setting (see the questions). One knob, `BAR_SCALE`, scales it all.
+This is the scheme proposed in `5-electronics/NOTES.md`, without its "off at night" option: the hosts want the bar always visible. One knob, `BAR_SCALE`, scales it all. The bar still pulses amber for a fussing alert, although the watch only glows then, so a parent who is up can see it and tap.
 
 **Status LED (green, under the kidney bean):** a VU meter of the instant level, so a parent can see it hears the monitor while they place it. Otherwise it gives a 60 ms "alive" blip every 4 s.
 
@@ -126,16 +126,16 @@ This is the scheme proposed in `5-electronics/NOTES.md`, except "off at night", 
 
 | Alert | Pattern (`haptic.c`) | Mean drive | Glow |
 |---|---|---|---|
-| 1 fussing | two soft taps (45 %) every 4 s | 4 % | soft pink |
+| 1 fussing | **none: glow only** (hosts' call) | 0 % | soft pink, slow breathing |
 | 2 crying | three firm pulses (70 %) every 2.5 s | 22 % | magenta |
 | 3 screaming | 0.8 s full buzz, 0.2 s gap, repeating | 80 % | red-magenta |
-| escalation | an un-acked alert steps up one level every 45 s (`BMM_ESCALATE_MS`), to 3 | | |
-| test | each level once | | |
+| escalation | an un-acked crying alert steps up to screaming after 45 s (`BMM_ESCALATE_MS`). Fussing never escalates into a buzz | | |
+| test | crying, then screaming, once each | | |
 | link lost | long-short-long, 20 s after 10 s of silence, then every 5 min, 3 times at most (not while charging), then glow-only red blips | | red |
 | low battery (< 3.55 V) | two faint taps, every 30 min | | |
 | paired | three quick ticks | | blue |
 
-- **Intensity:** % of the ERM's rated 3.0 V. `haptic_duty()` divides by the measured VBAT, so a level feels the same at 4.2 V and at 3.5 V, and the motor never averages more than 3 V. That gives 71 % duty at most on a full cell, the cap in the electronics notes. Soft pulses start with a 40 ms full-strength kick so the ERM spins up. PWM is 20 kHz (inaudible), 10-bit.
+- **Intensity:** % of the ERM's rated 3.0 V. `haptic_duty()` divides by the measured VBAT, so a level feels the same at 4.2 V and at 3.5 V, and the motor never averages more than 3 V. That gives 71 % duty at most on a full cell, the cap in the electronics notes. Pulses softer than 80 % start with a 40 ms full-strength kick so the ERM spins up. PWM is 20 kHz (inaudible), 10-bit.
 - **Following the sensor:** the watch follows STATUS from its paired sensor only, and drops repeats by `seq`. It answers each new STATUS once with its battery, flags and the RSSI it saw. The sensor uses that answer to show "watch not answering".
 - **Pairing (the watch has no button):** it accepts a PAIR_OFFER when it has no sensor yet, while it's charging, or in the first 2 min after it starts. The steps are: put the watch on its clip, then hold the sensor's bar 3 s.
 - **Power:**
@@ -150,8 +150,8 @@ From `pio run` (static RAM only; Wi-Fi and FreeRTOS allocate about 60–80 KB mo
 |---|---|---|
 | `sensor` | 815,487 B (41.5 %) | 37,904 B (11.6 %) |
 | `sensor` `devkit` | 785,375 B (39.9 %) | 36,568 B (11.2 %) |
-| `receiver` | 811,809 B (41.3 %) | 37,052 B (11.3 %) |
-| `receiver` `devkit` | 801,039 B (40.7 %) | 36,764 B (11.2 %) |
+| `receiver` | 811,895 B (41.3 %) | 37,052 B (11.3 %) |
+| `receiver` `devkit` | 801,125 B (40.7 %) | 36,764 B (11.2 %) |
 
 Most of that is the Wi-Fi stack ESP-NOW needs. The app itself is a few KB. There's room for OTA and for both slots.
 
@@ -172,7 +172,7 @@ Most of that is the Wi-Fi stack ESP-NOW needs. The app itself is a few KB. There
 ## Stubbed or untested (needs hardware)
 
 - **All the sound numbers** (`sensor/src/levels.h`): thresholds, floor rates, attack and release, and `MIC_CAL_DB`. They're a first guess for a sensor next to a monitor's speaker. Tune them with the real board, a real monitor and recorded crying, and check against an SPL meter. Logs print dB, floor, instant and smoothed level every 5 s for this.
-- **The buzz patterns and strengths** (`receiver/src/haptic.c`): a guess. Try them on a wrist, half asleep. Level 1 at 4 % mean drive may be too gentle to wake anyone; the 45 s escalation is the backstop.
+- **The buzz patterns and strengths** (`receiver/src/haptic.c`): a guess. Try them on a wrist, half asleep.
 - **The watch's radio duty cycle and battery life.** Untested:
   - Whether the C6's connectionless power save, with light sleep, really hits 50 ms / 200 ms while staying reliable.
   - The estimate: ~38 mA RX × 25 % + ~1–2 mA base gives **~11 mA, so ~13 h on 150 mAh**. The electronics notes call this the tightest number in the project.
@@ -191,9 +191,9 @@ Posted in `../FIT.md` as `[open] 7→5` requests. They're all inside the boards,
 2. **Watch: switch the glow LED's supply.** The WS2812B-2020 sits on VBAT and draws roughly 0.5–1 mA even when dark: ~5–10 mAh a night, out of 150 mAh. A P-FET (AO3401A, already on the sensor's BOM) with a gate pull-up, driven from a free pin (e.g. **IO18**, pad 24), would turn it off between alerts. The firmware would also drive its data pin low first. *Now:* the LED is set to black.
 3. **Watch: sense the charger.** For the same reason as (1), the watch can't tell "full, on its clip" from "on a wrist". That decides whether it may buzz "link lost" and whether it accepts pairing. A 100k / 100k divider from VBUS (after D2) to **IO3** (pad 6, free LP GPIO) fixes it. *Now:* it only knows "charging", so a full watch left on its clip may buzz "link lost" up to 3 times if the sensor is off.
 
-## Questions for the hosts
+## Hosts' decisions (round 1)
 
-- **Level 1 (fussing):** should it buzz at all, or only glow and log? Many parents don't want to be woken for fussing. As written, it buzzes gently and escalates to crying-strength after 45 s.
-- **Snooze length:** an ack holds 3 min unless the baby gets louder. Is that right, or should a tap mean "I'm up, stop until it's quiet"?
-- **Bar light at night:** the armed state is a dim warm white. Should there be an "off at night" option (for example a double-tap), as the electronics notes suggest?
-- **Link lost:** the watch buzzes 3 times over ~10 min, then only glows. Is that enough for the "monitor silently stopped" case, or too much for a parent who walked out of range?
+1. **Fussing glows only.** Level 1 no longer runs the motor: the watch face breathes soft pink. Fussing also doesn't escalate into a buzz however long it lasts; if the baby gets louder, the sensor reports crying, which buzzes and escalates to screaming after 45 s.
+2. **Snooze stays at 3 min** (`SNOOZE_MS`), broken early if the sound gets louder.
+3. **No "off at night" for the bar light:** its visibility is a feature. The armed state stays dim warm white.
+4. **Link-lost buzzing** (3 times over ~10 min, then glow only): **left as is until bench testing** decides. The knobs are `LOST_GRACE_MS`, `LOST_REPEAT_MS` and `LOST_MAX_BUZZES` in `receiver/src/config.h`.
