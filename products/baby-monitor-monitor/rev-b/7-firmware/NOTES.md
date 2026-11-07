@@ -172,6 +172,7 @@ Most of that is the Wi-Fi stack ESP-NOW needs. The app itself is a few KB. There
 ## Stubbed or untested (needs hardware)
 
 - **All the sound numbers** (`sensor/src/levels.h`): thresholds, floor rates, attack and release, and `MIC_CAL_DB`. They're a first guess for a sensor next to a monitor's speaker. Tune them with the real board, a real monitor and recorded crying, and check against an SPL meter. Logs print dB, floor, instant and smoothed level every 5 s for this.
+- **A white-noise machine that starts after the sensor is never learned** (found by the showcase track, see `../REV.md` "Still open"). The floor only moves on windows below the fussing threshold, so steady 52 dB noise stays at level 1 (glow) and 60 dB at level 2 (buzz) for as long as it runs. Checked with the real `detector.c` on the Mac. Not fixed yet.
 - **The buzz patterns and strengths** (`receiver/src/haptic.c`): a guess. Try them on a wrist, half asleep.
 - **The watch's radio duty cycle and battery life.** Untested:
   - Whether the C6's connectionless power save, with light sleep, really hits 50 ms / 200 ms while staying reliable.
