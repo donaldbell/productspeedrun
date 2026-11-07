@@ -40,9 +40,9 @@
 .snz-waves path { fill: none; stroke: #D86CFF; stroke-width: 3.5; stroke-linecap: round; opacity: 0; transition: opacity .08s; }
 .snz-watch[data-buzz] .snz-waves path { opacity: var(--wave, .8); }
 
-.snz-controls { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px 20px; align-items: end; }
+.snz-controls { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 12px 20px; align-items: end; }
 .snz-controls h3, .snz-read h3 { margin: 0 0 8px; font: 600 13px/1.2 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-.snz-presets { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.snz-presets { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
 .snz-presets button, .snz-speed button { min-height: 44px; padding: 8px 10px; border-radius: var(--r-md); border: 1px solid var(--line); background: var(--panel); color: var(--ink); font: 600 14px/1.15 var(--body); cursor: pointer; text-align: left; }
 .snz-presets button small { display: block; margin-top: 3px; font: 500 11px/1.2 var(--mono); color: var(--muted); }
 .snz-presets button[aria-pressed="true"], .snz-speed button[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); background: var(--accent-soft); }
@@ -64,7 +64,7 @@
   .snz-stage, .snz-read { grid-template-columns: 1fr; }
   .snz-watch svg { max-width: 130px; }
   .snz-controls { grid-template-columns: 1fr; }
-  .snz-presets { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .snz-presets { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 420px) { .snz-presets { grid-template-columns: repeat(2, minmax(0, 1fr)); } .snz-nums { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
@@ -247,7 +247,13 @@
               <button type="button" data-sound="fuss" aria-pressed="false">Fussing<small>whimpers ~53 dB</small></button>
               <button type="button" data-sound="cry" aria-pressed="false">Crying<small>~62 dB + breaths</small></button>
               <button type="button" data-sound="scream" aria-pressed="false">Screaming<small>~72 dB</small></button>
-              <button type="button" data-sound="noise" aria-pressed="false">White noise<small>starts, 52 dB</small></button>
+            </div>
+          </div>
+          <div>
+            <h3>White-noise machine</h3>
+            <div class="snz-speed snz-noise" role="group" aria-label="White-noise machine">
+              <button type="button" data-noise="0" aria-pressed="true">Off</button>
+              <button type="button" data-noise="1" aria-pressed="false">On · 52 dB</button>
             </div>
           </div>
           <div>
@@ -274,7 +280,7 @@
             <p class="snz-status" id="snz-status"><span id="snz-head" aria-live="polite">All quiet</span><small id="snz-more"></small></p>
           </div>
         </div>
-        <p class="snz-note">This is a simulation in your browser, not the device, and the sounds are made up. The thresholds, attack and release, 45 s escalation, 3 min snooze and the buzz patterns are the firmware's real numbers, all still waiting for bench tuning. The light colours are brightened for the screen; the real bar's "armed" glow is a dim night-light. The phone in your hand doesn't buzz: there's no ERM in it. The white-noise preset shows a real problem we found while building this page (see <a href="#next">what we still don't know</a>).</p>
+        <p class="snz-note">This is a simulation in your browser, not the device, and the sounds are made up. The thresholds, attack and release, 45 s escalation, 3 min snooze and the buzz patterns are the firmware's real numbers, all still waiting for bench tuning. The light colours are brightened for the screen; the real bar's "armed" glow is a dim night-light. The phone in your hand doesn't buzz: there's no ERM in it. The white-noise machine shows a bug we found while building this page, now fixed in the firmware: switch it on, then let 20 s pass (see <a href="#next">what we still don't know</a>).</p>
       </div>
     </div>
   </section>
@@ -371,9 +377,9 @@
         <p>New in Rev B: one PlatformIO project per device, sharing a radio protocol. Both compile, but neither has run on hardware yet.</p>
       </div>
       <div class="ps-grid two">
-        <div class="ps-card accent"><span class="tag">Hearing</span><h3>A level from 0 to 3, not just "loud"</h3><p>The sensor learns the room's noise floor and needs sound well above it before it calls fussing, crying or screaming. It needs 1 s of sound within 2 s, so a door slam doesn't count, and it steps down one level per 6 s, so the breaths between cries don't end an alert.</p></div>
+        <div class="ps-card accent"><span class="tag">Hearing</span><h3>A level from 0 to 3, not just "loud"</h3><p>The sensor learns the room's noise floor and needs sound well above it before it calls fussing, crying or screaming. It needs 1 s of sound within 2 s, so a door slam doesn't count, and it steps down one level per 6 s, so the breaths between cries don't end an alert. A sound that stays within 4 dB for 20 s, like a white-noise machine, becomes the new background.</p></div>
         <div class="ps-card"><span class="tag">Feeling</span><h3>Glow, pulse, buzz</h3><p>Fussing only glows soft pink (the hosts' call). Crying gives three firm pulses every 2.5 s. Screaming gives an almost continuous full buzz. A crying alert nobody answers steps up to screaming after 45 s. A tap on the bar stops it for 3 min, unless the crying gets louder.</p></div>
-        <div class="ps-card"><span class="tag">Builds clean</span><h3>ESP-IDF 5.5, 0 warnings</h3><p>Not Arduino: the pinned platform's Arduino core can't target the ESP32-C6. Each device builds to ~815 KB of a 1.875 MB slot, with room for over-the-air updates later. A host test runs the real detector and buzz code on a computer (21 checks pass).</p></div>
+        <div class="ps-card"><span class="tag">Builds clean</span><h3>ESP-IDF 5.5, 0 warnings</h3><p>Not Arduino: the pinned platform's Arduino core can't target the ESP32-C6. Each device builds to ~815 KB of a 1.875 MB slot, with room for over-the-air updates later. A host test runs the real detector and buzz code on a computer (26 checks pass).</p></div>
         <div class="ps-card"><span class="tag">Pins from the board</span><h3>Code and board can't disagree</h3><p><code>pins.h</code> is generated from each board's KiCad design script before every build, and the build stops if a net or pull-up the code relies on disappears.</p></div>
       </div>
     </div>
@@ -444,7 +450,7 @@
       </div>
       <ul class="ps-questions">
         <li><span class="topic">Prototype</span><h3>Designed, checked, never built</h3><p>Both boards are DRC-clean and fit their cases, and the firmware compiles, but nothing has been made or flashed. Every sound threshold and buzz strength is a first guess, waiting for a real board, a real monitor and recorded crying.</p></li>
-        <li><span class="topic">Hearing</span><h3>White noise that starts later fools it</h3><p>We found this while building the demo above, and checked it against the firmware's own detector. The sensor only learns the noise floor while the room is quiet. If a white-noise machine is already on when the sensor starts, it becomes the floor. If it starts later, it never does: at 52 dB the watch glows "fussing" all night, and at 60 dB it buzzes "crying". The floor needs a way to learn steady sound. That's a firmware fix for Rev C.</p></li>
+        <li><span class="topic">Hearing</span><h3>Is crying ever as steady as white noise?</h3><p>While building the demo above we found that a white-noise machine switched on after the sensor was never learned as background: the watch glowed or buzzed all night. That's fixed. A sound that stays within 4 dB for 20 s now becomes the background, up to 62 dB, so an unbroken scream never does. It rests on crying through a monitor swinging 10–20 dB with breaths and sobs, which still needs checking against recordings of real crying. It has two costs: when a machine switches on, the watch alerts for about 20 s before the sensor learns it, and over the noise, crying has to be 10 dB louder to glow and 18 dB louder to buzz.</p></li>
         <li><span class="topic">Battery</span><h3>Does 150 mAh last a whole night?</h3><p>The watch listens 50 ms in every 200 ms, so the estimate is ~11 mA, or about 13 h. That's untested. The glow LED also draws up to 1 mA when dark. A switch to cut its power is posted as a request for the board, along with a charger sense, so a full watch on its clip stops buzzing "link lost".</p></li>
         <li><span class="topic">Shape</span><h3>Still a little long for a pebble</h3><p>The sensor reads longer and more tube-like than the concept, because its 50 mm cell sets the length (the hosts chose to keep it), and the inset back panel is too big. A second pass with a steeper fall to the back is written but not built: it ran over an hour without finishing.</p></li>
         <li><span class="topic">Watch</span><h3>12.7 mm thick, not 10</h3><p>The concept's watch is about 10 mm thick. Ours is set by the cell and board stack. A 1.0 mm board and a 3 mm cell would win back about 1.5 mm.</p></li>
@@ -474,7 +480,9 @@
   // ---- sensor/src/levels.h + detector.c
   const REL = [0, 10, 18, 26], ABS = [0, 50, 58, 66];
   const FLOOR_MIN = 30, FLOOR_MAX = 62, FLOOR_RISE = 0.05, FLOOR_FALL = 0.25, ATTACK = 4, HIST = 8, RELEASE_MS = 6000;
-  const det = { floor: -1, hist: new Array(HIST).fill(0), hi: 0, windows: 0, level: 0, hold: 0 };
+  const STEADY_SPREAD_DB = 4, STEADY_LEARN_MS = 20000;   // a5963d4: steady sound becomes the floor
+  const det = { floor: -1, hist: new Array(HIST).fill(0), hi: 0, windows: 0, level: 0, hold: 0,
+                runMin: 0, runMax: 0, runSum: 0, runN: 0, runStart: 0, learned: 0 };
   const thr = (k) => Math.max(det.floor + REL[k], ABS[k]);
   const instant = (spl) => { let k = 0; for (let i = 1; i <= 3; i++) if (spl >= thr(i)) k = i; return k; };
   const trackFloor = (spl, mayRise) => {
@@ -485,8 +493,18 @@
   };
   const detUpdate = (spl, now) => {
     if (det.floor < 0) trackFloor(spl, true);
-    const inst = instant(spl);
+    let inst = instant(spl);
     if (inst === 0) trackFloor(spl, det.level === 0);
+    // Steady run: restart it whenever this window would stretch it past STEADY_SPREAD_DB.
+    const lo = Math.min(spl, det.runMin), hi = Math.max(spl, det.runMax);
+    if (det.runN === 0 || hi - lo > STEADY_SPREAD_DB) { det.runMin = det.runMax = det.runSum = spl; det.runN = 1; det.runStart = now; }
+    else { det.runMin = lo; det.runMax = hi; det.runSum += spl; det.runN++; }
+    // Loud and unchanging for too long to be a baby: the new background (never above FLOOR_MAX).
+    if (inst > 0 && now - det.runStart >= STEADY_LEARN_MS && det.runSum / det.runN <= FLOOR_MAX) {
+      det.floor = Math.max(FLOOR_MIN, det.runSum / det.runN);
+      det.hist.fill(0); det.level = 0; det.learned++;
+      inst = instant(spl);
+    }
     det.hist[det.hi] = inst; det.hi = (det.hi + 1) % HIST; if (det.windows < HIST) det.windows++;
     let cand = 0;
     for (let k = 3; k >= 1 && !cand; k--) { let n = 0; for (let i = 0; i < det.windows; i++) n += det.hist[i] >= k; if (n >= ATTACK) cand = k; }
@@ -543,10 +561,11 @@
     fuss: (t) => (t % 2000 < 1250 ? 53 + j(2) : 40 + j(1.5)),
     cry: (t) => (t % 1750 < 1250 ? 62.5 + j(1.5) : 42 + j(2)),
     scream: (t) => (t % 1500 < 1250 ? 72 + j(2) : 48 + j(2)),
-    noise: (t) => 52 + j(0.6),
   };
+  const NOISE_DB = 52;
+  const mix = (a, b) => 10 * Math.log10(10 ** (a / 10) + 10 ** (b / 10));   // two sounds add as power
   function j(a) { return (Math.random() * 2 - 1) * a; }
-  let sound = "sleep", speed = 1;
+  let sound = "sleep", speed = 1, noise = false, noiseLearned = false, learnedAt = -1e9;
 
   // ---- clocks
   let sim = 0, last = performance.now(), nextWin = 0;
@@ -581,9 +600,16 @@
     document.querySelectorAll(".snz-presets button").forEach((o) => o.setAttribute("aria-pressed", String(o === b)));
     render(true);
   }));
-  document.querySelectorAll(".snz-speed button").forEach((b) => b.addEventListener("click", () => {
+  document.querySelectorAll(".snz-noise button").forEach((b) => b.addEventListener("click", () => {
+    const on = b.dataset.noise === "1";
+    if (on && !noise) noiseLearned = false;
+    noise = on;
+    document.querySelectorAll(".snz-noise button").forEach((o) => o.setAttribute("aria-pressed", String(o === b)));
+    render(true);
+  }));
+  document.querySelectorAll(".snz-speed button[data-speed]").forEach((b) => b.addEventListener("click", () => {
     speed = +b.dataset.speed;
-    document.querySelectorAll(".snz-speed button").forEach((o) => o.setAttribute("aria-pressed", String(o === b)));
+    document.querySelectorAll(".snz-speed button[data-speed]").forEach((o) => o.setAttribute("aria-pressed", String(o === b)));
   }));
 
   // ---- lights (sensor/src/config.h colours, brightened for a screen)
@@ -616,20 +642,29 @@
       head = "Test buzz"; more = "The watch plays crying, then screaming, once each. The bar breathes blue for 30 s, offering pairing to a watch on its clip.";
     } else if (S.alert === 1) {
       head = "Fussing: the watch only glows";
-      more = sound === "noise" ? "This is the white-noise problem. The noise floor only learns while the room is quiet, so a machine that starts later never becomes \"normal\": the watch glows pink all night. Tap the bar and it comes back in 3 min." : "Soft pink and no buzz, the hosts' call. Fussing never escalates into a buzz, but the bar pulses amber in case you're up.";
+      more = "Soft pink and no buzz, the hosts' call. Fussing never escalates into a buzz, but the bar pulses amber in case you're up.";
+      if (noise && noiseLearned && sound !== "fuss") more = "Over the learned white noise, this sound is only about 10 dB louder than the background: enough to glow, not to buzz. A buzz needs 18 dB over the noise. " + more;
     } else if (S.alert >= 2) {
       const left = Math.max(0, Math.ceil((ESCALATE_MS - (sim - S.alertStart)) / 1000));
       head = W.playing === 3 && S.alert === 2 ? "Crying, nobody up: escalated" : names[S.alert] + (S.alert === 2 ? ": three firm pulses every 2.5 s" : ": full buzz");
       more = W.playing === 2 ? `Nobody has tapped the bar yet. It steps up to a full buzz in ${left} s.` : "Tap the snooze bar on the sensor to stop it.";
+      if (noise && noiseLearned && sound === "scream" && S.alert === 2) more = "Over the learned white noise, this scream counts as crying: screaming needs 26 dB over the background. " + more;
     } else if (S.acked && S.level) {
       const left = Math.max(0, Math.ceil((S.snoozeUntil - sim) / 1000));
       head = "You're up: the watch stopped"; more = `It flashed green and went quiet, and the bar glows soft green. It alerts again if the sound gets louder, or in ${left} s if it hasn't stopped.`;
     } else if (S.acked) {
       head = "Quiet again"; more = "After 30 s of quiet the episode ends, and the next sound alerts again.";
     } else {
-      head = "All quiet"; more = sound === "noise" ? "The white noise is above the fussing threshold but hasn't lasted long enough yet." : "The bar glows dim warm white so you can find it in the dark. The watch face is dark; its green dot blinks with each 2 s heartbeat.";
+      head = "All quiet"; more = "The bar glows dim warm white so you can find it in the dark. The watch face is dark; its green dot blinks with each 2 s heartbeat.";
     }
-    if (sound === "sleep" && S.alert && !W.testing) more = "The room went quiet, but the alert winds down one level every 6 s, so the breaths between cries don't end it. " + more;
+    if (performance.now() - learnedAt < 8000 && !S.alert && !W.testing && !(bar.down && !bar.holdFired)) {
+      head = "Steady sound learned as the background";
+      more = `It stayed within 4 dB for 20 s, which crying never does, so the noise floor jumped to ${Math.round(det.floor)} dB and the alert ended. From now on, crying has to be 10 dB louder than it to glow and 18 dB louder to buzz.`;
+    } else if (noise && !noiseLearned && S.alert && !W.testing) {
+      const left = Math.max(0, Math.ceil((STEADY_LEARN_MS - (sim - det.runStart)) / 1000));
+      more = `The white-noise machine just switched on, and for now the sensor can't tell it from a baby. If the sound stays within 4 dB for 20 s, it becomes the background (${left} s to go). ` + more;
+    }
+    if (sound === "sleep" && !noise && S.alert && !W.testing) more = "The room went quiet, but the alert winds down one level every 6 s, so the breaths between cries don't end it. " + more;
     if (head !== lastStatus) { $("snz-head").textContent = head; lastStatus = head; }
     if ($("snz-more").textContent !== more) $("snz-more").textContent = more;
   }
@@ -642,8 +677,11 @@
     // sensor: 250 ms windows on the simulated clock
     while (sim >= nextWin) {
       S.spl = SOUNDS[sound](nextWin);
+      if (noise) S.spl = mix(S.spl, NOISE_DB + j(0.6));
+      const learnedBefore = det.learned;
       S.inst = instant(S.spl);
       S.level = detUpdate(S.spl, nextWin);
+      if (det.learned !== learnedBefore) { learnedAt = t; if (noise) noiseLearned = true; }
       updateAlert(nextWin);
       pts.push({ t, spl: S.spl, floor: det.floor, t1: thr(1), t2: thr(2), t3: thr(3) });
       nextWin += 250;
