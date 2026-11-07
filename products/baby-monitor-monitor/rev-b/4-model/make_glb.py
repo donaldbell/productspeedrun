@@ -18,15 +18,15 @@ def srgb_to_linear(hexc):
 
 here = os.path.dirname(os.path.abspath(__file__))
 VISIBLE = {"Sensor Upper": "#eef0f5", "Sensor Swoosh": "#b4acdc", "Sensor Trim": "#c8ccd6", "Sensor Base": "#8f93a6", "VHB Pad": "#d9d9d9",
-           "Sensor Grille": "#2c2b35", "Sensor Button": "#d9dce6", "Sensor Light Pipe": "#7dff63",
+           "Sensor Grille": "#2c2b35", "Snooze Bar": "#e6f2ff", "Sensor Light Pipe": "#7dff63",
            "Watch Case": "#e6e9f0", "Watch Back": "#b9b3d9", "Watch Lens": "#d86cff", "Lens Face": "#f3cdfc", "Link Pipe": "#7dff63",
            "Band": "#6e58a8",
            "Charge Contact +": "#d8b04a", "Charge Contact -": "#d8b04a", "Magnet A": "#4a4a55", "Magnet B": "#4a4a55",
            "Switch Slider": "#9d8fe0", "Grille Collar": "#c8ccd6"}
 # PBR tweaks: pearl/NCVM shells a little glossy, lens and pipes glowing, band matte fabric
-ROUGH = {"Grille Collar": 0.2, "Sensor Trim": 0.2, "Lens Face": 0.3, "Sensor Upper": 0.3, "Watch Case": 0.25, "Watch Lens": 0.15, "Band": 0.9, "VHB Pad": 0.8, "Sensor Grille": 0.6}
+ROUGH = {"Snooze Bar": 0.1, "Grille Collar": 0.2, "Sensor Trim": 0.2, "Lens Face": 0.3, "Sensor Upper": 0.3, "Watch Case": 0.25, "Watch Lens": 0.15, "Band": 0.9, "VHB Pad": 0.8, "Sensor Grille": 0.6}
 METAL = {"Grille Collar": 0.9, "Sensor Trim": 0.8, "Watch Case": 0.35, "Sensor Upper": 0.15, "Charge Contact +": 1.0, "Charge Contact -": 1.0, "Magnet A": 0.8, "Magnet B": 0.8}
-EMISSIVE = {"Watch Lens": "#8a2bb0", "Lens Face": "#6a3a80", "Sensor Light Pipe": "#3fbf2a", "Link Pipe": "#3fbf2a"}
+EMISSIVE = {"Snooze Bar": "#2a3a4a", "Watch Lens": "#8a2bb0", "Lens Face": "#6a3a80", "Sensor Light Pipe": "#3fbf2a", "Link Pipe": "#3fbf2a"}
 
 import sys
 stl_dir = sys.argv[sys.argv.index("--stl-dir") + 1] if "--stl-dir" in sys.argv else None

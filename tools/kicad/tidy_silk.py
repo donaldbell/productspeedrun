@@ -56,7 +56,8 @@ def obstacles(board, layer, skip_field):
     out = []
     for fp in board.GetFootprints():
         for p in fp.Pads():
-            if p.IsOnLayer(copper):
+            # NPTH holes (a mic's port, locating pegs) sit on no copper layer but still cut the mask on both faces
+            if p.IsOnLayer(copper) or p.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH:
                 out.append((p, mm(PAD_GAP)))
         for g in fp.GraphicalItems():
             if g.GetLayer() == layer and (not hasattr(g, "IsVisible") or g.IsVisible()):

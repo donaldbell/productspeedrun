@@ -33,7 +33,7 @@
         ],
         [
           12,
-          -7.5
+          -9.5
         ]
       ],
       "hole_d": 2.2,
@@ -64,7 +64,7 @@
         },
         "button": {
           "at": [
-            6,
+            10.0,
             0
           ],
           "face": "top",
@@ -72,7 +72,31 @@
             6,
             6
           ],
-          "note": "6 x 6 x 5.0 tact switch (XKB 1TS009, plunger top 5.0 above the top face) under the \u00d812 top cap: tap = \"I'm awake\" (stops the watch buzzing), hold 3 s = test / pair"
+          "note": "Rev B snooze bar, back switch: 6 x 6 x 5.0 tact (XKB 1TS009, plunger top 5.0 above the top face). Two tacts in parallel on BTN (this one and button_2) carry a 30 x 12 clear acrylic snooze bar on the crown, so a press anywhere along it registers: tap = \"I'm awake\" (stops the watch buzzing), hold 3 s = test / pair"
+        },
+        "button_2": {
+          "at": [
+            -2.0,
+            0
+          ],
+          "face": "top",
+          "size": [
+            6,
+            6
+          ],
+          "note": "Rev B snooze bar, front switch: second 6 x 6 x 5.0 tact (1TS009) in parallel with `button` on BTN"
+        },
+        "bar_led": {
+          "at": [
+            4.0,
+            0
+          ],
+          "face": "top",
+          "size": [
+            2.2,
+            2.2
+          ],
+          "note": "Rev B: WS2812B-2020 RGB LED under the middle of the clear snooze bar (the bar's light leg ends 0.5 above it): bar glows to show where it is in the dark and the state (on / buzzing / paused / pairing)"
         },
         "usb": {
           "at": [
@@ -130,9 +154,11 @@
           "S Mic",
           "S Status LED",
           "S Tact Switch",
+          "S Tact Switch 2",
           "S USB-C",
           "S Power Switch",
-          "S Switch Lever"
+          "S Switch Lever",
+          "S Bar LED"
         ]
       },
       "keepouts": {

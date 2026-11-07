@@ -77,7 +77,7 @@ Any folder holding `src/` is a board folder to `build.sh`, `export.sh` and the P
 
 ## Stand-in 3D models
 
-`models/` holds body-sized STEP stand-ins for parts KiCad ships without a model, so renders and the fit check see them. Point `MODEL_SUBST` at them with `${KIPRJMOD}`, e.g. `"U3": "${KIPRJMOD}/../../../../tools/kicad/models/ESP32-C6-MINI-1.step"` from `5-electronics/<board>/` (one `../` less for a single-board episode).
+`models/` holds body-sized STEP stand-ins for parts KiCad ships without a model, so renders and the fit check see them. They are: `ESP32-C6-MINI-1.step`, `PogoPin_D1.8mm_H5.0mm.step` and `WS2812B-2020.step` (2.0 × 2.0 × 0.84 mm; use it rather than a bigger PLCC4 RGB model wherever something sits close above the LED, e.g. a light pipe, since the fit check measures against the stand-in). Point `MODEL_SUBST` at them with `${KIPRJMOD}`, e.g. `"U3": "${KIPRJMOD}/../../../../tools/kicad/models/ESP32-C6-MINI-1.step"` from `5-electronics/<board>/` (one `../` less for a single-board episode).
 
 | Model | Part |
 |---|---|
@@ -110,7 +110,7 @@ Coordinates are board mm (origin at the board's centre, +y up as seen from the t
 2. Loads stock footprints, places them, then adds the outline, keep-outs and the bottom GND pour.
 3. Lays the `PREROUTE` tracks, adds GND vias at the big ground pads and the top GND pour, then runs Freerouting twice headless (`ROUTE_PASSES`, default 40) and stitches GND vias across the pours and islands. Each Freerouting run is stopped after `ROUTE_TIMEOUT` seconds (default 300), because now and then it never finishes; if the second run fails that way, the first run's routing is kept.
 4. Runs two DRC passes with fixes: widens neck-downs, gives unreached GND pads a via, and removes dangling vias and dangling track spurs. If anything is still unconnected, steps 3 and 4 start again from the placed board, up to `ROUTE_TRIES` times (default 3), and the best try is kept.
-5. Moves reference labels off pads, then runs the final DRC, writes `drc.rpt` and prints `DRC: N violations, N unconnected`.
+5. Moves reference labels off pads and non-plated holes (a mic port, locating pegs: they cut the mask on both faces), then runs the final DRC, writes `drc.rpt` and prints `DRC: N violations, N unconnected`.
 6. Writes the renders and `board.glb` (scaled to metres for the web viewer). If the DRC wasn't 0 and 0, the build then says so in a banner and exits with an error.
 
 Freerouting varies from run to run, so a rebuild gives a slightly different board. Once a board is hand-edited in KiCad, stop running `build.sh` on it (it overwrites) and use `export.sh`.

@@ -8,12 +8,20 @@
 - The watch is a lofted pillow case with a stepped bezel, a recessed two-tone lens and smaller lugs.
 - Outputs: `model.solidcraft` (saved with its evaluated cache), `iso.png`, `model.step`, `model.stl`, `model.glb`, `compare.png`, and `blockout-01.png` with `progress-05…08.png`.
 
-**Left / open:** the sensor still reads longer and more tube-like than the concept's pebble (the 50 mm cell sets the length), and the back recess is too big. A pass 2 with a steeper fall and a smaller recess was written but ran over an hour without finishing and was stopped, so the model is pass 1. Pass 2's numbers are in `../REV.md`. Two requests to Stage 5 are open in `../FIT.md`. **The fit check has not been run to completion** on Rev B: the board model paths don't resolve at revision depth (that's one of the requests), and on a scratch copy the clearance pass ran over 2 h. See `../REV.md`.
+**Left / open:** the sensor still reads longer and more tube-like than the concept's pebble (the 50 mm cell sets the length), and the back recess is too big. A pass 2 with a steeper fall and a smaller recess was written but ran over an hour without finishing and was stopped, so the model is pass 1. Pass 2's numbers are in `../REV.md`. Two requests to Stage 5 are open in `../FIT.md`. **Round 2 (snooze bar):** both boards re-checked: fit check **PASS** on both, DRC 0 / 0 (see `../REV.md`).
 
 **Questions for the hosts:** none blocking. Both of these could change the look:
 
 1. Should the sensor shorten toward the concept's pebble? That needs a shorter cell than the 103450 (e.g. a 103040, ~1300 mAh, ~2 nights unplugged).
 2. The concept's back has a "connect" button that Rev A dropped. Keep it dropped?
+
+### Round 2: snooze bar (hosts' feedback)
+
+- Hosts kept the length (the longer battery life is a bonus) and dropped the connect button (long press = pair).
+- The Ø13 button became a **30 × 12 clear acrylic snooze bar** over two tacts (board (−2, 0) and (10, 0)) with an RGB LED between them at (4, 0). It's all read from `fit.json` (`button`, `button_2`, `bar_led`); `build_model.py` asserts the bar is centred on them and clears the posts. H2 moved to (12, −9.5) to clear the flange.
+- **Bar travel:** the plunger legs end 0.3 above the tacts (stroke 0.25), and the light leg ends 1.0 above the LED, so it never touches it.
+- The flange sits 2.9 mm below the bar top (1.0 proud + 1.8 wall + 0.6 for the crown falling sideways + 0.5 clearance) along an arc that follows the crown. It's 0.8 thick and overhangs the slot by 1.0.
+- **Build time:** the full build's compute rose from ~13 to ~23 min with the bar (its slot cut through the spline shell). It ran 80 min of wall time while three Freerouting jobs shared the CPU.
 
 ### Solidcraft findings this pass (for `tools/form/README.md`)
 

@@ -1,4 +1,38 @@
-# Baby Monitor Monitor: electronics (Stage 5)
+# Baby Monitor Monitor Rev B: electronics
+
+## Rev B changes (start here)
+
+**Hosts' asks for Rev B:** keep the sensor's length (the 2000 mAh cell is a bonus for parents), drop the concept's "connect" button (pairing stays a long press of the top button), and make the top button **much larger and findable in the dark**: an elongated, alarm-clock-style **snooze bar**, **illuminated** in colour to show its state.
+
+| Change | Parts | Why |
+|---|---|---|
+| **Snooze bar on two tacts in parallel** | SW3 (new, 1TS009 6 × 6 × 5) at board (−2, 0) joins SW1, which moves from (6, 0) to **(10, 0)**. Both on BTN (IO7, the LP GPIO that wakes the C6). | A 30 × 12 bar pressed at one end would rock on a single switch. Two switches 12 mm apart register a press anywhere along it. Tap = "I'm awake" (stop the buzz); hold 3 s = test / pair (this replaces the concept's connect button). The 12 mm spacing comes from the courtyards: two ±4.25 tacts with a 3.1 mm LED between. |
+| **RGB bar light** | LED2 WS2812B-2020 at (4, 0) under the bar's light leg; R10 100 Ω series on the data line; C11 100 nF; data on **IO6** (module pad 15, next to the button's IO7). | It shows where the bar is in the dark, and the state. Firmware sketch: dim warm white = armed; slow amber pulse = watch buzzing (press me); blue breathing = paired / pairing mode on a long press; green blink = "I'm awake" registered; red = watch link lost; off at night if the parent prefers (a long press in the app/firmware later). One data pin, any colour. |
+| **Bar light supply** | D2 1N5819WS + C10 1 µF: VBAR = **LDO_EN** (the power switch's output, = VSYS when on) − one Schottky. | This is episode 002's diode-dropped WS2812B block. VSYS is already one Schottky below USB, so a 1N5819WS (not 002's 1N4148W) gives ~4.45 V on USB: 0.7 × VDD = 3.1 V, so the C6's 3.3 V data reads high. On battery it gets ~VBAT − 0.3 (3.4–3.9 V): red and green fine, blue a little dim below ~3.7 V. Feeding it from the switch means the LED's ~1 mA idle draw stops when the sensor is switched off. The PCM12 now carries a few mA (rated 300 mA). |
+| H2 post hole (12, −7.5) → **(12, −9.5)** | (fit.json) | The bar's flange needs the room. |
+| Charger U1 → (15.4, −5.6), landscape; D1, Q1 back ~1.5 mm; R3 out of H2's new keep-out; TP1 out from under SW3 | (layout.py) | Room for SW1 at x 10. |
+| BTN hand pre-routes | (layout.py) | Module IO7 → SW3 along the bottom at y −5.3, then SW1 → SW3 along the bottom at y −3.6, so the top under the bar stays clear for LED2 and its parts. |
+| 3D model paths: five `../` (both boards) | (layout.py; the receiver's routed `.kicad_pcb` edited the same way instead of re-routed) | A revision folder sits one level deeper than an episode, so the fit check couldn't find the module and pogo-pin models. |
+| Kit: `tidy_silk.py` treats non-plated holes as obstacles | (`tools/kicad/`) | It parked C9's label on the mic's port hole (Rev A fixed that by hand). |
+
+### Rev B results
+
+| | ERC | DRC | Fit check |
+|---|---|---|---|
+| Sensor | 0 errors, 0 warnings | 0 violations, 0 unconnected, 0 parity | **PASS**: 0 overlaps (5 intended gaps: posts 0.02, slider notch 0.03 on the PCM12 lever, slider 0.17 above the board, bar plunger 0.23 above the front tact, status pipe 0.23 above its LED) |
+| Receiver | unchanged (0 / 0) | 0 violations, 0 unconnected, 0 parity | **PASS**: 0 overlaps (3 intended gaps, as Rev A) |
+
+- **Routing:** the sensor took four rounds. LED2 can't sit between tacts closer than 11.7 mm (courtyards), so SW1 went to x 10. That crowded the power corner, so D2 and C10 moved in between the tacts. Freerouting kept dropping the status LED's anode (R9 bottom → LED1 top), so it is now pre-routed. Of four pass counts tried (10 / 20 / 30 / 40), the default 40 routed clean; the board in the folder is that run.
+- **Fit check stand-in:** KiCad has no WS2812B-2020 model. The bigger Würth PLCC4 stand-in (2.05 tall) would have run 0.2 mm into the bar's light leg, so the kit gained a true-size stand-in, `tools/kicad/models/WS2812B-2020.step` (2.0 × 2.0 × 0.84), used for LED2. The receiver's glow LED keeps the taller stand-in; it passes with it, so it passes with the real part.
+- **Fit check time:** about 2 h per board on this enclosure (the design's ~20 min open, then the clearance pass against the spline-trimmed shells). Run the two boards in parallel.
+
+Pins: IO6 = BAR light (was unused). Everything else is as below. The receiver's circuit is unchanged.
+
+---
+
+# Rev A notes (as aired; Rev B changes above)
+
+## Baby Monitor Monitor: electronics (Stage 5)
 
 Two devices, so two boards, each a kit project of its own:
 
@@ -51,7 +85,7 @@ USB-C ─► MCP73831 ─► LiPo 103450                          pogo + / − �
 | IO2 | MIC_SD (pull-down) | MOT_PWM (~20 kHz) |
 | IO3 | status LED | |
 | IO4 / IO5 | MIC_SCK / MIC_WS | |
-| IO6 / IO7 | — / BTN "I'm awake" (wakes from deep sleep) | glow LED (WS2812B) / link LED |
+| IO6 / IO7 | Rev B: BAR light (WS2812B) / BTN "I'm awake" (both bar tacts; wakes from deep sleep) | glow LED (WS2812B) / link LED |
 | IO8 | 10k pull-up (strap) | 10k pull-up (strap) |
 | IO9 | boot strap, TP1 pad | boot strap, TP1 pad |
 | IO12 / IO13 | USB D− / D+ (USB-C) | USB D− / D+ (TP3 / TP2, flashing jig) |

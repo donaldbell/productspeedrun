@@ -24,17 +24,30 @@ The hosts' goals and feedback are in `rev.json`; Claude Code records what change
 - **Fixed the `fitlib` import path** in `build_model.py`. A revision folder sits one level deeper than an episode, so the copied script couldn't find `tools/fit/`.
 - **`make_glb.py`** exports the new bodies (`Sensor Trim`, `Lens Face`) with linear colours.
 
+### Snooze bar, bar light and boards (hosts' feedback, round 2)
+
+Hosts' decisions: **keep the sensor's length** (the longer battery life is a bonus for parents). **No connect button:** pairing is a long press of the top button. And: *"make the top button larger and more accessible for sleep-deprived parents who need to push the button in dark conditions… something elongated like an alarm clock snooze bar… illuminated… a clear acrylic button and a color changing LED beneath it to indicate states."*
+
+- **Snooze bar replaces the Ø13 button:** a 30 × 12 clear acrylic bar along the crown. Its top follows the crown 1 mm proud, with R1.8 rounded edges. A flange under the shell retains it, two plunger legs sit on two tacts, and a light leg runs down to an RGB LED. Tap = "I'm awake" (stop the buzz), hold 3 s = test / pair. *Why:* hosts' feedback (bigger, findable in the dark, pressable anywhere).
+- **Two tacts in parallel** (SW1 moved (6, 0) → (10, 0); new SW3 at (−2, 0), both on BTN/IO7). *Why:* a long bar rocks on one switch, so a press at either end must still register. The 12 mm spacing is the least that fits the LED between the switch courtyards.
+- **RGB bar light:** WS2812B-2020 (LED2) at (4, 0) on IO6. It's fed from the power switch's output through a 1N5819WS (D2), giving ~4.45 V on USB so 3.3 V data reads high; it's dark and draws nothing when switched off. R10 100 Ω on the data line, C10 1 µF, C11 100 nF. *Why:* hosts' feedback (illuminated, colour shows the state). The colour scheme is a firmware proposal in `5-electronics/NOTES.md`.
+- **H2 post (12, −7.5) → (12, −9.5)** so the bar's flange clears it. Charger U1 turned landscape to (15.4, −5.6); D1, Q1, R3 and TP1 nudged. *Why:* room for SW1 at x 10 (fit request in `FIT.md`, done on both sides).
+- **Sensor board re-placed and re-routed through the kit:** BTN and the status-LED anode got hand pre-routes; the clean route used Freerouting's default 40 passes (10 / 20 left 1–3 nets open). Final: **ERC 0, DRC 0 violations / 0 unconnected / 0 parity.**
+- **Receiver board:** circuit unchanged. Its 3D model paths were fixed to revision depth (the routed `.kicad_pcb` edited, not re-routed, to keep the proven board), and the silk now reads "rev B". **DRC 0 / 0 / 0.**
+- **Kit: true-size WS2812B-2020 stand-in** (`tools/kicad/models/WS2812B-2020.step`, 2.0 × 2.0 × 0.84). The Würth PLCC4 stand-in is 2.05 tall and made the fit check report a 0.2 mm clash with the bar's light leg that the real 0.84 mm LED doesn't have.
+- **Model:** `iso.png`, `model.step`, `model.stl`, `model.glb` and `model.solidcraft` re-exported with the bar; `compare.png` still reads as the product; `progress-09.png` (bar close-up) and `progress-10.png` (section along the bar: legs over both tacts, light leg over the LED).
+- **Kit fix (`tools/kicad/tidy_silk.py`):** non-plated holes (the mic's port) now count as obstacles for reference labels. It had put C9's label over the port (Rev A fixed that by hand).
+
 ## Results
 
 - **Model:** `4-model/model.solidcraft` (built headless from `build_model.py`, ~13 min, saved with its evaluated cache), `iso.png`, `model.step`, `model.stl`, `model.glb` (20 parts, linear colours, metres). Progress: `blockout-01.png` (pass 1 blockout), `progress-05.png` (watch blockout), `progress-06.png` (sensor section through post H1), `progress-07.png` (back view), `progress-08.png` (side view).
 - **Compare** (`4-model/compare.png`, against the previous hero render and the concept): it reads as the same product, and closer to the concept than Rev A on the grille nose, the green bean, the S-swoosh, the button and the pillow watch with its ring lens. Per-feature scores are in `4-model/DESIGN.md`: 8 ✓, 3 partly (teardrop body, asymmetry, back panel).
 - **Checks in `build_model.py`** (they fail the build if broken): the 103450 cell clears the side walls at both ends and the middle; the board and its parts clear the walls; walls ≥ 1.15 mm (1.8 nominal); the bezel sits inside the nose face; the USB-C and slider openings sit inside the back face; the button stem has room; the light-pipe bar clears the posts; the watch back plate still fits. Checked by hand against the routed sensor PCB: the light-pipe bar (1.4 above the board, board x −26…−25.2) passes over only U4 (mic, 1.0 tall) and clears C6 and post H1 (0.4 gap).
-- **Fit check: not run to completion.** `fitcheck.py` on this folder stops before checking: the boards' 3D model paths don't resolve at revision depth (request in `FIT.md`). On a scratch copy where they do resolve, the sensor's clearance pass ran for over 2 h without finishing (Rev A's took minutes: the spline-trimmed shell meshes heavily), and so did an in-session `inspect.clearance` (32 min, no answer). The enclosure moves nothing the board lines up with, but this is still unverified. Run it once Stage 5 fixes the paths, and expect it to be slow.
+- **Fit check (round 2): PASS on both boards.** Sensor: 0 overlaps, 5 intended gaps (bar plunger 0.23 above its tact, status pipe 0.23 above its LED, slider notch 0.03 on the lever, posts). Receiver: 0 overlaps, 3 intended gaps. Each takes ~2 h on this enclosure. Details in `5-electronics/<board>/fitcheck.md`.
 - **Pass 2, not built:** steeper fall to the back (heights −1.72: 28.5 … 29.0: 22.0), rear shoulder exponents 2.0–2.2 and back recess inset 3.0. Its full build ran over 60 min without finishing and was stopped, so the model is pass 1. These numbers are the next thing to try, perhaps with fewer stations at the back.
 
 ## Still open
 
-- Fit check (see Results).
 - The sensor still reads longer and more tube-like than the concept's pebble: the 50 mm 103450 cell sets the length (question for the hosts in `4-model/NOTES.md`). The back recess reads as a big flat panel (pass 2's inset 3.0).
 - `SYSTEM.md` is missing in Rev A and Rev B (the product has two devices). Not written in this enclosure pass.
 - The status-light pipe is ~22 mm long: it crosses from the board LED at board y +7.5 to the −y cheek. If it looks dim on a real part, Stage 5 could move the LED to the −y half of the board near the front (it's near post H1 and the mic, so it's a layout question).

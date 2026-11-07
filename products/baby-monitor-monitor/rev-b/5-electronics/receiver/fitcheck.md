@@ -1,6 +1,6 @@
 # Fit check: bmm-receiver in the enclosure
 
-Real board (KiCad STEP export, parts included) placed in `4-model/model.solidcraft` where `fit.json` puts it, with Stage 4's stand-ins removed (R PCB, R Glow LED, R Link LED, R Pogo +, R Pogo -). Re-run with `python3 tools/fit/fitcheck.py episodes/003-003/5-electronics/receiver`.
+Real board (KiCad STEP export, parts included) placed in `4-model/model.solidcraft` where `fit.json` puts it, with Stage 4's stand-ins removed (R PCB, R Glow LED, R Link LED, R Pogo +, R Pogo -). Re-run with `python3 tools/fit/fitcheck.py products/baby-monitor-monitor/rev-b/5-electronics/receiver`.
 
 **Result: PASS**: 0 overlaps, 3 gaps under 0.3 mm, 0 pairs the checker couldn't measure.
 

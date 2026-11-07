@@ -39,6 +39,7 @@ S_PCB_TOP = FS.origin[2]
 S_PCB_Z = S_PCB_TOP - FS.thickness
 sxy = lambda name: tuple(r4(v) for v in FS.to_enclosure(FS.feature(name))[:2])
 S_MIC, S_LED, S_BTN, S_USB = sxy("mic"), sxy("status_led"), sxy("button"), sxy("usb")
+S_BTN2, S_BARLED = sxy("button_2"), sxy("bar_led")   # Rev B snooze bar: front tact and the RGB LED under the bar
 S_PSW, S_CELL = sxy("power_switch"), sxy("cell")
 S_CELL_WLH = (*FS.features["cell"]["size"], 10.0)     # 103450: 50 x 34 x 10
 S_PSW_Z = S_PCB_TOP + 0.8                          # C&K PCM12SMTR lever centre (Stage 5)
@@ -295,13 +296,18 @@ else:   # blockout: the openings drawn as dark insets
     c("sketch.finish")
     c("solid.extrude", distance=3, operation="cut", targets=["Sensor Upper"], name="Sensor USB Opening")
 
-S_BTN_R = 6.5                                           # Ø13 "I'm awake" cap (the concept's big disc)
-bx, by = S_BTN
-zt_b = top_z(bx - SX)
-c("sketch.create", **XY(zt_b - 5), name="Sensor Button Hole")
-c("sketch.circle.center", center=[bx, by], radius=S_BTN_R + 0.3)
+# Rev B snooze bar: a 30 x 12 clear acrylic bar along the crown, over two tacts in parallel (fit.json button and
+# button_2) with an RGB LED under its middle (bar_led), so a sleepy parent can find it in the dark and press it anywhere
+BAR_L, BAR_W, BAR_PROUD, BAR_GAP = 30.0, 12.0, 1.0, 0.3
+BAR_X = (S_BTN[0] + S_BTN2[0]) / 2                           # centred between the tacts (absolute x)
+assert abs(BAR_X - S_BARLED[0]) < 0.5 and abs(S_BTN[1]) < 0.5 and abs(S_BTN2[1]) < 0.5, "bar LED / tacts off the bar's axis"
+bar_x0, bar_x1 = BAR_X - BAR_L / 2, BAR_X + BAR_L / 2
+assert bar_x0 - SX > NOSE_X + 18 and bar_x1 - SX < BACK_X - 8, "snooze bar runs off the crown"
+sw_top = S_PCB_TOP + S_SW_H
+c("sketch.create", **XY(sw_top + 1.0), name="Snooze Bar Slot")
+c("sketch.slot.overall", p0=P(bar_x0 - BAR_GAP, 0), p1=P(bar_x1 + BAR_GAP, 0), width=BAR_W + 2 * BAR_GAP)
 c("sketch.finish")
-c("solid.extrude", distance=10, operation="cut", targets=["Sensor Upper"], name="Sensor Button Hole")
+c("solid.extrude", distance=20, operation="cut", targets=["Sensor Upper"], name="Snooze Bar Slot")
 
 # the swoosh: lavender side panels below an S-curve (one per side, the -y one sweeping higher), with a bright trim
 # band 1.5 mm wide along its top edge. Each is the shell intersected with a tool extruded from the curve in the
@@ -383,19 +389,58 @@ for hy, hz in holes:
 c("sketch.finish")
 c("solid.extrude", distance=r4(ro + 2 - (cc - c_out) + 0.5), operation="cut", targets=["Sensor Grille"], name="Grille Holes", profiles="all")
 
-# top button ("I'm awake"): a revolved disc, 1 mm proud, domed edge and a small centre dimple; flange under the
-# crown, stem down to the 6x6 tact switch
-slope_b = (top_z(bx - SX + 3) - top_z(bx - SX - 3)) / 6
-z_in = zt_b - S_WALL - abs(slope_b) * (S_BTN_R + 1.0) - 0.9      # flange clears the crown's inside (it also falls sideways)
-sw_top = S_PCB_TOP + S_SW_H
-cap_top = zt_b + 1.0
-assert z_in - 0.7 > sw_top + 1.0, "no room for the button's stem"
-c("sketch.create", plane={"origin": [bx, by, 0], "x_dir": [1, 0, 0], "y_dir": [0, 0, 1]}, name="Sensor Button Profile")
-c("sketch.line", closed=True, points=[P(0, sw_top + 0.3), P(1.6, sw_top + 0.3), P(1.6, z_in - 0.7), P(S_BTN_R + 1.0, z_in - 0.7),
-                                      P(S_BTN_R + 1.0, z_in), P(S_BTN_R, z_in), P(S_BTN_R, cap_top), P(1.3, cap_top), P(0, cap_top - 0.4)])
-c("sketch.finish")
-c("solid.revolve", axis="y", operation="new", name="Sensor Button", body_name="Sensor Button")
-c("solid.fillet", body="Sensor Button", edges=[P(bx + S_BTN_R, by, cap_top)], radius=1.2, name="Sensor Button Dome")
+# snooze bar ("I'm awake": tap = stop the buzz, hold = test / pair). One clear acrylic part: a cap whose top follows
+# the crown (an arc through the crown 1 mm up at its ends and middle) with rounded edges, a flange under the shell
+# that follows the same arc lower down, two plunger legs onto the tacts and a light leg down to the RGB LED.
+def arc3(pa, pm, pb):
+    ux, uy, rr = circ3(pa, pm, pb)
+    return lambda x: uy + math.sqrt(rr * rr - (x - ux) ** 2) if uy < pm[1] else uy - math.sqrt(rr * rr - (x - ux) ** 2)
+def circ3(p1, p2, p3):
+    (ax, ay), (bx_, by_), (cx_, cy_) = p1, p2, p3
+    d = 2 * (ax * (by_ - cy_) + bx_ * (cy_ - ay) + cx_ * (ay - by_))
+    ux = ((ax * ax + ay * ay) * (by_ - cy_) + (bx_ * bx_ + by_ * by_) * (cy_ - ay) + (cx_ * cx_ + cy_ * cy_) * (ay - by_)) / d
+    uy = ((ax * ax + ay * ay) * (cx_ - bx_) + (bx_ * bx_ + by_ * by_) * (ax - cx_) + (cx_ * cx_ + cy_ * cy_) * (bx_ - ax)) / d
+    return ux, uy, math.hypot(ax - ux, ay - uy)
+crown_pts = [(x, top_z(x - SX) + BAR_PROUD) for x in (bar_x0 - 2, BAR_X, bar_x1 + 2)]
+bar_top = arc3(*crown_pts)
+FL_TOP = BAR_PROUD + S_WALL + 0.6 + 0.5          # flange top below the bar top: proud + wall + the crown falling sideways + clearance
+FL_T, FL_OVER = 0.8, 1.0                         # flange thickness and overhang round the slot
+def arc_band(name, off_top, off_bot, body):
+    """A body between the bar-top arc lowered by off_top and by off_bot, extruded across y."""
+    xs = [bar_x0 - 2, BAR_X, bar_x1 + 2]
+    top = [(x, bar_top(x) - off_top) for x in xs]
+    c("sketch.create", plane=XZ_AT(15), name=name)
+    c("sketch.arc.three_point", start=P(*top[0]), through=P(*top[1]), end=P(*top[2]))
+    if off_bot is None:
+        c("sketch.line", points=[P(*top[2]), P(xs[2], sw_top), P(xs[0], sw_top), P(*top[0])])
+    else:
+        bot = [(x, bar_top(x) - off_bot) for x in xs]
+        c("sketch.line", points=[P(*top[2]), P(*bot[2])])
+        c("sketch.arc.three_point", start=P(*bot[2]), through=P(*bot[1]), end=P(*bot[0]))
+        c("sketch.line", points=[P(*bot[0]), P(*top[0])])
+    c("sketch.finish")
+    c("solid.extrude", distance=30, operation="new", name=name, body_name=body)
+def slot_prism(name, grow, body):
+    c("sketch.create", **XY(sw_top), name=name)
+    c("sketch.slot.overall", p0=P(bar_x0 - grow, 0), p1=P(bar_x1 + grow, 0), width=BAR_W + 2 * grow)
+    c("sketch.finish")
+    c("solid.extrude", distance=25, operation="new", name=name, body_name=body)
+slot_prism("Snooze Bar Cap", 0.0, "Snooze Bar")
+arc_band("Snooze Bar Top", 0.0, FL_TOP + FL_T, "Bar Top Tool")    # the cap runs from the crown down to the flange's underside
+c("solid.combine", target="Snooze Bar", tools=["Bar Top Tool"], operation="intersect", name="Snooze Bar Crown")
+c("solid.fillet", body="Snooze Bar", edges=[P(BAR_X, s_ * BAR_W / 2, bar_top(BAR_X)) for s_ in (1, -1)]
+  + [P(x_, 0, bar_top(x_)) for x_ in (bar_x0, bar_x1)], radius=1.8, fit="reduce", name="Snooze Bar Round")
+slot_prism("Snooze Bar Flange", BAR_GAP + FL_OVER, "Bar Flange")
+arc_band("Snooze Bar Flange Band", FL_TOP, FL_TOP + FL_T, "Bar Flange Tool")
+c("solid.combine", target="Bar Flange", tools=["Bar Flange Tool"], operation="intersect", name="Snooze Bar Flange Cut")
+c("solid.combine", target="Snooze Bar", tools=["Bar Flange"], operation="join", name="Snooze Bar Flange Join")
+for nm, (lx_, ly_), z0, rr in (("Bar Leg Front", S_BTN2, sw_top + BAR_GAP, 1.6), ("Bar Leg Back", S_BTN, sw_top + BAR_GAP, 1.6),
+                               ("Bar Light Leg", S_BARLED, S_PCB_TOP + 0.9 + 1.0, 1.5)):   # light leg 1.0 above the LED: more than the travel
+    h_ = bar_top(lx_) - FL_TOP - FL_T + 0.3 - z0
+    c("solid.cylinder", radius=rr, height=r4(h_), base=P(lx_, ly_, z0), operation="join", targets=["Snooze Bar"], name=nm)
+for (px, py) in S_POSTS:                                     # the flange clears the posts (H2 moved to y -9.5 for it)
+    assert not (bar_x0 - BAR_GAP - FL_OVER - 1.8 - 0.3 < px < bar_x1 + BAR_GAP + FL_OVER + 1.8 + 0.3
+                and abs(py) - 1.8 < BAR_W / 2 + BAR_GAP + FL_OVER + 0.3), "snooze bar flange hits a post"
 
 if not BLOCKOUT:
     # power slider: a cap in the back slot that reaches in over the PCM12's short lever; a notch takes the lever
@@ -570,6 +615,8 @@ box("S Battery", S_CELL_WLH[0], S_CELL_WLH[1], S_CELL_WLH[2], S_CELL[0], S_CELL[
 box("S Mic", 3.5, 2.65, 1.0, S_MIC[0], S_MIC[1], S_PCB_TOP + 0.5)
 box("S Status LED", 1.6, 0.8, 1.1, S_LED[0], S_LED[1], S_PCB_TOP + 0.55)
 box("S Tact Switch", 6, 6, S_SW_H, S_BTN[0], S_BTN[1], S_PCB_TOP + S_SW_H / 2)
+box("S Tact Switch 2", 6, 6, S_SW_H, S_BTN2[0], S_BTN2[1], S_PCB_TOP + S_SW_H / 2)
+box("S Bar LED", 2.2, 2.2, 0.9, S_BARLED[0], S_BARLED[1], S_PCB_TOP + 0.45)
 box("S USB-C", 7.3, 8.9, 3.26, S_USB[0], S_USB[1], S_PCB_TOP + 1.63)
 box("S Power Switch", 2.6, 6.7, 1.5, S_PSW[0] + 0.3, S_PSW[1], S_PCB_TOP + 0.75)   # body x origin -1.0 .. +1.6
 box("S Switch Lever", 1.55, 1.3, 1.0, S_LEVER_TIP - 0.775, SLIDER_Y, S_PSW_Z)
@@ -585,14 +632,14 @@ box("R Link LED", 1.6, 0.8, 1.1, R_LINK[0], R_LINK[1], R_PCB_TOP + 0.55)
 stage("colour")
 COLOURS = {
     "Sensor Upper": "#eef0f5", "Sensor Swoosh": "#b4acdc", "Sensor Trim": "#c8ccd6", "Lens Face": "#f3cdfc", "Sensor Base": "#8f93a6", "VHB Pad": "#d9d9d9",
-    "Sensor Grille": "#2c2b35", "Grille Collar": "#c8ccd6", "Sensor Button": "#d9dce6", "Sensor Light Pipe": "#7dff63",
+    "Sensor Grille": "#2c2b35", "Grille Collar": "#c8ccd6", "Snooze Bar": "#e6f2ff", "S Bar LED": "#f4f4f4", "S Tact Switch 2": "#222222", "Sensor Light Pipe": "#7dff63",
     "Watch Case": "#e6e9f0", "Watch Back": "#b9b3d9", "Watch Lens": "#d86cff", "Link Pipe": "#7dff63",
     "Band": "#6e58a8", "Charge Contact +": "#d8b04a", "Charge Contact -": "#d8b04a", "Magnet A": "#4a4a55", "Magnet B": "#4a4a55",
     "S PCB": "#2e7d4f", "R PCB": "#2e7d4f", "S Battery": "#3a3a3a", "R Battery": "#3a3a3a", "R ERM Motor": "#c0c4c8",
     "S Mic": "#c0c4c8", "S Status LED": "#d8ffd0", "S Tact Switch": "#222222", "S USB-C": "#b0b4b8",
     "R Pogo +": "#d8b04a", "R Pogo -": "#d8b04a", "S Power Switch": "#222222", "S Switch Lever": "#222222", "Switch Slider": "#9d8fe0", "R Glow LED": "#f4f4f4", "R Link LED": "#d8ffd0",
 }
-OPACITY = {"Watch Lens": 0.85, "Lens Face": 0.9, "Sensor Light Pipe": 0.85, "Link Pipe": 0.85}
+OPACITY = {"Snooze Bar": 0.55, "Watch Lens": 0.85, "Lens Face": 0.9, "Sensor Light Pipe": 0.85, "Link Pipe": 0.85}
 for body, col in COLOURS.items():
     c("appearance.assign", bodies=[body], color=col, **({"opacity": OPACITY[body]} if body in OPACITY else {}))
 

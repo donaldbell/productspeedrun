@@ -2250,7 +2250,7 @@
 			(uuid "dc67837f-ebc1-46b1-82ab-446e55a8568d")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/../../../../tools/kicad/models/ESP32-C6-MINI-1.step"
+		(model "${KIPRJMOD}/../../../../../tools/kicad/models/ESP32-C6-MINI-1.step"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -4346,7 +4346,7 @@
 			(uuid "6226a982-0d5b-4d77-9c99-84f6a001e335")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/../../../../tools/kicad/models/PogoPin_D1.8mm_H5.0mm.step"
+		(model "${KIPRJMOD}/../../../../../tools/kicad/models/PogoPin_D1.8mm_H5.0mm.step"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -5381,7 +5381,7 @@
 			(uuid "232d005c-2b62-4ff3-a944-e2b150299f45")
 		)
 		(embedded_fonts no)
-		(model "${KIPRJMOD}/../../../../tools/kicad/models/PogoPin_D1.8mm_H5.0mm.step"
+		(model "${KIPRJMOD}/../../../../../tools/kicad/models/PogoPin_D1.8mm_H5.0mm.step"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -7185,7 +7185,7 @@
 			)
 		)
 	)
-	(gr_text "RECEIVER  PS 003  rev A"
+	(gr_text "RECEIVER  PS 003  rev B"
 		(at 100 88.8 0)
 		(layer "B.SilkS")
 		(uuid "e9e3457b-34d6-4fc3-8187-731f2ad1e9e2")

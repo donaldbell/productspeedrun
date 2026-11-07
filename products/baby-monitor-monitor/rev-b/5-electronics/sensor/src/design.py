@@ -7,11 +7,16 @@ it's there and from the cell when it isn't. A slide switch on the back drives th
 off = no 3.3 V, but the cell still charges. The ESP32-C6-MINI-1 reads an ICS-43434 I2S mic, turns
 the sound level into 0-3 and sends it to the watch over ESP-NOW. The top button is "I'm awake"
 (tap = stop the watch buzzing, hold = test / pair); one green status LED.
+
+Rev B: the top button is a 30 x 12 clear acrylic snooze bar riding on two tact switches in parallel (SW1, SW3),
+so a sleepy press anywhere along it works, lit from below by a WS2812B-2020 (LED2) that shows where it is in the
+dark and the state. The LED runs from the power switch's output through a diode (~VSYS - 0.3 V), so its 3.3 V
+data reads as high and it draws nothing when the sensor is switched off.
 """
 from schkit import *  # noqa: F401,F403
 
 setup("bmm-sensor", lib="bmm", title="Baby Monitor Monitor: Sensor", company="Product Speedrun 003",
-      date="2026-11-04", comments=["ESP32-C6-MINI-1 + ICS-43434 mic + USB-C power path + LiPo charger + LDO"],
+      date="2026-11-07", comments=["ESP32-C6-MINI-1 + ICS-43434 mic + USB-C power path + LiPo charger + LDO", "Rev B: snooze bar (2 tacts) + RGB bar light"],
       ns="5e2a9c14-7b3d-4c80-a1f6-d4b8e2c0f003")
 
 C6 = "RF_Module:ESP32-C6-MINI-1"
@@ -55,7 +60,7 @@ cap("C5", "100nF", at(66, 45), "VBAT_SENSE", "GND")
 part("U3", C6, "ESP32-C6-MINI-1-N4", "RF_Module:ESP32-C6-MINI-1", "", "ESP32-C6-MINI-1-N4", at(28, 80),
      {"3": "3V3", "8": "EN",
       "12": "VBAT_SENSE", "13": None, "5": "MIC_SD", "6": "LED_IO", "9": "MIC_SCK", "10": "MIC_WS",
-      "15": None, "16": "BTN", "22": "IO8", "23": "IO9",
+      "15": "BAR_IO", "16": "BTN", "22": "IO8", "23": "IO9",
       "17": "USB_DN", "18": "USB_DP", "19": None, "20": None,
       "24": None, "25": None, "26": None,
       "27": "CHG_STAT", "28": None, "29": None, "30": None, "31": None,
@@ -77,7 +82,18 @@ part("U4", "Sensor_Audio:ICS-43434", "ICS-43434", "Sensor_Audio:InvenSense_ICS-4
 cap("C9", "100nF", at(122, 18), "3V3", "GND")
 # SD is tri-stated between slots: the C6 holds IO2 with its internal pull-down (no resistor)
 part("SW1", "Switch:SW_Push", "I'M AWAKE", "Button_Switch_SMD:SW_Push_1TS009xxxx-xxxx-xxxx_6x6x5mm", "", "1TS009A-1800-5000-CT",
-     at(100, 50), {"1": "BTN", "2": "GND"}, "Tact switch 6 x 6 x 5 mm SMD under the top cap: tap = I'm awake, hold = test / pair")
+     at(100, 50), {"1": "BTN", "2": "GND"}, "Tact switch 6 x 6 x 5 mm SMD under the snooze bar's back end: tap = I'm awake, hold = test / pair")
+part("SW3", "Switch:SW_Push", "I'M AWAKE", "Button_Switch_SMD:SW_Push_1TS009xxxx-xxxx-xxxx_6x6x5mm", "", "1TS009A-1800-5000-CT",
+     at(112, 50), {"1": "BTN", "2": "GND"}, "Tact switch 6 x 6 x 5 mm SMD under the snooze bar's front end, in parallel with SW1")
+
+# --- Snooze bar light: WS2812B-2020 under the clear bar (episode 002's diode-dropped block, with a Schottky: VSYS is already one diode below USB), on only when switched on
+part("D2", "Diode:1N5819WS", "1N5819WS", "Diode_SMD:D_SOD-323", "C191023", "1N5819WS", at(100, 86),
+     {"1": "VBAR", "2": "LDO_EN"}, "Schottky SOD-323: feeds the bar LED from the power switch (~VSYS - 0.3 V = ~4.45 V on USB), so 3.3 V data reads high (0.7 x VDD = 3.1 V)")
+cap("C10", "1uF", at(108, 86), "VBAR", "GND")
+res("R10", "100", at(100, 96), "BAR_IO", "BAR_DIN")
+part("LED2", "LED:WS2812B-2020", "WS2812B-2020", "LED_SMD:LED_WS2812B-2020_PLCC4_2.0x2.0mm", "C965555", "WS2812B-2020",
+     at(116, 94), {"1": None, "2": "GND", "3": "BAR_DIN", "4": "VBAR"}, "RGB LED 2 x 2 mm under the clear snooze bar: location in the dark + state")
+cap("C11", "100nF", at(124, 88), "VBAR", "GND")
 
 # --- Output: green status LED (bottom-right)
 res("R9", "1k", at(100, 72), "LED_IO", "LED_A")
@@ -90,7 +106,7 @@ for i in range(2):
          at(70 + 4 * i, 104), {}, "Mounting hole M2")
 
 # --- power flags (nets fed only by connectors / passive pins)
-for i, (net, xy) in enumerate((("VBUS", at(4, 34)), ("GND", at(8, 34)), ("VSYS", at(12, 34))), 1):
+for i, (net, xy) in enumerate((("VBUS", at(4, 34)), ("GND", at(8, 34)), ("VSYS", at(12, 34)), ("VBAR", at(16, 34))), 1):
     part("#FLG%02d" % i, "power:PWR_FLAG", "PWR_FLAG", "", "", "", xy, {"1": net}, power=True)
 
 NOTES += [
@@ -99,7 +115,8 @@ NOTES += [
                "U2 AP2112K-3.3 from VSYS, EN from SW2 (off = EN to GND). VBAT_SENSE = VBAT / 2 -> IO0, CHG_STAT -> IO21 (internal pull-up; the module side facing the charger)."),
     (at(80, 3), "MIC: ICS-43434 on IO4 / IO5 / IO2 (SCK / WS / SD: the module's side facing the mic), bottom port through the board to the front grille.\n"
                 "Firmware: 16 kHz I2S, RMS over 250 ms, three thresholds -> level 0-3 sent over ESP-NOW."),
-    (at(80, 60), "I'M AWAKE button on IO7 (LP GPIO, internal pull-up). STATUS LED green on IO3.\n"
+    (at(80, 60), "I'M AWAKE snooze bar: SW1 + SW3 in parallel on IO7 (LP GPIO, internal pull-up). STATUS LED green on IO3.\n"
+                 "BAR LIGHT: WS2812B-2020 on IO6 via R10, VBAR = switched VSYS (LDO_EN) - D2 (~4.45 V on USB, ~VBAT - 0.3 on battery).\n"
                  "IO8 pulled high (R8); IO9 internal pull-up, TP1 pulls it low for recovery. USB on IO12/IO13."),
 ]
 

@@ -19,7 +19,7 @@ Written for Rev B, which had no `DESIGN.md`. Sources: the favourite concept art 
 | S3 | **Round nose face filled by the grille.** A near-circular front face. A chrome bezel ring takes ~85 % of its height, and the dark honeycomb grille fills the ring as a shallow dome. | The loft's first section is close to a circle (R≈13.5). The chrome **collar ring** (R12.2 out, 1 proud) is a revolve. The grille is a revolved **shallow dome** (bulges ~3.5 mm, flatter than Rev A's SM58 ball), with a hex hole pattern. |
 | S4 | **S-curve swoosh, two-colour.** A lavender lower side panel starts as a sliver under the nose bezel. It rises in an S-curve to ~60 % of the height toward the back, then rolls over onto the back corners. A **bright trim band** runs along the top of the swoosh, continuing the bezel's chrome. | Side tool bodies are extruded from **fit-point S-curves** in the side view (one per side) and kept to \|y\| > 15, so only the side walls are lavender. Lavender = shell ∩ tool. The trim band is the same tool raised 1.4 mm, minus the lavender. |
 | S5 | **Kidney-bean status light on the cheek** just behind the bezel, on the visible (+y) side. It's a vertical, slightly bowed capsule. | A bean outline (fit-point periodic spline) on a side plane, cut through the wall. The light pipe is the same bean, clipped to the outer skin so it sits flush, with a block back to the board LED. |
-| S6 | **Big disc button on the crown** (~30 % of the width) with a centre dimple, flush to slightly proud. | Ø13 revolved cap with a 0.4 mm centre dimple in its profile and a domed edge. (It stays over the tact switch at board (6, 0): moving it forward would hit the module.) |
+| S6 | **Snooze bar** (hosts, Rev B round 2; was the concept's big disc button): a 30 × 12 clear acrylic bar along the crown, lit from inside in colour, easy to find and press half-asleep in the dark. | A slot-shaped prism cut to an arc that follows the crown (1 mm proud), with R1.8 rounded edges; a flange following the same arc lower down; plunger legs onto two tacts; a light leg down to an RGB LED. Frosted clear (`#e6f2ff`, 55 % opaque in the model). |
 | S7 | **Inset back panel** holding the slide switch and USB-C, with a dark foot strip along the base. | A 0.6 mm recess cut into the loft's flat back cap, following the cap outline inset by ~2.5 mm. The USB-C and slider openings sit in it. The base slab stays dark grey. |
 
 ### Proportions
@@ -109,9 +109,13 @@ Filled in after each `tools/form/compare.py` pass. ✓ reads, partly, ✗ doesn'
 | S3 round nose / big grille | partly | ✓ | ✓ |
 | S4 S-curve swoosh + trim | ✗ (planar) | ✓ | ✓ |
 | S5 kidney status light on cheek | ✗ (front face) | ✓ | ✓ |
-| S6 disc button | ✓ | ✓ | ✓ |
+| S6 disc button → snooze bar (round 2) | ✓ | ✓ | see round 2 below |
 | S7 inset back panel + foot | partly | partly: the recess is too big; inset 2.2 → 3.0 | partly: the recess reads as a big flat panel; inset 3.0 was in pass 2 |
 | R1 pillow squircle case | partly | ✓ | ✓ |
 | R2 recessed glowing lens | partly | ✓ | ✓ |
 | R3 link dot | ✓ | ✓ | ✓ |
 | R4 small lugs | partly | ✓ | ✓ |
+
+### Round 2 (hosts' feedback: snooze bar)
+
+The concept's disc button gave way to the hosts' snooze bar, a deliberate departure from the art for usability. It keeps the concept's character: it sits on the crown just behind the nose like the disc did, is soft-edged and follows the crown's curve, and its glow continues the product's lit-detail language (green bean, magenta watch lens). It reads as a long, glowing pill on the crown in `iso.png` and `progress-09.png`.

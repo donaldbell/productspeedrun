@@ -67,10 +67,10 @@ PREFER = [
 ]
 
 MODEL_SUBST = {
-    "U3": "${KIPRJMOD}/../../../../tools/kicad/models/ESP32-C6-MINI-1.step",
+    "U3": "${KIPRJMOD}/../../../../../tools/kicad/models/ESP32-C6-MINI-1.step",
     "LED1": "${KICAD10_3DMODEL_DIR}/LED_SMD.3dshapes/LED_RGB_Wuerth-PLCC4_3.2x2.8mm_150141M173100.step",
-    "P1": "${KIPRJMOD}/../../../../tools/kicad/models/PogoPin_D1.8mm_H5.0mm.step",
-    "P2": "${KIPRJMOD}/../../../../tools/kicad/models/PogoPin_D1.8mm_H5.0mm.step",
+    "P1": "${KIPRJMOD}/../../../../../tools/kicad/models/PogoPin_D1.8mm_H5.0mm.step",
+    "P2": "${KIPRJMOD}/../../../../../tools/kicad/models/PogoPin_D1.8mm_H5.0mm.step",
 }
 POWER_NETS = ("/VCHG_IN", "/VBUS", "/VBAT")
 GND_VIA_PADS = ["U3"]
@@ -81,4 +81,4 @@ def silk(board, placed):
     add_text(board, "+", -9.3, -12.6, pcbnew.F_SilkS, 0.9)        # J2 pin 1: LiPo +
     add_text(board, "+", 11.2, 5.6, pcbnew.F_SilkS, 0.9)          # J3 pin 1: motor +
     add_text(board, "BABY MONITOR MONITOR", 0.0, 12.6, pcbnew.B_SilkS, 0.8, bold=True)   # under the antenna: no parts there
-    add_text(board, "RECEIVER  PS 003  rev A", 0.0, 11.2, pcbnew.B_SilkS, 0.8)
+    add_text(board, "RECEIVER  PS 003  rev B", 0.0, 11.2, pcbnew.B_SilkS, 0.8)
