@@ -1,0 +1,290 @@
+{
+  "boards": {
+    "sensor": {
+      "board": {
+        "size": [
+          52,
+          24
+        ],
+        "corner_r": 3,
+        "thickness": 1.6,
+        "faces": "both",
+        "origin": [
+          -40,
+          0,
+          14.5
+        ],
+        "x_axis": [
+          1,
+          0,
+          0
+        ],
+        "y_axis": [
+          0,
+          1,
+          0
+        ],
+        "posts_face": "top"
+      },
+      "holes": [
+        [
+          -23,
+          -7.5
+        ],
+        [
+          12,
+          -7.5
+        ]
+      ],
+      "hole_d": 2.2,
+      "features": {
+        "mic": {
+          "at": [
+            -23.5,
+            3.5
+          ],
+          "face": "top",
+          "size": [
+            3.5,
+            2.65
+          ],
+          "note": "ICS-43434 I2S MEMS mic (bottom port: port hole through the board) facing the front grille chamber; foam gasket ring between board and grille"
+        },
+        "status_led": {
+          "at": [
+            -23.5,
+            7.5
+          ],
+          "face": "top",
+          "size": [
+            1.6,
+            0.8
+          ],
+          "note": "green 0603 LED under the light pipe (pipe ends 1.4 above the board). Rev B: the pipe runs across under the top wall to a kidney-bean window on the -y cheek behind the grille bezel (enclosure x -68.9..-65.7, z 9.7..19.6); the LED itself does not move"
+        },
+        "button": {
+          "at": [
+            6,
+            0
+          ],
+          "face": "top",
+          "size": [
+            6,
+            6
+          ],
+          "note": "6 x 6 x 5.0 tact switch (XKB 1TS009, plunger top 5.0 above the top face) under the \u00d812 top cap: tap = \"I'm awake\" (stops the watch buzzing), hold 3 s = test / pair"
+        },
+        "usb": {
+          "at": [
+            22.325,
+            -5.5
+          ],
+          "face": "top",
+          "size": [
+            8.9,
+            7.3
+          ],
+          "note": "GCT USB4105 USB-C 16P top-mount (footprint centre), mouth flush with the +x board edge (x 26), centre 1.6 above the top face. Main power input (plugged in) and charges the 103450 cell"
+        },
+        "module": {
+          "at": [
+            -13.45,
+            0.6
+          ],
+          "face": "top",
+          "size": [
+            13.2,
+            16.6
+          ],
+          "note": "ESP32-C6-MINI-1 footprint origin (body x -20.05..-6.85, y -5..11.6, 2.4 tall), antenna end at the +y edge"
+        },
+        "power_switch": {
+          "at": [
+            22.55,
+            6.5
+          ],
+          "face": "top",
+          "size": [
+            3.3,
+            6.7
+          ],
+          "note": "C&K PCM12SMTR right-angle SMD SPDT slide (footprint origin; body x 21.55..24.15, y 3.15..9.85, 1.5 tall). Lever 1.3 wide x 1.55 long, centre ~0.8 above the top face, tip 0.3 inside the +x board edge (x 25.7), slides along y (travel ~1.5 mm, centre at y 6.5): the back wall needs a slider cap that engages the lever"
+        },
+        "cell": {
+          "at": [
+            0,
+            0
+          ],
+          "face": "bottom",
+          "size": [
+            50,
+            34
+          ],
+          "note": "off-board: 103450 LiPo (10 x 34 x 50, ~2000 mAh) on the bottom plate, 1.0 below the bottom face"
+        }
+      },
+      "model": {
+        "design": "4-model/model.solidcraft",
+        "stand_ins": [
+          "S PCB",
+          "S Mic",
+          "S Status LED",
+          "S Tact Switch",
+          "S USB-C",
+          "S Power Switch",
+          "S Switch Lever"
+        ]
+      },
+      "keepouts": {
+        "antenna": [
+          -20.3,
+          6.0,
+          -6.6,
+          12
+        ]
+      }
+    },
+    "receiver": {
+      "board": {
+        "size": [
+          30,
+          30
+        ],
+        "corner_r": 8,
+        "thickness": 1.6,
+        "faces": "both",
+        "origin": [
+          25,
+          0,
+          8.1
+        ],
+        "x_axis": [
+          1,
+          0,
+          0
+        ],
+        "y_axis": [
+          0,
+          1,
+          0
+        ],
+        "posts_face": "top"
+      },
+      "holes": [
+        [
+          -10.5,
+          10.5
+        ],
+        [
+          10.5,
+          -10.5
+        ]
+      ],
+      "hole_d": 2.2,
+      "features": {
+        "glow_led": {
+          "at": [
+            0,
+            -5
+          ],
+          "face": "top",
+          "size": [
+            2.2,
+            2.2
+          ],
+          "note": "WS2812B-2020 under the 20 x 20 frosted lens: intensity colour + wake pulse"
+        },
+        "link_led": {
+          "at": [
+            0,
+            -11.6
+          ],
+          "face": "top",
+          "size": [
+            1.6,
+            0.8
+          ],
+          "note": "green 0603 LED under the \u00d81.6 link light pipe at 6 o'clock (pipe ends 1.4 above the board: KiCad's 0603 LED model is 1.1 tall)"
+        },
+        "lra": {
+          "at": [
+            9,
+            3
+          ],
+          "face": "bottom",
+          "size": [
+            10,
+            10
+          ],
+          "note": "off-board: \u00d810 x 2.7 ERM coin motor glued to the back plate (skin side), top 2.6 below the bottom face, 2 wires to pads (MOSFET drive)"
+        },
+        "battery": {
+          "at": [
+            -6.9,
+            0
+          ],
+          "face": "bottom",
+          "size": [
+            20,
+            25
+          ],
+          "note": "off-board: 402025 LiPo (~150 mAh) on the back plate, 1.0 below the bottom face; bottom-face parts <= 1.0 tall over it"
+        },
+        "module": {
+          "at": [
+            0.4,
+            3.6
+          ],
+          "face": "top",
+          "size": [
+            13.2,
+            16.6
+          ],
+          "note": "ESP32-C6-MINI-1 footprint origin (body x -6.2..7, y -2..14.6, 2.4 tall), antenna end at the +y edge"
+        },
+        "pogo_pos": {
+          "at": [
+            5.5,
+            -10
+          ],
+          "face": "bottom",
+          "size": [
+            2,
+            2
+          ],
+          "note": "spring pogo pin (bottom face, ~5 mm) pressing on a gold contact moulded into the back plate; the magnetic USB charger clips onto the back"
+        },
+        "pogo_neg": {
+          "at": [
+            13,
+            -5
+          ],
+          "face": "bottom",
+          "size": [
+            2,
+            2
+          ],
+          "note": "second pogo pin; two \u00d83 x 1 magnets in the back plate at board (-1, -13) and (13, -13) align the charger"
+        }
+      },
+      "model": {
+        "design": "4-model/model.solidcraft",
+        "stand_ins": [
+          "R PCB",
+          "R Glow LED",
+          "R Link LED",
+          "R Pogo +",
+          "R Pogo -"
+        ]
+      },
+      "keepouts": {
+        "antenna": [
+          -6.6,
+          9.2,
+          7.4,
+          15
+        ]
+      }
+    }
+  }
+}

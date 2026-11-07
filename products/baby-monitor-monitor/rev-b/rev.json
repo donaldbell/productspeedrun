@@ -1,0 +1,23 @@
+{
+  "product": "Baby Monitor Monitor",
+  "productSlug": "baby-monitor-monitor",
+  "rev": "rev-b",
+  "letter": "B",
+  "episode": "003-003",
+  "number": 3,
+  "basedOn": "episodes/003-003",
+  "createdAt": "2026-11-06T22:12:09.435Z",
+  "guest": "Just Donald",
+  "goals": "Create a product enclosure design that is a truer representation of the concept art and includes the style nuances, complex curves, asymmetry, and details.",
+  "feedback": {
+    "cad": "",
+    "electronics": "",
+    "code": "",
+    "showcase": ""
+  },
+  "promptEdited": {},
+  "prompts": {},
+  "done": [],
+  "hero": null,
+  "previousHero": "/episodes/003-003/4-model/render-Gemini_Generated_Image_qcntulqcntulqcnt.jpeg"
+}
