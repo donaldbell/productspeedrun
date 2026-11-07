@@ -95,6 +95,7 @@ Each project's `src/CMakeLists.txt` also compiles `../common/*.c`. Its `partitio
    - **Level k** needs `max(floor + 10 / 18 / 26 dB, 50 / 58 / 66 dB SPL)`. The relative part makes it mostly independent of how loud the parent sets the monitor.
    - **Attack:** 1 s of sound within 2 s, so a door slam or a cough doesn't count.
    - **Release:** one level down per 6 s, so breaths between cries don't end it.
+   - **Steady sound is background too:** a sound that stays within 4 dB for 20 s becomes the floor, even above the fussing threshold. That covers a white-noise machine or fan switched on after the sensor (found by the showcase track). Crying through a monitor swings 10–20 dB with breaths and sobs, so it never qualifies. Learning stops at the floor's 62 dB ceiling, so an unbroken steady scream is never learned away. Expect up to ~20 s of alert when such a machine starts: a glow at 52 dB, a crying buzz at 60 dB.
 5. **Alert and ack** (`main.c`):
    - The alert is the level unless a parent has pressed "I'm awake".
    - An ack stops the watch at once and holds for 3 min, unless the sound gets **louder** than when they pressed.
@@ -106,7 +107,7 @@ Each project's `src/CMakeLists.txt` also compiles `../common/*.c`. Its `partitio
 | Press | Does |
 |---|---|
 | Tap (anything shorter than 3 s) | "I'm awake": the watch stops, and the bar blinks green. With nothing to stop, it gives a short white blink |
-| Hold 3 s | **Test + pair:** the watch plays every level once, and the sensor offers pairing for 30 s (the bar breathes blue). While held, the bar lights white and turns blue at 2 s, so a parent knows when to let go |
+| Hold 3 s | **Test + pair:** the watch plays crying, then screaming, and the sensor offers pairing for 30 s (the bar breathes blue). While held, the bar lights white and turns blue at 2 s, so a parent knows when to let go |
 
 **Bar light** (WS2812B-2020 under the acrylic), from top priority down:
 1. held
@@ -148,8 +149,8 @@ From `pio run` (static RAM only; Wi-Fi and FreeRTOS allocate about 60–80 KB mo
 
 | env | Flash (of the 1.875 MB OTA slot) | Static RAM (of 320 KB) |
 |---|---|---|
-| `sensor` | 815,487 B (41.5 %) | 37,904 B (11.6 %) |
-| `sensor` `devkit` | 785,375 B (39.9 %) | 36,568 B (11.2 %) |
+| `sensor` | 815,923 B (41.5 %) | 37,936 B (11.6 %) |
+| `sensor` `devkit` | 785,819 B (40.0 %) | 36,600 B (11.2 %) |
 | `receiver` | 811,895 B (41.3 %) | 37,052 B (11.3 %) |
 | `receiver` `devkit` | 801,125 B (40.7 %) | 36,764 B (11.2 %) |
 
@@ -172,7 +173,7 @@ Most of that is the Wi-Fi stack ESP-NOW needs. The app itself is a few KB. There
 ## Stubbed or untested (needs hardware)
 
 - **All the sound numbers** (`sensor/src/levels.h`): thresholds, floor rates, attack and release, and `MIC_CAL_DB`. They're a first guess for a sensor next to a monitor's speaker. Tune them with the real board, a real monitor and recorded crying, and check against an SPL meter. Logs print dB, floor, instant and smoothed level every 5 s for this.
-- **A white-noise machine that starts after the sensor is never learned** (found by the showcase track, see `../REV.md` "Still open"). The floor only moves on windows below the fussing threshold, so steady 52 dB noise stays at level 1 (glow) and 60 dB at level 2 (buzz) for as long as it runs. Checked with the real `detector.c` on the Mac. Not fixed yet.
+- **Steady-sound learning** (`STEADY_SPREAD_DB` 4 dB, `STEADY_LEARN_MS` 20 s, in `levels.h`): check with recordings of real crying through a real monitor that no stretch of crying stays within 4 dB for 20 s. Also note that crying over learned white noise has to clear the noise by the usual margins: 12 dB over it is level 1 (glow), and +18 dB is needed for a buzz.
 - **The buzz patterns and strengths** (`receiver/src/haptic.c`): a guess. Try them on a wrist, half asleep.
 - **The watch's radio duty cycle and battery life.** Untested:
   - Whether the C6's connectionless power save, with light sleep, really hits 50 ms / 200 ms while staying reliable.

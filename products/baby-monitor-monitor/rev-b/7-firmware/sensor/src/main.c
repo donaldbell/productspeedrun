@@ -291,7 +291,8 @@ void app_main(void) {
 
     detector_cfg_t dc = {.rel_db = LEVEL_REL_DB, .abs_min_db = LEVEL_ABS_MIN_DB, .floor_min_db = FLOOR_MIN_DB,
                          .floor_max_db = FLOOR_MAX_DB, .floor_rise_db = FLOOR_RISE_DB, .floor_fall = FLOOR_FALL,
-                         .attack_windows = ATTACK_WINDOWS, .release_ms = RELEASE_MS};
+                         .attack_windows = ATTACK_WINDOWS, .release_ms = RELEASE_MS,
+                         .steady_spread_db = STEADY_SPREAD_DB, .steady_learn_ms = STEADY_LEARN_MS};
     detector_init(&S.det, &dc);
     audio_start(audio_q);
 
@@ -304,7 +305,10 @@ void app_main(void) {
         while (xQueueReceive(audio_q, &w, 0) == pdTRUE) {
             S.spl_db = w.spl_db;
             S.instant = detector_instant(&S.det, w.spl_db);
+            int learned = S.det.learned;
             S.level = detector_update(&S.det, w.spl_db, w.t_ms);
+            if (S.det.learned != learned)
+                ESP_LOGI(TAG, "steady sound for %d s: %.0f dB is the new background", STEADY_LEARN_MS / 1000, S.det.floor_db);
             S.last_window_ms = w.t_ms;
             if (w.peak > 8000000) ESP_LOGW(TAG, "mic clipping (%.0f dB)", w.spl_db);
         }

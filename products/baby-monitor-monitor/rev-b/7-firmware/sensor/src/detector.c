@@ -37,6 +37,27 @@ int detector_update(detector_t *d, float spl_db, int64_t now_ms) {
     // Quiet windows teach the floor; during an episode (breaths between cries) it may only fall.
     if (inst == 0) track_floor(d, spl_db, d->level == 0);
 
+    // Steady run: restart it whenever this window would stretch it past steady_spread_db.
+    float lo = spl_db < d->run_min ? spl_db : d->run_min, hi = spl_db > d->run_max ? spl_db : d->run_max;
+    if (d->run_n == 0 || hi - lo > d->cfg.steady_spread_db) {
+        d->run_min = d->run_max = d->run_sum = spl_db;
+        d->run_n = 1;
+        d->run_start_ms = now_ms;
+    } else {
+        d->run_min = lo, d->run_max = hi, d->run_sum += spl_db, d->run_n++;
+    }
+    // Only up to floor_max_db: a steady sound louder than that (an unbroken scream) is never learned away.
+    if (inst > 0 && now_ms - d->run_start_ms >= d->cfg.steady_learn_ms &&
+        d->run_sum / d->run_n <= d->cfg.floor_max_db) {
+        // It has been loud and unchanging for too long to be a baby: it's the new background.
+        d->floor_db = d->run_sum / d->run_n;
+        if (d->floor_db < d->cfg.floor_min_db) d->floor_db = d->cfg.floor_min_db;
+        memset(d->hist, 0, sizeof d->hist);
+        d->level = 0;
+        d->learned++;
+        inst = detector_instant(d, spl_db);
+    }
+
     d->hist[d->hist_i] = (uint8_t)inst;
     d->hist_i = (d->hist_i + 1) % DET_HISTORY;
     if (d->windows < DET_HISTORY) d->windows++;

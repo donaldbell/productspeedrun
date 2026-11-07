@@ -55,6 +55,7 @@ Hosts' decisions: **keep the sensor's length** (the longer battery life is a bon
 - **Host test** (`7-firmware/test/run_tests.sh`): the firmware's own `detector.c` and `haptic.c` on the Mac. Louder sound gives a stronger buzz, a door slam doesn't alert, the motor stays at or under 3 V. Writing it found a real bug: the breaths in a long cry let the noise floor creep up. The floor can now only fall during an episode.
 - **`SYSTEM.md` written** (missing in Rev A and Rev B): the two devices, the ESP-NOW protocol, pairing without a watch button, and the power budget.
 - **Hosts' decisions on the firmware (round 1):** fussing now **glows only** (no motor, and no escalation into a buzz; crying still escalates to screaming after 45 s); the 3 min snooze stays; the bar light gets **no night-off option** (its visibility is a feature); link-lost buzzing stays as is until bench testing. *Why:* the hosts' answers to the questions in `7-firmware/NOTES.md`.
+- **Fixed: white noise that starts after the sensor is now learned** (bug found by the showcase track). The floor used to move only on windows below the fussing threshold, so a machine switched on later held the watch at "fussing" (52 dB) or "crying" (60 dB) all night. Now a sound that stays within 4 dB for 20 s becomes the floor, up to the floor's 62 dB ceiling, so an unbroken scream is never learned away. The host test now covers their exact case (52 and 60 dB after a quiet minute: learned after 20 s, still quiet 30 min later, crying over it still alerts) and a steady 75 dB scream (stays level 3). *Why:* the showcase track's report.
 - **Three optional board requests** posted in `FIT.md` (`[open] 7→5`): VBUS sense on the sensor, a switched glow-LED supply and a charger sense on the watch. All are inside only. *Why:* the firmware can't tell plugged-in from full, and the dark WS2812B costs the watch ~5–10 mAh a night.
 
 ### Showcase (6-showcase, track "showcase")
@@ -66,7 +67,7 @@ Hosts' decisions: **keep the sensor's length** (the longer battery life is a bon
 - **Revision timeline:** Rev A (episode 003), then Rev B's headline changes from this file, then Rev C "not started".
 - **Open-questions list rewritten for Rev B:** Rev A's fit-check question is answered (PASS on both boards) and dropped. Rev A's questions about the watch battery and the chrome finish stay. The new questions come from "Still open" below.
 - **Checked:** no console errors, every relative link resolves, no horizontal overflow at 375 px, light and dark mode screenshots.
-- **Found while building the demo: the detector can't learn white noise that starts later** (see "Still open"). It was confirmed against the real `detector.c` and added to the page's open questions and to `7-firmware/NOTES.md`. The firmware was not changed (it isn't this track's job).
+- **Found while building the demo: the detector can't learn white noise that starts later** (since fixed in the firmware track, see "Firmware" above; the page's demo and open question still describe the old behaviour). It was confirmed against the real `detector.c` and added to the page's open questions and to `7-firmware/NOTES.md`. The firmware was not changed (it isn't this track's job).
 
 ## Results
 
@@ -79,7 +80,6 @@ Hosts' decisions: **keep the sensor's length** (the longer battery life is a bon
 
 ## Still open
 
-- **White noise that starts after the sensor never becomes the floor** (found by the showcase track, 2026-11-07). `detector.c` only moves the floor on windows below the fussing threshold, so a steady sound above that threshold is never learned. In a test with the real `detector.c` (1 min of quiet room at 36 dB, then 30 min of steady noise), 52 dB stayed at level 1 (the watch glows all night) and 60 dB stayed at level 2 (it buzzes "crying" all night; an ack holds only 3 min). A white-noise machine that is already running when the sensor starts is fine, because the first window sets the floor. A possible fix: let the floor rise slowly when the sound stays steady (little variance) for minutes, since a cry is never steady. That's a firmware change for the next code track.
 - The sensor still reads longer and more tube-like than the concept's pebble: the 50 mm 103450 cell sets the length (question for the hosts in `4-model/NOTES.md`). The back recess reads as a big flat panel (pass 2's inset 3.0).
 - Firmware needs a bench: sound thresholds (`7-firmware/sensor/src/levels.h`), buzz strengths (`receiver/src/haptic.c`), and the watch's real current with the radio duty-cycled (estimate ~11 mA, ~13 h on 150 mAh). How much to buzz when the sensor goes silent is left for bench testing (hosts).
 - No ESP-NOW encryption and no OTA code yet (the partition table is ready for OTA).

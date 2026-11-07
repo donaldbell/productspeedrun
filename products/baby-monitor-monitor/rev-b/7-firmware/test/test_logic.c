@@ -26,7 +26,8 @@ static int fails;
 static detector_t new_detector(void) {
     detector_cfg_t c = {.rel_db = LEVEL_REL_DB, .abs_min_db = LEVEL_ABS_MIN_DB, .floor_min_db = FLOOR_MIN_DB,
                         .floor_max_db = FLOOR_MAX_DB, .floor_rise_db = FLOOR_RISE_DB, .floor_fall = FLOOR_FALL,
-                        .attack_windows = ATTACK_WINDOWS, .release_ms = RELEASE_MS};
+                        .attack_windows = ATTACK_WINDOWS, .release_ms = RELEASE_MS,
+                        .steady_spread_db = STEADY_SPREAD_DB, .steady_learn_ms = STEADY_LEARN_MS};
     detector_t d;
     detector_init(&d, &c);
     return d;
@@ -72,6 +73,38 @@ static void test_detector(void) {
     CHECK(n.floor_db > 47, "steady 49 dB white noise raises the floor (%.1f dB)", n.floor_db);
     CHECK(feed(&n, 56, 3) == 0, "then 56 dB isn't fussing any more (needs floor + 10)");
     CHECK(feed(&n, 62, 3) == 1, "but 62 dB is");
+
+    // A white-noise machine switched on AFTER the sensor (showcase track's report): it must become the floor.
+    // Their case: 1 min of quiet room at 36 dB, then 30 min of steady noise, +-1.5 dB of window-to-window wobble.
+    for (int db = 52; db <= 60; db += 8) {
+        detector_t w = new_detector();
+        feed(&w, 36, 60);
+        int first_quiet = -1, worst_after = 0, alerted = 0;
+        uint32_t rng = 7;
+        for (int i = 0; i < 30 * 60 * 4; i++) {
+            rng = rng * 1103515245u + 12345u;
+            int l = detector_update(&w, db + ((int)((rng >> 16) % 31) - 15) / 10.0f, t += 250);
+            if (l > 0) alerted = 1;         // it does alert at first: it can't know yet that the noise will stay
+            if (l == 0 && alerted && first_quiet < 0) first_quiet = i;
+            if (first_quiet >= 0 && l > worst_after) worst_after = l;
+        }
+        CHECK(first_quiet >= 0 && first_quiet <= 30 * 4, "white noise %d dB switched on later is learned (level 0 after %.1f s)",
+              db, first_quiet / 4.0);
+        CHECK(first_quiet >= 0 && worst_after == 0, "  ... and stays learned for the next 30 min (worst level %d)", worst_after);
+        // Then the baby cries over the noise (crying with breaths, 12 dB above it): still an alert
+        int lvl = 0;
+        for (int i = 0; i < 40; i++) lvl = detector_update(&w, (i % 4 == 3) ? db : db + 12, t += 250);
+        CHECK(lvl >= 1, "  ... and crying 12 dB over it still alerts (level %d)", lvl);
+    }
+    // Safety: an unbroken, steady 75 dB scream must never be learned as background
+    detector_t s = new_detector();
+    feed(&s, 36, 60);
+    int lowest = 3;
+    for (int i = 0; i < 2 * 60 * 4; i++) {
+        int l = detector_update(&s, 75, t += 250);
+        if (i > 8 && l < lowest) lowest = l;
+    }
+    CHECK(lowest == 3 && s.learned == 0, "2 min of steady 75 dB screaming stays level 3 (never learned away)");
 }
 
 static double energy(const hpattern_t *p, int vbat_mv) {    // mean motor drive (fraction of 3 V) over a loop

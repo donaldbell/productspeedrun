@@ -13,3 +13,6 @@
 #define FLOOR_FALL          0.25f   // fraction of the gap per window when it gets quieter
 #define ATTACK_WINDOWS      4       // of the last 8 (1 s of sound within 2 s)
 #define RELEASE_MS          6000    // one level down per 6 s without it
+// Steady sound above level 0 (white noise / a fan switched on after the sensor) becomes the floor after this
+#define STEADY_SPREAD_DB    4.0f    // a run whose windows all sit within 4 dB ...
+#define STEADY_LEARN_MS     20000   // ... for 20 s. Real crying through a monitor swings far more; check with recordings
