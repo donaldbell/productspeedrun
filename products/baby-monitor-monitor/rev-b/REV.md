@@ -38,18 +38,38 @@ Hosts' decisions: **keep the sensor's length** (the longer battery life is a bon
 - **Model:** `iso.png`, `model.step`, `model.stl`, `model.glb` and `model.solidcraft` re-exported with the bar; `compare.png` still reads as the product; `progress-09.png` (bar close-up) and `progress-10.png` (section along the bar: legs over both tacts, light leg over the LED).
 - **Kit fix (`tools/kicad/tidy_silk.py`):** non-plated holes (the mic's port) now count as obstacles for reference labels. It had put C9's label over the port (Rev A fixed that by hand).
 
+### Firmware (7-firmware, track "code")
+
+- **First firmware for both devices:** two PlatformIO projects, `7-firmware/sensor/` and `7-firmware/receiver/`, with the shared radio protocol and helpers in `7-firmware/common/`. *Why:* the code track's brief: sound level in, haptic intensity out, to wake the wearer.
+- **ESP-IDF 5.5, not Arduino.** The pinned platform (`espressif32@6.12.0`) ships Arduino-ESP32 2.0.17, which has no ESP32-C6 support. Its ESP-IDF does support the C6.
+- **`pins.h` generated from each board's `design.py`** (`common/scripts/gen_pins.py`, run before every build), with the C6-MINI-1 pad table checked against KiCad's symbol. Each `config.h` `#error`s if a net or pull the firmware relies on goes away.
+- **Sensor:**
+  - I2S at 32 kHz, band-limited to ~330 Hz–3.7 kHz, gives dB SPL every 250 ms.
+  - A detector with an adaptive noise floor turns that into levels 0–3. Attack is 1 s of sound within 2 s, so slams don't count; release is one level per 6 s, so breaths don't end an alert.
+  - Tap the snooze bar = "I'm awake" (a 3 min snooze, broken if the sound gets louder). Hold 3 s = test buzz + 30 s pairing offer.
+  - The bar light follows the state scheme proposed in `5-electronics/NOTES.md`. The status LED is a VU meter.
+- **Watch:**
+  - Three distinct ERM patterns, rising in strength (mean drive 4 / 22 / 80 %), battery-compensated so the 3 V motor feels the same from 4.2 to 3.5 V and is never over-driven.
+  - An un-acked alert escalates one level every 45 s. It buzzes "link lost" if the sensor goes silent.
+  - Radio duty-cycled (50 ms / 200 ms) with light sleep; the sensor repeats every packet so it lands in a wake window.
+- **Host test** (`7-firmware/test/run_tests.sh`): the firmware's own `detector.c` and `haptic.c` on the Mac. Louder sound gives a stronger buzz, a door slam doesn't alert, the motor stays at or under 3 V. Writing it found a real bug: the breaths in a long cry let the noise floor creep up. The floor can now only fall during an episode.
+- **`SYSTEM.md` written** (missing in Rev A and Rev B): the two devices, the ESP-NOW protocol, pairing without a watch button, and the power budget.
+- **Three optional board requests** posted in `FIT.md` (`[open] 7→5`): VBUS sense on the sensor, a switched glow-LED supply and a charger sense on the watch. All are inside only. *Why:* the firmware can't tell plugged-in from full, and the dark WS2812B costs the watch ~5–10 mAh a night.
+
 ## Results
 
 - **Model:** `4-model/model.solidcraft` (built headless from `build_model.py`, ~13 min, saved with its evaluated cache), `iso.png`, `model.step`, `model.stl`, `model.glb` (20 parts, linear colours, metres). Progress: `blockout-01.png` (pass 1 blockout), `progress-05.png` (watch blockout), `progress-06.png` (sensor section through post H1), `progress-07.png` (back view), `progress-08.png` (side view).
 - **Compare** (`4-model/compare.png`, against the previous hero render and the concept): it reads as the same product, and closer to the concept than Rev A on the grille nose, the green bean, the S-swoosh, the button and the pillow watch with its ring lens. Per-feature scores are in `4-model/DESIGN.md`: 8 ✓, 3 partly (teardrop body, asymmetry, back panel).
 - **Checks in `build_model.py`** (they fail the build if broken): the 103450 cell clears the side walls at both ends and the middle; the board and its parts clear the walls; walls ≥ 1.15 mm (1.8 nominal); the bezel sits inside the nose face; the USB-C and slider openings sit inside the back face; the button stem has room; the light-pipe bar clears the posts; the watch back plate still fits. Checked by hand against the routed sensor PCB: the light-pipe bar (1.4 above the board, board x −26…−25.2) passes over only U4 (mic, 1.0 tall) and clears C6 and post H1 (0.4 gap).
 - **Fit check (round 2): PASS on both boards.** Sensor: 0 overlaps, 5 intended gaps (bar plunger 0.23 above its tact, status pipe 0.23 above its LED, slider notch 0.03 on the lever, posts). Receiver: 0 overlaps, 3 intended gaps. Each takes ~2 h on this enclosure. Details in `5-electronics/<board>/fitcheck.md`.
+- **Firmware:** all four envs (`sensor`, `receiver` and a `devkit` stand-in for each) build with **0 warnings**. Sensor 815 KB flash / 37.9 KB static RAM, watch 812 KB / 37.1 KB, of a 1.875 MB OTA slot / 320 KB. The host test passes (21 checks). **Not run on hardware yet.** Details in `7-firmware/NOTES.md`.
 - **Pass 2, not built:** steeper fall to the back (heights −1.72: 28.5 … 29.0: 22.0), rear shoulder exponents 2.0–2.2 and back recess inset 3.0. Its full build ran over 60 min without finishing and was stopped, so the model is pass 1. These numbers are the next thing to try, perhaps with fewer stations at the back.
 
 ## Still open
 
 - The sensor still reads longer and more tube-like than the concept's pebble: the 50 mm 103450 cell sets the length (question for the hosts in `4-model/NOTES.md`). The back recess reads as a big flat panel (pass 2's inset 3.0).
-- `SYSTEM.md` is missing in Rev A and Rev B (the product has two devices). Not written in this enclosure pass.
+- Firmware needs a bench: sound thresholds (`7-firmware/sensor/src/levels.h`), buzz strengths (`receiver/src/haptic.c`), and the watch's real current with the radio duty-cycled (estimate ~11 mA, ~13 h on 150 mAh). Questions for the hosts (fussing buzz, snooze length, bar light at night, link-lost buzzing) are in `7-firmware/NOTES.md`.
+- No ESP-NOW encryption and no OTA code yet (the partition table is ready for OTA).
 - The status-light pipe is ~22 mm long: it crosses from the board LED at board y +7.5 to the −y cheek. If it looks dim on a real part, Stage 5 could move the LED to the −y half of the board near the front (it's near post H1 and the mic, so it's a layout question).
 - Back panel layout: the concept has the slider top-left, a "connect" button top-right and the USB-C below centre. Rev B keeps the board's USB-C and slider side by side (and no connect button, per the hosts' Rev A decision). Moving them is a Stage 5 change.
 - The watch is still 12.7 mm thick (concept ~10): set by the cell + board stack (see `4-model/NOTES.md`).
