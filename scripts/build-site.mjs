@@ -1,7 +1,8 @@
 // Builds the public site into _site/: an episode gallery plus each episode's files
 // (its showcase page in 6-showcase/ links to images and models with relative paths).
 // Run: node scripts/build-site.mjs
-import { readdir, readFile, writeFile, mkdir, cp, rm, stat } from "node:fs/promises";
+import { readdir, readFile, writeFile, mkdir, mkdtemp, cp, rm, stat } from "node:fs/promises";
+import os from "node:os";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -143,6 +144,37 @@ async function zipFolder(absDir, outFile) {
     return existsSync(outFile);
   } catch { return false; }
 }
+// A board's zip has to open on its own, but some boards point at custom footprints and 3D models in
+// tools/kicad/ (outside their folder). Copy the ones a board uses into parts/ inside the zip and point
+// the zipped KiCad files there. The repo's own files are unchanged.
+const KIT_REF = /\$\{KIPRJMOD\}\/((?:\.\.\/)+)tools\/kicad\/((?:models|footprints)\/[^")\s]+)/g;
+async function zipBoard(absDir, outFile) {
+  const texts = new Map();
+  for (const e of await listDir(absDir)) {
+    if (!e.isFile() || !/\.(kicad_pcb|kicad_sch|kicad_pro)$|^(fp|sym)-lib-table$/.test(e.name)) continue;
+    const t = await readFile(path.join(absDir, e.name), "utf8");
+    if (t.includes("tools/kicad/")) texts.set(e.name, t);
+  }
+  if (!texts.size) return zipFolder(absDir, outFile);
+  const kit = path.join(ROOT, "tools", "kicad"), used = new Set();
+  const tmp = await mkdtemp(path.join(os.tmpdir(), "ps-zip-"));
+  try {
+    await cp(absDir, tmp, { recursive: true, filter: (src) => !/[\\/](output|__pycache__)([\\/]|$)/.test(src) });
+    for (const [name, t] of texts) {
+      await writeFile(path.join(tmp, name), t.replace(KIT_REF, (whole, ups, rest) => {
+        const src = path.resolve(absDir, ups + "tools/kicad/" + rest);
+        if (!src.startsWith(kit + path.sep) || !existsSync(src)) return whole;   // nothing to bundle: leave it
+        used.add(rest);
+        return "${KIPRJMOD}/parts/" + rest;
+      }));
+    }
+    for (const rest of used) {
+      await mkdir(path.dirname(path.join(tmp, "parts", rest)), { recursive: true });
+      await cp(path.join(kit, rest), path.join(tmp, "parts", rest), { recursive: true });
+    }
+    return await zipFolder(tmp, outFile);
+  } finally { await rm(tmp, { recursive: true, force: true }); }
+}
 // The boards in a project folder: 5-electronics itself, or one per 5-electronics/<device>/ (episode 003's layout).
 async function boardsIn(absProject) {
   const hw = path.join(absProject, "5-electronics");
@@ -181,7 +213,7 @@ async function buildOn(ctx) {
     if (mf("model.step")) links.push([`${ctx.rel}/4-model/model.step`, "model.step", "opens in any CAD tool (FreeCAD, Fusion, Onshape…)", true]);
     if (mf("model.stl")) links.push([`${ctx.rel}/4-model/model.stl`, "model.stl", "mesh for 3D printing", true]);
     if (mf("model.solidcraft")) links.push([`${ctx.rel}/4-model/model.solidcraft`, "model.solidcraft", "the editable Solidcraft design", true]);
-    if (mf("build_model.py")) links.push([`${ctx.rel}/4-model/build_model.py`, "build_model.py", "the parametric script that builds it", false]);
+    if (mf("build_model.py")) links.push([`${ctx.rel}/4-model/build_model.py`, "build_model.py", "a record of how the show built the model (it needs the show's own tools to run)", false]);
     if (mf("NOTES.md")) links.push([`${ctx.rel}/4-model/NOTES.md`, "NOTES.md", "dimensions, decisions and open questions", false]);
     const z = await zipFolder(m, path.join(OUT, "downloads", `${ctx.rel.replace(/\//g, "-")}-3d-model.zip`));
     if (links.length) cards.push({ title: "3D model", sub: "Enclosure, ready to edit or print", folder: `${ctx.rel}/4-model`, zip: z && `${dl}-3d-model.zip`, links });
@@ -192,9 +224,9 @@ async function buildOn(ctx) {
     const bd = `${ctx.rel}/${b.dir}`, ab = path.join(abs, b.dir), links = [];
     for (const ext of ["kicad_pro", "kicad_sch", "kicad_pcb"]) if (has(path.join(ab, `${b.project}.${ext}`))) links.push([`${bd}/${b.project}.${ext}`, `${b.project}.${ext}`, { kicad_pro: "KiCad project", kicad_sch: "schematic", kicad_pcb: "routed 2-layer board" }[ext], false]);
     if (has(path.join(ab, "bom.csv"))) links.push([`${bd}/bom.csv`, "bom.csv", "parts list with manufacturer part numbers", true]);
-    if (has(path.join(ab, "src", "design.py"))) links.push([`${bd}/src/design.py`, "src/design.py", "parts and nets: the board's source", false]);
-    if (has(path.join(ab, "src", "layout.py"))) links.push([`${bd}/src/layout.py`, "src/layout.py", "outline and placement", false]);
-    const z = await zipFolder(ab, path.join(OUT, "downloads", `${(bd).replace(/\//g, "-")}-kicad.zip`));
+    if (has(path.join(ab, "src", "design.py"))) links.push([`${bd}/src/design.py`, "src/design.py", "the parts and nets the board was generated from (a record, not runnable)", false]);
+    if (has(path.join(ab, "src", "layout.py"))) links.push([`${bd}/src/layout.py`, "src/layout.py", "the outline and placement it was generated from (a record)", false]);
+    const z = await zipBoard(ab, path.join(OUT, "downloads", `${(bd).replace(/\//g, "-")}-kicad.zip`));
     const kv = await kicadVersion(path.join(ab, `${b.project}.kicad_pcb`));
     cards.push({ title: b.key ? `Board · ${titleCase(b.key)}` : "Circuit board", sub: kv ? `KiCad project, schematic and BOM. Saved with KiCad ${kv}: open it in ${kv} or newer.` : "KiCad project, schematic and BOM", folder: bd, zip: z && `${SITE}/downloads/${bd.replace(/\//g, "-")}-kicad.zip`, links });
   }
@@ -215,7 +247,7 @@ async function buildOn(ctx) {
   const has3 = (p) => has(path.join(ROOT, here, p));
   const read = [
     "README.md (the folder layout and how to open the files)",
-    `${ctx.epRel}/episode.json (the brief: what it is, what it does, who it's for, what's inside, design language)`,
+    `${ctx.epRel}/episode.json (the brief: what it is and does, who it's for, what's inside, design language, form factor)`,
     has(path.join(ROOT, here, "SYSTEM.md")) ? `${here}/SYSTEM.md (how the devices work together)` : null,
     ctx.revRel || latest ? `${here}/REV.md (what changed in this revision, and what's still open)` : null,
     has3("4-model/NOTES.md") ? `${here}/4-model/NOTES.md (the enclosure: dimensions and decisions)` : null,
