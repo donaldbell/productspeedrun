@@ -1,0 +1,4 @@
+(fp_lib_table
+	(version 7)
+	(lib (name "ProductSpeedrun") (type "KiCad") (uri "${KIPRJMOD}/../../../tools/kicad/footprints/ProductSpeedrun.pretty") (options "") (descr "Product Speedrun kit footprints"))
+)

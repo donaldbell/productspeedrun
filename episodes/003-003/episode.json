@@ -1,0 +1,63 @@
+{
+  "slug": "003-003",
+  "number": 3,
+  "title": "003",
+  "createdAt": "2026-11-04T17:03:05.998Z",
+  "stage": 7,
+  "roll": [
+    {
+      "bucket": "Act",
+      "group": "Hardware",
+      "label": "Haptic motor"
+    },
+    {
+      "bucket": "User",
+      "group": "Human",
+      "label": "New parent"
+    },
+    {
+      "bucket": "Form factor",
+      "group": "Flavor",
+      "label": "Wearable"
+    },
+    {
+      "bucket": "Vibe",
+      "group": "Flavor",
+      "label": "Y2K"
+    }
+  ],
+  "brief": {
+    "name": "Baby Monitor Monitor",
+    "pitch": "An add-on for any exiting baby monitor that translates audio into haptic feedback felt through a wearable device, allowing parents to sleep with earplugs.",
+    "what": "It's a pair of hardware devices -- one is an audio sensor placed near the existing monitor that transmits audio above a certain threshold to the wearable receiver, which translates the signal into haptic feedback.",
+    "does": "Translates an audio level into haptic feedback. Different levels of audio input result in different intensities of haptic feedback to wake the wearer.",
+    "who": "",
+    "electronics": "microphone, haptic motor, motor driver circuit, batteries, esp32 (possibly bluetooth only, or ESP NOW compatible depending on wireless protocol), button for confirmed awake, LED indicator lights on both to convey that the system is on and connected.",
+    "design": "Y2K, Oakley Sunglasses, Sony Aibo, but within the realm of baby monitor accessories , winamp skins,   sony minidisc, Yak Bak.",
+    "looksLike": "Wireless Mic sensor is big enough not to be a choking hazard, but small enough to stick to existing monitor using VHB tape. Wearable haptic buzzer is smartwatch-sized with replaceable elastic, washable bands of different sizes to be worn on wrist or ankle.",
+    "size": ""
+  },
+  "prompts": {
+    "3-layout:style": 1
+  },
+  "promptEdited": {
+    "3-layout": false,
+    "render": false
+  },
+  "favorites": {
+    "2-concept": "2-concept/Watercolor-Baby-Monitor-Concept-Board.png",
+    "3-layout": "3-layout/Gemini_Generated_Image_xdwwv8xdwwv8xdww.jpeg",
+    "render": "4-model/render-Gemini_Generated_Image_qcntulqcntulqcnt.jpeg"
+  },
+  "done": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "decision": "keep",
+  "decidedAt": "2026-11-05T08:13:51.315Z"
+}

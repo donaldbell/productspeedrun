@@ -1,0 +1,434 @@
+<!doctype html>
+<!--
+  Product Speedrun showcase page, episode 003: Baby Monitor Monitor.
+  Built from kit/showcase/template.html. Paths: ../2-concept/ … ../5-electronics/ are this episode's
+  folders, ../../../kit/ is the shared series look.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Baby Monitor Monitor · Product Speedrun 003</title>
+<meta name="description" content="A design proposal for a baby monitor accessory that turns the baby's cries into a buzz on your wrist, so you can sleep with earplugs in. An open hardware concept from Product Speedrun, not yet built.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../../../kit/showcase.css">
+<style>
+/* This episode's accent: the watch's magenta-lavender lens. */
+:root { --accent: #9446D6; --accent-ink: #6A2FA8; --accent-soft: #F1E8FB; }
+@media (prefers-color-scheme: dark) { :root { --accent-ink: #D9A6FF; --accent-soft: #221830; } }
+
+/* ---------- The free slot: a Y2K "media player skin" for the monitor's audio, wired to the watch ---------- */
+.bmm { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--gap); align-items: center;
+  /* the skin's own palette, from the product: pearl shell, lavender swoosh, light-pipe green, lens magenta */
+  --bmm-chrome: linear-gradient(180deg, #F7F8FC 0%, #D7DAE6 46%, #B9BDCE 54%, #E4E6EF 100%);
+  --bmm-lcd: #0A0F0B; --bmm-green: #7DFF63; --bmm-lens: #D86CFF; --bmm-lav: #6E58A8; --bmm-ink: #2A2540; }
+.bmm-amp { border-radius: 14px 14px 22px 22px; padding: 8px 10px 14px; background: var(--bmm-chrome); border: 1px solid #8E93A8;
+  box-shadow: inset 0 1px 0 #fff, inset 0 -2px 0 rgba(0,0,0,.12), 0 18px 34px -20px rgba(40,20,80,.55); color: var(--bmm-ink); min-width: 0; }
+.bmm-title { display: flex; align-items: center; gap: 8px; padding: 2px 4px 8px; font: 700 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+.bmm-title::before, .bmm-title::after { content: ""; flex: 1; height: 5px; border-block: 1px solid rgba(42,37,64,.35); }
+.bmm-title span { white-space: nowrap; }
+.bmm-lcd { background: var(--bmm-lcd); border-radius: 8px; padding: 10px 12px; border: 2px solid #3B3650; box-shadow: inset 0 2px 8px rgba(0,0,0,.8); color: var(--bmm-green); font-family: var(--mono); }
+.bmm-marquee { overflow: hidden; white-space: nowrap; font-size: 12px; letter-spacing: .08em; opacity: .9; }
+.bmm-marquee span { display: inline-block; padding-left: 100%; }
+@media (prefers-reduced-motion: no-preference) { .bmm-marquee span { animation: bmm-scroll 14s linear infinite; } }
+@media (prefers-reduced-motion: reduce) { .bmm-marquee span { padding-left: 0; } }
+@keyframes bmm-scroll { to { transform: translateX(-100%); } }
+.bmm-read { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin: 6px 0 4px; }
+.bmm-read b { font: 700 clamp(22px, 3.4vw, 30px)/1 var(--mono); letter-spacing: .02em; }
+.bmm-read small { font-size: 11px; color: #4FAF3E; text-align: right; }
+.bmm-lcd canvas { display: block; width: 100%; height: 92px; }
+.bmm-meter { position: relative; height: 10px; margin-top: 8px; border-radius: 3px; background: #18221A; overflow: hidden; }
+.bmm-meter i { position: absolute; inset: 0 auto 0 0; width: 0; background: linear-gradient(90deg, var(--bmm-green) 0 55%, #E8FF5A 55% 75%, var(--bmm-lens) 75%); transition: width .25s linear; }
+.bmm-meter s { position: absolute; top: 0; bottom: 0; width: 2px; background: #0A0F0B; }
+.bmm-ticks { position: relative; height: 14px; font-size: 9px; color: #4FAF3E; }
+.bmm-ticks span { position: absolute; transform: translateX(-50%); top: 2px; }
+.bmm-presets { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-top: 12px; }
+.bmm-presets button, .bmm-ack { min-height: 44px; padding: 6px 4px; border-radius: 8px; border: 1px solid #8E93A8; background: var(--bmm-chrome); color: var(--bmm-ink);
+  font: 600 13px/1.1 var(--body); cursor: pointer; box-shadow: inset 0 1px 0 #fff, 0 2px 0 #9DA2B6; }
+.bmm-presets button small { display: block; font: 500 10px/1.2 var(--mono); opacity: .7; margin-top: 2px; }
+.bmm-presets button[aria-pressed="true"] { background: linear-gradient(180deg, #8E78D2, var(--bmm-lav)); color: #fff; border-color: #4C3C82; box-shadow: inset 0 2px 4px rgba(0,0,0,.3); }
+.bmm-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 12px; font-size: 13px; }
+.bmm-row label { display: flex; align-items: center; gap: 8px; flex: 1 1 200px; }
+.bmm-row input[type="range"] { flex: 1; accent-color: var(--bmm-lav); min-width: 0; }
+.bmm-row .bmm-vib { flex: 0 0 auto; }
+.bmm-row .bmm-vib input { accent-color: var(--bmm-lav); width: 18px; height: 18px; }
+
+.bmm-wrist { display: grid; justify-items: center; gap: 12px; min-width: 0; }
+.bmm-wrist svg { width: 100%; max-width: 280px; display: block; overflow: visible; }
+.bmm-watch { transform-origin: 140px 150px; }
+.bmm-wrist[data-buzz] .bmm-watch { animation: bmm-buzz .07s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .bmm-wrist[data-buzz] .bmm-watch { animation: none; } }
+@keyframes bmm-buzz { 0% { transform: translate(calc(var(--amp) * -1px), 0) rotate(-.6deg); } 50% { transform: translate(calc(var(--amp) * 1px), calc(var(--amp) * .5px)) rotate(.6deg); } 100% { transform: translate(calc(var(--amp) * -1px), 0); } }
+.bmm-lens { transition: opacity .15s, fill .2s; }
+.bmm-waves path { fill: none; stroke: var(--bmm-lens); stroke-width: 4; stroke-linecap: round; opacity: 0; transition: opacity .1s; }
+.bmm-wrist[data-buzz] .bmm-waves path { opacity: var(--wave, .8); }
+.bmm-status { text-align: center; min-height: 3em; font: 600 18px/1.35 var(--display); margin: 0; }
+.bmm-status small { display: block; font: 400 14px/1.4 var(--body); color: var(--muted); }
+.bmm-ack { padding-inline: 22px; font-size: 15px; }
+.bmm-ack:disabled { opacity: .5; cursor: default; }
+.bmm-note { margin-top: 18px; font-size: 14px; color: var(--muted); max-width: 70ch; }
+@media (max-width: 860px) { .bmm { grid-template-columns: 1fr; } .bmm-wrist svg { max-width: 220px; } }
+@media (max-width: 420px) { .bmm-presets { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Keep the hero render and the moment crop at their own proportions (the width/height attributes only reserve space) */
+.ps-hero figure img, .ps-moment img { height: auto; }
+
+/* Two board viewers side by side (same .ps-viewer component, just two of them) */
+.bmm-boards .ps-viewer { min-height: 360px; }
+.bmm-boards h3 { font-size: 18px; margin-bottom: 10px; }
+.bmm-boards h3 small { font: 500 12px/1 var(--mono); color: var(--muted); margin-left: 6px; }
+.bmm-bom + .bmm-bom { margin-top: 12px; }
+</style>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js"></script>
+<script type="module" src="../../../kit/series-bar.js"></script>
+<script type="module" src="../../../kit/showcase.js"></script>
+</head>
+<body>
+<ps-series-bar></ps-series-bar>
+
+<header class="ps-hero" id="top">
+  <div class="wrap">
+    <div>
+      <ul class="ps-roll" aria-label="The roll">
+        <li><small>Act</small><b>Haptic motor</b></li>
+        <li><small>User</small><b>New parent</b></li>
+        <li><small>Form factor</small><b>Wearable</b></li>
+        <li><small>Vibe</small><b>Y2K</b></li>
+      </ul>
+      <h1>Baby Monitor Monitor</h1>
+      <p class="ps-pitch">A design proposal for a baby monitor accessory. You feel the crying instead of hearing it, so you can sleep with earplugs in.</p>
+      <p class="ps-lede">A pearl-white mic sits next to the monitor and listens to its speaker. When the baby fusses, the watch on your wrist or ankle buzzes: gently for a whimper, harder for a full cry. It keeps going until you tap "I'm awake".</p>
+      <dl class="ps-facts">
+        <div><dt>63 × 43 × 33 mm</dt><dd>The sensor: too big to swallow</dd></div>
+        <div><dt>38 × 38 × 12.7 mm</dt><dd>The watch, on any 20 mm band</dd></div>
+        <div><dt>ESP-NOW</dt><dd>Direct link: no app, no router, no cloud</dd></div>
+        <div><dt>Sealed watch</dt><dd>No button, no port: it charges on a magnetic clip</dd></div>
+      </dl>
+    </div>
+    <figure>
+      <img src="../4-model/render-Gemini_Generated_Image_qcntulqcntulqcnt.jpeg" alt="Render: a pearl-white sensor with a dark round mic grille, a green status light and a purple lower half, next to a square white watch on a purple band with a glowing magenta lens" width="1306" height="816">
+      <figcaption>An AI render of our Stage 4 CAD model. The final watch is sealed: the side controls in this render are gone.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<nav class="ps-run" aria-label="How this episode ran">
+  <ol>
+    <li><a href="#top"><span class="n"><i>1</i>Roll &amp; brief</span><span class="thumb"><svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><rect x="3" y="3" width="34" height="34" rx="8" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="13" cy="13" r="3" fill="currentColor"/><circle cx="27" cy="27" r="3" fill="currentColor"/><circle cx="20" cy="20" r="3" fill="currentColor"/></svg></span></a></li>
+    <li><a href="#trail"><span class="n"><i>2</i>Concept</span><span class="thumb"><img src="../2-concept/Watercolor-Baby-Monitor-Concept-Board.png" alt=""></span></a></li>
+    <li><a href="#trail"><span class="n"><i>3</i>Layout</span><span class="thumb"><img src="../3-layout/Gemini_Generated_Image_xdwwv8xdwwv8xdww.jpeg" alt=""></span></a></li>
+    <li><a href="#model"><span class="n"><i>4</i>3D model</span><span class="thumb"><img src="../4-model/iso.png" alt=""></span></a></li>
+    <li><a href="#inside"><span class="n"><i>5</i>Electronics</span><span class="thumb"><img src="../5-electronics/receiver/board-iso.png" alt=""></span></a></li>
+    <li><a href="#top"><span class="n"><i>6</i>Showcase</span><span class="thumb">This page</span></a></li>
+    <li><a href="#next"><span class="n"><i>7</i>Verdict</span><span class="thumb"><span class="verdict open" data-verdict>Still deciding</span></span></a></li>
+  </ol>
+</nav>
+
+<main>
+  <section class="ps-section" id="who">
+    <div class="wrap">
+      <div class="ps-head">
+        <h2>Two parents, one bed, one on duty</h2>
+        <p>The one on duty wears it. The one off duty gets to sleep.</p>
+      </div>
+      <div class="ps-grid two">
+        <div class="ps-person">
+          <span class="role">The parent on night duty</span>
+          <h3>Earplugs in, and still listening</h3>
+          <p>The monitor's hiss, a snoring partner or the street outside keeps them awake, but earplugs feel like neglect. With the watch on, they can block out the room and still be the first to know when the baby actually needs them, and how urgently.</p>
+        </div>
+        <div class="ps-person">
+          <span class="role">The parent who's off tonight</span>
+          <h3>Sleeps through the whole thing</h3>
+          <p>A beeping monitor wakes everyone in the room. A buzz on one wrist wakes one person. Swap the watch at the next feed, or strap it to an ankle if wrists are busy holding a baby.</p>
+        </div>
+      </div>
+      <figure class="ps-moment">
+        <img src="moment.jpg" alt="Concept art: the pearl-white mic sensor on a bedside table, its green light on, while the purple watch buzzes on a raised wrist" width="850" height="330" loading="lazy">
+        <blockquote>"Bzz. Bzz-bzz. BZZZ."<cite>3:12 am. The monitor is at normal volume across the room, the earplugs are in, and the wrist feels the crying ramp up before anyone else in the house hears it.</cite></blockquote>
+      </figure>
+    </div>
+  </section>
+
+  <!-- The free slot -->
+  <section class="ps-section tint" id="demo">
+    <div class="wrap">
+      <div class="ps-head">
+        <h2>Turn up the intensity</h2>
+        <p>Pick what the monitor is playing. Every 250 ms the sensor measures how loud it is and sorts that into one of four levels. The watch buzzes to match, a little harder with each round, until someone taps "I'm awake".</p>
+      </div>
+      <div class="ps-free bmm" id="bmm">
+        <div class="bmm-amp">
+          <div class="bmm-title"><span>BMM · sensor link</span></div>
+          <div class="bmm-lcd">
+            <div class="bmm-marquee" aria-hidden="true"><span id="bmm-marq">*** BABY MONITOR MONITOR *** HEAR IT. FEEL IT. *** ESP-NOW LINKED ***</span></div>
+            <div class="bmm-read"><b id="bmm-lvl">LVL 0</b><small id="bmm-sub">QUIET<br>loudness 18</small></div>
+            <canvas id="bmm-spec" width="480" height="92" aria-hidden="true"></canvas>
+            <div class="bmm-meter" aria-hidden="true"><i id="bmm-bar"></i><s style="left:35%"></s><s style="left:58%"></s><s style="left:80%"></s></div>
+            <div class="bmm-ticks" aria-hidden="true"><span style="left:35%">1</span><span style="left:58%">2</span><span style="left:80%">3</span></div>
+          </div>
+          <div class="bmm-presets" role="group" aria-label="What the monitor hears">
+            <button type="button" data-loud="18" aria-pressed="true">Sleeping<small>breathing</small></button>
+            <button type="button" data-loud="46" aria-pressed="false">Fussing<small>level 1</small></button>
+            <button type="button" data-loud="69" aria-pressed="false">Crying<small>level 2</small></button>
+            <button type="button" data-loud="92" aria-pressed="false">Screaming<small>level 3</small></button>
+          </div>
+          <div class="bmm-row">
+            <label>Loudness <input type="range" id="bmm-vol" min="0" max="100" value="18" aria-label="Loudness the sensor hears"></label>
+            <label class="bmm-vib"><input type="checkbox" id="bmm-vib"> Buzz my phone too</label>
+          </div>
+        </div>
+        <div class="bmm-wrist" id="bmm-wrist" style="--amp:0">
+          <svg viewBox="0 0 280 300" role="img" aria-label="The watch: a square case with a lens that glows and buzzes with the level">
+            <g class="bmm-watch">
+              <rect x="95" y="0" width="90" height="300" rx="14" fill="#6E58A8"/>
+              <rect x="95" y="0" width="90" height="300" rx="14" fill="none" stroke="#4C3C82" stroke-width="2" stroke-dasharray="2 6" opacity=".6"/>
+              <rect x="60" y="62" width="160" height="176" rx="40" fill="#C9CCD8"/>
+              <rect x="56" y="58" width="168" height="168" rx="42" fill="#EEF0F5" stroke="#B9BDCE" stroke-width="3"/>
+              <rect x="66" y="66" width="148" height="148" rx="34" fill="none" stroke="#fff" stroke-width="2" opacity=".8"/>
+              <rect x="92" y="92" width="96" height="96" rx="28" fill="#3A2E55"/>
+              <rect class="bmm-lens" id="bmm-lens" x="92" y="92" width="96" height="96" rx="28" fill="#D86CFF" opacity=".12"/>
+              <rect x="104" y="100" width="40" height="10" rx="5" fill="#fff" opacity=".35"/>
+              <circle id="bmm-link" cx="140" cy="206" r="4.5" fill="#7DFF63"/>
+            </g>
+            <g class="bmm-waves">
+              <path d="M36 112 q-12 28 0 56"/><path d="M18 100 q-18 40 0 80" style="opacity:calc(var(--wave,.8) * .6)"/>
+              <path d="M244 112 q12 28 0 56"/><path d="M262 100 q18 40 0 80" style="opacity:calc(var(--wave,.8) * .6)"/>
+            </g>
+          </svg>
+          <p class="bmm-status" id="bmm-status" aria-live="polite">All quiet<small>The green link light blinks with the sensor's heartbeat.</small></p>
+          <button type="button" class="bmm-ack" id="bmm-ack" disabled>Tap "I'm awake"</button>
+        </div>
+      </div>
+      <p class="bmm-note">This is a simulation of the first-pass firmware plan, not real audio. The thresholds are guesses, and a real sensor would be calibrated to your monitor's volume. The phone buzz only works in browsers that support vibration (most Android phones, not iPhones).</p>
+    </div>
+  </section>
+
+  <section class="ps-section" id="model">
+    <div class="wrap">
+      <div class="ps-head">
+        <span class="ps-stage"><i>4</i>3D model in Solidcraft</span>
+        <h2>Pearl shells, chrome grille, one glowing lens</h2>
+        <p>Both devices are in one first-pass CAD model, sized around real parts: the cells, the coin motor and the two routed boards. Drag to spin it.</p>
+      </div>
+      <div class="ps-grid side">
+        <div>
+          <div class="ps-viewer">
+            <model-viewer id="enclosure" src="../4-model/model.glb" alt="3D model of the Baby Monitor Monitor sensor and watch" camera-controls auto-rotate shadow-intensity="0.6" interaction-prompt="none" camera-orbit="-45deg 65deg auto"></model-viewer>
+          </div>
+          <div class="ps-views" role="group" aria-label="Views">
+            <button type="button" data-target="#enclosure" data-orbit="-45deg 65deg auto" aria-pressed="true">Three-quarter</button>
+            <button type="button" data-target="#enclosure" data-orbit="-90deg 80deg auto" aria-pressed="false">Mic grille</button>
+            <button type="button" data-target="#enclosure" data-orbit="0deg 8deg auto" aria-pressed="false">Top</button>
+            <button type="button" data-target="#enclosure" data-orbit="20deg 160deg auto" aria-pressed="false">Underneath</button>
+          </div>
+        </div>
+        <ol class="ps-callouts">
+          <li><b>Sensor shell</b><span>A lofted, asymmetric "gamer mouse" body, 63 × 43 × 33 mm, with a lavender swoosh sweeping up the sides. Too big for the small-parts test cylinder in any orientation.</span></li>
+          <li><b>Stage-mic grille</b><span>A chrome collar and a domed honeycomb cage on the nose, with a green status slit beside it. The mic sits right behind the cage.</span></li>
+          <li><b>Controls and mounting</b><span>A Ø12 "I'm awake" button on the crown (tap to stop the buzz, hold to pair). USB-C and a lavender power slider are on the back, with a VHB pad underneath for sticking it to the monitor.</span></li>
+          <li><b>The sealed watch</b><span>38 × 38 mm with no holes in the sides. The magenta lens is a diffuser over an RGB LED, not a screen. A green link light sits at 6 o'clock.</span></li>
+          <li><b>Skin-side back plate</b><span>The coin motor is glued inside so the buzz goes straight into the skin. Two gold charge contacts and two off-centre magnets mean the clip charger only fits one way. The 20 mm spring bars take any elastic band.</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="ps-section" id="inside">
+    <div class="wrap">
+      <div class="ps-head">
+        <span class="ps-stage"><i>5</i>Electronics in KiCad</span>
+        <h2>Two boards, one link</h2>
+        <p>Each device has its own routed two-layer board with an ESP32-C6 module, and the two talk directly over ESP-NOW. The sensor's 52 × 24 mm board hangs in its crown, and the watch's 30 × 30 mm board hangs under the lens. Both carry parts on both faces.</p>
+      </div>
+      <div class="ps-stats">
+        <div class="ps-stat"><b>0 / 0</b><span>DRC violations and unrouted connections, on both boards</span></div>
+        <div class="ps-stat"><b>57</b><span>Components across the two devices</span></div>
+        <div class="ps-stat"><b>~3 nights</b><span>The sensor unplugged on its 2000 mAh cell (estimate)</span></div>
+        <div class="ps-stat"><b>~1 night</b><span>The watch on 150 mAh, charged daily (estimate)</span></div>
+      </div>
+      <div class="ps-grid two bmm-boards">
+        <div>
+          <h3>Sensor board<small>52 × 24 mm</small></h3>
+          <div class="ps-viewer">
+            <div class="load"><button class="ps-btn primary" type="button" data-load-model="../5-electronics/sensor/board.glb" data-alt="3D model of the sensor's circuit board">Load the sensor board (6 MB)</button></div>
+            <span class="note">Routed in KiCad with Freerouting</span>
+          </div>
+        </div>
+        <div>
+          <h3>Watch board<small>30 × 30 mm</small></h3>
+          <div class="ps-viewer">
+            <div class="load"><button class="ps-btn primary" type="button" data-load-model="../5-electronics/receiver/board.glb" data-alt="3D model of the watch's circuit board">Load the watch board (4 MB)</button></div>
+            <span class="note">Routed in KiCad with Freerouting</span>
+          </div>
+        </div>
+      </div>
+      <div class="ps-parts">
+        <div class="ps-part"><span class="ref">U3 × 2 · ESP32-C6-MINI-1-N4</span><h3>Two brains, no router</h3><p>ESP-NOW links two ESP32s directly in about a millisecond, with no Wi-Fi network, no app and no account. The sensor sends a heartbeat every few seconds, and if it stops, the watch gives a "lost link" buzz.</p></div>
+        <div class="ps-part"><span class="ref">U4 · ICS-43434</span><h3>Ears</h3><p>A digital I2S MEMS mic, ported through the board to the grille. The sensor measures loudness every 250 ms and sorts it into quiet, fussing, crying or screaming.</p></div>
+        <div class="ps-part"><span class="ref">M1 + Q1 · coin ERM + AO3400A</span><h3>The buzz</h3><p>A Ø10 × 2.7 mm coin motor, switched by a MOSFET at 20 kHz with a flyback diode. Intensity is set by the PWM duty, capped at about 70 % because the motor is rated for 3 V.</p></div>
+        <div class="ps-part"><span class="ref">LED1 · WS2812B-2020</span><h3>The Winamp glow</h3><p>A 2 mm RGB LED under the frosted lens. Its colour follows the level, and it blinks green when the "I'm awake" tap arrives.</p></div>
+        <div class="ps-part"><span class="ref">P1–P2 · pogo pins + MCP73831</span><h3>Charging without a port</h3><p>Two spring pins press on gold contacts in the back plate. A Schottky diode blocks reversed polarity and keeps the cell's voltage off the exposed contacts, so sweat can't drain it.</p></div>
+        <div class="ps-part"><span class="ref">J1 · USB-C, SW2 · PCM12, BT1 · 103450</span><h3>Sensor power</h3><p>USB-C runs the sensor beside the monitor and charges a 2000 mAh cell for nights away from home. A power-path switch stops it float-charging all night, and a slide switch turns it fully off.</p></div>
+      </div>
+      <details class="ps-bom bmm-bom">
+        <summary>Sensor bill of materials (21 lines)</summary>
+        <div class="ps-table" data-bom="../5-electronics/sensor/bom.csv">Loading the parts list…</div>
+      </details>
+      <details class="ps-bom bmm-bom">
+        <summary>Watch bill of materials (19 lines)</summary>
+        <div class="ps-table" data-bom="../5-electronics/receiver/bom.csv">Loading the parts list…</div>
+      </details>
+      <ul class="ps-files" aria-label="Design files">
+        <li><a href="../5-electronics/sensor/bmm-sensor.kicad_sch">Sensor schematic (KiCad)</a></li>
+        <li><a href="../5-electronics/sensor/bmm-sensor.kicad_pcb">Sensor board (KiCad)</a></li>
+        <li><a href="../5-electronics/receiver/bmm-receiver.kicad_sch">Watch schematic (KiCad)</a></li>
+        <li><a href="../5-electronics/receiver/bmm-receiver.kicad_pcb">Watch board (KiCad)</a></li>
+        <li><a href="../5-electronics/sensor/bom.csv">sensor bom.csv</a></li>
+        <li><a href="../5-electronics/receiver/bom.csv">watch bom.csv</a></li>
+        <li><a href="../4-model/model.step">Enclosures (STEP)</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="ps-section" id="trail">
+    <div class="wrap">
+      <div class="ps-head">
+        <h2>How we got here</h2>
+        <p>From a roll of "haptic motor, new parent, wearable, Y2K" to two routed boards in one episode.</p>
+      </div>
+      <ol class="ps-trail">
+        <li><figure><a class="frame" href="../2-concept/Watercolor-Baby-Monitor-Concept-Board.png"><img src="../2-concept/Watercolor-Baby-Monitor-Concept-Board.png" alt="Watercolour concept board of the sensor and the watch" loading="lazy"></a><figcaption><b>Concept</b>The watercolour concept board</figcaption></figure></li>
+        <li><figure><a class="frame" href="../3-layout/Gemini_Generated_Image_xdwwv8xdwwv8xdww.jpeg"><img src="../3-layout/Gemini_Generated_Image_xdwwv8xdwwv8xdww.jpeg" alt="Blueprint layout of the sensor and receiver units" loading="lazy"></a><figcaption><b>Layout</b>The blueprint drawing</figcaption></figure></li>
+        <li><figure><a class="frame" href="../4-model/iso.png"><img src="../4-model/iso.png" alt="Isometric view of the CAD model of both devices" loading="lazy"></a><figcaption><b>3D model</b>Both enclosures in Solidcraft</figcaption></figure></li>
+        <li><figure><a class="frame" href="../5-electronics/receiver/board-iso.png"><img src="../5-electronics/receiver/board-iso.png" alt="3D render of the routed watch board" loading="lazy"></a><figcaption><b>Electronics</b>The watch board, routed</figcaption></figure></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="ps-section" id="next">
+    <div class="wrap">
+      <div class="ps-head">
+        <h2>What we still don't know</h2>
+        <p>This is a speedrun first pass. Here's what we'd answer before anyone orders a board or cuts a mould.</p>
+      </div>
+      <ul class="ps-questions">
+        <li><span class="topic">Battery</span><h3>Does 150 mAh last a whole night?</h3><p>The watch has to keep listening for the sensor all night. That only works if the radio sleeps between heartbeats, which is firmware work. Measure it on a dev board before fixing the case thickness. A bigger cell makes the watch thicker.</p></li>
+        <li><span class="topic">Fit</span><h3>The fit check needs a re-run</h3><p>Both boards were re-routed (DRC 0 / 0) after the hosts dropped the watch's button and USB port and gave the sensor a bigger cell. The board-in-enclosure fit checks were last run before those changes.</p></li>
+        <li><span class="topic">Feel</span><h3>Will a coin motor wake a deep sleeper?</h3><p>An ERM through an elastic band is gentle. If it isn't enough, the upgrade is an LRA with a DRV2605L driver: crisper, stronger and able to play patterns.</p></li>
+        <li><span class="topic">Hearing</span><h3>Can it tell crying from a white-noise machine?</h3><p>Loudness alone can't. Lots of nurseries run white noise all night, so the sensor needs calibrating to the room, and probably a filter tuned to the pitch of a cry.</p></li>
+        <li><span class="topic">Finish</span><h3>Chrome that doesn't block the radio</h3><p>Real metal plating would shield the 2.4 GHz antennas. The Y2K chrome look has to be NCVM (non-conductive vacuum metallising) or pearl paint.</p></li>
+        <li><span class="topic">Watch</span><h3>How do you stop it from your wrist?</h3><p>With no button, you can only stop the buzz from the sensor. A tap gesture would need an accelerometer, and it's still an open question whether the watch should be able to switch itself off.</p></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer class="ps-foot">
+  <div class="wrap">
+    <span>Baby Monitor Monitor is an open design from Product Speedrun episode 003, by Donald Bell and Jordan Bunker. Build it, change it, even sell it: hardware under <a href="https://github.com/donaldbell/productspeedrun/blob/main/LICENSES/CERN-OHL-P-2.0.txt">CERN-OHL-P v2</a>, words and images under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. If you do, we'd love a credit and to hear about it.</span>
+    <span><a href="../../../">All episodes</a> · <a href="https://github.com/donaldbell/productspeedrun/tree/main/episodes/003-003">Files on GitHub</a></span>
+  </div>
+</footer>
+
+<script>
+// The free slot's behaviour (this episode only): a simulated sensor → watch loop.
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const vol = $("bmm-vol"), wrist = $("bmm-wrist"), lens = $("bmm-lens"), link = $("bmm-link");
+  const lvlEl = $("bmm-lvl"), sub = $("bmm-sub"), bar = $("bmm-bar"), status = $("bmm-status"), ack = $("bmm-ack"), vib = $("bmm-vib");
+  const canvas = $("bmm-spec"), ctx = canvas.getContext("2d");
+  const presets = [...document.querySelectorAll(".bmm-presets button")];
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const TH = [35, 58, 80], NAMES = ["QUIET", "FUSSING", "CRYING", "SCREAMING"];
+  const LENS = ["#D86CFF", "#B98CFF", "#E06CFF", "#FF5FD2"];
+  const BASE = [0, 0.35, 0.6, 0.85];               // starting intensity per level
+  let target = 18, loud = 18, level = 0, acked = false, round = 0, buzzing = false, beat = 0;
+  const bands = new Array(24).fill(0);
+
+  const setTarget = (v, fromSlider) => {
+    target = +v;
+    if (!fromSlider) vol.value = v;
+    presets.forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.loud === +v)));
+  };
+  presets.forEach((b) => b.addEventListener("click", () => setTarget(b.dataset.loud)));
+  vol.addEventListener("input", () => setTarget(vol.value, true));
+
+  ack.addEventListener("click", () => {
+    acked = true; round = 0; stopBuzz();
+    lens.setAttribute("fill", "#7DFF63"); lens.style.opacity = 1;
+    setTimeout(() => { lens.setAttribute("fill", LENS[level]); lens.style.opacity = level ? .35 : .12; }, 900);
+    render();
+  });
+
+  function stopBuzz() { buzzing = false; wrist.removeAttribute("data-buzz"); if (navigator.vibrate) try { navigator.vibrate(0); } catch {} }
+
+  function pulse() {
+    if (!level || acked) return;
+    const k = Math.min(1, BASE[level] + round * 0.08);   // escalates each round until acked
+    round++;
+    const on = 180 + 140 * level;
+    wrist.style.setProperty("--amp", (1 + k * 5).toFixed(2));
+    wrist.style.setProperty("--wave", (0.3 + k * 0.7).toFixed(2));
+    wrist.setAttribute("data-buzz", ""); buzzing = true;
+    lens.setAttribute("fill", LENS[level]); lens.style.opacity = (0.45 + k * 0.55).toFixed(2);
+    if (vib.checked && navigator.vibrate) try { navigator.vibrate(level === 3 ? [on, 120, on] : on); } catch {}
+    setTimeout(() => { wrist.removeAttribute("data-buzz"); buzzing = false; if (!acked) lens.style.opacity = (0.25 + k * 0.3).toFixed(2); }, on);
+    render(k);
+  }
+
+  function render(k) {
+    lvlEl.textContent = "LVL " + level;
+    sub.innerHTML = NAMES[level] + "<br>loudness " + Math.round(loud);
+    bar.style.width = Math.min(100, loud) + "%";
+    ack.disabled = !level || acked;
+    if (!level) status.innerHTML = "All quiet<small>The green link light blinks with the sensor's heartbeat.</small>";
+    else if (acked) status.innerHTML = "Got it: you're up<small>The lens flashed green. The watch stays quiet until the room goes quiet again.</small>";
+    else status.innerHTML = ["", "Fussing: a gentle nudge", "Crying: firmer pulses", "Screaming: full buzz"][level] +
+      "<small>Round " + Math.max(1, round) + (k != null ? ", " + Math.round(k * 100) + " % intensity" : "") + ". It escalates until someone taps \"I'm awake\".</small>";
+  }
+
+  // Every 250 ms the sensor computes loudness and picks a level (as the firmware plan does).
+  setInterval(() => {
+    loud += (target - loud) * 0.45 + (Math.random() - 0.5) * (4 + target * 0.08);
+    loud = Math.max(0, Math.min(100, loud));
+    const nl = loud >= TH[2] ? 3 : loud >= TH[1] ? 2 : loud >= TH[0] ? 1 : 0;
+    if (nl !== level) {
+      if (nl === 0) { acked = false; round = 0; stopBuzz(); lens.style.opacity = .12; }
+      if (nl > level && acked) { acked = false; round = 0; }   // it got worse after the ack: wake again
+      level = nl; lens.setAttribute("fill", LENS[level]);
+      if (!acked && level && lens.style.opacity < .3) lens.style.opacity = .3;
+    }
+    beat = (beat + 1) % 8;
+    link.style.opacity = beat < 1 ? 1 : 0.25;   // heartbeat blink every 2 s
+    render();
+    if (still) draw();
+  }, 250);
+
+  // Buzz rhythm: one pulse every 1.2 s while a level is active.
+  setInterval(pulse, 1200);
+
+  function draw() {
+    const w = canvas.width, h = canvas.height, n = bands.length, bw = w / n;
+    ctx.clearRect(0, 0, w, h);
+    for (let i = 0; i < n; i++) {
+      // cries carry their energy in the low-mid bands; quiet breathing is a low wash
+      const shape = Math.exp(-((i - 7) ** 2) / 40) * 0.8 + 0.2;
+      const v = Math.max(0.03, Math.min(1, (loud / 100) * shape * (0.75 + Math.random() * 0.5)));
+      bands[i] = still ? v : Math.max(v, bands[i] - 0.04);
+      const bh = Math.round(bands[i] * (h - 4));
+      for (let y = h - 2; y > h - 2 - bh; y -= 5) {
+        const t = (h - y) / h;
+        ctx.fillStyle = t > 0.78 ? "#D86CFF" : t > 0.55 ? "#E8FF5A" : "#7DFF63";
+        ctx.fillRect(i * bw + 2, y - 3, bw - 4, 3);
+      }
+    }
+  }
+  if (!still) (function loop() { draw(); setTimeout(() => requestAnimationFrame(loop), 50); })();
+  else draw();
+  render();
+})();
+</script>
+</body>
+</html>

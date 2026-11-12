@@ -1,0 +1,28 @@
+{
+  "product": "Backpack Defender",
+  "productSlug": "backpack-defender",
+  "rev": "rev-b",
+  "letter": "B",
+  "episode": "001-demo-1",
+  "number": 1,
+  "basedOn": "episodes/001-demo-1",
+  "createdAt": "2026-11-01T17:26:48.767Z",
+  "guest": "Just me.",
+  "goals": "Make product design a little slicker, less basic,  with a larger, triangular loop for hooking to a backpack (large enough for a carabiner hook). Let's make it thinner, if possible, add an physical on/off switch that disconnects power, and change from piezo to a small speaker. Let's make sure we have a more interesting library of sounds and melodies to choose from, exploring sound examples from existing i2s synth and sound libraries. Let's also add a white graphic to the back that says \"Property of:\" with space for kids to write their name in dark marker. Let's add white LEDs to the small dots in the eyes that flash when the alarm goes off.",
+  "feedback": {
+    "cad": "Make product design a little slicker, less basic,  with a larger, triangular loop for hooking to a backpack (large enough for a carabiner hook). Let's make it thinner, if possible, add an physical on/off switch that disconnects power, and change from piezo to a small speaker. Let's make sure we have a more interesting library of sounds and melodies to choose from, exploring sound examples from existing i2s synth and sound libraries. Let's also add a white graphic to the back that says \"Property of:\" with space for kids to write their name in dark marker. Let's add white LEDs to the small dots in the eyes that flash when the alarm goes off.",
+    "electronics": "add an physical on/off switch that disconnects power, and change from piezo to a small speaker. Let's make sure we have a more interesting library of sounds and melodies to choose from, exploring sound examples from existing i2s synth and sound libraries. Let's add white LEDs to the small dots in the eyes that flash when the alarm goes off.",
+    "code": "",
+    "showcase": ""
+  },
+  "promptEdited": {
+    "showcase": false
+  },
+  "prompts": {},
+  "done": [
+    "cad",
+    "electronics",
+    "code"
+  ],
+  "hero": "4-model/render-Mint-Aqua-Gadget-with-Glitter-Button.png"
+}

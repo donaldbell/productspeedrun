@@ -1,0 +1,10612 @@
+{
+ "commands": [
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": -1.0,
+    "name": "base plan"
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      -118.0,
+      13.6
+     ],
+     [
+      -122.0,
+      13.45
+     ],
+     [
+      -127.5,
+      13.0
+     ],
+     [
+      -130.8,
+      12.805
+     ],
+     [
+      -133.2,
+      12.35
+     ],
+     [
+      -135.0,
+      11.7
+     ],
+     [
+      -136.5,
+      10.92
+     ],
+     [
+      -137.7,
+      10.205
+     ],
+     [
+      -138.45,
+      9.62
+     ],
+     [
+      -139.28,
+      8.06
+     ],
+     [
+      -139.38,
+      4.55
+     ],
+     [
+      -139.4,
+      0.0
+     ],
+     [
+      -139.38,
+      -4.55
+     ],
+     [
+      -139.28,
+      -8.06
+     ],
+     [
+      -138.45,
+      -9.62
+     ],
+     [
+      -137.7,
+      -10.205
+     ],
+     [
+      -136.5,
+      -10.92
+     ],
+     [
+      -135.0,
+      -11.7
+     ],
+     [
+      -133.2,
+      -12.35
+     ],
+     [
+      -130.8,
+      -12.805
+     ],
+     [
+      -127.5,
+      -13.0
+     ],
+     [
+      -122.0,
+      -13.45
+     ],
+     [
+      -118.0,
+      -13.6
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      118.0,
+      13.6
+     ],
+     [
+      122.0,
+      13.45
+     ],
+     [
+      127.5,
+      13.0
+     ],
+     [
+      130.8,
+      12.805
+     ],
+     [
+      133.2,
+      12.35
+     ],
+     [
+      135.0,
+      11.7
+     ],
+     [
+      136.5,
+      10.92
+     ],
+     [
+      137.7,
+      10.205
+     ],
+     [
+      138.45,
+      9.62
+     ],
+     [
+      139.28,
+      8.06
+     ],
+     [
+      139.38,
+      4.55
+     ],
+     [
+      139.4,
+      0.0
+     ],
+     [
+      139.38,
+      -4.55
+     ],
+     [
+      139.28,
+      -8.06
+     ],
+     [
+      138.45,
+      -9.62
+     ],
+     [
+      137.7,
+      -10.205
+     ],
+     [
+      136.5,
+      -10.92
+     ],
+     [
+      135.0,
+      -11.7
+     ],
+     [
+      133.2,
+      -12.35
+     ],
+     [
+      130.8,
+      -12.805
+     ],
+     [
+      127.5,
+      -13.0
+     ],
+     [
+      122.0,
+      -13.45
+     ],
+     [
+      118.0,
+      -13.6
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -118.0,
+      13.6
+     ],
+     [
+      118.0,
+      13.6
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -118.0,
+      -13.6
+     ],
+     [
+      118.0,
+      -13.6
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "base plan",
+    "distance": 13.0,
+    "name": "base plan body",
+    "body_name": "Base",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      0,
+      0,
+      0
+     ],
+     "x_dir": [
+      1,
+      0,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "base side"
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      -120.0,
+      6.3
+     ],
+     [
+      -130.0,
+      6.3
+     ],
+     [
+      -134.5,
+      6.0
+     ],
+     [
+      -137.5,
+      5.0
+     ],
+     [
+      -139.2,
+      3.5
+     ],
+     [
+      -139.9,
+      1.8
+     ],
+     [
+      -140.3,
+      -0.6
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      120.0,
+      6.3
+     ],
+     [
+      130.0,
+      6.3
+     ],
+     [
+      134.5,
+      6.0
+     ],
+     [
+      137.5,
+      5.0
+     ],
+     [
+      139.2,
+      3.5
+     ],
+     [
+      139.9,
+      1.8
+     ],
+     [
+      140.3,
+      -0.6
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -120.0,
+      6.3
+     ],
+     [
+      120.0,
+      6.3
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -140.3,
+      -0.6
+     ],
+     [
+      140.3,
+      -0.6
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "base side",
+    "distance": 32.0,
+    "direction": "symmetric",
+    "operation": "intersect",
+    "targets": [
+     "Base"
+    ],
+    "name": "base side cut"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -160,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "base section"
+   }
+  },
+  {
+   "command": "sketch.rectangle.rounded",
+   "params": {
+    "p0": [
+     -13.0,
+     0
+    ],
+    "p1": [
+     13.0,
+     8.8
+    ],
+    "radius": 1.4
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "base section",
+    "distance": 320,
+    "operation": "intersect",
+    "targets": [
+     "Base"
+    ],
+    "name": "base section cut"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 5.3,
+    "name": "deck plan"
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      -118.0,
+      12.8
+     ],
+     [
+      -122.0,
+      12.65
+     ],
+     [
+      -126.7,
+      12.2
+     ],
+     [
+      -130.0,
+      12.017
+     ],
+     [
+      -132.4,
+      11.59
+     ],
+     [
+      -134.2,
+      10.98
+     ],
+     [
+      -135.7,
+      10.248
+     ],
+     [
+      -136.9,
+      9.577
+     ],
+     [
+      -137.65,
+      9.028
+     ],
+     [
+      -138.48,
+      7.564
+     ],
+     [
+      -138.58,
+      4.27
+     ],
+     [
+      -138.6,
+      0.0
+     ],
+     [
+      -138.58,
+      -4.27
+     ],
+     [
+      -138.48,
+      -7.564
+     ],
+     [
+      -137.65,
+      -9.028
+     ],
+     [
+      -136.9,
+      -9.577
+     ],
+     [
+      -135.7,
+      -10.248
+     ],
+     [
+      -134.2,
+      -10.98
+     ],
+     [
+      -132.4,
+      -11.59
+     ],
+     [
+      -130.0,
+      -12.017
+     ],
+     [
+      -126.7,
+      -12.2
+     ],
+     [
+      -122.0,
+      -12.65
+     ],
+     [
+      -118.0,
+      -12.8
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      118.0,
+      12.8
+     ],
+     [
+      122.0,
+      12.65
+     ],
+     [
+      126.7,
+      12.2
+     ],
+     [
+      130.0,
+      12.017
+     ],
+     [
+      132.4,
+      11.59
+     ],
+     [
+      134.2,
+      10.98
+     ],
+     [
+      135.7,
+      10.248
+     ],
+     [
+      136.9,
+      9.577
+     ],
+     [
+      137.65,
+      9.028
+     ],
+     [
+      138.48,
+      7.564
+     ],
+     [
+      138.58,
+      4.27
+     ],
+     [
+      138.6,
+      0.0
+     ],
+     [
+      138.58,
+      -4.27
+     ],
+     [
+      138.48,
+      -7.564
+     ],
+     [
+      137.65,
+      -9.028
+     ],
+     [
+      136.9,
+      -9.577
+     ],
+     [
+      135.7,
+      -10.248
+     ],
+     [
+      134.2,
+      -10.98
+     ],
+     [
+      132.4,
+      -11.59
+     ],
+     [
+      130.0,
+      -12.017
+     ],
+     [
+      126.7,
+      -12.2
+     ],
+     [
+      122.0,
+      -12.65
+     ],
+     [
+      118.0,
+      -12.8
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -118.0,
+      12.8
+     ],
+     [
+      118.0,
+      12.8
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -118.0,
+      -12.8
+     ],
+     [
+      118.0,
+      -12.8
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "deck plan",
+    "distance": 6.7,
+    "name": "deck plan body",
+    "body_name": "Deck",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      0,
+      0,
+      0
+     ],
+     "x_dir": [
+      1,
+      0,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "deck side"
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      -118.0,
+      11.8
+     ],
+     [
+      -121.5,
+      11.75
+     ],
+     [
+      -123.6,
+      11.5
+     ],
+     [
+      -125.4,
+      11.0
+     ],
+     [
+      -127.6,
+      10.2
+     ],
+     [
+      -130.2,
+      9.15
+     ],
+     [
+      -133.0,
+      7.9
+     ],
+     [
+      -135.0,
+      6.95
+     ],
+     [
+      -136.6,
+      6.3
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      118.0,
+      11.8
+     ],
+     [
+      121.5,
+      11.75
+     ],
+     [
+      123.6,
+      11.5
+     ],
+     [
+      125.4,
+      11.0
+     ],
+     [
+      127.6,
+      10.2
+     ],
+     [
+      130.2,
+      9.15
+     ],
+     [
+      133.0,
+      7.9
+     ],
+     [
+      135.0,
+      6.95
+     ],
+     [
+      136.6,
+      6.3
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -118.0,
+      11.8
+     ],
+     [
+      118.0,
+      11.8
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -136.6,
+      6.3
+     ],
+     [
+      136.6,
+      6.3
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "deck side",
+    "distance": 32.0,
+    "direction": "symmetric",
+    "operation": "intersect",
+    "targets": [
+     "Deck"
+    ],
+    "name": "deck side cut"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -160,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "deck section"
+   }
+  },
+  {
+   "command": "sketch.rectangle.rounded",
+   "params": {
+    "p0": [
+     -12.2,
+     1.9
+    ],
+    "p1": [
+     12.2,
+     11.0
+    ],
+    "radius": 2.2
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "deck section",
+    "distance": 320,
+    "operation": "intersect",
+    "targets": [
+     "Deck"
+    ],
+    "name": "deck section cut"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -142.6,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "finial collar 0"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     5.5
+    ],
+    "major": [
+     8.2,
+     5.5
+    ],
+    "minor_radius": 4.2
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -142.1,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "finial collar 1"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     5.5
+    ],
+    "major": [
+     10.0,
+     5.5
+    ],
+    "minor_radius": 5.0
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -140.9,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "finial collar 2"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     5.5
+    ],
+    "major": [
+     10.0,
+     5.5
+    ],
+    "minor_radius": 5.0
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -140.3,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "finial collar 3"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     5.5
+    ],
+    "major": [
+     8.6,
+     5.5
+    ],
+    "minor_radius": 4.4
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -138.8,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "finial collar 4"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     5.5
+    ],
+    "major": [
+     8.2,
+     5.5
+    ],
+    "minor_radius": 4.2
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.loft",
+   "params": {
+    "sections": [
+     {
+      "sketch": "finial collar 0"
+     },
+     {
+      "sketch": "finial collar 1"
+     },
+     {
+      "sketch": "finial collar 2"
+     },
+     {
+      "sketch": "finial collar 3"
+     },
+     {
+      "sketch": "finial collar 4"
+     }
+    ],
+    "operation": "new",
+    "name": "finial collar loft",
+    "body_name": "Finial L"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -150.0,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "finial nub 0"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     5.5
+    ],
+    "major": [
+     2.6,
+     5.5
+    ],
+    "minor_radius": 1.4
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -149.6,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "finial nub 1"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     5.5
+    ],
+    "major": [
+     4.6,
+     5.5
+    ],
+    "minor_radius": 2.5
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -148.7,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "finial nub 2"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     5.5
+    ],
+    "major": [
+     5.9,
+     5.5
+    ],
+    "minor_radius": 3.2
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -147.4,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "finial nub 3"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     5.5
+    ],
+    "major": [
+     6.2,
+     5.5
+    ],
+    "minor_radius": 3.35
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -146.0,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "finial nub 4"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     5.5
+    ],
+    "major": [
+     5.6,
+     5.5
+    ],
+    "minor_radius": 3.0
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -144.8,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "finial nub 5"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     5.5
+    ],
+    "major": [
+     4.5,
+     5.5
+    ],
+    "minor_radius": 2.45
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -142.3,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "finial nub 6"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     5.5
+    ],
+    "major": [
+     4.5,
+     5.5
+    ],
+    "minor_radius": 2.45
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.loft",
+   "params": {
+    "sections": [
+     {
+      "sketch": "finial nub 0"
+     },
+     {
+      "sketch": "finial nub 1"
+     },
+     {
+      "sketch": "finial nub 2"
+     },
+     {
+      "sketch": "finial nub 3"
+     },
+     {
+      "sketch": "finial nub 4"
+     },
+     {
+      "sketch": "finial nub 5"
+     },
+     {
+      "sketch": "finial nub 6"
+     }
+    ],
+    "operation": "new",
+    "name": "finial nub loft",
+    "body_name": "fin nub"
+   }
+  },
+  {
+   "command": "solid.combine",
+   "params": {
+    "target": "Finial L",
+    "tools": [
+     "fin nub"
+    ],
+    "operation": "join"
+   }
+  },
+  {
+   "command": "solid.mirror",
+   "params": {
+    "bodies": [
+     "Finial L"
+    ],
+    "plane": "YZ"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 10.5,
+    "name": "panel l"
+   }
+  },
+  {
+   "command": "sketch.rectangle.rounded",
+   "params": {
+    "p0": [
+     -124.5,
+     -10.6
+    ],
+    "p1": [
+     -93.0,
+     10.6
+    ],
+    "radius": 4.0
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "panel l",
+    "distance": 2,
+    "operation": "cut",
+    "targets": [
+     "Deck"
+    ],
+    "name": "panel l cut"
+   }
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "panel l",
+    "distance": 0.12,
+    "operation": "new",
+    "name": "panel l ext",
+    "body_name": "Panel L"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 9.6,
+    "name": "riser"
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -116.0,
+     0
+    ],
+    "radius": 12.4
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "riser",
+    "distance": 2.8000000000000007,
+    "taper": "-20.0 deg",
+    "name": "riser ext",
+    "body_name": "Dome Collar",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 12.25,
+    "name": "facets low"
+   }
+  },
+  {
+   "command": "sketch.polygon.inscribed",
+   "params": {
+    "center": [
+     -116.0,
+     0
+    ],
+    "radius": 10.9929,
+    "sides": 10,
+    "angle": 0
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "facets low",
+    "distance": 11.0,
+    "taper": "-12 deg",
+    "operation": "new",
+    "name": "facets low ext",
+    "body_name": "Dome"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 12.25,
+    "name": "facets mid"
+   }
+  },
+  {
+   "command": "sketch.polygon.inscribed",
+   "params": {
+    "center": [
+     -116.0,
+     0
+    ],
+    "radius": 12.906,
+    "sides": 10,
+    "angle": 18
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "facets mid",
+    "distance": 11.0,
+    "taper": "-38 deg",
+    "operation": "intersect",
+    "targets": [
+     "Dome"
+    ],
+    "name": "facets mid cut"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 12.25,
+    "name": "facets high"
+   }
+  },
+  {
+   "command": "sketch.polygon.inscribed",
+   "params": {
+    "center": [
+     -116.0,
+     0
+    ],
+    "radius": 25.3157,
+    "sides": 5,
+    "angle": 0
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "facets high",
+    "distance": 10.2827,
+    "taper": "-63 deg",
+    "operation": "intersect",
+    "targets": [
+     "Dome"
+    ],
+    "name": "facets high cut"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 21.1373,
+    "name": "dome crown"
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -116.0,
+     0
+    ],
+    "radius": 10.50888888888889
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "dome crown",
+    "distance": 5,
+    "operation": "cut",
+    "targets": [
+     "Dome"
+    ],
+    "name": "crown flat"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "diameter": 7.6,
+    "height": 1.5,
+    "base": [
+     -98.5,
+     0,
+     10.7
+    ],
+    "name": "port boss",
+    "body_name": "Port Boss",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "diameter": 5.0,
+    "height": 0.7,
+    "base": [
+     -98.5,
+     0,
+     12.1
+    ],
+    "name": "port cap",
+    "body_name": "Port Cap",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "diameter": 2.4,
+    "height": 0.3,
+    "base": [
+     -98.5,
+     0,
+     12.7
+    ],
+    "name": "port eye",
+    "body_name": "Port Eye",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 10.4,
+    "name": "led window"
+   }
+  },
+  {
+   "command": "sketch.slot.center_to_center",
+   "params": {
+    "p0": [
+     -81.5,
+     0
+    ],
+    "p1": [
+     76.5,
+     0
+    ],
+    "width": 13.4
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "led window",
+    "distance": 2,
+    "operation": "cut",
+    "targets": [
+     "Deck"
+    ],
+    "name": "led window cut"
+   }
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "led window",
+    "distance": 0.5,
+    "name": "diffuser ext",
+    "body_name": "Diffuser",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 10.8,
+    "name": "led bezel"
+   }
+  },
+  {
+   "command": "sketch.slot.center_to_center",
+   "params": {
+    "p0": [
+     -81.5,
+     0
+    ],
+    "p1": [
+     76.5,
+     0
+    ],
+    "width": 17.0
+   }
+  },
+  {
+   "command": "sketch.slot.center_to_center",
+   "params": {
+    "p0": [
+     -81.5,
+     0
+    ],
+    "p1": [
+     76.5,
+     0
+    ],
+    "width": 13.4
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "led bezel",
+    "distance": 0.75,
+    "operation": "new",
+    "name": "bezel ext",
+    "body_name": "LED Bezel"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 9.0,
+    "width": 10.0,
+    "height": 0.05,
+    "center": [
+     -79.5,
+     0,
+     10.925
+    ],
+    "name": "glow 1",
+    "body_name": "Glow 1",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 4.0,
+    "width": 4.0,
+    "height": 0.1,
+    "center": [
+     -82.0,
+     0,
+     11.0
+    ],
+    "name": "lamp 1",
+    "body_name": "Lamp 1",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 14.1545,
+    "width": 10.0,
+    "height": 0.05,
+    "center": [
+     -67.5455,
+     0,
+     10.925
+    ],
+    "name": "glow 2",
+    "body_name": "Glow 2",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 4.0,
+    "width": 4.0,
+    "height": 0.1,
+    "center": [
+     -67.5455,
+     0,
+     11.0
+    ],
+    "name": "lamp 2",
+    "body_name": "Lamp 2",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 14.1545,
+    "width": 10.0,
+    "height": 0.05,
+    "center": [
+     -53.0909,
+     0,
+     10.925
+    ],
+    "name": "glow 3",
+    "body_name": "Glow 3",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 4.0,
+    "width": 4.0,
+    "height": 0.1,
+    "center": [
+     -53.0909,
+     0,
+     11.0
+    ],
+    "name": "lamp 3",
+    "body_name": "Lamp 3",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 14.1545,
+    "width": 10.0,
+    "height": 0.05,
+    "center": [
+     -38.6364,
+     0,
+     10.925
+    ],
+    "name": "glow 4",
+    "body_name": "Glow 4",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 4.0,
+    "width": 4.0,
+    "height": 0.1,
+    "center": [
+     -38.6364,
+     0,
+     11.0
+    ],
+    "name": "lamp 4",
+    "body_name": "Lamp 4",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 14.1545,
+    "width": 10.0,
+    "height": 0.05,
+    "center": [
+     -24.1818,
+     0,
+     10.925
+    ],
+    "name": "glow 5",
+    "body_name": "Glow 5",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 4.0,
+    "width": 4.0,
+    "height": 0.1,
+    "center": [
+     -24.1818,
+     0,
+     11.0
+    ],
+    "name": "lamp 5",
+    "body_name": "Lamp 5",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 14.1545,
+    "width": 10.0,
+    "height": 0.05,
+    "center": [
+     -9.7273,
+     0,
+     10.925
+    ],
+    "name": "glow 6",
+    "body_name": "Glow 6",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 4.0,
+    "width": 4.0,
+    "height": 0.1,
+    "center": [
+     -9.7273,
+     0,
+     11.0
+    ],
+    "name": "lamp 6",
+    "body_name": "Lamp 6",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 14.1545,
+    "width": 10.0,
+    "height": 0.05,
+    "center": [
+     4.7273,
+     0,
+     10.925
+    ],
+    "name": "glow 7",
+    "body_name": "Glow 7",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 4.0,
+    "width": 4.0,
+    "height": 0.1,
+    "center": [
+     4.7273,
+     0,
+     11.0
+    ],
+    "name": "lamp 7",
+    "body_name": "Lamp 7",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 14.1545,
+    "width": 10.0,
+    "height": 0.05,
+    "center": [
+     19.1818,
+     0,
+     10.925
+    ],
+    "name": "glow 8",
+    "body_name": "Glow 8",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 4.0,
+    "width": 4.0,
+    "height": 0.1,
+    "center": [
+     19.1818,
+     0,
+     11.0
+    ],
+    "name": "lamp 8",
+    "body_name": "Lamp 8",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 14.1545,
+    "width": 10.0,
+    "height": 0.05,
+    "center": [
+     33.6364,
+     0,
+     10.925
+    ],
+    "name": "glow 9",
+    "body_name": "Glow 9",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 4.0,
+    "width": 4.0,
+    "height": 0.1,
+    "center": [
+     33.6364,
+     0,
+     11.0
+    ],
+    "name": "lamp 9",
+    "body_name": "Lamp 9",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 14.1545,
+    "width": 10.0,
+    "height": 0.05,
+    "center": [
+     48.0909,
+     0,
+     10.925
+    ],
+    "name": "glow 10",
+    "body_name": "Glow 10",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 4.0,
+    "width": 4.0,
+    "height": 0.1,
+    "center": [
+     48.0909,
+     0,
+     11.0
+    ],
+    "name": "lamp 10",
+    "body_name": "Lamp 10",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 14.1545,
+    "width": 10.0,
+    "height": 0.05,
+    "center": [
+     62.5455,
+     0,
+     10.925
+    ],
+    "name": "glow 11",
+    "body_name": "Glow 11",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 4.0,
+    "width": 4.0,
+    "height": 0.1,
+    "center": [
+     62.5455,
+     0,
+     11.0
+    ],
+    "name": "lamp 11",
+    "body_name": "Lamp 11",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 9.0,
+    "width": 10.0,
+    "height": 0.05,
+    "center": [
+     74.5,
+     0,
+     10.925
+    ],
+    "name": "glow 12",
+    "body_name": "Glow 12",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 4.0,
+    "width": 4.0,
+    "height": 0.1,
+    "center": [
+     77.0,
+     0,
+     11.0
+    ],
+    "name": "lamp 12",
+    "body_name": "Lamp 12",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 10.2,
+    "name": "view window"
+   }
+  },
+  {
+   "command": "sketch.rectangle.rounded",
+   "params": {
+    "p0": [
+     88.5,
+     -8.0
+    ],
+    "p1": [
+     107.5,
+     8.0
+    ],
+    "radius": 2.5
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "view window",
+    "distance": 2,
+    "operation": "cut",
+    "targets": [
+     "Deck"
+    ],
+    "name": "view window cut"
+   }
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "view window",
+    "distance": 0.5,
+    "operation": "new",
+    "name": "view glass ext",
+    "body_name": "View Glass"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 6.5,
+    "width": 6.5,
+    "height": 0.1,
+    "center": [
+     99.5,
+     0,
+     10.75
+    ],
+    "name": "view chip",
+    "body_name": "View Chip",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 10.8,
+    "name": "view bezel"
+   }
+  },
+  {
+   "command": "sketch.rectangle.rounded",
+   "params": {
+    "p0": [
+     87.1,
+     -9.4
+    ],
+    "p1": [
+     108.9,
+     9.4
+    ],
+    "radius": 3.9
+   }
+  },
+  {
+   "command": "sketch.rectangle.rounded",
+   "params": {
+    "p0": [
+     88.5,
+     -8.0
+    ],
+    "p1": [
+     107.5,
+     8.0
+    ],
+    "radius": 2.5
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "view bezel",
+    "distance": 0.7,
+    "operation": "new",
+    "name": "view bezel ext",
+    "body_name": "View Bezel"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 10.4,
+    "name": "oval"
+   }
+  },
+  {
+   "command": "sketch.slot.center_to_center",
+   "params": {
+    "p0": [
+     113.5,
+     0
+    ],
+    "p1": [
+     119.5,
+     0
+    ],
+    "width": 7.4
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "oval",
+    "distance": 2,
+    "operation": "cut",
+    "targets": [
+     "Deck"
+    ],
+    "name": "oval cut"
+   }
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "oval",
+    "distance": 0.4,
+    "operation": "new",
+    "name": "oval lens ext",
+    "body_name": "Oval Lens"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 10.8,
+    "name": "oval bezel"
+   }
+  },
+  {
+   "command": "sketch.slot.center_to_center",
+   "params": {
+    "p0": [
+     113.5,
+     0
+    ],
+    "p1": [
+     119.5,
+     0
+    ],
+    "width": 10.0
+   }
+  },
+  {
+   "command": "sketch.slot.center_to_center",
+   "params": {
+    "p0": [
+     113.5,
+     0
+    ],
+    "p1": [
+     119.5,
+     0
+    ],
+    "width": 7.4
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "oval bezel",
+    "distance": 1.1,
+    "operation": "new",
+    "name": "oval bezel ext",
+    "body_name": "Oval Bezel"
+   }
+  },
+  {
+   "command": "solid.sphere",
+   "params": {
+    "radius": 1.0,
+    "center": [
+     87.6,
+     9.6,
+     10.9
+    ],
+    "name": "rivet 1",
+    "body_name": "Rivet 1",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.sphere",
+   "params": {
+    "radius": 1.0,
+    "center": [
+     87.6,
+     -9.6,
+     10.9
+    ],
+    "name": "rivet 2",
+    "body_name": "Rivet 2",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 6.0,
+    "name": "filigree"
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -127.3207,
+      0.4215
+     ],
+     [
+      -127.4852,
+      1.2482
+     ],
+     [
+      -128.6897,
+      1.5556
+     ],
+     [
+      -129.0491,
+      2.0935
+     ],
+     [
+      -128.8721,
+      3.3239
+     ],
+     [
+      -129.573,
+      3.7923
+     ],
+     [
+      -130.6421,
+      3.1579
+     ],
+     [
+      -131.2765,
+      3.2841
+     ],
+     [
+      -132.0215,
+      4.2793
+     ],
+     [
+      -132.8482,
+      4.1148
+     ],
+     [
+      -133.1556,
+      2.9103
+     ],
+     [
+      -133.6935,
+      2.5509
+     ],
+     [
+      -134.9239,
+      2.7279
+     ],
+     [
+      -135.3923,
+      2.027
+     ],
+     [
+      -134.7579,
+      0.9579
+     ],
+     [
+      -134.8841,
+      0.3235
+     ],
+     [
+      -135.8793,
+      -0.4215
+     ],
+     [
+      -135.7148,
+      -1.2482
+     ],
+     [
+      -134.5103,
+      -1.5556
+     ],
+     [
+      -134.1509,
+      -2.0935
+     ],
+     [
+      -134.3279,
+      -3.3239
+     ],
+     [
+      -133.627,
+      -3.7923
+     ],
+     [
+      -132.5579,
+      -3.1579
+     ],
+     [
+      -131.9235,
+      -3.2841
+     ],
+     [
+      -131.1785,
+      -4.2793
+     ],
+     [
+      -130.3518,
+      -4.1148
+     ],
+     [
+      -130.0444,
+      -2.9103
+     ],
+     [
+      -129.5065,
+      -2.5509
+     ],
+     [
+      -128.2761,
+      -2.7279
+     ],
+     [
+      -127.8077,
+      -2.027
+     ],
+     [
+      -128.4421,
+      -0.9579
+     ],
+     [
+      -128.3159,
+      -0.3235
+     ]
+    ],
+    "closed": true
+   }
+  },
+  {
+   "command": "sketch.polygon.inscribed",
+   "params": {
+    "center": [
+     -130.6,
+     -7.6
+    ],
+    "radius": 1.4,
+    "sides": 6
+   }
+  },
+  {
+   "command": "sketch.polygon.inscribed",
+   "params": {
+    "center": [
+     -130.6,
+     7.6
+    ],
+    "radius": 1.4,
+    "sides": 6
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      135.8793,
+      0.4215
+     ],
+     [
+      135.7148,
+      1.2482
+     ],
+     [
+      134.5103,
+      1.5556
+     ],
+     [
+      134.1509,
+      2.0935
+     ],
+     [
+      134.3279,
+      3.3239
+     ],
+     [
+      133.627,
+      3.7923
+     ],
+     [
+      132.5579,
+      3.1579
+     ],
+     [
+      131.9235,
+      3.2841
+     ],
+     [
+      131.1785,
+      4.2793
+     ],
+     [
+      130.3518,
+      4.1148
+     ],
+     [
+      130.0444,
+      2.9103
+     ],
+     [
+      129.5065,
+      2.5509
+     ],
+     [
+      128.2761,
+      2.7279
+     ],
+     [
+      127.8077,
+      2.027
+     ],
+     [
+      128.4421,
+      0.9579
+     ],
+     [
+      128.3159,
+      0.3235
+     ],
+     [
+      127.3207,
+      -0.4215
+     ],
+     [
+      127.4852,
+      -1.2482
+     ],
+     [
+      128.6897,
+      -1.5556
+     ],
+     [
+      129.0491,
+      -2.0935
+     ],
+     [
+      128.8721,
+      -3.3239
+     ],
+     [
+      129.573,
+      -3.7923
+     ],
+     [
+      130.6421,
+      -3.1579
+     ],
+     [
+      131.2765,
+      -3.2841
+     ],
+     [
+      132.0215,
+      -4.2793
+     ],
+     [
+      132.8482,
+      -4.1148
+     ],
+     [
+      133.1556,
+      -2.9103
+     ],
+     [
+      133.6935,
+      -2.5509
+     ],
+     [
+      134.9239,
+      -2.7279
+     ],
+     [
+      135.3923,
+      -2.027
+     ],
+     [
+      134.7579,
+      -0.9579
+     ],
+     [
+      134.8841,
+      -0.3235
+     ]
+    ],
+    "closed": true
+   }
+  },
+  {
+   "command": "sketch.polygon.inscribed",
+   "params": {
+    "center": [
+     130.6,
+     -7.6
+    ],
+    "radius": 1.4,
+    "sides": 6
+   }
+  },
+  {
+   "command": "sketch.polygon.inscribed",
+   "params": {
+    "center": [
+     130.6,
+     7.6
+    ],
+    "radius": 1.4,
+    "sides": 6
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "filigree",
+    "distance": 8,
+    "operation": "cut",
+    "targets": [
+     "Deck"
+    ],
+    "name": "filigree cut"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "diameter": 2.6,
+    "height": 2.6,
+    "base": [
+     -131.6,
+     0,
+     6.1
+    ],
+    "name": "gear hub L",
+    "body_name": "Gear Hub L",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "diameter": 2.6,
+    "height": 2.6,
+    "base": [
+     131.6,
+     0,
+     6.1
+    ],
+    "name": "gear hub R",
+    "body_name": "Gear Hub R",
+    "operation": "new"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      0,
+      -13.7,
+      0
+     ],
+     "x_dir": [
+      1,
+      0,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "usb plug"
+   }
+  },
+  {
+   "command": "sketch.slot.center_to_center",
+   "params": {
+    "p0": [
+     96.4,
+     3.2
+    ],
+    "p1": [
+     103.6,
+     3.2
+    ],
+    "width": 4.6
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "usb plug",
+    "distance": 1.2,
+    "direction": "negative",
+    "operation": "new",
+    "name": "usb plug ext",
+    "body_name": "USB Plug"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      0,
+      -12.95,
+      0
+     ],
+     "x_dir": [
+      1,
+      0,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "vine wave"
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      -126.0,
+      4.4
+     ],
+     [
+      -125.0,
+      4.7253
+     ],
+     [
+      -124.0,
+      5.001
+     ],
+     [
+      -123.0,
+      5.1853
+     ],
+     [
+      -122.0,
+      5.25
+     ],
+     [
+      -121.0,
+      5.1853
+     ],
+     [
+      -120.0,
+      5.001
+     ],
+     [
+      -119.0,
+      4.7253
+     ],
+     [
+      -118.0,
+      4.4
+     ],
+     [
+      -117.0,
+      4.0747
+     ],
+     [
+      -116.0,
+      3.799
+     ],
+     [
+      -115.0,
+      3.6147
+     ],
+     [
+      -114.0,
+      3.55
+     ],
+     [
+      -113.0,
+      3.6147
+     ],
+     [
+      -112.0,
+      3.799
+     ],
+     [
+      -111.0,
+      4.0747
+     ],
+     [
+      -110.0,
+      4.4
+     ],
+     [
+      -109.0,
+      4.7253
+     ],
+     [
+      -108.0,
+      5.001
+     ],
+     [
+      -107.0,
+      5.1853
+     ],
+     [
+      -106.0,
+      5.25
+     ],
+     [
+      -105.0,
+      5.1853
+     ],
+     [
+      -104.0,
+      5.001
+     ],
+     [
+      -103.0,
+      4.7253
+     ],
+     [
+      -102.0,
+      4.4
+     ],
+     [
+      -101.0,
+      4.0747
+     ],
+     [
+      -100.0,
+      3.799
+     ],
+     [
+      -99.0,
+      3.6147
+     ],
+     [
+      -98.0,
+      3.55
+     ],
+     [
+      -97.0,
+      3.6147
+     ],
+     [
+      -96.0,
+      3.799
+     ],
+     [
+      -95.0,
+      4.0747
+     ],
+     [
+      -94.0,
+      4.4
+     ],
+     [
+      -93.0,
+      4.7253
+     ],
+     [
+      -92.0,
+      5.001
+     ],
+     [
+      -91.0,
+      5.1853
+     ],
+     [
+      -90.0,
+      5.25
+     ],
+     [
+      -89.0,
+      5.1853
+     ],
+     [
+      -88.0,
+      5.001
+     ],
+     [
+      -87.0,
+      4.7253
+     ],
+     [
+      -86.0,
+      4.4
+     ],
+     [
+      -85.0,
+      4.0747
+     ],
+     [
+      -84.0,
+      3.799
+     ],
+     [
+      -83.0,
+      3.6147
+     ],
+     [
+      -82.0,
+      3.55
+     ],
+     [
+      -81.0,
+      3.6147
+     ],
+     [
+      -80.0,
+      3.799
+     ],
+     [
+      -79.0,
+      4.0747
+     ],
+     [
+      -78.0,
+      4.4
+     ],
+     [
+      -77.0,
+      4.7253
+     ],
+     [
+      -76.0,
+      5.001
+     ],
+     [
+      -75.0,
+      5.1853
+     ],
+     [
+      -74.0,
+      5.25
+     ],
+     [
+      -73.0,
+      5.1853
+     ],
+     [
+      -72.0,
+      5.001
+     ],
+     [
+      -71.0,
+      4.7253
+     ],
+     [
+      -70.0,
+      4.4
+     ],
+     [
+      -69.0,
+      4.0747
+     ],
+     [
+      -68.0,
+      3.799
+     ],
+     [
+      -67.0,
+      3.6147
+     ],
+     [
+      -66.0,
+      3.55
+     ],
+     [
+      -65.0,
+      3.6147
+     ],
+     [
+      -64.0,
+      3.799
+     ],
+     [
+      -63.0,
+      4.0747
+     ],
+     [
+      -62.0,
+      4.4
+     ],
+     [
+      -61.0,
+      4.7253
+     ],
+     [
+      -60.0,
+      5.001
+     ],
+     [
+      -59.0,
+      5.1853
+     ],
+     [
+      -58.0,
+      5.25
+     ],
+     [
+      -57.0,
+      5.1853
+     ],
+     [
+      -56.0,
+      5.001
+     ],
+     [
+      -55.0,
+      4.7253
+     ],
+     [
+      -54.0,
+      4.4
+     ],
+     [
+      -53.0,
+      4.0747
+     ],
+     [
+      -52.0,
+      3.799
+     ],
+     [
+      -51.0,
+      3.6147
+     ],
+     [
+      -50.0,
+      3.55
+     ],
+     [
+      -49.0,
+      3.6147
+     ],
+     [
+      -48.0,
+      3.799
+     ],
+     [
+      -47.0,
+      4.0747
+     ],
+     [
+      -46.0,
+      4.4
+     ],
+     [
+      -45.0,
+      4.7253
+     ],
+     [
+      -44.0,
+      5.001
+     ],
+     [
+      -43.0,
+      5.1853
+     ],
+     [
+      -42.0,
+      5.25
+     ],
+     [
+      -41.0,
+      5.1853
+     ],
+     [
+      -40.0,
+      5.001
+     ],
+     [
+      -39.0,
+      4.7253
+     ],
+     [
+      -38.0,
+      4.4
+     ],
+     [
+      -37.0,
+      4.0747
+     ],
+     [
+      -36.0,
+      3.799
+     ],
+     [
+      -35.0,
+      3.6147
+     ],
+     [
+      -34.0,
+      3.55
+     ],
+     [
+      -33.0,
+      3.6147
+     ],
+     [
+      -32.0,
+      3.799
+     ],
+     [
+      -31.0,
+      4.0747
+     ],
+     [
+      -30.0,
+      4.4
+     ],
+     [
+      -29.0,
+      4.7253
+     ],
+     [
+      -28.0,
+      5.001
+     ],
+     [
+      -27.0,
+      5.1853
+     ],
+     [
+      -26.0,
+      5.25
+     ],
+     [
+      -25.0,
+      5.1853
+     ],
+     [
+      -24.0,
+      5.001
+     ],
+     [
+      -23.0,
+      4.7253
+     ],
+     [
+      -22.0,
+      4.4
+     ],
+     [
+      -21.0,
+      4.0747
+     ],
+     [
+      -20.0,
+      3.799
+     ],
+     [
+      -19.0,
+      3.6147
+     ],
+     [
+      -18.0,
+      3.55
+     ],
+     [
+      -17.0,
+      3.6147
+     ],
+     [
+      -16.0,
+      3.799
+     ],
+     [
+      -15.0,
+      4.0747
+     ],
+     [
+      -14.0,
+      4.4
+     ],
+     [
+      -13.0,
+      4.7253
+     ],
+     [
+      -12.0,
+      5.001
+     ],
+     [
+      -11.0,
+      5.1853
+     ],
+     [
+      -10.0,
+      5.25
+     ],
+     [
+      -9.0,
+      5.1853
+     ],
+     [
+      -8.0,
+      5.001
+     ],
+     [
+      -7.0,
+      4.7253
+     ],
+     [
+      -6.0,
+      4.4
+     ],
+     [
+      -5.0,
+      4.0747
+     ],
+     [
+      -4.0,
+      3.799
+     ],
+     [
+      -3.0,
+      3.6147
+     ],
+     [
+      -2.0,
+      3.55
+     ],
+     [
+      -1.0,
+      3.6147
+     ],
+     [
+      0.0,
+      3.799
+     ],
+     [
+      1.0,
+      4.0747
+     ],
+     [
+      2.0,
+      4.4
+     ],
+     [
+      3.0,
+      4.7253
+     ],
+     [
+      4.0,
+      5.001
+     ],
+     [
+      5.0,
+      5.1853
+     ],
+     [
+      6.0,
+      5.25
+     ],
+     [
+      7.0,
+      5.1853
+     ],
+     [
+      8.0,
+      5.001
+     ],
+     [
+      9.0,
+      4.7253
+     ],
+     [
+      10.0,
+      4.4
+     ],
+     [
+      11.0,
+      4.0747
+     ],
+     [
+      12.0,
+      3.799
+     ],
+     [
+      13.0,
+      3.6147
+     ],
+     [
+      14.0,
+      3.55
+     ],
+     [
+      15.0,
+      3.6147
+     ],
+     [
+      16.0,
+      3.799
+     ],
+     [
+      17.0,
+      4.0747
+     ],
+     [
+      18.0,
+      4.4
+     ],
+     [
+      19.0,
+      4.7253
+     ],
+     [
+      20.0,
+      5.001
+     ],
+     [
+      21.0,
+      5.1853
+     ],
+     [
+      22.0,
+      5.25
+     ],
+     [
+      23.0,
+      5.1853
+     ],
+     [
+      24.0,
+      5.001
+     ],
+     [
+      25.0,
+      4.7253
+     ],
+     [
+      26.0,
+      4.4
+     ],
+     [
+      27.0,
+      4.0747
+     ],
+     [
+      28.0,
+      3.799
+     ],
+     [
+      29.0,
+      3.6147
+     ],
+     [
+      30.0,
+      3.55
+     ],
+     [
+      31.0,
+      3.6147
+     ],
+     [
+      32.0,
+      3.799
+     ],
+     [
+      33.0,
+      4.0747
+     ],
+     [
+      34.0,
+      4.4
+     ],
+     [
+      35.0,
+      4.7253
+     ],
+     [
+      36.0,
+      5.001
+     ],
+     [
+      37.0,
+      5.1853
+     ],
+     [
+      38.0,
+      5.25
+     ],
+     [
+      39.0,
+      5.1853
+     ],
+     [
+      40.0,
+      5.001
+     ],
+     [
+      41.0,
+      4.7253
+     ],
+     [
+      42.0,
+      4.4
+     ],
+     [
+      43.0,
+      4.0747
+     ],
+     [
+      44.0,
+      3.799
+     ],
+     [
+      45.0,
+      3.6147
+     ],
+     [
+      46.0,
+      3.55
+     ],
+     [
+      47.0,
+      3.6147
+     ],
+     [
+      48.0,
+      3.799
+     ],
+     [
+      49.0,
+      4.0747
+     ],
+     [
+      50.0,
+      4.4
+     ],
+     [
+      51.0,
+      4.7253
+     ],
+     [
+      52.0,
+      5.001
+     ],
+     [
+      53.0,
+      5.1853
+     ],
+     [
+      54.0,
+      5.25
+     ],
+     [
+      55.0,
+      5.1853
+     ],
+     [
+      56.0,
+      5.001
+     ],
+     [
+      57.0,
+      4.7253
+     ],
+     [
+      58.0,
+      4.4
+     ],
+     [
+      59.0,
+      4.0747
+     ],
+     [
+      60.0,
+      3.799
+     ],
+     [
+      61.0,
+      3.6147
+     ],
+     [
+      62.0,
+      3.55
+     ],
+     [
+      63.0,
+      3.6147
+     ],
+     [
+      64.0,
+      3.799
+     ],
+     [
+      65.0,
+      4.0747
+     ],
+     [
+      66.0,
+      4.4
+     ],
+     [
+      67.0,
+      4.7253
+     ],
+     [
+      68.0,
+      5.001
+     ],
+     [
+      69.0,
+      5.1853
+     ],
+     [
+      70.0,
+      5.25
+     ],
+     [
+      71.0,
+      5.1853
+     ],
+     [
+      72.0,
+      5.001
+     ],
+     [
+      73.0,
+      4.7253
+     ],
+     [
+      74.0,
+      4.4
+     ],
+     [
+      75.0,
+      4.0747
+     ],
+     [
+      76.0,
+      3.799
+     ],
+     [
+      77.0,
+      3.6147
+     ],
+     [
+      78.0,
+      3.55
+     ],
+     [
+      79.0,
+      3.6147
+     ],
+     [
+      80.0,
+      3.799
+     ],
+     [
+      81.0,
+      4.0747
+     ],
+     [
+      82.0,
+      4.4
+     ],
+     [
+      83.0,
+      4.7253
+     ],
+     [
+      84.0,
+      5.001
+     ],
+     [
+      85.0,
+      5.1853
+     ],
+     [
+      86.0,
+      5.25
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      -126.0,
+      4.4
+     ],
+     [
+      -125.0,
+      4.0747
+     ],
+     [
+      -124.0,
+      3.799
+     ],
+     [
+      -123.0,
+      3.6147
+     ],
+     [
+      -122.0,
+      3.55
+     ],
+     [
+      -121.0,
+      3.6147
+     ],
+     [
+      -120.0,
+      3.799
+     ],
+     [
+      -119.0,
+      4.0747
+     ],
+     [
+      -118.0,
+      4.4
+     ],
+     [
+      -117.0,
+      4.7253
+     ],
+     [
+      -116.0,
+      5.001
+     ],
+     [
+      -115.0,
+      5.1853
+     ],
+     [
+      -114.0,
+      5.25
+     ],
+     [
+      -113.0,
+      5.1853
+     ],
+     [
+      -112.0,
+      5.001
+     ],
+     [
+      -111.0,
+      4.7253
+     ],
+     [
+      -110.0,
+      4.4
+     ],
+     [
+      -109.0,
+      4.0747
+     ],
+     [
+      -108.0,
+      3.799
+     ],
+     [
+      -107.0,
+      3.6147
+     ],
+     [
+      -106.0,
+      3.55
+     ],
+     [
+      -105.0,
+      3.6147
+     ],
+     [
+      -104.0,
+      3.799
+     ],
+     [
+      -103.0,
+      4.0747
+     ],
+     [
+      -102.0,
+      4.4
+     ],
+     [
+      -101.0,
+      4.7253
+     ],
+     [
+      -100.0,
+      5.001
+     ],
+     [
+      -99.0,
+      5.1853
+     ],
+     [
+      -98.0,
+      5.25
+     ],
+     [
+      -97.0,
+      5.1853
+     ],
+     [
+      -96.0,
+      5.001
+     ],
+     [
+      -95.0,
+      4.7253
+     ],
+     [
+      -94.0,
+      4.4
+     ],
+     [
+      -93.0,
+      4.0747
+     ],
+     [
+      -92.0,
+      3.799
+     ],
+     [
+      -91.0,
+      3.6147
+     ],
+     [
+      -90.0,
+      3.55
+     ],
+     [
+      -89.0,
+      3.6147
+     ],
+     [
+      -88.0,
+      3.799
+     ],
+     [
+      -87.0,
+      4.0747
+     ],
+     [
+      -86.0,
+      4.4
+     ],
+     [
+      -85.0,
+      4.7253
+     ],
+     [
+      -84.0,
+      5.001
+     ],
+     [
+      -83.0,
+      5.1853
+     ],
+     [
+      -82.0,
+      5.25
+     ],
+     [
+      -81.0,
+      5.1853
+     ],
+     [
+      -80.0,
+      5.001
+     ],
+     [
+      -79.0,
+      4.7253
+     ],
+     [
+      -78.0,
+      4.4
+     ],
+     [
+      -77.0,
+      4.0747
+     ],
+     [
+      -76.0,
+      3.799
+     ],
+     [
+      -75.0,
+      3.6147
+     ],
+     [
+      -74.0,
+      3.55
+     ],
+     [
+      -73.0,
+      3.6147
+     ],
+     [
+      -72.0,
+      3.799
+     ],
+     [
+      -71.0,
+      4.0747
+     ],
+     [
+      -70.0,
+      4.4
+     ],
+     [
+      -69.0,
+      4.7253
+     ],
+     [
+      -68.0,
+      5.001
+     ],
+     [
+      -67.0,
+      5.1853
+     ],
+     [
+      -66.0,
+      5.25
+     ],
+     [
+      -65.0,
+      5.1853
+     ],
+     [
+      -64.0,
+      5.001
+     ],
+     [
+      -63.0,
+      4.7253
+     ],
+     [
+      -62.0,
+      4.4
+     ],
+     [
+      -61.0,
+      4.0747
+     ],
+     [
+      -60.0,
+      3.799
+     ],
+     [
+      -59.0,
+      3.6147
+     ],
+     [
+      -58.0,
+      3.55
+     ],
+     [
+      -57.0,
+      3.6147
+     ],
+     [
+      -56.0,
+      3.799
+     ],
+     [
+      -55.0,
+      4.0747
+     ],
+     [
+      -54.0,
+      4.4
+     ],
+     [
+      -53.0,
+      4.7253
+     ],
+     [
+      -52.0,
+      5.001
+     ],
+     [
+      -51.0,
+      5.1853
+     ],
+     [
+      -50.0,
+      5.25
+     ],
+     [
+      -49.0,
+      5.1853
+     ],
+     [
+      -48.0,
+      5.001
+     ],
+     [
+      -47.0,
+      4.7253
+     ],
+     [
+      -46.0,
+      4.4
+     ],
+     [
+      -45.0,
+      4.0747
+     ],
+     [
+      -44.0,
+      3.799
+     ],
+     [
+      -43.0,
+      3.6147
+     ],
+     [
+      -42.0,
+      3.55
+     ],
+     [
+      -41.0,
+      3.6147
+     ],
+     [
+      -40.0,
+      3.799
+     ],
+     [
+      -39.0,
+      4.0747
+     ],
+     [
+      -38.0,
+      4.4
+     ],
+     [
+      -37.0,
+      4.7253
+     ],
+     [
+      -36.0,
+      5.001
+     ],
+     [
+      -35.0,
+      5.1853
+     ],
+     [
+      -34.0,
+      5.25
+     ],
+     [
+      -33.0,
+      5.1853
+     ],
+     [
+      -32.0,
+      5.001
+     ],
+     [
+      -31.0,
+      4.7253
+     ],
+     [
+      -30.0,
+      4.4
+     ],
+     [
+      -29.0,
+      4.0747
+     ],
+     [
+      -28.0,
+      3.799
+     ],
+     [
+      -27.0,
+      3.6147
+     ],
+     [
+      -26.0,
+      3.55
+     ],
+     [
+      -25.0,
+      3.6147
+     ],
+     [
+      -24.0,
+      3.799
+     ],
+     [
+      -23.0,
+      4.0747
+     ],
+     [
+      -22.0,
+      4.4
+     ],
+     [
+      -21.0,
+      4.7253
+     ],
+     [
+      -20.0,
+      5.001
+     ],
+     [
+      -19.0,
+      5.1853
+     ],
+     [
+      -18.0,
+      5.25
+     ],
+     [
+      -17.0,
+      5.1853
+     ],
+     [
+      -16.0,
+      5.001
+     ],
+     [
+      -15.0,
+      4.7253
+     ],
+     [
+      -14.0,
+      4.4
+     ],
+     [
+      -13.0,
+      4.0747
+     ],
+     [
+      -12.0,
+      3.799
+     ],
+     [
+      -11.0,
+      3.6147
+     ],
+     [
+      -10.0,
+      3.55
+     ],
+     [
+      -9.0,
+      3.6147
+     ],
+     [
+      -8.0,
+      3.799
+     ],
+     [
+      -7.0,
+      4.0747
+     ],
+     [
+      -6.0,
+      4.4
+     ],
+     [
+      -5.0,
+      4.7253
+     ],
+     [
+      -4.0,
+      5.001
+     ],
+     [
+      -3.0,
+      5.1853
+     ],
+     [
+      -2.0,
+      5.25
+     ],
+     [
+      -1.0,
+      5.1853
+     ],
+     [
+      0.0,
+      5.001
+     ],
+     [
+      1.0,
+      4.7253
+     ],
+     [
+      2.0,
+      4.4
+     ],
+     [
+      3.0,
+      4.0747
+     ],
+     [
+      4.0,
+      3.799
+     ],
+     [
+      5.0,
+      3.6147
+     ],
+     [
+      6.0,
+      3.55
+     ],
+     [
+      7.0,
+      3.6147
+     ],
+     [
+      8.0,
+      3.799
+     ],
+     [
+      9.0,
+      4.0747
+     ],
+     [
+      10.0,
+      4.4
+     ],
+     [
+      11.0,
+      4.7253
+     ],
+     [
+      12.0,
+      5.001
+     ],
+     [
+      13.0,
+      5.1853
+     ],
+     [
+      14.0,
+      5.25
+     ],
+     [
+      15.0,
+      5.1853
+     ],
+     [
+      16.0,
+      5.001
+     ],
+     [
+      17.0,
+      4.7253
+     ],
+     [
+      18.0,
+      4.4
+     ],
+     [
+      19.0,
+      4.0747
+     ],
+     [
+      20.0,
+      3.799
+     ],
+     [
+      21.0,
+      3.6147
+     ],
+     [
+      22.0,
+      3.55
+     ],
+     [
+      23.0,
+      3.6147
+     ],
+     [
+      24.0,
+      3.799
+     ],
+     [
+      25.0,
+      4.0747
+     ],
+     [
+      26.0,
+      4.4
+     ],
+     [
+      27.0,
+      4.7253
+     ],
+     [
+      28.0,
+      5.001
+     ],
+     [
+      29.0,
+      5.1853
+     ],
+     [
+      30.0,
+      5.25
+     ],
+     [
+      31.0,
+      5.1853
+     ],
+     [
+      32.0,
+      5.001
+     ],
+     [
+      33.0,
+      4.7253
+     ],
+     [
+      34.0,
+      4.4
+     ],
+     [
+      35.0,
+      4.0747
+     ],
+     [
+      36.0,
+      3.799
+     ],
+     [
+      37.0,
+      3.6147
+     ],
+     [
+      38.0,
+      3.55
+     ],
+     [
+      39.0,
+      3.6147
+     ],
+     [
+      40.0,
+      3.799
+     ],
+     [
+      41.0,
+      4.0747
+     ],
+     [
+      42.0,
+      4.4
+     ],
+     [
+      43.0,
+      4.7253
+     ],
+     [
+      44.0,
+      5.001
+     ],
+     [
+      45.0,
+      5.1853
+     ],
+     [
+      46.0,
+      5.25
+     ],
+     [
+      47.0,
+      5.1853
+     ],
+     [
+      48.0,
+      5.001
+     ],
+     [
+      49.0,
+      4.7253
+     ],
+     [
+      50.0,
+      4.4
+     ],
+     [
+      51.0,
+      4.0747
+     ],
+     [
+      52.0,
+      3.799
+     ],
+     [
+      53.0,
+      3.6147
+     ],
+     [
+      54.0,
+      3.55
+     ],
+     [
+      55.0,
+      3.6147
+     ],
+     [
+      56.0,
+      3.799
+     ],
+     [
+      57.0,
+      4.0747
+     ],
+     [
+      58.0,
+      4.4
+     ],
+     [
+      59.0,
+      4.7253
+     ],
+     [
+      60.0,
+      5.001
+     ],
+     [
+      61.0,
+      5.1853
+     ],
+     [
+      62.0,
+      5.25
+     ],
+     [
+      63.0,
+      5.1853
+     ],
+     [
+      64.0,
+      5.001
+     ],
+     [
+      65.0,
+      4.7253
+     ],
+     [
+      66.0,
+      4.4
+     ],
+     [
+      67.0,
+      4.0747
+     ],
+     [
+      68.0,
+      3.799
+     ],
+     [
+      69.0,
+      3.6147
+     ],
+     [
+      70.0,
+      3.55
+     ],
+     [
+      71.0,
+      3.6147
+     ],
+     [
+      72.0,
+      3.799
+     ],
+     [
+      73.0,
+      4.0747
+     ],
+     [
+      74.0,
+      4.4
+     ],
+     [
+      75.0,
+      4.7253
+     ],
+     [
+      76.0,
+      5.001
+     ],
+     [
+      77.0,
+      5.1853
+     ],
+     [
+      78.0,
+      5.25
+     ],
+     [
+      79.0,
+      5.1853
+     ],
+     [
+      80.0,
+      5.001
+     ],
+     [
+      81.0,
+      4.7253
+     ],
+     [
+      82.0,
+      4.4
+     ],
+     [
+      83.0,
+      4.0747
+     ],
+     [
+      84.0,
+      3.799
+     ],
+     [
+      85.0,
+      3.6147
+     ],
+     [
+      86.0,
+      3.55
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      112.0,
+      4.4
+     ],
+     [
+      113.0,
+      4.7253
+     ],
+     [
+      114.0,
+      5.001
+     ],
+     [
+      115.0,
+      5.1853
+     ],
+     [
+      116.0,
+      5.25
+     ],
+     [
+      117.0,
+      5.1853
+     ],
+     [
+      118.0,
+      5.001
+     ],
+     [
+      119.0,
+      4.7253
+     ],
+     [
+      120.0,
+      4.4
+     ],
+     [
+      121.0,
+      4.0747
+     ],
+     [
+      122.0,
+      3.799
+     ],
+     [
+      123.0,
+      3.6147
+     ],
+     [
+      124.0,
+      3.55
+     ],
+     [
+      125.0,
+      3.6147
+     ],
+     [
+      126.0,
+      3.799
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      112.0,
+      4.4
+     ],
+     [
+      113.0,
+      4.0747
+     ],
+     [
+      114.0,
+      3.799
+     ],
+     [
+      115.0,
+      3.6147
+     ],
+     [
+      116.0,
+      3.55
+     ],
+     [
+      117.0,
+      3.6147
+     ],
+     [
+      118.0,
+      3.799
+     ],
+     [
+      119.0,
+      4.0747
+     ],
+     [
+      120.0,
+      4.4
+     ],
+     [
+      121.0,
+      4.7253
+     ],
+     [
+      122.0,
+      5.001
+     ],
+     [
+      123.0,
+      5.1853
+     ],
+     [
+      124.0,
+      5.25
+     ],
+     [
+      125.0,
+      5.1853
+     ],
+     [
+      126.0,
+      5.001
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "vine wave",
+    "thin": true,
+    "thickness": 0.55,
+    "distance": 0.4,
+    "operation": "new",
+    "name": "vine wave ext",
+    "body_name": "Vine"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      0,
+      -12.95,
+      0
+     ],
+     "x_dir": [
+      1,
+      0,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "vine beads"
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -122.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -114.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -106.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -98.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -90.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -82.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -74.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -66.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -58.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -50.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -42.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -34.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -26.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -18.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -10.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -2.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     6.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     14.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     22.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     30.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     38.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     46.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     54.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     62.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     70.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     78.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     116.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     124.0,
+     4.4
+    ],
+    "diameter": 1.1
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "vine beads",
+    "distance": 0.45,
+    "operation": "new",
+    "name": "vine curls ext",
+    "body_name": "Bead"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      0,
+      -12.95,
+      0
+     ],
+     "x_dir": [
+      1,
+      0,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "escutcheon"
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      89.5,
+      2.4
+     ],
+     [
+      90.6,
+      3.9
+     ],
+     [
+      92.3,
+      4.9
+     ],
+     [
+      94.6,
+      5.6
+     ],
+     [
+      97.4,
+      5.9
+     ],
+     [
+      100.0,
+      6.1
+     ],
+     [
+      102.6,
+      5.9
+     ],
+     [
+      105.4,
+      5.6
+     ],
+     [
+      107.7,
+      4.9
+     ],
+     [
+      109.4,
+      3.9
+     ],
+     [
+      110.5,
+      2.4
+     ],
+     [
+      109.6,
+      1.75
+     ],
+     [
+      106.0,
+      1.6
+     ],
+     [
+      100.0,
+      1.6
+     ],
+     [
+      94.0,
+      1.6
+     ],
+     [
+      90.4,
+      1.75
+     ]
+    ],
+    "periodic": true
+   }
+  },
+  {
+   "command": "sketch.slot.center_to_center",
+   "params": {
+    "p0": [
+     96.4,
+     3.2
+    ],
+    "p1": [
+     103.6,
+     3.2
+    ],
+    "width": 4.9
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "escutcheon",
+    "distance": 0.4,
+    "profiles": [
+     {
+      "point": [
+       91.0,
+       3.0
+      ]
+     }
+    ],
+    "operation": "new",
+    "name": "escutcheon ext",
+    "body_name": "Escutcheon"
+   }
+  },
+  {
+   "command": "solid.mirror",
+   "params": {
+    "features": [
+     "vine wave ext",
+     "vine curls ext",
+     "escutcheon ext"
+    ],
+    "plane": "XZ"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 10.6,
+    "name": "scrolls l"
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      -106.6,
+      8.9
+     ],
+     [
+      -104.5,
+      9.5
+     ],
+     [
+      -101.5,
+      9.75
+     ],
+     [
+      -98.9,
+      9.45
+     ],
+     [
+      -97.2029,
+      8.7605
+     ],
+     [
+      -96.3337,
+      8.8819
+     ],
+     [
+      -95.5699,
+      8.5494
+     ],
+     [
+      -95.1182,
+      7.9032
+     ],
+     [
+      -95.074,
+      7.1606
+     ],
+     [
+      -95.4043,
+      6.5443
+     ],
+     [
+      -95.9705,
+      6.2153
+     ],
+     [
+      -96.5807,
+      6.2318
+     ],
+     [
+      -97.0534,
+      6.543
+     ],
+     [
+      -97.2718,
+      7.0167
+     ],
+     [
+      -97.2113,
+      7.4903
+     ],
+     [
+      -96.9359,
+      7.8247
+     ],
+     [
+      -96.5658,
+      7.9457
+     ],
+     [
+      -96.2314,
+      7.8584
+     ],
+     [
+      -96.0284,
+      7.6346
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      -104.5,
+      9.45
+     ],
+     [
+      -103.5695,
+      8.8463
+     ],
+     [
+      -103.0434,
+      8.6556
+     ],
+     [
+      -102.6754,
+      8.2669
+     ],
+     [
+      -102.5279,
+      7.7775
+     ],
+     [
+      -102.6118,
+      7.2979
+     ],
+     [
+      -102.888,
+      6.9267
+     ],
+     [
+      -103.28,
+      6.7303
+     ],
+     [
+      -103.6943,
+      6.7318
+     ],
+     [
+      -104.0418,
+      6.9092
+     ],
+     [
+      -104.2572,
+      7.2051
+     ],
+     [
+      -104.311,
+      7.5428
+     ],
+     [
+      -104.2128,
+      7.8451
+     ],
+     [
+      -104.0044,
+      8.0523
+     ],
+     [
+      -103.7469,
+      8.1335
+     ],
+     [
+      -103.5046,
+      8.0908
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      -106.6,
+      -8.9
+     ],
+     [
+      -104.5,
+      -9.5
+     ],
+     [
+      -101.5,
+      -9.75
+     ],
+     [
+      -98.9,
+      -9.45
+     ],
+     [
+      -97.2029,
+      -8.7605
+     ],
+     [
+      -96.3337,
+      -8.8819
+     ],
+     [
+      -95.5699,
+      -8.5494
+     ],
+     [
+      -95.1182,
+      -7.9032
+     ],
+     [
+      -95.074,
+      -7.1606
+     ],
+     [
+      -95.4043,
+      -6.5443
+     ],
+     [
+      -95.9705,
+      -6.2153
+     ],
+     [
+      -96.5807,
+      -6.2318
+     ],
+     [
+      -97.0534,
+      -6.543
+     ],
+     [
+      -97.2718,
+      -7.0167
+     ],
+     [
+      -97.2113,
+      -7.4903
+     ],
+     [
+      -96.9359,
+      -7.8247
+     ],
+     [
+      -96.5658,
+      -7.9457
+     ],
+     [
+      -96.2314,
+      -7.8584
+     ],
+     [
+      -96.0284,
+      -7.6346
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      -104.5,
+      -9.45
+     ],
+     [
+      -103.5695,
+      -8.8463
+     ],
+     [
+      -103.0434,
+      -8.6556
+     ],
+     [
+      -102.6754,
+      -8.2669
+     ],
+     [
+      -102.5279,
+      -7.7775
+     ],
+     [
+      -102.6118,
+      -7.2979
+     ],
+     [
+      -102.888,
+      -6.9267
+     ],
+     [
+      -103.28,
+      -6.7303
+     ],
+     [
+      -103.6943,
+      -6.7318
+     ],
+     [
+      -104.0418,
+      -6.9092
+     ],
+     [
+      -104.2572,
+      -7.2051
+     ],
+     [
+      -104.311,
+      -7.5428
+     ],
+     [
+      -104.2128,
+      -7.8451
+     ],
+     [
+      -104.0044,
+      -8.0523
+     ],
+     [
+      -103.7469,
+      -8.1335
+     ],
+     [
+      -103.5046,
+      -8.0908
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "scrolls l",
+    "thin": true,
+    "thickness": 0.75,
+    "distance": 0.4,
+    "operation": "new",
+    "name": "scrolls l ext",
+    "body_name": "Scrolls L"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 10.5,
+    "name": "panel r"
+   }
+  },
+  {
+   "command": "sketch.rectangle.rounded",
+   "params": {
+    "p0": [
+     109.2,
+     -9.8
+    ],
+    "p1": [
+     124.8,
+     9.8
+    ],
+    "radius": 3.0
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "panel r",
+    "distance": 2,
+    "operation": "cut",
+    "targets": [
+     "Deck"
+    ],
+    "name": "panel r cut"
+   }
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "panel r",
+    "distance": 0.12,
+    "operation": "new",
+    "name": "panel r ext",
+    "body_name": "Panel R"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 10.6,
+    "name": "scrolls r"
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      109.9,
+      6.0
+     ],
+     [
+      111.6,
+      8.3
+     ],
+     [
+      114.5,
+      9.25
+     ],
+     [
+      118.0,
+      9.2
+     ],
+     [
+      120.0,
+      8.75
+     ],
+     [
+      121.6923,
+      8.6903
+     ],
+     [
+      122.3202,
+      8.4261
+     ],
+     [
+      122.7238,
+      7.9127
+     ],
+     [
+      122.8233,
+      7.2957
+     ],
+     [
+      122.6204,
+      6.7344
+     ],
+     [
+      122.1915,
+      6.3607
+     ],
+     [
+      121.6625,
+      6.2485
+     ],
+     [
+      121.1725,
+      6.3997
+     ],
+     [
+      120.8376,
+      6.7501
+     ],
+     [
+      120.7233,
+      7.1923
+     ],
+     [
+      120.8325,
+      7.607
+     ],
+     [
+      121.1113,
+      7.895
+     ],
+     [
+      121.4688,
+      8.0012
+     ],
+     [
+      121.8051,
+      7.9238
+     ],
+     [
+      122.0388,
+      7.7092
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      112.4,
+      8.75
+     ],
+     [
+      112.237,
+      7.877
+     ],
+     [
+      112.0892,
+      7.4648
+     ],
+     [
+      112.1219,
+      7.0421
+     ],
+     [
+      112.318,
+      6.6818
+     ],
+     [
+      112.6333,
+      6.4417
+     ],
+     [
+      113.0059,
+      6.3549
+     ],
+     [
+      113.3678,
+      6.4258
+     ],
+     [
+      113.6576,
+      6.6307
+     ],
+     [
+      113.8308,
+      6.9246
+     ],
+     [
+      113.8667,
+      7.25
+     ],
+     [
+      113.7699,
+      7.5483
+     ],
+     [
+      113.5684,
+      7.7702
+     ],
+     [
+      113.306,
+      7.884
+     ],
+     [
+      113.0338,
+      7.8799
+     ],
+     [
+      112.8,
+      7.7696
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      109.9,
+      -6.0
+     ],
+     [
+      111.6,
+      -8.3
+     ],
+     [
+      114.5,
+      -9.25
+     ],
+     [
+      118.0,
+      -9.2
+     ],
+     [
+      120.0,
+      -8.75
+     ],
+     [
+      121.6923,
+      -8.6903
+     ],
+     [
+      122.3202,
+      -8.4261
+     ],
+     [
+      122.7238,
+      -7.9127
+     ],
+     [
+      122.8233,
+      -7.2957
+     ],
+     [
+      122.6204,
+      -6.7344
+     ],
+     [
+      122.1915,
+      -6.3607
+     ],
+     [
+      121.6625,
+      -6.2485
+     ],
+     [
+      121.1725,
+      -6.3997
+     ],
+     [
+      120.8376,
+      -6.7501
+     ],
+     [
+      120.7233,
+      -7.1923
+     ],
+     [
+      120.8325,
+      -7.607
+     ],
+     [
+      121.1113,
+      -7.895
+     ],
+     [
+      121.4688,
+      -8.0012
+     ],
+     [
+      121.8051,
+      -7.9238
+     ],
+     [
+      122.0388,
+      -7.7092
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      112.4,
+      -8.75
+     ],
+     [
+      112.237,
+      -7.877
+     ],
+     [
+      112.0892,
+      -7.4648
+     ],
+     [
+      112.1219,
+      -7.0421
+     ],
+     [
+      112.318,
+      -6.6818
+     ],
+     [
+      112.6333,
+      -6.4417
+     ],
+     [
+      113.0059,
+      -6.3549
+     ],
+     [
+      113.3678,
+      -6.4258
+     ],
+     [
+      113.6576,
+      -6.6307
+     ],
+     [
+      113.8308,
+      -6.9246
+     ],
+     [
+      113.8667,
+      -7.25
+     ],
+     [
+      113.7699,
+      -7.5483
+     ],
+     [
+      113.5684,
+      -7.7702
+     ],
+     [
+      113.306,
+      -7.884
+     ],
+     [
+      113.0338,
+      -7.8799
+     ],
+     [
+      112.8,
+      -7.7696
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "scrolls r",
+    "thin": true,
+    "thickness": 0.65,
+    "distance": 0.4,
+    "operation": "new",
+    "name": "scrolls r ext",
+    "body_name": "Scrolls R"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 10.99,
+    "name": "window etch"
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      -86.0,
+      9.25
+     ],
+     [
+      -85.1971,
+      9.4204
+     ],
+     [
+      -84.3942,
+      9.5305
+     ],
+     [
+      -83.5913,
+      9.5413
+     ],
+     [
+      -82.7885,
+      9.4489
+     ],
+     [
+      -81.9856,
+      9.2862
+     ],
+     [
+      -81.1827,
+      9.1106
+     ],
+     [
+      -80.3798,
+      8.9844
+     ],
+     [
+      -79.5769,
+      8.9522
+     ],
+     [
+      -78.774,
+      9.0254
+     ],
+     [
+      -77.9712,
+      9.1782
+     ],
+     [
+      -77.1683,
+      9.3564
+     ],
+     [
+      -76.3654,
+      9.4969
+     ],
+     [
+      -75.5625,
+      9.55
+     ],
+     [
+      -74.7596,
+      9.4969
+     ],
+     [
+      -73.9567,
+      9.3564
+     ],
+     [
+      -73.1538,
+      9.1782
+     ],
+     [
+      -72.351,
+      9.0254
+     ],
+     [
+      -71.5481,
+      8.9522
+     ],
+     [
+      -70.7452,
+      8.9844
+     ],
+     [
+      -69.9423,
+      9.1106
+     ],
+     [
+      -69.1394,
+      9.2862
+     ],
+     [
+      -68.3365,
+      9.4489
+     ],
+     [
+      -67.5337,
+      9.5413
+     ],
+     [
+      -66.7308,
+      9.5305
+     ],
+     [
+      -65.9279,
+      9.4204
+     ],
+     [
+      -65.125,
+      9.25
+     ],
+     [
+      -64.3221,
+      9.0796
+     ],
+     [
+      -63.5192,
+      8.9695
+     ],
+     [
+      -62.7163,
+      8.9587
+     ],
+     [
+      -61.9135,
+      9.0511
+     ],
+     [
+      -61.1106,
+      9.2138
+     ],
+     [
+      -60.3077,
+      9.3894
+     ],
+     [
+      -59.5048,
+      9.5156
+     ],
+     [
+      -58.7019,
+      9.5478
+     ],
+     [
+      -57.899,
+      9.4746
+     ],
+     [
+      -57.0962,
+      9.3218
+     ],
+     [
+      -56.2933,
+      9.1436
+     ],
+     [
+      -55.4904,
+      9.0031
+     ],
+     [
+      -54.6875,
+      8.95
+     ],
+     [
+      -53.8846,
+      9.0031
+     ],
+     [
+      -53.0817,
+      9.1436
+     ],
+     [
+      -52.2788,
+      9.3218
+     ],
+     [
+      -51.476,
+      9.4746
+     ],
+     [
+      -50.6731,
+      9.5478
+     ],
+     [
+      -49.8702,
+      9.5156
+     ],
+     [
+      -49.0673,
+      9.3894
+     ],
+     [
+      -48.2644,
+      9.2138
+     ],
+     [
+      -47.4615,
+      9.0511
+     ],
+     [
+      -46.6587,
+      8.9587
+     ],
+     [
+      -45.8558,
+      8.9695
+     ],
+     [
+      -45.0529,
+      9.0796
+     ],
+     [
+      -44.25,
+      9.25
+     ],
+     [
+      -43.4471,
+      9.4204
+     ],
+     [
+      -42.6442,
+      9.5305
+     ],
+     [
+      -41.8413,
+      9.5413
+     ],
+     [
+      -41.0385,
+      9.4489
+     ],
+     [
+      -40.2356,
+      9.2862
+     ],
+     [
+      -39.4327,
+      9.1106
+     ],
+     [
+      -38.6298,
+      8.9844
+     ],
+     [
+      -37.8269,
+      8.9522
+     ],
+     [
+      -37.024,
+      9.0254
+     ],
+     [
+      -36.2212,
+      9.1782
+     ],
+     [
+      -35.4183,
+      9.3564
+     ],
+     [
+      -34.6154,
+      9.4969
+     ],
+     [
+      -33.8125,
+      9.55
+     ],
+     [
+      -33.0096,
+      9.4969
+     ],
+     [
+      -32.2067,
+      9.3564
+     ],
+     [
+      -31.4038,
+      9.1782
+     ],
+     [
+      -30.601,
+      9.0254
+     ],
+     [
+      -29.7981,
+      8.9522
+     ],
+     [
+      -28.9952,
+      8.9844
+     ],
+     [
+      -28.1923,
+      9.1106
+     ],
+     [
+      -27.3894,
+      9.2862
+     ],
+     [
+      -26.5865,
+      9.4489
+     ],
+     [
+      -25.7837,
+      9.5413
+     ],
+     [
+      -24.9808,
+      9.5305
+     ],
+     [
+      -24.1779,
+      9.4204
+     ],
+     [
+      -23.375,
+      9.25
+     ],
+     [
+      -22.5721,
+      9.0796
+     ],
+     [
+      -21.7692,
+      8.9695
+     ],
+     [
+      -20.9663,
+      8.9587
+     ],
+     [
+      -20.1635,
+      9.0511
+     ],
+     [
+      -19.3606,
+      9.2138
+     ],
+     [
+      -18.5577,
+      9.3894
+     ],
+     [
+      -17.7548,
+      9.5156
+     ],
+     [
+      -16.9519,
+      9.5478
+     ],
+     [
+      -16.149,
+      9.4746
+     ],
+     [
+      -15.3462,
+      9.3218
+     ],
+     [
+      -14.5433,
+      9.1436
+     ],
+     [
+      -13.7404,
+      9.0031
+     ],
+     [
+      -12.9375,
+      8.95
+     ],
+     [
+      -12.1346,
+      9.0031
+     ],
+     [
+      -11.3317,
+      9.1436
+     ],
+     [
+      -10.5288,
+      9.3218
+     ],
+     [
+      -9.726,
+      9.4746
+     ],
+     [
+      -8.9231,
+      9.5478
+     ],
+     [
+      -8.1202,
+      9.5156
+     ],
+     [
+      -7.3173,
+      9.3894
+     ],
+     [
+      -6.5144,
+      9.2138
+     ],
+     [
+      -5.7115,
+      9.0511
+     ],
+     [
+      -4.9087,
+      8.9587
+     ],
+     [
+      -4.1058,
+      8.9695
+     ],
+     [
+      -3.3029,
+      9.0796
+     ],
+     [
+      -2.5,
+      9.25
+     ],
+     [
+      -1.6971,
+      9.4204
+     ],
+     [
+      -0.8942,
+      9.5305
+     ],
+     [
+      -0.0913,
+      9.5413
+     ],
+     [
+      0.7115,
+      9.4489
+     ],
+     [
+      1.5144,
+      9.2862
+     ],
+     [
+      2.3173,
+      9.1106
+     ],
+     [
+      3.1202,
+      8.9844
+     ],
+     [
+      3.9231,
+      8.9522
+     ],
+     [
+      4.726,
+      9.0254
+     ],
+     [
+      5.5288,
+      9.1782
+     ],
+     [
+      6.3317,
+      9.3564
+     ],
+     [
+      7.1346,
+      9.4969
+     ],
+     [
+      7.9375,
+      9.55
+     ],
+     [
+      8.7404,
+      9.4969
+     ],
+     [
+      9.5433,
+      9.3564
+     ],
+     [
+      10.3462,
+      9.1782
+     ],
+     [
+      11.149,
+      9.0254
+     ],
+     [
+      11.9519,
+      8.9522
+     ],
+     [
+      12.7548,
+      8.9844
+     ],
+     [
+      13.5577,
+      9.1106
+     ],
+     [
+      14.3606,
+      9.2862
+     ],
+     [
+      15.1635,
+      9.4489
+     ],
+     [
+      15.9663,
+      9.5413
+     ],
+     [
+      16.7692,
+      9.5305
+     ],
+     [
+      17.5721,
+      9.4204
+     ],
+     [
+      18.375,
+      9.25
+     ],
+     [
+      19.1779,
+      9.0796
+     ],
+     [
+      19.9808,
+      8.9695
+     ],
+     [
+      20.7837,
+      8.9587
+     ],
+     [
+      21.5865,
+      9.0511
+     ],
+     [
+      22.3894,
+      9.2138
+     ],
+     [
+      23.1923,
+      9.3894
+     ],
+     [
+      23.9952,
+      9.5156
+     ],
+     [
+      24.7981,
+      9.5478
+     ],
+     [
+      25.601,
+      9.4746
+     ],
+     [
+      26.4038,
+      9.3218
+     ],
+     [
+      27.2067,
+      9.1436
+     ],
+     [
+      28.0096,
+      9.0031
+     ],
+     [
+      28.8125,
+      8.95
+     ],
+     [
+      29.6154,
+      9.0031
+     ],
+     [
+      30.4183,
+      9.1436
+     ],
+     [
+      31.2212,
+      9.3218
+     ],
+     [
+      32.024,
+      9.4746
+     ],
+     [
+      32.8269,
+      9.5478
+     ],
+     [
+      33.6298,
+      9.5156
+     ],
+     [
+      34.4327,
+      9.3894
+     ],
+     [
+      35.2356,
+      9.2138
+     ],
+     [
+      36.0385,
+      9.0511
+     ],
+     [
+      36.8413,
+      8.9587
+     ],
+     [
+      37.6442,
+      8.9695
+     ],
+     [
+      38.4471,
+      9.0796
+     ],
+     [
+      39.25,
+      9.25
+     ],
+     [
+      40.0529,
+      9.4204
+     ],
+     [
+      40.8558,
+      9.5305
+     ],
+     [
+      41.6587,
+      9.5413
+     ],
+     [
+      42.4615,
+      9.4489
+     ],
+     [
+      43.2644,
+      9.2862
+     ],
+     [
+      44.0673,
+      9.1106
+     ],
+     [
+      44.8702,
+      8.9844
+     ],
+     [
+      45.6731,
+      8.9522
+     ],
+     [
+      46.476,
+      9.0254
+     ],
+     [
+      47.2788,
+      9.1782
+     ],
+     [
+      48.0817,
+      9.3564
+     ],
+     [
+      48.8846,
+      9.4969
+     ],
+     [
+      49.6875,
+      9.55
+     ],
+     [
+      50.4904,
+      9.4969
+     ],
+     [
+      51.2933,
+      9.3564
+     ],
+     [
+      52.0962,
+      9.1782
+     ],
+     [
+      52.899,
+      9.0254
+     ],
+     [
+      53.7019,
+      8.9522
+     ],
+     [
+      54.5048,
+      8.9844
+     ],
+     [
+      55.3077,
+      9.1106
+     ],
+     [
+      56.1106,
+      9.2862
+     ],
+     [
+      56.9135,
+      9.4489
+     ],
+     [
+      57.7163,
+      9.5413
+     ],
+     [
+      58.5192,
+      9.5305
+     ],
+     [
+      59.3221,
+      9.4204
+     ],
+     [
+      60.125,
+      9.25
+     ],
+     [
+      60.9279,
+      9.0796
+     ],
+     [
+      61.7308,
+      8.9695
+     ],
+     [
+      62.5337,
+      8.9587
+     ],
+     [
+      63.3365,
+      9.0511
+     ],
+     [
+      64.1394,
+      9.2138
+     ],
+     [
+      64.9423,
+      9.3894
+     ],
+     [
+      65.7452,
+      9.5156
+     ],
+     [
+      66.5481,
+      9.5478
+     ],
+     [
+      67.351,
+      9.4746
+     ],
+     [
+      68.1538,
+      9.3218
+     ],
+     [
+      68.9567,
+      9.1436
+     ],
+     [
+      69.7596,
+      9.0031
+     ],
+     [
+      70.5625,
+      8.95
+     ],
+     [
+      71.3654,
+      9.0031
+     ],
+     [
+      72.1683,
+      9.1436
+     ],
+     [
+      72.9712,
+      9.3218
+     ],
+     [
+      73.774,
+      9.4746
+     ],
+     [
+      74.5769,
+      9.5478
+     ],
+     [
+      75.3798,
+      9.5156
+     ],
+     [
+      76.1827,
+      9.3894
+     ],
+     [
+      76.9856,
+      9.2138
+     ],
+     [
+      77.7885,
+      9.0511
+     ],
+     [
+      78.5913,
+      8.9587
+     ],
+     [
+      79.3942,
+      8.9695
+     ],
+     [
+      80.1971,
+      9.0796
+     ],
+     [
+      81.0,
+      9.25
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      -86.0,
+      -9.25
+     ],
+     [
+      -85.1971,
+      -9.0796
+     ],
+     [
+      -84.3942,
+      -8.9695
+     ],
+     [
+      -83.5913,
+      -8.9587
+     ],
+     [
+      -82.7885,
+      -9.0511
+     ],
+     [
+      -81.9856,
+      -9.2138
+     ],
+     [
+      -81.1827,
+      -9.3894
+     ],
+     [
+      -80.3798,
+      -9.5156
+     ],
+     [
+      -79.5769,
+      -9.5478
+     ],
+     [
+      -78.774,
+      -9.4746
+     ],
+     [
+      -77.9712,
+      -9.3218
+     ],
+     [
+      -77.1683,
+      -9.1436
+     ],
+     [
+      -76.3654,
+      -9.0031
+     ],
+     [
+      -75.5625,
+      -8.95
+     ],
+     [
+      -74.7596,
+      -9.0031
+     ],
+     [
+      -73.9567,
+      -9.1436
+     ],
+     [
+      -73.1538,
+      -9.3218
+     ],
+     [
+      -72.351,
+      -9.4746
+     ],
+     [
+      -71.5481,
+      -9.5478
+     ],
+     [
+      -70.7452,
+      -9.5156
+     ],
+     [
+      -69.9423,
+      -9.3894
+     ],
+     [
+      -69.1394,
+      -9.2138
+     ],
+     [
+      -68.3365,
+      -9.0511
+     ],
+     [
+      -67.5337,
+      -8.9587
+     ],
+     [
+      -66.7308,
+      -8.9695
+     ],
+     [
+      -65.9279,
+      -9.0796
+     ],
+     [
+      -65.125,
+      -9.25
+     ],
+     [
+      -64.3221,
+      -9.4204
+     ],
+     [
+      -63.5192,
+      -9.5305
+     ],
+     [
+      -62.7163,
+      -9.5413
+     ],
+     [
+      -61.9135,
+      -9.4489
+     ],
+     [
+      -61.1106,
+      -9.2862
+     ],
+     [
+      -60.3077,
+      -9.1106
+     ],
+     [
+      -59.5048,
+      -8.9844
+     ],
+     [
+      -58.7019,
+      -8.9522
+     ],
+     [
+      -57.899,
+      -9.0254
+     ],
+     [
+      -57.0962,
+      -9.1782
+     ],
+     [
+      -56.2933,
+      -9.3564
+     ],
+     [
+      -55.4904,
+      -9.4969
+     ],
+     [
+      -54.6875,
+      -9.55
+     ],
+     [
+      -53.8846,
+      -9.4969
+     ],
+     [
+      -53.0817,
+      -9.3564
+     ],
+     [
+      -52.2788,
+      -9.1782
+     ],
+     [
+      -51.476,
+      -9.0254
+     ],
+     [
+      -50.6731,
+      -8.9522
+     ],
+     [
+      -49.8702,
+      -8.9844
+     ],
+     [
+      -49.0673,
+      -9.1106
+     ],
+     [
+      -48.2644,
+      -9.2862
+     ],
+     [
+      -47.4615,
+      -9.4489
+     ],
+     [
+      -46.6587,
+      -9.5413
+     ],
+     [
+      -45.8558,
+      -9.5305
+     ],
+     [
+      -45.0529,
+      -9.4204
+     ],
+     [
+      -44.25,
+      -9.25
+     ],
+     [
+      -43.4471,
+      -9.0796
+     ],
+     [
+      -42.6442,
+      -8.9695
+     ],
+     [
+      -41.8413,
+      -8.9587
+     ],
+     [
+      -41.0385,
+      -9.0511
+     ],
+     [
+      -40.2356,
+      -9.2138
+     ],
+     [
+      -39.4327,
+      -9.3894
+     ],
+     [
+      -38.6298,
+      -9.5156
+     ],
+     [
+      -37.8269,
+      -9.5478
+     ],
+     [
+      -37.024,
+      -9.4746
+     ],
+     [
+      -36.2212,
+      -9.3218
+     ],
+     [
+      -35.4183,
+      -9.1436
+     ],
+     [
+      -34.6154,
+      -9.0031
+     ],
+     [
+      -33.8125,
+      -8.95
+     ],
+     [
+      -33.0096,
+      -9.0031
+     ],
+     [
+      -32.2067,
+      -9.1436
+     ],
+     [
+      -31.4038,
+      -9.3218
+     ],
+     [
+      -30.601,
+      -9.4746
+     ],
+     [
+      -29.7981,
+      -9.5478
+     ],
+     [
+      -28.9952,
+      -9.5156
+     ],
+     [
+      -28.1923,
+      -9.3894
+     ],
+     [
+      -27.3894,
+      -9.2138
+     ],
+     [
+      -26.5865,
+      -9.0511
+     ],
+     [
+      -25.7837,
+      -8.9587
+     ],
+     [
+      -24.9808,
+      -8.9695
+     ],
+     [
+      -24.1779,
+      -9.0796
+     ],
+     [
+      -23.375,
+      -9.25
+     ],
+     [
+      -22.5721,
+      -9.4204
+     ],
+     [
+      -21.7692,
+      -9.5305
+     ],
+     [
+      -20.9663,
+      -9.5413
+     ],
+     [
+      -20.1635,
+      -9.4489
+     ],
+     [
+      -19.3606,
+      -9.2862
+     ],
+     [
+      -18.5577,
+      -9.1106
+     ],
+     [
+      -17.7548,
+      -8.9844
+     ],
+     [
+      -16.9519,
+      -8.9522
+     ],
+     [
+      -16.149,
+      -9.0254
+     ],
+     [
+      -15.3462,
+      -9.1782
+     ],
+     [
+      -14.5433,
+      -9.3564
+     ],
+     [
+      -13.7404,
+      -9.4969
+     ],
+     [
+      -12.9375,
+      -9.55
+     ],
+     [
+      -12.1346,
+      -9.4969
+     ],
+     [
+      -11.3317,
+      -9.3564
+     ],
+     [
+      -10.5288,
+      -9.1782
+     ],
+     [
+      -9.726,
+      -9.0254
+     ],
+     [
+      -8.9231,
+      -8.9522
+     ],
+     [
+      -8.1202,
+      -8.9844
+     ],
+     [
+      -7.3173,
+      -9.1106
+     ],
+     [
+      -6.5144,
+      -9.2862
+     ],
+     [
+      -5.7115,
+      -9.4489
+     ],
+     [
+      -4.9087,
+      -9.5413
+     ],
+     [
+      -4.1058,
+      -9.5305
+     ],
+     [
+      -3.3029,
+      -9.4204
+     ],
+     [
+      -2.5,
+      -9.25
+     ],
+     [
+      -1.6971,
+      -9.0796
+     ],
+     [
+      -0.8942,
+      -8.9695
+     ],
+     [
+      -0.0913,
+      -8.9587
+     ],
+     [
+      0.7115,
+      -9.0511
+     ],
+     [
+      1.5144,
+      -9.2138
+     ],
+     [
+      2.3173,
+      -9.3894
+     ],
+     [
+      3.1202,
+      -9.5156
+     ],
+     [
+      3.9231,
+      -9.5478
+     ],
+     [
+      4.726,
+      -9.4746
+     ],
+     [
+      5.5288,
+      -9.3218
+     ],
+     [
+      6.3317,
+      -9.1436
+     ],
+     [
+      7.1346,
+      -9.0031
+     ],
+     [
+      7.9375,
+      -8.95
+     ],
+     [
+      8.7404,
+      -9.0031
+     ],
+     [
+      9.5433,
+      -9.1436
+     ],
+     [
+      10.3462,
+      -9.3218
+     ],
+     [
+      11.149,
+      -9.4746
+     ],
+     [
+      11.9519,
+      -9.5478
+     ],
+     [
+      12.7548,
+      -9.5156
+     ],
+     [
+      13.5577,
+      -9.3894
+     ],
+     [
+      14.3606,
+      -9.2138
+     ],
+     [
+      15.1635,
+      -9.0511
+     ],
+     [
+      15.9663,
+      -8.9587
+     ],
+     [
+      16.7692,
+      -8.9695
+     ],
+     [
+      17.5721,
+      -9.0796
+     ],
+     [
+      18.375,
+      -9.25
+     ],
+     [
+      19.1779,
+      -9.4204
+     ],
+     [
+      19.9808,
+      -9.5305
+     ],
+     [
+      20.7837,
+      -9.5413
+     ],
+     [
+      21.5865,
+      -9.4489
+     ],
+     [
+      22.3894,
+      -9.2862
+     ],
+     [
+      23.1923,
+      -9.1106
+     ],
+     [
+      23.9952,
+      -8.9844
+     ],
+     [
+      24.7981,
+      -8.9522
+     ],
+     [
+      25.601,
+      -9.0254
+     ],
+     [
+      26.4038,
+      -9.1782
+     ],
+     [
+      27.2067,
+      -9.3564
+     ],
+     [
+      28.0096,
+      -9.4969
+     ],
+     [
+      28.8125,
+      -9.55
+     ],
+     [
+      29.6154,
+      -9.4969
+     ],
+     [
+      30.4183,
+      -9.3564
+     ],
+     [
+      31.2212,
+      -9.1782
+     ],
+     [
+      32.024,
+      -9.0254
+     ],
+     [
+      32.8269,
+      -8.9522
+     ],
+     [
+      33.6298,
+      -8.9844
+     ],
+     [
+      34.4327,
+      -9.1106
+     ],
+     [
+      35.2356,
+      -9.2862
+     ],
+     [
+      36.0385,
+      -9.4489
+     ],
+     [
+      36.8413,
+      -9.5413
+     ],
+     [
+      37.6442,
+      -9.5305
+     ],
+     [
+      38.4471,
+      -9.4204
+     ],
+     [
+      39.25,
+      -9.25
+     ],
+     [
+      40.0529,
+      -9.0796
+     ],
+     [
+      40.8558,
+      -8.9695
+     ],
+     [
+      41.6587,
+      -8.9587
+     ],
+     [
+      42.4615,
+      -9.0511
+     ],
+     [
+      43.2644,
+      -9.2138
+     ],
+     [
+      44.0673,
+      -9.3894
+     ],
+     [
+      44.8702,
+      -9.5156
+     ],
+     [
+      45.6731,
+      -9.5478
+     ],
+     [
+      46.476,
+      -9.4746
+     ],
+     [
+      47.2788,
+      -9.3218
+     ],
+     [
+      48.0817,
+      -9.1436
+     ],
+     [
+      48.8846,
+      -9.0031
+     ],
+     [
+      49.6875,
+      -8.95
+     ],
+     [
+      50.4904,
+      -9.0031
+     ],
+     [
+      51.2933,
+      -9.1436
+     ],
+     [
+      52.0962,
+      -9.3218
+     ],
+     [
+      52.899,
+      -9.4746
+     ],
+     [
+      53.7019,
+      -9.5478
+     ],
+     [
+      54.5048,
+      -9.5156
+     ],
+     [
+      55.3077,
+      -9.3894
+     ],
+     [
+      56.1106,
+      -9.2138
+     ],
+     [
+      56.9135,
+      -9.0511
+     ],
+     [
+      57.7163,
+      -8.9587
+     ],
+     [
+      58.5192,
+      -8.9695
+     ],
+     [
+      59.3221,
+      -9.0796
+     ],
+     [
+      60.125,
+      -9.25
+     ],
+     [
+      60.9279,
+      -9.4204
+     ],
+     [
+      61.7308,
+      -9.5305
+     ],
+     [
+      62.5337,
+      -9.5413
+     ],
+     [
+      63.3365,
+      -9.4489
+     ],
+     [
+      64.1394,
+      -9.2862
+     ],
+     [
+      64.9423,
+      -9.1106
+     ],
+     [
+      65.7452,
+      -8.9844
+     ],
+     [
+      66.5481,
+      -8.9522
+     ],
+     [
+      67.351,
+      -9.0254
+     ],
+     [
+      68.1538,
+      -9.1782
+     ],
+     [
+      68.9567,
+      -9.3564
+     ],
+     [
+      69.7596,
+      -9.4969
+     ],
+     [
+      70.5625,
+      -9.55
+     ],
+     [
+      71.3654,
+      -9.4969
+     ],
+     [
+      72.1683,
+      -9.3564
+     ],
+     [
+      72.9712,
+      -9.1782
+     ],
+     [
+      73.774,
+      -9.0254
+     ],
+     [
+      74.5769,
+      -8.9522
+     ],
+     [
+      75.3798,
+      -8.9844
+     ],
+     [
+      76.1827,
+      -9.1106
+     ],
+     [
+      76.9856,
+      -9.2862
+     ],
+     [
+      77.7885,
+      -9.4489
+     ],
+     [
+      78.5913,
+      -9.5413
+     ],
+     [
+      79.3942,
+      -9.5305
+     ],
+     [
+      80.1971,
+      -9.4204
+     ],
+     [
+      81.0,
+      -9.25
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "window etch",
+    "thin": true,
+    "thickness": 0.42,
+    "distance": 0.05,
+    "operation": "new",
+    "name": "window etch ext",
+    "body_name": "Etch"
+   }
+  },
+  {
+   "command": "parameters.add",
+   "params": {
+    "name": "floor_t",
+    "expression": "1.2 mm",
+    "comment": "base floor"
+   }
+  },
+  {
+   "command": "parameters.add",
+   "params": {
+    "name": "wall",
+    "expression": "1.4 mm",
+    "comment": "side walls"
+   }
+  },
+  {
+   "command": "parameters.add",
+   "params": {
+    "name": "ceiling",
+    "expression": "1.2 mm",
+    "comment": "deck top wall"
+   }
+  },
+  {
+   "command": "parameters.add",
+   "params": {
+    "name": "z_split",
+    "expression": "6.3 mm",
+    "comment": "parting line height"
+   }
+  },
+  {
+   "command": "parameters.add",
+   "params": {
+    "name": "bar_thickness",
+    "expression": "11.0 mm",
+    "comment": "body thickness"
+   }
+  },
+  {
+   "command": "parameters.add",
+   "params": {
+    "name": "bar_width",
+    "expression": "26.0 mm",
+    "comment": "body width"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 1.2,
+    "name": "base cavity"
+   }
+  },
+  {
+   "command": "sketch.rectangle.rounded",
+   "params": {
+    "p0": [
+     -126.0,
+     -11.6
+    ],
+    "p1": [
+     126.0,
+     11.6
+    ],
+    "radius": 3.0
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "base cavity",
+    "distance": "z_split - floor_t + 1 mm",
+    "operation": "cut",
+    "targets": [
+     "Base"
+    ],
+    "name": "base cavity cut"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 5.3,
+    "name": "deck cavity"
+   }
+  },
+  {
+   "command": "sketch.rectangle.rounded",
+   "params": {
+    "p0": [
+     -124.6,
+     -10.8
+    ],
+    "p1": [
+     124.6,
+     10.8
+    ],
+    "radius": 3.0
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "deck cavity",
+    "distance": "bar_thickness - ceiling - z_split + 1 mm",
+    "operation": "cut",
+    "targets": [
+     "Deck"
+    ],
+    "name": "deck cavity cut"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 5.3,
+    "name": "tongue"
+   }
+  },
+  {
+   "command": "sketch.rectangle.rounded",
+   "params": {
+    "p0": [
+     -125.95,
+     -11.55
+    ],
+    "p1": [
+     125.95,
+     11.55
+    ],
+    "radius": 2.95
+   }
+  },
+  {
+   "command": "sketch.rectangle.rounded",
+   "params": {
+    "p0": [
+     -124.6,
+     -10.8
+    ],
+    "p1": [
+     124.6,
+     10.8
+    ],
+    "radius": 3.0
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "tongue",
+    "distance": 1.05,
+    "operation": "join",
+    "targets": [
+     "Deck"
+    ],
+    "name": "tongue ext"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 9.3,
+    "name": "led thru"
+   }
+  },
+  {
+   "command": "sketch.slot.center_to_center",
+   "params": {
+    "p0": [
+     -81.5,
+     0
+    ],
+    "p1": [
+     76.5,
+     0
+    ],
+    "width": 13.4
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "led thru",
+    "distance": 1.4,
+    "operation": "cut",
+    "targets": [
+     "Deck"
+    ],
+    "name": "led thru cut"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 9.0,
+    "name": "diffuser body"
+   }
+  },
+  {
+   "command": "sketch.slot.center_to_center",
+   "params": {
+    "p0": [
+     -81.5,
+     0
+    ],
+    "p1": [
+     76.5,
+     0
+    ],
+    "width": 13.4
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "diffuser body",
+    "distance": 1.4100000000000004,
+    "operation": "join",
+    "targets": [
+     "Diffuser"
+    ],
+    "name": "diffuser body ext"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 9.0,
+    "name": "diffuser flange"
+   }
+  },
+  {
+   "command": "sketch.slot.center_to_center",
+   "params": {
+    "p0": [
+     -81.5,
+     0
+    ],
+    "p1": [
+     76.5,
+     0
+    ],
+    "width": 15.8
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "diffuser flange",
+    "distance": 0.75,
+    "operation": "join",
+    "targets": [
+     "Diffuser"
+    ],
+    "name": "diffuser flange ext"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 9.3,
+    "name": "view thru"
+   }
+  },
+  {
+   "command": "sketch.rectangle.rounded",
+   "params": {
+    "p0": [
+     88.5,
+     -8.0
+    ],
+    "p1": [
+     107.5,
+     8.0
+    ],
+    "radius": 2.5
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "view thru",
+    "distance": 1.4,
+    "operation": "cut",
+    "targets": [
+     "Deck"
+    ],
+    "name": "view thru cut"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 9.0,
+    "name": "view glass body"
+   }
+  },
+  {
+   "command": "sketch.rectangle.rounded",
+   "params": {
+    "p0": [
+     88.5,
+     -8.0
+    ],
+    "p1": [
+     107.5,
+     8.0
+    ],
+    "radius": 2.5
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "view glass body",
+    "distance": 1.2099999999999993,
+    "operation": "join",
+    "targets": [
+     "View Glass"
+    ],
+    "name": "view glass body ext"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 9.0,
+    "name": "view flange"
+   }
+  },
+  {
+   "command": "sketch.rectangle.rounded",
+   "params": {
+    "p0": [
+     87.5,
+     -9.0
+    ],
+    "p1": [
+     108.5,
+     9.0
+    ],
+    "radius": 3.5
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "view flange",
+    "distance": 0.75,
+    "operation": "join",
+    "targets": [
+     "View Glass"
+    ],
+    "name": "view flange ext"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 9.3,
+    "name": "oval thru"
+   }
+  },
+  {
+   "command": "sketch.slot.center_to_center",
+   "params": {
+    "p0": [
+     113.5,
+     0
+    ],
+    "p1": [
+     119.5,
+     0
+    ],
+    "width": 7.4
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "oval thru",
+    "distance": 1.4,
+    "operation": "cut",
+    "targets": [
+     "Deck"
+    ],
+    "name": "oval thru cut"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 9.0,
+    "name": "oval lens body"
+   }
+  },
+  {
+   "command": "sketch.slot.center_to_center",
+   "params": {
+    "p0": [
+     113.5,
+     0
+    ],
+    "p1": [
+     119.5,
+     0
+    ],
+    "width": 7.4
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "oval lens body",
+    "distance": 1.4100000000000004,
+    "operation": "join",
+    "targets": [
+     "Oval Lens"
+    ],
+    "name": "oval lens body ext"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 9.0,
+    "name": "oval flange"
+   }
+  },
+  {
+   "command": "sketch.slot.center_to_center",
+   "params": {
+    "p0": [
+     113.5,
+     0
+    ],
+    "p1": [
+     119.5,
+     0
+    ],
+    "width": 9.200000000000001
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "oval flange",
+    "distance": 0.75,
+    "operation": "join",
+    "targets": [
+     "Oval Lens"
+    ],
+    "name": "oval flange ext"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 9.3,
+    "name": "dome hole"
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -116.0,
+     0
+    ],
+    "diameter": 7.0
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "dome hole",
+    "distance": 3.0500000000000007,
+    "operation": "cut",
+    "targets": [
+     "Deck",
+     "Panel L",
+     "Dome Collar"
+    ],
+    "name": "dome hole cut"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 0.6,
+    "width": 7.2,
+    "height": 2.75,
+    "center": [
+     -115.87,
+     0,
+     9.625
+    ],
+    "operation": "join",
+    "targets": [
+     "Deck"
+    ],
+    "name": "light barrier"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 9.3,
+    "name": "port hole"
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -98.5,
+     0
+    ],
+    "diameter": 5.4
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "port hole",
+    "distance": 4.0,
+    "operation": "cut",
+    "targets": [
+     "Deck",
+     "Panel L",
+     "Port Boss"
+    ],
+    "name": "port hole cut"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "diameter": 4.8,
+    "height": 2.8999999999999986,
+    "base": [
+     -98.5,
+     0,
+     9.3
+    ],
+    "operation": "join",
+    "targets": [
+     "Port Cap"
+    ],
+    "name": "plunger stem"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "diameter": 7.0,
+    "height": 0.4,
+    "base": [
+     -98.5,
+     0,
+     9.3
+    ],
+    "operation": "join",
+    "targets": [
+     "Port Cap"
+    ],
+    "name": "plunger stop"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      0,
+      -14.0,
+      0
+     ],
+     "x_dir": [
+      1,
+      0,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "usb hole"
+   }
+  },
+  {
+   "command": "sketch.slot.center_to_center",
+   "params": {
+    "p0": [
+     97.2,
+     3.2
+    ],
+    "p1": [
+     102.8,
+     3.2
+    ],
+    "width": 4.0
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "usb hole",
+    "distance": 3.0,
+    "direction": "negative",
+    "operation": "cut",
+    "targets": [
+     "Base"
+    ],
+    "name": "usb hole cut"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      0,
+      -12.6,
+      0
+     ],
+     "x_dir": [
+      1,
+      0,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "plug stem"
+   }
+  },
+  {
+   "command": "sketch.slot.center_to_center",
+   "params": {
+    "p0": [
+     97.2,
+     3.2
+    ],
+    "p1": [
+     102.8,
+     3.2
+    ],
+    "width": 3.7
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "plug stem",
+    "distance": 0.55,
+    "direction": "negative",
+    "operation": "join",
+    "targets": [
+     "USB Plug"
+    ],
+    "name": "plug stem ext"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "diameter": 6.0,
+    "height": 4.699999999999999,
+    "base": [
+     -120.0,
+     7.5,
+     0.9
+    ],
+    "operation": "join",
+    "targets": [
+     "Base"
+    ],
+    "name": "post 1"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "diameter": 4.6,
+    "height": 3.250000000000001,
+    "base": [
+     -120.0,
+     7.5,
+     6.65
+    ],
+    "operation": "join",
+    "targets": [
+     "Deck"
+    ],
+    "name": "boss 1"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "diameter": 6.0,
+    "height": 4.699999999999999,
+    "base": [
+     -120.0,
+     -7.5,
+     0.9
+    ],
+    "operation": "join",
+    "targets": [
+     "Base"
+    ],
+    "name": "post 2"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "diameter": 4.6,
+    "height": 3.250000000000001,
+    "base": [
+     -120.0,
+     -7.5,
+     6.65
+    ],
+    "operation": "join",
+    "targets": [
+     "Deck"
+    ],
+    "name": "boss 2"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "diameter": 6.0,
+    "height": 4.699999999999999,
+    "base": [
+     121.0,
+     7.5,
+     0.9
+    ],
+    "operation": "join",
+    "targets": [
+     "Base"
+    ],
+    "name": "post 3"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "diameter": 4.6,
+    "height": 3.250000000000001,
+    "base": [
+     121.0,
+     7.5,
+     6.65
+    ],
+    "operation": "join",
+    "targets": [
+     "Deck"
+    ],
+    "name": "boss 3"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "diameter": 6.0,
+    "height": 4.699999999999999,
+    "base": [
+     121.0,
+     -7.5,
+     0.9
+    ],
+    "operation": "join",
+    "targets": [
+     "Base"
+    ],
+    "name": "post 4"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "diameter": 4.6,
+    "height": 3.250000000000001,
+    "base": [
+     121.0,
+     -7.5,
+     6.65
+    ],
+    "operation": "join",
+    "targets": [
+     "Deck"
+    ],
+    "name": "boss 4"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": -0.5,
+    "name": "screw clearance"
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -120.0,
+     7.5
+    ],
+    "diameter": 2.4
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -120.0,
+     -7.5
+    ],
+    "diameter": 2.4
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     121.0,
+     7.5
+    ],
+    "diameter": 2.4
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     121.0,
+     -7.5
+    ],
+    "diameter": 2.4
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "screw clearance",
+    "distance": 6.1,
+    "operation": "cut",
+    "targets": [
+     "Base"
+    ],
+    "name": "screw holes"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": -0.5,
+    "name": "counterbores"
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -120.0,
+     7.5
+    ],
+    "diameter": 4.2
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -120.0,
+     -7.5
+    ],
+    "diameter": 4.2
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     121.0,
+     7.5
+    ],
+    "diameter": 4.2
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     121.0,
+     -7.5
+    ],
+    "diameter": 4.2
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "counterbores",
+    "distance": 2.3,
+    "operation": "cut",
+    "targets": [
+     "Base"
+    ],
+    "name": "counterbores cut"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 7.1,
+    "name": "pilots"
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -120.0,
+     7.5
+    ],
+    "diameter": 1.6
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -120.0,
+     -7.5
+    ],
+    "diameter": 1.6
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     121.0,
+     7.5
+    ],
+    "diameter": 1.6
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     121.0,
+     -7.5
+    ],
+    "diameter": 1.6
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "pilots",
+    "distance": 2.300000000000001,
+    "operation": "cut",
+    "targets": [
+     "Deck"
+    ],
+    "name": "pilot holes"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "diameter": 3.5,
+    "height": 4.699999999999999,
+    "base": [
+     -5.5,
+     0.0,
+     0.9
+    ],
+    "operation": "join",
+    "targets": [
+     "Base"
+    ],
+    "name": "rest 1"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 1.5,
+    "name": "rail grooves"
+   }
+  },
+  {
+   "command": "sketch.rectangle.two_point",
+   "params": {
+    "p0": [
+     -82.0,
+     -12.3
+    ],
+    "p1": [
+     82.0,
+     -13.6
+    ]
+   }
+  },
+  {
+   "command": "sketch.rectangle.two_point",
+   "params": {
+    "p0": [
+     -82.0,
+     12.3
+    ],
+    "p1": [
+     82.0,
+     13.6
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "rail grooves",
+    "distance": 1.0,
+    "operation": "cut",
+    "targets": [
+     "Base"
+    ],
+    "name": "rail grooves cut"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -80.0,
+      0,
+      0
+     ],
+     "x_dir": [
+      0,
+      1,
+      0
+     ],
+     "y_dir": [
+      0,
+      0,
+      1
+     ]
+    },
+    "name": "rail section"
+   }
+  },
+  {
+   "command": "sketch.line",
+   "params": {
+    "points": [
+     [
+      -14.2,
+      -1.6
+     ],
+     [
+      14.2,
+      -1.6
+     ],
+     [
+      14.2,
+      2.4
+     ],
+     [
+      12.4,
+      2.4
+     ],
+     [
+      12.4,
+      1.6
+     ],
+     [
+      13.1,
+      1.6
+     ],
+     [
+      13.1,
+      -0.05
+     ],
+     [
+      -13.1,
+      -0.05
+     ],
+     [
+      -13.1,
+      1.6
+     ],
+     [
+      -12.4,
+      1.6
+     ],
+     [
+      -12.4,
+      2.4
+     ],
+     [
+      -14.2,
+      2.4
+     ]
+    ],
+    "closed": true
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "rail section",
+    "distance": 160.0,
+    "operation": "new",
+    "name": "rail ext",
+    "body_name": "Mount Rail"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 156.0,
+    "width": 24.0,
+    "height": 0.8,
+    "center": [
+     0,
+     0,
+     -2.0
+    ],
+    "operation": "new",
+    "name": "vhb",
+    "body_name": "VHB Tape"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 5.6,
+    "name": "pcb"
+   }
+  },
+  {
+   "command": "sketch.rectangle.rounded",
+   "params": {
+    "p0": [
+     -124.0,
+     -10.7
+    ],
+    "p1": [
+     124.0,
+     10.7
+    ],
+    "radius": 3.0
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -120.0,
+     7.5
+    ],
+    "diameter": 2.2
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -120.0,
+     -7.5
+    ],
+    "diameter": 2.2
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     121.0,
+     7.5
+    ],
+    "diameter": 2.2
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     121.0,
+     -7.5
+    ],
+    "diameter": 2.2
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "pcb",
+    "distance": 1.0,
+    "operation": "new",
+    "name": "pcb ext",
+    "body_name": "PCB"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 17.8,
+    "width": 21,
+    "height": 1.0,
+    "center": [
+     100.0,
+     -0.2,
+     5.1
+    ],
+    "operation": "new",
+    "name": "xiao",
+    "body_name": "XIAO"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 8.94,
+    "width": 7.35,
+    "height": 3.2,
+    "center": [
+     100.0,
+     -8.225,
+     3.2
+    ],
+    "operation": "new",
+    "name": "xiao usb",
+    "body_name": "XIAO USB-C"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 3.94,
+    "width": 2.36,
+    "height": 1.35,
+    "center": [
+     -116.0,
+     0.0,
+     7.275
+    ],
+    "operation": "new",
+    "name": "apds-9960",
+    "body_name": "APDS-9960"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 2.0,
+    "width": 2.0,
+    "height": 0.65,
+    "center": [
+     116.5,
+     0.0,
+     6.925
+    ],
+    "operation": "new",
+    "name": "apds-9251",
+    "body_name": "APDS-9251"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 4.2,
+    "width": 3.2,
+    "height": 2.5,
+    "center": [
+     -98.5,
+     0.0,
+     7.85
+    ],
+    "operation": "new",
+    "name": "button sw",
+    "body_name": "Button SW"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 2.0,
+    "width": 2.0,
+    "height": 0.84,
+    "center": [
+     -82.0,
+     0.0,
+     7.02
+    ],
+    "operation": "new",
+    "name": "led 1",
+    "body_name": "LED 1"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 2.0,
+    "width": 2.0,
+    "height": 0.84,
+    "center": [
+     -67.545,
+     0.0,
+     7.02
+    ],
+    "operation": "new",
+    "name": "led 2",
+    "body_name": "LED 2"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 2.0,
+    "width": 2.0,
+    "height": 0.84,
+    "center": [
+     -53.091,
+     0.0,
+     7.02
+    ],
+    "operation": "new",
+    "name": "led 3",
+    "body_name": "LED 3"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 2.0,
+    "width": 2.0,
+    "height": 0.84,
+    "center": [
+     -38.636,
+     0.0,
+     7.02
+    ],
+    "operation": "new",
+    "name": "led 4",
+    "body_name": "LED 4"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 2.0,
+    "width": 2.0,
+    "height": 0.84,
+    "center": [
+     -24.182,
+     0.0,
+     7.02
+    ],
+    "operation": "new",
+    "name": "led 5",
+    "body_name": "LED 5"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 2.0,
+    "width": 2.0,
+    "height": 0.84,
+    "center": [
+     -9.727,
+     0.0,
+     7.02
+    ],
+    "operation": "new",
+    "name": "led 6",
+    "body_name": "LED 6"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 2.0,
+    "width": 2.0,
+    "height": 0.84,
+    "center": [
+     4.727,
+     0.0,
+     7.02
+    ],
+    "operation": "new",
+    "name": "led 7",
+    "body_name": "LED 7"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 2.0,
+    "width": 2.0,
+    "height": 0.84,
+    "center": [
+     19.182,
+     0.0,
+     7.02
+    ],
+    "operation": "new",
+    "name": "led 8",
+    "body_name": "LED 8"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 2.0,
+    "width": 2.0,
+    "height": 0.84,
+    "center": [
+     33.636,
+     0.0,
+     7.02
+    ],
+    "operation": "new",
+    "name": "led 9",
+    "body_name": "LED 9"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 2.0,
+    "width": 2.0,
+    "height": 0.84,
+    "center": [
+     48.091,
+     0.0,
+     7.02
+    ],
+    "operation": "new",
+    "name": "led 10",
+    "body_name": "LED 10"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 2.0,
+    "width": 2.0,
+    "height": 0.84,
+    "center": [
+     62.545,
+     0.0,
+     7.02
+    ],
+    "operation": "new",
+    "name": "led 11",
+    "body_name": "LED 11"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 2.0,
+    "width": 2.0,
+    "height": 0.84,
+    "center": [
+     77.0,
+     0.0,
+     7.02
+    ],
+    "operation": "new",
+    "name": "led 12",
+    "body_name": "LED 12"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 80,
+    "width": 20,
+    "height": 4.0,
+    "center": [
+     -49.0,
+     0.0,
+     3.3
+    ],
+    "operation": "new",
+    "name": "cell 1",
+    "body_name": "Cell 1"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 3.5,
+    "width": 2.6,
+    "height": 0.2,
+    "center": [
+     -90.5,
+     5.5,
+     3.3
+    ],
+    "operation": "join",
+    "targets": [
+     "Cell 1"
+    ],
+    "name": "cell 1 tab 5.5"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 3.5,
+    "width": 2.6,
+    "height": 0.2,
+    "center": [
+     -90.5,
+     1.9,
+     3.3
+    ],
+    "operation": "join",
+    "targets": [
+     "Cell 1"
+    ],
+    "name": "cell 1 tab 1.9"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 80,
+    "width": 20,
+    "height": 4.0,
+    "center": [
+     38.0,
+     0.0,
+     3.3
+    ],
+    "operation": "new",
+    "name": "cell 2",
+    "body_name": "Cell 2"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 3.5,
+    "width": 2.6,
+    "height": 0.2,
+    "center": [
+     79.5,
+     5.5,
+     3.3
+    ],
+    "operation": "join",
+    "targets": [
+     "Cell 2"
+    ],
+    "name": "cell 2 tab 5.5"
+   }
+  },
+  {
+   "command": "solid.box",
+   "params": {
+    "length": 3.5,
+    "width": 2.6,
+    "height": 0.2,
+    "center": [
+     79.5,
+     1.9,
+     3.3
+    ],
+    "operation": "join",
+    "targets": [
+     "Cell 2"
+    ],
+    "name": "cell 2 tab 1.9"
+   }
+  },
+  {
+   "command": "browser.visibility",
+   "params": {
+    "visible": false,
+    "folder": "sketches"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Base"
+    ],
+    "color": "#3b3d40"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Deck"
+    ],
+    "color": "#b8863b"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Finial L"
+    ],
+    "color": "#b8863b"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Dome Collar"
+    ],
+    "color": "#a87a34"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Dome"
+    ],
+    "color": "#7f4a1c"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Port Boss"
+    ],
+    "color": "#b8863b"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Port Cap"
+    ],
+    "color": "#c9a25a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Port Eye"
+    ],
+    "color": "#2a2420"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "LED Bezel"
+    ],
+    "color": "#c39042"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Diffuser"
+    ],
+    "color": "#f3eef8"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "View Bezel"
+    ],
+    "color": "#c39042"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "View Glass"
+    ],
+    "color": "#23272b"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "View Chip"
+    ],
+    "color": "#c9c4b8"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Oval Bezel"
+    ],
+    "color": "#c8cbcf"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Oval Lens"
+    ],
+    "color": "#15181b"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "USB Plug"
+    ],
+    "color": "#b8863b"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Panel L"
+    ],
+    "color": "#2e3134"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Lamp 1"
+    ],
+    "color": "#ff4fd8"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Glow 1"
+    ],
+    "color": "#ffa7ec"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Lamp 2"
+    ],
+    "color": "#c25cff"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Glow 2"
+    ],
+    "color": "#e0aeff"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Lamp 3"
+    ],
+    "color": "#7a6bff"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Glow 3"
+    ],
+    "color": "#bcb5ff"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Lamp 4"
+    ],
+    "color": "#4f8dff"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Glow 4"
+    ],
+    "color": "#a7c6ff"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Lamp 5"
+    ],
+    "color": "#33c6ff"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Glow 5"
+    ],
+    "color": "#99e2ff"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Lamp 6"
+    ],
+    "color": "#2fe0d0"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Glow 6"
+    ],
+    "color": "#97f0e8"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Lamp 7"
+    ],
+    "color": "#3fe08a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Glow 7"
+    ],
+    "color": "#9ff0c4"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Lamp 8"
+    ],
+    "color": "#a6e43c"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Glow 8"
+    ],
+    "color": "#d2f29e"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Lamp 9"
+    ],
+    "color": "#ffe14a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Glow 9"
+    ],
+    "color": "#fff0a4"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Lamp 10"
+    ],
+    "color": "#ffb23e"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Glow 10"
+    ],
+    "color": "#ffd89e"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Lamp 11"
+    ],
+    "color": "#ff8a3d"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Glow 11"
+    ],
+    "color": "#ffc49e"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Lamp 12"
+    ],
+    "color": "#ff5f7a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Glow 12"
+    ],
+    "color": "#ffafbc"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Rivet 1"
+    ],
+    "color": "#c9a25a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Rivet 2"
+    ],
+    "color": "#c9a25a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Gear Hub L"
+    ],
+    "color": "#c9a25a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Gear Hub R"
+    ],
+    "color": "#c9a25a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Vine"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Vine (2)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (2)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (3)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (4)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (5)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (6)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (7)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (8)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (9)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (10)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (11)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (12)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (13)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (14)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (15)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (16)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (17)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (18)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (19)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (20)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (21)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (22)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (23)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (24)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (25)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (26)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (27)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Bead (28)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Escutcheon"
+    ],
+    "color": "#b8863b"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body1"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body2"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body3"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body4"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body5"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body6"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body7"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body8"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body9"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body10"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body11"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body12"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body13"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body14"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body15"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body16"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body17"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body18"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body19"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body20"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body21"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body22"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body23"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body24"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body25"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body26"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body27"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body28"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body29"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body30"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Body31"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Scrolls L"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Scrolls L (2)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Panel R"
+    ],
+    "color": "#2e3134"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Scrolls R"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Scrolls R (2)"
+    ],
+    "color": "#c9974a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Etch"
+    ],
+    "color": "#2e2a24"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Etch (2)"
+    ],
+    "color": "#2e2a24"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Mount Rail"
+    ],
+    "color": "#2b2d30"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "VHB Tape"
+    ],
+    "color": "#d9d4c7"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "LED 1"
+    ],
+    "color": "#f2f2f2"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "LED 2"
+    ],
+    "color": "#f2f2f2"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "LED 3"
+    ],
+    "color": "#f2f2f2"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "LED 4"
+    ],
+    "color": "#f2f2f2"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "LED 5"
+    ],
+    "color": "#f2f2f2"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "LED 6"
+    ],
+    "color": "#f2f2f2"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "LED 7"
+    ],
+    "color": "#f2f2f2"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "LED 8"
+    ],
+    "color": "#f2f2f2"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "LED 9"
+    ],
+    "color": "#f2f2f2"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "LED 10"
+    ],
+    "color": "#f2f2f2"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "LED 11"
+    ],
+    "color": "#f2f2f2"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "LED 12"
+    ],
+    "color": "#f2f2f2"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Cell 1"
+    ],
+    "color": "#b9c2cc"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Cell 2"
+    ],
+    "color": "#b9c2cc"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "PCB"
+    ],
+    "color": "#16181b"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "XIAO"
+    ],
+    "color": "#1f2a36"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "XIAO USB-C"
+    ],
+    "color": "#c0c4c8"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "APDS-9960"
+    ],
+    "color": "#141414"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "APDS-9251"
+    ],
+    "color": "#141414"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Button SW"
+    ],
+    "color": "#4a4a4a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Finial L (2)"
+    ],
+    "color": "#b8863b"
+   }
+  }
+ ]
+}

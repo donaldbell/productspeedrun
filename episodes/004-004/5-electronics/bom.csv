@@ -1,0 +1,20 @@
+Ref,Qty,Value,Description,Footprint,MPN
+C1 C8,2,22uF,"Capacitor, ceramic, 22 uF 25 V X5R 0805",C_0805_2012Metric,CL21A226MAQNNNE
+C2 C5 C7 C10 C11 C12 C13 C14 C15 C16 C17 C18 C19 C20 C21,15,100nF,"Capacitor, ceramic, 100 nF 50 V X7R 0603",C_0603_1608Metric,CC0603KRX7R9BB104
+C3,1,10uF,"Capacitor, ceramic, 10 uF 25 V X5R 0805",C_0805_2012Metric,CL21A106KAYNNNE
+C4 C6,2,1uF,"Capacitor, ceramic, 1 uF 50 V X5R 0603",C_0603_1608Metric,CL10A105KB8NNNC
+LED1 LED2 LED3 LED4 LED5 LED6 LED7 LED8 LED9 LED10 LED11 LED12,12,WS2812B-2020,"RGB LED 2 x 2 mm, one under each of the 12 window squares",LED_WS2812B-2020_PLCC4_2.0x2.0mm,WS2812B-2020
+Q1,1,AO3401A,P-MOSFET -30 V -4 A SOT-23: high-side switch for the LED chain,SOT-23,AO3401A
+Q2,1,AO3400A,N-MOSFET 30 V 5.7 A SOT-23: drives Q1's gate from the 3.3 V GPIO,SOT-23,AO3400A
+R1 R2,2,200k,"Resistor, 1 %, 0603, 200k",R_0603_1608Metric,0603WAF2003T5E
+R3 R10 R12,3,100k,"Resistor, 1 %, 0603, 100k",R_0603_1608Metric,0603WAF1003T5E
+R4,1,150k,"Resistor, 1 %, 0603, 150k",R_0603_1608Metric,0603WAF1503T5E
+R5 R6,2,4.7k,"Resistor, 1 %, 0603, 4.7k",R_0603_1608Metric,0603WAF4701T5E
+R7 R8 R9,3,10k,"Resistor, 1 %, 0603, 10k",R_0603_1608Metric,0603WAF1002T5E
+R11 R13,2,100,"Resistor, 1 %, 0603, 100",R_0603_1608Metric,0603WAF1000T5E
+SW1,1,PORTHOLE,"Tact switch 4.2 x 3.2 x 2.5 mm SMD under the porthole boss: wake, mode, hold = open the control panel",SW_SPST_PTS810,PTS810 SJM 250 SMTR LFS
+U1,1,XIAO ESP32C6,"Seeed XIAO ESP32C6 (USB-C, LiPo charger, 3.3 V LDO, ceramic antenna), castellations + BAT pads reflowed to the carrier",Seeed_XIAO_ESP32C6_SMD,113991254
+U2,1,APDS-9960,"Proximity / gesture / ambient / RGBC sensor with IR LED, I2C 0x39: fish near the surface, room light",Avago_APDS-9960,APDS-9960
+U3,1,APDS-9251-001,"Digital RGB + IR light sensor, I2C 0x52: reads the tank's colour",Broadcom_LGA-8_2x2mm_P0.5mm,APDS-9251-001
+BT1,1,LiPo ~600 mAh,"LiPo pouch 3.7 V ~600 mAh, ~4 x 20 x 80 mm, with protection PCB, leads soldered to J1",off-board,generic 402080
+BT2,1,LiPo ~600 mAh,"Second, matching cell in parallel, leads soldered to J2 (charge both to the same voltage before joining)",off-board,generic 402080

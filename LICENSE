@@ -1,0 +1,32 @@
+The designs in this repository are open. You're free to build, change, share and sell what's
+here, including the products themselves, as long as you keep the credit and licence notices.
+
+  Hardware designs        CERN Open Hardware Licence v2, Permissive (CERN-OHL-P-2.0)
+  (KiCad projects, CAD models, STEP/STL/OBJ/GLB files, BOMs, everything in
+  */4-model and */5-electronics, and tools/kicad/footprints and tools/kicad/models)
+
+  Writing, images and pages   Creative Commons Attribution 4.0 (CC-BY-4.0)
+  (concept art, layout sheets, renders, notes, showcase pages, newsletters,
+  everything else in episodes/ and products/, and kit/showcase*)
+
+  Software                MIT
+  (firmware in */7-firmware, except third-party libraries under their own licences
+  (see CREDITS.md); scripts/build-site.mjs; kit/*.js)
+
+The full texts are in LICENSES/.
+
+Copyright 2026 Donald Bell and Product Speedrun contributors. Each episode's ideas
+are co-created with that episode's guest, who is credited on its showcase page and in CREDITS.md.
+Credit line for reuse: "Based on Product Speedrun episode NNN by Donald Bell and
+<guest>, https://donaldbell.github.io/productspeedrun/".
+
+Not covered: the name "Product Speedrun" and its logo. You can sell a product based
+on these designs, but please don't present it as an official Product Speedrun product.
+Also not covered: the show's own production tools, console and methods, which are not
+part of this repository and are not licensed.
+
+A request, not a requirement: if you build or sell something based on these designs,
+we'd love a credit and a link back, and we'd love to hear about it.
+
+Some concept art is AI-generated and may not be protected by copyright at all; it is
+offered under the same terms as far as any rights exist.

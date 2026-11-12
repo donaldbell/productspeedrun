@@ -1,0 +1,521 @@
+<!doctype html>
+<!--
+  Backpack Defender Rev B showcase page, built from kit/showcase/template.html.
+  Paths: ../4-model/ … ../7-firmware/ are this revision's folders, ../../../../episodes/001-demo-1/ is Rev A
+  (the episode), and ../../../../kit/ is the shared series look.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Backpack Defender · Product Speedrun 001 · Rev B</title>
+<meta name="description" content="A design proposal for a kawaii motion alarm that guards a kid's backpack or locker with ringtones, flashing eyes and a big glowing off button. An open hardware concept from Product Speedrun, not yet built.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../../../../kit/showcase.css">
+<style>
+/* This product's accent: the mint lid. The only colours the page itself sets. */
+:root { --accent: #2FBFA8; --accent-ink: #137867; --accent-soft: #DDF5F0; }
+@media (prefers-color-scheme: dark) { :root { --accent-ink: #74E6D2; --accent-soft: #10302A; } }
+
+/* Free slot: the alarm, played on the real firmware's sounds */
+.bd { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: var(--gap); align-items: start; }
+.bd-stage { position: relative; background: var(--viewer); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 18px; }
+.bd-stage svg { display: block; width: 100%; max-width: 480px; margin: 0 auto; overflow: visible; }
+.bd-stage .bd-tip { margin: 8px 0 0; text-align: center; color: var(--muted); font-size: 14px; }
+.bd-btn { cursor: pointer; outline: none; }
+.bd-btn:focus-visible .bd-ring { stroke: var(--accent); stroke-width: 4; }
+.bd-btn:active .bd-cap { transform: translateY(1.5px); }
+.bd-sw { cursor: pointer; outline: none; }
+.bd-sw:focus-visible rect.bd-slot { stroke: var(--accent); stroke-width: 3; }
+.bd-lever { transition: transform .18s; }
+.bd[data-on] .bd-lever { transform: translateY(-14px); }
+.bd-off { transition: opacity .3s; opacity: .35; }
+.bd[data-on] .bd-off { opacity: 0; }
+.bd-panel { display: grid; gap: 18px; }
+.bd-panel h3 { margin: 0 0 8px; font: 600 13px/1.2 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.bd-power { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.bd-power button { position: relative; width: 66px; height: 34px; border-radius: 17px; border: 1px solid var(--line); background: var(--sunk); cursor: pointer; padding: 0; }
+.bd-power button::after { content: ""; position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: 50%; background: var(--muted); transition: transform .18s; }
+.bd-power button[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); }
+.bd-power button[aria-pressed="true"]::after { transform: translateX(32px); background: var(--accent); }
+.bd-power span { font-weight: 600; }
+.bd-sounds { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.bd-sounds button { display: grid; grid-template-columns: 26px 1fr; gap: 0 8px; align-items: center; text-align: left; padding: 10px 12px; border-radius: var(--r-md); border: 1px solid var(--line); background: var(--panel); color: var(--ink); font: inherit; cursor: pointer; }
+.bd-sounds button b { font-weight: 600; }
+.bd-sounds button small { grid-column: 2; color: var(--muted); font-size: 13px; }
+.bd-sounds button span { grid-row: span 2; font-size: 20px; line-height: 1; }
+.bd-sounds button[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.bd-swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+.bd-swatches button { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--line); background: var(--c); cursor: pointer; padding: 0; }
+.bd-swatches button.rain { background: conic-gradient(#ff2a2a, #ffd400, #38e05a, #19c3ff, #8a3dff, #ff4fc3, #ff2a2a); }
+.bd-swatches button[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 2px var(--panel) inset; }
+.bd-go { display: flex; gap: 10px; flex-wrap: wrap; }
+.bd-status { min-height: 3em; margin: 0; font: 600 18px/1.35 var(--display); }
+.bd-note { margin: 0; color: var(--muted); font-size: 14px; }
+@media (max-width: 860px) { .bd { grid-template-columns: 1fr; } }
+@media (max-width: 420px) { .bd-sounds { grid-template-columns: 1fr; } }
+
+/* Revision timeline (in "How we got here") */
+.revline { list-style: none; margin: 0 0 var(--gap); padding: 0; display: grid; gap: var(--gap); grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.revline > li { position: relative; display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; }
+.revline > li.now { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.revline > li.next { background: transparent; border-style: dashed; }
+.revline .rl-img { aspect-ratio: 3 / 2; background: var(--viewer); display: block; }
+.revline .rl-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.revline .rl-body { padding: 16px 18px 18px; }
+.revline .rl-when { display: inline-block; font: 700 12px/1 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--accent-ink); background: var(--accent-soft); border-radius: 999px; padding: 6px 10px; }
+.revline h3 { margin: 10px 0 6px; font: 700 22px/1.2 var(--display); }
+.revline ul { margin: 8px 0 0; padding-left: 18px; }
+.revline li li { margin: 4px 0; }
+.revline p { margin: 6px 0 0; color: var(--muted); }
+.revline a { color: var(--accent-ink); }
+@media (max-width: 960px) { .revline { grid-template-columns: 1fr; } }
+</style>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js"></script>
+<script type="module" src="../../../../kit/series-bar.js"></script>
+<script type="module" src="../../../../kit/showcase.js"></script>
+</head>
+<body>
+<ps-series-bar></ps-series-bar>
+
+<header class="ps-hero" id="top">
+  <div class="wrap">
+    <div>
+      <ul class="ps-roll" aria-label="The brief">
+        <li><small>User</small><b>School-age kids</b></li>
+        <li><small>Looks like</small><b>Deck of cards</b></li>
+      </ul>
+      <h1>Backpack Defender</h1>
+      <p class="ps-pitch">A design proposal for a motion alarm that guards a kid's backpack or locker, with a face, a voice and a big glowing off button.</p>
+      <p class="ps-lede">The idea: a pastel pebble with a kawaii face clips onto a backpack or sits on a locker shelf. When a hand reaches in, a motion sensor wakes it, the eyes flash and it plays a ringtone until someone hits the big button. The kid picks the ringtone and the button's colour from a phone, and writes their name on the back.</p>
+      <dl class="ps-facts">
+        <div><dt>76 × 51 × 22.5 mm</dt><dd>About the size of a deck of cards</dd></div>
+        <div><dt>Carabiner loop</dt><dd>Designed to clip onto a backpack strap</dd></div>
+        <div><dt>6 ringtones</dt><dd>Plus 4 chirps, on a 20 mm speaker</dd></div>
+        <div><dt>2 × AAA + switch</dt><dd>A real off switch for teachers</dd></div>
+      </dl>
+    </div>
+    <figure>
+      <img src="../4-model/render-Mint-Aqua-Gadget-with-Glitter-Button.png" alt="Render: a mint and yellow pebble-shaped gadget on a school desk, with a kawaii face, a white sensor dome, a speaker grille, a clear glitter button glowing pink, a yellow loop and a slide switch on its end" width="1536" height="1024">
+      <figcaption>An AI render of the CAD model. This is a concept, designed down to the circuit board and firmware but not yet built. The pink glow is the colour LED under the clear button.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<nav class="ps-run" aria-label="How this product ran">
+  <ol>
+    <li><a href="#top"><span class="n"><i>1</i>Roll &amp; brief</span><span class="thumb"><svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><rect x="3" y="3" width="34" height="34" rx="8" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="13" cy="13" r="3" fill="currentColor"/><circle cx="27" cy="27" r="3" fill="currentColor"/><circle cx="20" cy="20" r="3" fill="currentColor"/></svg></span></a></li>
+    <li><a href="#trail"><span class="n"><i>2</i>Concept</span><span class="thumb"><img src="../../../../episodes/001-demo-1/2-concept/Gemini_Generated_Image_aokq2uaokq2uaokq.jpeg" alt=""></span></a></li>
+    <li><a href="#trail"><span class="n"><i>3</i>Layout</span><span class="thumb"><img src="../../../../episodes/001-demo-1/3-layout/Gemini_Generated_Image_gxrn7ggxrn7ggxrn.jpeg" alt=""></span></a></li>
+    <li><a href="#model"><span class="n"><i>4</i>3D model</span><span class="thumb"><img src="../4-model/iso.png" alt=""></span></a></li>
+    <li><a href="#inside"><span class="n"><i>5</i>Electronics</span><span class="thumb"><img src="../5-electronics/board.png" alt=""></span></a></li>
+    <li><a href="#top"><span class="n"><i>6</i>Showcase</span><span class="thumb">This page</span></a></li>
+    <li><a href="#trail"><span class="n"><i>7</i>Verdict</span><span class="thumb"><span class="verdict keep">Keep building</span></span></a></li>
+  </ol>
+</nav>
+
+<main>
+  <section class="ps-section" id="who">
+    <div class="wrap">
+      <div class="ps-head">
+        <h2>Whose bag is it, anyway?</h2>
+        <p>The kid owns it. The teacher has to be able to switch it off.</p>
+      </div>
+      <div class="ps-grid two">
+        <div class="ps-person">
+          <span class="role">The owner, 6 to 12</span>
+          <h3>Their snacks keep "wandering off"</h3>
+          <p>It's designed to clip onto the backpack with a real carabiner, or lie flat on a locker shelf. They'd pick the ringtone and the button colour from a phone, then write their name on the back in marker so everyone knows whose guard this is.</p>
+        </div>
+        <div class="ps-person">
+          <span class="role">The teacher (and the parent)</span>
+          <h3>One slide and it's quiet</h3>
+          <p>A slide switch on the end cuts the power completely, so nobody has to pry out a battery. The big glowing button silences an alarm in one press, so anyone can see how to make it stop.</p>
+        </div>
+      </div>
+      <figure class="ps-moment">
+        <img src="../../../../episodes/001-demo-1/2-concept/Gemini_Generated_Image_aokq2uaokq2uaokq.jpeg" alt="Concept art: a mint, butter-yellow and lavender pebble with a kawaii face, shown in a locker and clipped to a backpack" width="1200" height="896" loading="lazy">
+        <blockquote>"Hands off my snacks!"<cite>A hand reaches into the backpack, the eyes start flashing, and Für Elise plays until someone hits the big button.</cite></blockquote>
+      </figure>
+    </div>
+  </section>
+
+  <section class="ps-section tint" id="demo">
+    <div class="wrap">
+      <div class="ps-head">
+        <h2>Switch it on and set it off</h2>
+        <p>Try it here. Slide the power on, pick a ringtone and a button colour, then reach for the backpack. Tap the big button to silence it.</p>
+      </div>
+      <div class="ps-free bd" id="bd">
+        <div class="bd-stage">
+          <svg viewBox="0 0 380 260" role="img" aria-labelledby="bd-title">
+            <title id="bd-title">Top view of Backpack Defender: loop on the left, sensor dome, two eyes with light dots, smile, speaker grille, the big clear button and the power switch on the right end</title>
+            <defs>
+              <filter id="bd-blur" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="5"/></filter>
+              <filter id="bd-blur2" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="9"/></filter>
+              <radialGradient id="bd-clear" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".55" stop-color="#eef3f6" stop-opacity=".55"/><stop offset="1" stop-color="#cfd9e0" stop-opacity=".7"/></radialGradient>
+              <radialGradient id="bd-dome" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#d9ccff"/><stop offset="1" stop-color="#8b74d6"/></radialGradient>
+            </defs>
+            <!-- triangular carabiner loop -->
+            <path d="M74 92 L18 130 L74 168" fill="none" stroke="#E9BE45" stroke-width="20" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M74 92 L18 130 L74 168" fill="none" stroke="#F4D36B" stroke-width="13" stroke-linejoin="round" stroke-linecap="round"/>
+            <!-- base and lid -->
+            <rect x="60" y="34" width="290" height="192" rx="56" fill="#E9BE45"/>
+            <rect x="66" y="40" width="278" height="180" rx="50" fill="#7FD9C6"/>
+            <rect x="80" y="54" width="250" height="152" rx="38" fill="#8EE0CE" stroke="#6CC8B4" stroke-width="1.5"/>
+            <!-- power switch on the right end -->
+            <g class="bd-sw" id="bd-sw" role="button" tabindex="0" aria-label="Power switch">
+              <rect class="bd-slot" x="344" y="126" width="14" height="40" rx="5" fill="#B8912A"/>
+              <rect class="bd-lever" x="347" y="145" width="8" height="18" rx="3" fill="#F7DE8A" stroke="#9C7A1E"/>
+            </g>
+            <!-- PIR dome -->
+            <circle cx="118" cy="78" r="18" fill="url(#bd-dome)"/>
+            <!-- eyes, each with a white light-pipe dot over an LED -->
+            <g fill="#23324A"><circle cx="150" cy="120" r="17"/><circle cx="222" cy="120" r="17"/></g>
+            <g id="bd-glow" opacity="0" fill="#fff" filter="url(#bd-blur)"><circle cx="156" cy="114" r="10"/><circle cx="228" cy="114" r="10"/></g>
+            <g id="bd-dots" fill="#E6ECEE"><circle cx="156" cy="114" r="5"/><circle cx="228" cy="114" r="5"/></g>
+            <path d="M166 150 q20 18 40 0" fill="none" stroke="#23324A" stroke-width="5" stroke-linecap="round"/>
+            <!-- 19-hole speaker grille -->
+            <g id="bd-grille" fill="#4FA898"></g>
+            <!-- the big clear button with its colour LED underneath -->
+            <g class="bd-btn" id="bd-btn" role="button" tabindex="0" aria-label="The big silence button">
+              <circle id="bd-halo" cx="282" cy="150" r="44" fill="#7b2ff7" opacity="0" filter="url(#bd-blur2)"/>
+              <circle class="bd-ring" cx="282" cy="150" r="42" fill="#7AD2BF" stroke="#5DB9A5" stroke-width="2"/>
+              <g class="bd-cap">
+                <circle id="bd-tint" cx="282" cy="150" r="36" fill="#7b2ff7" opacity="0"/>
+                <circle cx="282" cy="150" r="36" fill="url(#bd-clear)"/>
+                <g id="bd-glitter" fill="#fff" opacity=".8"></g>
+              </g>
+            </g>
+            <rect class="bd-off" x="60" y="34" width="290" height="192" rx="56" fill="#1d2633" pointer-events="none"/>
+          </svg>
+          <p class="bd-tip">Tap the switch on the right end, or the big button.</p>
+        </div>
+        <div class="bd-panel">
+          <div class="bd-power">
+            <button type="button" id="bd-power" aria-pressed="false" aria-label="Power"></button>
+            <span id="bd-power-label">Off</span>
+          </div>
+          <div>
+            <h3>Ringtone</h3>
+            <div class="bd-sounds" id="bd-sounds" role="group" aria-label="Ringtones">
+              <button type="button" data-key="ringandting" aria-pressed="true"><span>🔔</span><b>Ring and Ting</b><small>Rings · 4 s</small></button>
+              <button type="button" data-key="fiverecho" aria-pressed="false"><span>📣</span><b>Fiver Echo</b><small>Rings · 3 s</small></button>
+              <button type="button" data-key="steeldrum" aria-pressed="false"><span>🥁</span><b>Steel Drum</b><small>Rings · 4 s</small></button>
+              <button type="button" data-key="upanddown" aria-pressed="false"><span>🎢</span><b>Up and Down</b><small>Songs · 2 s</small></button>
+              <button type="button" data-key="echoecho" aria-pressed="false"><span>🏔️</span><b>Echo Echo</b><small>Songs · 12 s</small></button>
+              <button type="button" data-key="furelise" aria-pressed="false"><span>🎹</span><b>Für Elise</b><small>Songs · 9 s</small></button>
+            </div>
+          </div>
+          <div>
+            <h3>Button colour</h3>
+            <div class="bd-swatches" id="bd-swatches" role="group" aria-label="Button colours"></div>
+          </div>
+          <div class="bd-go">
+            <button class="ps-btn primary" type="button" id="bd-reach">Reach into the backpack</button>
+          </div>
+          <p class="bd-status" id="bd-status" aria-live="polite">It's switched off. Slide the power on.</p>
+          <p class="bd-note">These are the firmware's real sounds: Phil Burk's Mobileer ringtone engine, rendered on a Mac at 22.05 kHz with the same code and data the board plays. Through the real 20 mm speaker they'll sound thinner. The lights are drawn here and follow the sound's loudness, as the firmware does. The real quiet time after a silence is 60 s; here it's 5 s.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ps-section" id="model">
+    <div class="wrap">
+      <div class="ps-head">
+        <span class="ps-stage"><i>4</i>3D model in Solidcraft</span>
+        <h2>A pebble with a face</h2>
+        <p>The enclosure, modelled in Solidcraft around the real circuit board inside. Drag to spin it.</p>
+      </div>
+      <div class="ps-grid side">
+        <div>
+          <div class="ps-viewer">
+            <model-viewer id="enclosure" src="../4-model/model.glb" alt="3D model of the Backpack Defender enclosure" camera-controls auto-rotate shadow-intensity="0.6" interaction-prompt="none" camera-orbit="30deg 55deg auto"></model-viewer>
+          </div>
+          <div class="ps-views" role="group" aria-label="Views">
+            <button type="button" data-target="#enclosure" data-orbit="30deg 55deg auto" aria-pressed="true">Three-quarter</button>
+            <button type="button" data-target="#enclosure" data-orbit="0deg 8deg auto" aria-pressed="false">Face</button>
+            <button type="button" data-target="#enclosure" data-orbit="0deg 88deg auto" aria-pressed="false">Side</button>
+            <button type="button" data-target="#enclosure" data-orbit="90deg 75deg auto" aria-pressed="false">Switch end</button>
+            <button type="button" data-target="#enclosure" data-orbit="0deg 172deg auto" aria-pressed="false">Back</button>
+          </div>
+        </div>
+        <ol class="ps-callouts">
+          <li><b>22.5 mm thin</b><span>The AAA cells sit in a cradle in the bottom plate, and the silence switch is a 4.3 mm low-profile part. A rounder top (R7.5) and a shadow-line reveal at the lid seam make it look finished.</span></li>
+          <li><b>Triangular carabiner loop</b><span>About 23 mm long, 6 mm thick, with a hole that fits a Ø12 mm circle. It's joined into 35 mm of the end wall so a yank on the backpack won't snap it off.</span></li>
+          <li><b>Face with lights and a voice</b><span>A 19-hole flower grille over a 20 mm speaker, and the eye highlights are white light pipes over two LEDs.</span></li>
+          <li><b>Clear glitter button</b><span>A big captive button in clear plastic with glitter or a dichroic finish. An RGB LED under it lights it in the owner's colour.</span></li>
+          <li><b>Power switch and name plate</b><span>The slide switch's lever sits flush in a thumb pocket on the right end. On the back, "PROPERTY OF:" in white with a write-on panel for a dark marker.</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="ps-section" id="inside">
+    <div class="wrap">
+      <div class="ps-head">
+        <span class="ps-stage"><i>5</i>Electronics in KiCad</span>
+        <h2>What's inside</h2>
+        <p>One 70 × 45 mm two-layer board. The ESP32 sits on the underside so the top is free for the eye LEDs, and the motion sensor drops through a hole in the board so its dome clears the thin lid.</p>
+      </div>
+      <div class="ps-stats">
+        <div class="ps-stat"><b>0 / 0</b><span>DRC violations and unrouted connections</span></div>
+        <div class="ps-stat"><b>41</b><span>Parts on the board, plus the cells, PIR and speaker wired to it</span></div>
+        <div class="ps-stat"><b>PASS</b><span>Fit check of the real routed board in the case, closest gap 0.11 mm</span></div>
+      </div>
+      <div class="ps-viewer">
+        <div class="load"><button class="ps-btn primary" type="button" data-load-model="../5-electronics/board.glb" data-alt="3D model of the circuit board">Load the 3D board (8.5 MB)</button></div>
+        <span class="note">Routed in KiCad with Freerouting</span>
+      </div>
+      <div class="ps-parts">
+        <div class="ps-part"><span class="ref">SW2 · C&amp;K OS102011MA1Q</span><h3>A real off switch</h3><p>A right-angle slide switch in series with the battery, so off means off. Its lever comes out through the end wall.</p></div>
+        <div class="ps-part"><span class="ref">U3 · MAX98357A + LS1</span><h3>A voice, not a beep</h3><p>An I2S class-D amp drives a 20 mm, 8 Ω micro speaker, so it can play real ringtones instead of piezo beeps.</p></div>
+        <div class="ps-part"><span class="ref">D1–D2 · white 0603 + Q2</span><h3>Eyes that flash</h3><p>Two white LEDs under the eye light pipes, switched together by one MOSFET. A pull-down keeps them dark at boot.</p></div>
+        <div class="ps-part"><span class="ref">LED1 · WS2812B-2020 + Q3</span><h3>Button glow</h3><p>A 2 mm RGB LED under the clear button. A P-FET cuts its power while it sleeps, since a dark WS2812 still draws about 1 mA.</p></div>
+        <div class="ps-part"><span class="ref">U2 · ESP32-C3-WROOM-02</span><h3>The brain</h3><p>Hosts the setup page over its own Wi-Fi, plays the ringtones over I2S and sleeps between alarms, waking on the PIR or the button.</p></div>
+        <div class="ps-part"><span class="ref">C12–C13 · 2 × 47 µF</span><h3>Tired-battery insurance</h3><p>Bulk capacitance on the battery rail, asked for by the firmware, so Wi-Fi bursts and speaker peaks don't brown out the chip on old AAAs.</p></div>
+      </div>
+      <details class="ps-bom">
+        <summary>Full bill of materials (<span data-bom-count>…</span> lines)</summary>
+        <div class="ps-table" data-bom="../5-electronics/bom.csv">Loading the parts list…</div>
+      </details>
+      <ul class="ps-files" aria-label="Design files">
+        <li><a href="../5-electronics/backpack-defender.kicad_sch">Schematic (KiCad)</a></li>
+        <li><a href="../5-electronics/backpack-defender.kicad_pcb">Board (KiCad)</a></li>
+        <li><a href="../5-electronics/bom.csv">bom.csv</a></li>
+        <li><a href="../4-model/model.step">Enclosure (STEP)</a></li>
+        <li><a href="../7-firmware/NOTES.md">Firmware notes</a></li>
+      </ul>
+
+      <div class="ps-head" id="firmware" style="margin-top: calc(var(--gap) * 2)">
+        <span class="ps-stage"><i>7</i>Firmware in PlatformIO</span>
+        <h2>The firmware</h2>
+        <p>A PlatformIO project for this board. It builds cleanly, but it hasn't run on real hardware yet.</p>
+      </div>
+      <div class="ps-grid two">
+        <div class="ps-card accent"><span class="tag">Sounds</span><h3>Ringtones from a Palm Treo synth</h3><p>The hosts didn't like our first homemade synth, so the alarms are six ringtones they picked from Phil Burk's Mobileer set. They play on his General MIDI engine (Apache-2.0) at 22.05 kHz with 16 voices, and the four chirps (awake, silenced, saved, low battery) are tiny MIDI files on the same engine.</p></div>
+        <div class="ps-card"><span class="tag">Builds clean</span><h3>855 KB of flash, 49 KB of RAM</h3><p><code>pio run</code> builds with 0 warnings for the board and for a plain ESP32-C3 dev board stand-in. That's 43.5 % of the app slot and 15 % of RAM, with room to spare.</p></div>
+        <div class="ps-card"><span class="tag">Pins from the board</span><h3>Code and board can't disagree</h3><p><code>pins.h</code> is generated from the KiCad design script before every build, and the build stops if a pull-up the code relies on disappears from the board.</p></div>
+        <div class="ps-card"><span class="tag">Setup</span><h3>Hold the button, open your phone</h3><p>Hold the button while switching on and it starts a <code>BackpackDefender-XXXX</code> hotspot with a captive page: ringtone tiles that preview on the device, colour swatches or Rainbow, brightness, volume, alarm length and quiet time.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ps-section" id="trail">
+    <div class="wrap">
+      <div class="ps-head">
+        <h2>How we got here</h2>
+        <p>Backpack Defender was the first product on <i>Product Speedrun</i>, a show where two hosts take a randomly rolled product idea from brainstorm to a showcase-ready concept.</p>
+        <p>Episode 001 ended with a first version, Rev A: concept art, a CAD model and a routed board. The hosts voted to keep building, and set the goals for the second version, Rev B (this page): slimmer and slicker, with a carabiner loop, a real off switch, a speaker instead of a beeper, eyes that flash and a name plate on the back. Rev B also got the first firmware.</p>
+      </div>
+      <ol class="revline">
+        <li>
+          <a class="rl-img" href="../../../../episodes/001-demo-1/6-showcase/"><img src="../../../../episodes/001-demo-1/4-model/iso.png" alt="Rev A CAD model: the mint and yellow pebble with a coral button" loading="lazy"></a>
+          <div class="rl-body">
+            <span class="rl-when">Rev A · Episode 001 · Oct 2026</span>
+            <h3>The kawaii pebble</h3>
+            <ul>
+              <li>76 × 51 × 26 mm, 2 × AAA in a holder; pull a cell to disarm</li>
+              <li>ESP32-C3, MAX98357A amp and a 12 mm piezo</li>
+              <li>AM312 PIR dome, big coral silence button, small charm loop</li>
+              <li>Five alarm voices, chosen on a phone (designed, not yet coded)</li>
+            </ul>
+            <p>Verdict: keep building. <a href="../../../../episodes/001-demo-1/6-showcase/">See the Rev A page</a></p>
+          </div>
+        </li>
+        <li class="now">
+          <span class="rl-img"><img src="../4-model/iso.png" alt="Rev B CAD model with the triangular loop and clear button" loading="lazy"></span>
+          <div class="rl-body">
+            <span class="rl-when">Rev B · This page · Nov 2026</span>
+            <h3>Slimmer, louder, lit up</h3>
+            <ul>
+              <li>22.5 mm thick (−13 %), rounder shell with a reveal line</li>
+              <li>Triangular loop that takes a carabiner</li>
+              <li>Slide switch that cuts the battery</li>
+              <li>20 mm speaker instead of the piezo, and six Mobileer ringtones</li>
+              <li>White LEDs in the eye dots, flashing with the alarm</li>
+              <li>Clear glitter button lit by an RGB LED; pink cheeks gone</li>
+              <li>"PROPERTY OF:" write-on plate on the back</li>
+              <li>First firmware: builds clean, not yet on hardware</li>
+            </ul>
+          </div>
+        </li>
+        <li class="next">
+          <div class="rl-body">
+            <span class="rl-when">Rev C · Not started</span>
+            <h3>Build one</h3>
+            <p>Nothing here has been built yet. The next step is a prototype: order the board, print the case, flash the firmware and work through the list below.</p>
+          </div>
+        </li>
+      </ol>
+      <ol class="ps-trail">
+        <li><figure><a class="frame" href="../4-model/progress-08.png"><img src="../4-model/progress-08.png" alt="Side profile of the thinner Rev B enclosure" loading="lazy"></a><figcaption><b>Thinner</b>The 22.5 mm side profile (before the clear button)</figcaption></figure></li>
+        <li><figure><a class="frame" href="../4-model/progress-07.png"><img src="../4-model/progress-07.png" alt="The back of the enclosure with the PROPERTY OF name plate" loading="lazy"></a><figcaption><b>The back</b>"PROPERTY OF:" and the write-on panel</figcaption></figure></li>
+        <li><figure><a class="frame" href="../5-electronics/board-iso.png"><img src="../5-electronics/board-iso.png" alt="3D render of the Rev B circuit board" loading="lazy"></a><figcaption><b>Electronics</b>The routed board</figcaption></figure></li>
+        <li><figure><a class="frame" href="../5-electronics/fitcheck.png"><img src="../5-electronics/fitcheck.png" alt="The real routed board placed inside the enclosure for the fit check" loading="lazy"></a><figcaption><b>Fit check</b>The real board in the case: pass</figcaption></figure></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="ps-section" id="next">
+    <div class="wrap">
+      <div class="ps-head">
+        <h2>What we still don't know</h2>
+        <p>The design is complete on paper. Here's what we'd still answer before anyone orders a board or cuts a mould.</p>
+      </div>
+      <ul class="ps-questions">
+        <li><span class="topic">Prototype</span><h3>Designed, checked, never built</h3><p>The board is DRC-clean and fits the case, and the firmware compiles, but nothing has been made or flashed. Still to check on the bench: waking from deep sleep on the PIR and button, the sleep current (the boost converter's own draw is the unknown), and the setup page on iPhone and Android.</p></li>
+        <li><span class="topic">Sound</span><h3>Do the ringtones survive a 20 mm speaker?</h3><p>The previews above come from a Mac. On the device, expect less bass and sparkle. The foam seal under the speaker is assumed, not modelled, and the engine's CPU use on the C3 is an estimate (20–35 % with all 16 voices) until the firmware logs the real number.</p></li>
+        <li><span class="topic">Lights</span><h3>Are the eyes bright enough in daylight?</h3><p>White LEDs need about 2.9 V and the board runs at 3.3 V, so there's little headroom and brightness will vary by batch. The LEDs and light pipes need a daylight test together.</p></li>
+        <li><span class="topic">Feel</span><h3>Can a kid's thumb move the switch?</h3><p>The switch lever ends flush with the wall, in a 0.6 mm pocket. If it's too hard to slide, it needs a press-on cap.</p></li>
+        <li><span class="topic">Looks</span><h3>What shows through the clear button?</h3><p>Through clear plastic you can see the black switch and the board. Glitter hides them best; a dichroic finish would need a white disc underneath.</p></li>
+        <li><span class="topic">Enclosure</span><h3>How does it stay together?</h3><p>The lid and base aren't fastened yet, the battery door has no latch, and the wires to the PIR, speaker and cells need routing and strain relief.</p></li>
+        <li><span class="topic">Parts</span><h3>Part numbers to confirm</h3><p>The part numbers for the white LEDs, the 47 Ω resistor and the low-profile 12 mm switch need checking against real parts before ordering.</p></li>
+        <li><span class="topic">Product</span><h3>Thinner still means a LiPo</h3><p>About 18 mm is possible with a flat LiPo and USB-C charging, but that gives up the AAA cells teachers can pull. The power switch now covers part of that.</p></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer class="ps-foot">
+  <div class="wrap">
+    <span>Backpack Defender is an open design from Product Speedrun episode 001; Rev B by Donald Bell. Build it, change it, even sell it: hardware under <a href="https://github.com/donaldbell/productspeedrun/blob/main/LICENSES/CERN-OHL-P-2.0.txt">CERN-OHL-P v2</a>, words and images under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, software under <a href="https://github.com/donaldbell/productspeedrun/blob/main/LICENSES/MIT.txt">MIT</a> (the Mobileer engine is Apache-2.0). If you do, we'd love a credit and to hear about it.</span>
+    <span><a href="../../../../">All episodes</a> · <a href="https://github.com/donaldbell/productspeedrun/tree/main/products/backpack-defender/rev-b">Files on GitHub</a></span>
+  </div>
+</footer>
+
+<script>
+// The free slot (this page only): power, ringtone, colour, alarm, silence.
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const root = $("bd"), status = $("bd-status");
+  const glow = $("bd-glow"), dots = $("bd-dots"), halo = $("bd-halo"), tint = $("bd-tint");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const NS = "http://www.w3.org/2000/svg";
+  const dot = (g, x, y, r) => { const c = document.createElementNS(NS, "circle"); c.setAttribute("cx", x); c.setAttribute("cy", y); c.setAttribute("r", r); g.append(c); };
+
+  // 19-hole flower grille and a little glitter
+  const grille = $("bd-grille"); dot(grille, 186, 186, 2.6);
+  for (let i = 0; i < 6; i++) { const a = i * Math.PI / 3; dot(grille, 186 + 8 * Math.cos(a), 186 + 8 * Math.sin(a), 2.6); }
+  for (let i = 0; i < 12; i++) { const a = (i + .5) * Math.PI / 6; dot(grille, 186 + 16 * Math.cos(a), 186 + 16 * Math.sin(a), 2.6); }
+  const glit = $("bd-glitter"); let s = 7;
+  for (let i = 0; i < 26; i++) { s = (s * 9301 + 49297) % 233280; const a = s / 233280 * 6.283; s = (s * 9301 + 49297) % 233280; const r = 30 * Math.sqrt(s / 233280); dot(glit, 282 + r * Math.cos(a), 150 + r * Math.sin(a), .9); }
+
+  // The firmware's button colours (src/portal_html.h), default purple 7B2FF7
+  const COLORS = ["7b2ff7", "ff2a2a", "ff8a00", "ffd400", "38e05a", "2fe0b0", "19c3ff", "2f5bff", "ff4fc3", "ffffff"];
+  const S = { on: false, state: "off", key: "ringandting", color: "#7b2ff7", rainbow: false, level: 0, flash: null };
+  const sw = $("bd-swatches");
+  [...COLORS, "rainbow"].forEach((h) => {
+    const b = document.createElement("button"); b.type = "button";
+    if (h === "rainbow") { b.className = "rain"; b.setAttribute("aria-label", "Rainbow"); } else { b.style.setProperty("--c", "#" + h); b.setAttribute("aria-label", "Colour #" + h); }
+    b.setAttribute("aria-pressed", String(h === "7b2ff7"));
+    b.addEventListener("click", () => {
+      sw.querySelectorAll("button").forEach((o) => o.setAttribute("aria-pressed", String(o === b)));
+      S.rainbow = h === "rainbow"; if (!S.rainbow) S.color = "#" + h;
+      if (S.on && (S.state === "armed" || S.state === "preview")) { S.flash = { until: performance.now() + 1200, kind: "show" }; }
+    });
+    sw.append(b);
+  });
+
+  // Audio: decode the firmware's renders so the lights can follow their loudness.
+  // From file:// fetch is blocked, so fall back to a plain <audio> and a steady 4 Hz flash.
+  let ctx, gain, an, buf = new Float32Array(1024), cur = null;
+  const cache = {};
+  const url = (k) => `../7-firmware/preview/${k}.wav`;
+  const ensure = () => {
+    if (ctx) return;
+    try { ctx = new (window.AudioContext || window.webkitAudioContext)(); gain = ctx.createGain(); gain.gain.value = .8; an = ctx.createAnalyser(); an.fftSize = 1024; gain.connect(an); an.connect(ctx.destination); } catch { ctx = null; }
+  };
+  const load = (k) => cache[k] ||= fetch(url(k)).then((r) => (r.ok ? r.arrayBuffer() : Promise.reject())).then((a) => ctx.decodeAudioData(a)).catch(() => null);
+  const stop = () => { if (cur) { cur.stop(); cur = null; } };
+  const play = async (k, loop = false, onEnd) => {
+    stop(); ensure();
+    const me = { stopped: false, stop() { this.stopped = true; this.kill && this.kill(); } }; cur = me;
+    const b = ctx ? await load(k) : null;
+    if (me.stopped) return;
+    if (ctx && ctx.state === "suspended") ctx.resume();
+    if (b) {
+      const src = ctx.createBufferSource(); src.buffer = b; src.loop = loop; src.connect(gain); src.start();
+      src.onended = () => { if (cur === me) { cur = null; onEnd && onEnd(); } };
+      me.kill = () => { try { src.stop(); } catch {} }; me.measured = true;
+    } else {
+      const a = new Audio(url(k)); a.loop = loop; a.play().catch(() => {});
+      a.onended = () => { if (cur === me) { cur = null; onEnd && onEnd(); } };
+      me.kill = () => a.pause(); me.measured = false;
+    }
+  };
+
+  let timer;
+  const later = (ms, fn) => { clearTimeout(timer); timer = setTimeout(fn, ms); };
+  const say = (t) => { status.textContent = t; };
+  const name = () => root.querySelector(`#bd-sounds [data-key="${S.key}"] b`).textContent;
+
+  const setPower = (on) => {
+    S.on = on; clearTimeout(timer); stop(); S.flash = null;
+    root.toggleAttribute("data-on", on);
+    $("bd-power").setAttribute("aria-pressed", String(on)); $("bd-power-label").textContent = on ? "On" : "Off";
+    if (on) {
+      S.state = "awake"; S.flash = { until: performance.now() + 900, kind: "blink" };
+      play("_awake"); say("“I'm awake!” Armed and sleeping until something moves.");
+      later(1200, () => { S.state = "armed"; });
+    } else { S.state = "off"; say("Off. The switch cuts the battery, so nothing can wake it."); }
+  };
+  const alarm = () => {
+    if (!S.on) { say("It's switched off, so nothing happens. Slide the power on."); return; }
+    if (S.state === "cool") { say("Shh, it's ignoring motion for a moment after being silenced."); return; }
+    if (S.state === "alarm") return;
+    S.state = "alarm"; say(`Motion! ${name()} plays and the eyes flash. Hit the big button.`);
+    play(S.key, true);
+    later(10000, () => { stop(); S.state = "armed"; say("The 10 s alarm ran out. Armed again after a short hold-off."); });
+  };
+  const silence = () => {
+    if (!S.on) { say("It's switched off. Slide the power on first."); return; }
+    if (S.state !== "alarm" && S.state !== "preview") { say("Nothing to silence. Try reaching into the backpack."); return; }
+    clearTimeout(timer); stop(); play("_silenced");
+    S.state = "cool"; S.flash = { until: performance.now() + 700, kind: "three" };
+    say("Silenced. It ignores motion for a bit so you can get your stuff.");
+    later(5000, () => { S.state = "armed"; say("Armed again."); });
+  };
+
+  $("bd-power").addEventListener("click", () => setPower(!S.on));
+  const key = (el, fn) => { el.addEventListener("click", fn); el.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fn(); } }); };
+  key($("bd-sw"), () => setPower(!S.on));
+  key($("bd-btn"), silence);
+  $("bd-reach").addEventListener("click", alarm);
+  root.querySelectorAll("#bd-sounds button").forEach((b) => b.addEventListener("click", () => {
+    root.querySelectorAll("#bd-sounds button").forEach((o) => o.setAttribute("aria-pressed", String(o === b)));
+    S.key = b.dataset.key;
+    if (!S.on) { say(`${name()} picked. Switch it on to hear it.`); return; }
+    if (S.state === "alarm") { play(S.key, true); return; }
+    clearTimeout(timer); S.state = "preview"; say(`Previewing ${name()}…`);
+    play(S.key, false, () => { if (S.state === "preview") { S.state = "armed"; say(`${name()} it is. Armed.`); } });
+  }));
+
+  // Lights, every frame
+  const hsl = (t) => `hsl(${(t / 6000 * 360) % 360} 100% 55%)`;
+  const frame = (t) => {
+    let eyes = 0, btn = 0;
+    if (cur && cur.measured && an) { an.getFloatTimeDomainData(buf); let sum = 0; for (const v of buf) sum += v * v; S.level = S.level * .6 + Math.min(1, Math.sqrt(sum / buf.length) * 7) * .4; }
+    else S.level = cur ? (Math.floor(t / 125) % 2 ? 1 : .15) : 0;
+    if (S.state === "alarm") { eyes = reduce ? 1 : S.level; btn = 1; }
+    else if (S.state === "preview") { btn = .6; eyes = reduce ? .6 : S.level * .8; }
+    if (S.flash && t < S.flash.until) {
+      const left = S.flash.until - t;
+      if (S.flash.kind === "blink") eyes = Math.floor(left / 225) % 2 ? 1 : 0;
+      if (S.flash.kind === "three") btn = Math.floor(left / 117) % 2 ? 1 : 0;
+      if (S.flash.kind === "show") btn = Math.max(btn, .6);
+    } else S.flash = null;
+    const c = S.rainbow ? hsl(t) : S.color;
+    glow.setAttribute("opacity", eyes.toFixed(2));
+    dots.setAttribute("fill", eyes > .3 ? "#ffffff" : "#E6ECEE");
+    halo.setAttribute("fill", c); tint.setAttribute("fill", c);
+    halo.setAttribute("opacity", (btn * .9).toFixed(2)); tint.setAttribute("opacity", (btn * .55).toFixed(2));
+    requestAnimationFrame(frame);
+  };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

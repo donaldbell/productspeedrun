@@ -1,0 +1,12 @@
+{
+  "name": "productspeedrun",
+  "private": true,
+  "description": "Product Speedrun: open product designs from the show, and the site that shows them",
+  "type": "module",
+  "scripts": {
+    "build:site": "node scripts/build-site.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

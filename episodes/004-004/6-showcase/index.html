@@ -1,0 +1,441 @@
+<!doctype html>
+<!--
+  Product Speedrun 004: Aquatica Lumina. Built from kit/showcase/template.html (kit/showcase/README.md).
+  Paths: ../2-concept/ … ../5-electronics/ are this episode's folders, ../../../kit/ is the shared series look.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aquatica Lumina · Product Speedrun 004</title>
+<meta name="description" content="A design proposal for a steampunk, colour-sensing aquarium accent light that reads the colours of its tank and lights the water to match. A Product Speedrun concept.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../../../kit/showcase.css">
+<style>
+/* This episode's accent: antique brass from the deck and finials, on chart-room parchment. */
+:root { --accent: #9A6B1E; --accent-ink: #74501A; --accent-soft: #F3EAD6; }
+@media (prefers-color-scheme: dark) { :root { --accent-ink: #E6BC6C; --accent-soft: #211A10; } }
+
+/* The hero render is square: keep it square (the width/height attributes only reserve space) */
+.ps-hero figure img { aspect-ratio: 1 / 1; height: auto; object-fit: cover; }
+.ps-moment img { height: auto; }
+
+/* The free slot (this episode: the bar reads a tank and plays it back, in a brass instrument panel) */
+.aql { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: var(--gap); align-items: start; }
+.aql-tank { margin: 0; border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--line); background: #0B1A20; }
+.aql-tank svg { display: block; width: 100%; height: auto; }
+.aql-water { transition: fill 1.2s ease; }
+.aql-plant { fill: none; stroke-width: 5; stroke-linecap: round; transition: stroke 1.2s ease; }
+.aql-body { transition: fill 1.2s ease; }
+.aql-led, .aql-halo rect { transition: fill .7s ease; }
+.aql-pal stop { transition: stop-color .9s ease; }
+.aql-wash { opacity: .72; }
+.aql-flare { fill: #FFF8E6; opacity: 0; }
+.aql-surface { fill: none; stroke-width: 4; opacity: .55; }
+.aql-domering, .aql-eyering { fill: none; opacity: 0; transition: opacity .2s; }
+.aql-domering { stroke: #FFE1A8; stroke-width: 2; }
+.aql-eyering { stroke: #FFFFFF; stroke-width: 1.5; }
+.aql[data-reading] .aql-eyering, .aql[data-sensing] .aql-domering { opacity: 1; }
+.aql[data-rippling] .aql-flare { animation: aql-flare .95s ease-out both; animation-delay: var(--dl, 0ms); }
+.aql[data-rippling] .aql-surface { animation: aql-shine 2.2s ease-out; }
+@keyframes aql-flare { 0% { opacity: 0; } 30% { opacity: .9; } 100% { opacity: 0; } }
+@keyframes aql-shine { 0% { opacity: .55; } 35% { opacity: 1; stroke-width: 7; } 100% { opacity: .55; } }
+.aql-swim, .aql-rise { transform-box: fill-box; }
+@media (prefers-reduced-motion: no-preference) {
+  .aql-swim { animation: aql-swim var(--t, 9s) ease-in-out infinite alternate; }
+  .aql[data-sensing] .aql-rise { animation: aql-rise 1.7s ease-in-out; }
+}
+@keyframes aql-swim { to { transform: translateX(var(--dx, 22px)); } }
+@keyframes aql-rise { 0%, 100% { transform: translateY(0); } 45%, 60% { transform: translateY(-148px); } }
+
+.aql-panel { position: relative; padding: 20px 18px 18px; border-radius: 16px; color: #F2E7D0; border: 5px solid transparent;
+  background: linear-gradient(170deg, #2C3137, #1B1F23) padding-box, linear-gradient(135deg, #EBC77E, #8A5E1E 38%, #E3B865 58%, #6A4614) border-box;
+  box-shadow: 0 10px 28px rgba(40, 26, 6, .22); }
+.aql-panel::before { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: 11px;
+  background: radial-gradient(circle at 9px 9px, #E9C47A 0 3px, #6A4614 3.5px, transparent 4.5px), radial-gradient(circle at calc(100% - 9px) 9px, #E9C47A 0 3px, #6A4614 3.5px, transparent 4.5px), radial-gradient(circle at 9px calc(100% - 9px), #E9C47A 0 3px, #6A4614 3.5px, transparent 4.5px), radial-gradient(circle at calc(100% - 9px) calc(100% - 9px), #E9C47A 0 3px, #6A4614 3.5px, transparent 4.5px); }
+.aql-plate { margin: 0 0 14px; text-align: center; font: 700 11px/1.3 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: #E3B865; }
+.aql-plate span { display: block; font-weight: 500; letter-spacing: .08em; color: #A99A7F; margin-top: 2px; }
+.aql-group { border: 0; margin: 0 0 14px; padding: 0; }
+.aql-group legend { padding: 0; margin-bottom: 6px; font: 500 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: #CFAE6B; }
+.aql-tanks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.aql-modes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.aql button { font: inherit; color: inherit; cursor: pointer; text-align: left; border-radius: 9px; border: 1px solid #5B4B2E; background: #30363D; padding: 9px 10px; }
+.aql button:hover { border-color: #B9914A; }
+.aql button[aria-pressed="true"] { border-color: #E3B865; box-shadow: inset 0 0 0 1px #E3B865; background: #3A3427; }
+.aql-tanks b, .aql-modes b { display: block; font: 600 15px/1.2 var(--body); }
+.aql-tanks small, .aql-modes small { display: block; font-size: 12px; line-height: 1.3; color: #B4A78E; margin-top: 2px; }
+.aql-chips { display: flex; gap: 3px; margin-top: 6px; }
+.aql-chips i { width: 12px; height: 12px; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .35); }
+.aql .aql-rise-btn { width: 100%; text-align: center; font-weight: 600; background: linear-gradient(#C99A45, #8E6220); color: #1C1408; border-color: #6A4614; }
+.aql .aql-rise-btn:hover { border-color: #F0D08E; }
+.aql-read { min-height: 3.9em; margin: 12px 0 0; padding: 9px 10px; border-radius: 8px; background: #121518; border: 1px solid #3B3326; font: 500 12.5px/1.45 var(--mono); color: #9FE3C9; }
+.aql-note { grid-column: 1 / -1; font-size: 14px; color: var(--muted); max-width: 72ch; }
+@media (max-width: 860px) { .aql { grid-template-columns: 1fr; } }
+@media (max-width: 380px) { .aql-tanks { grid-template-columns: 1fr; } }
+</style>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js"></script>
+<script type="module" src="../../../kit/series-bar.js"></script>
+<script type="module" src="../../../kit/showcase.js"></script>
+</head>
+<body>
+<ps-series-bar></ps-series-bar>
+
+<header class="ps-hero" id="top">
+  <div class="wrap">
+    <div>
+      <ul class="ps-roll" aria-label="The roll">
+        <li><small>Sense</small><b>Colour / light</b></li>
+        <li><small>Act</small><b>Addressable RGB LEDs</b></li>
+        <li><small>User</small><b>Aquarium keeper</b></li>
+        <li><small>Form factor</small><b>Clip-on</b></li>
+        <li><small>Vibe</small><b>Steampunk</b></li>
+        <li><small>Twist</small><b>Built into a found object</b></li>
+      </ul>
+      <h1>Aquatica Lumina</h1>
+      <p class="ps-pitch">A design proposal for a colour-sensing aquarium accent light that matches the colours of the tank it hangs over.</p>
+      <p class="ps-lede">The idea: a slim brass-and-gunmetal light bar, styled like a fitting from Captain Nemo's salon, clips under the aquarium lid. When the room goes dim it wakes and flashes white for an instant to read the colours of the water, plants and fish. Then it lights the surface in a palette that matches them, or plays against them. When a fish rises under its faceted dome, a slow ripple runs along the lamps.</p>
+      <dl class="ps-facts">
+        <div><dt>300 × 26 × 11 mm</dt><dd>About a foot long, phone-thin</dd></div>
+        <div><dt>Clips under the lid</dt><dd>On a stick-on rail, so it can't fall in</dd></div>
+        <div><dt>~4 nights a charge</dt><dd>At a dim glow, 5 hours a night, USB-C</dd></div>
+        <div><dt>No app to install</dt><dd>Its own Wi-Fi control panel</dd></div>
+      </dl>
+    </div>
+    <figure>
+      <img src="../4-model/render-sqGemini_Generated_Image_c67tpgc67tpgc67t.jpeg" alt="AI render: a slim antique-brass and gunmetal light bar with turned finials, a faceted red glass dome at one end and twelve square lamps glowing in a rainbow, lying on dark wet stone beside coral" width="1024" height="1024">
+      <figcaption>An AI render of the CAD model: a concept that hasn't been built. The render tinted the dome ruby; the CAD calls for smoky amber.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<nav class="ps-run" aria-label="How this episode ran">
+  <ol>
+    <li><a href="#top"><span class="n"><i>1</i>Roll &amp; brief</span><span class="thumb"><svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><rect x="3" y="3" width="34" height="34" rx="8" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="13" cy="13" r="3" fill="currentColor"/><circle cx="27" cy="27" r="3" fill="currentColor"/><circle cx="20" cy="20" r="3" fill="currentColor"/></svg></span></a></li>
+    <li><a href="#trail"><span class="n"><i>2</i>Concept</span><span class="thumb"><img src="../2-concept/Steampunk-Rainbow-Aquarium-Light-Blueprint.png" alt=""></span></a></li>
+    <li><a href="#trail"><span class="n"><i>3</i>Drawing</span><span class="thumb"><img src="../3-layout/ctrlSteampunk-LED-Light-Bar-Blueprint.png" alt=""></span></a></li>
+    <li><a href="#model"><span class="n"><i>4</i>3D model</span><span class="thumb"><img src="../4-model/iso.png" alt=""></span></a></li>
+    <li><a href="#inside"><span class="n"><i>5</i>Electronics</span><span class="thumb"><img src="../5-electronics/board.png" alt=""></span></a></li>
+    <li><a href="#top"><span class="n"><i>6</i>Showcase</span><span class="thumb">This page</span></a></li>
+    <li><a href="#next"><span class="n"><i>7</i>Verdict</span><span class="thumb"><span class="verdict open" data-verdict>Still deciding</span></span></a></li>
+  </ol>
+</nav>
+
+<main>
+  <section class="ps-section" id="who">
+    <div class="wrap">
+      <div class="ps-head">
+        <h2>One keeper, a few dozen fish</h2>
+        <p>The keeper would set it up. The fish would have to live with it.</p>
+      </div>
+      <div class="ps-grid two">
+        <div class="ps-person">
+          <span class="role">The keeper</span>
+          <h3>Tests the water weekly, tinkers with everything</h3>
+          <p>A hobbyist with a planted tank in the living room, the kind who would happily open a control panel to set a timer or pick an animation. The bar is designed to be the tank's evening light: it would come on by itself when the room goes dim, pick its colours from what's actually in the tank, and switch off on schedule.</p>
+        </div>
+        <div class="ps-person">
+          <span class="role">The fish</span>
+          <h3>Didn't ask for a light show</h3>
+          <p>So the design keeps it quiet: a dim mood light at around 5 % brightness, colours that fade over seconds instead of flashing, and a sensor that would answer movement near the surface with one gentle ripple. Out of the night window, the lamps are switched off completely.</p>
+        </div>
+      </div>
+      <figure class="ps-moment">
+        <img src="moment.jpg" alt="Concept art: the brass light bar under an aquarium lid, the water surface below it lit in rainbow ripples over neon tetras, an angelfish and green plants" width="1336" height="444" loading="lazy">
+        <blockquote>"It looked at the tetras and turned the surface red and electric blue."<cite>Nine at night, room lights off. The bar reads the tank once at dusk and paints it back onto the water.</cite></blockquote>
+      </figure>
+    </div>
+  </section>
+
+  <section class="ps-section tint" id="demo">
+    <div class="wrap">
+      <div class="ps-head">
+        <h2>It reads the tank, then plays it back</h2>
+        <p>Pick a tank and a mode. The bar flashes white for a moment, its colour eye reads what bounces back, and the twelve lamps settle into a palette. Then send a fish up under the dome.</p>
+      </div>
+      <div class="ps-free aql" id="aql">
+        <figure class="aql-tank">
+          <svg viewBox="0 0 640 380" role="img" aria-labelledby="aql-title">
+            <title id="aql-title">An aquarium seen from the front, with the brass light bar under its lid lighting the water in the chosen palette</title>
+            <defs>
+              <linearGradient id="aql-pal" class="aql-pal" gradientUnits="userSpaceOnUse" x1="20" y1="0" x2="620" y2="0"></linearGradient>
+              <linearGradient id="aql-fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".55" stop-color="#fff" stop-opacity=".25"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+              <mask id="aql-cone"><rect x="20" y="64" width="600" height="300" fill="url(#aql-fade)"/></mask>
+              <linearGradient id="aql-brass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EDC983"/><stop offset=".5" stop-color="#B8862E"/><stop offset="1" stop-color="#7A5418"/></linearGradient>
+              <radialGradient id="aql-amber" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#FFE0AA"/><stop offset=".45" stop-color="#C9802C"/><stop offset="1" stop-color="#4E2C0C"/></radialGradient>
+              <filter id="aql-blur" x="-100%" y="-200%" width="300%" height="500%"><feGaussianBlur stdDeviation="4"/></filter>
+            </defs>
+            <rect class="aql-water" x="20" y="64" width="600" height="300" fill="#0E4C5A"/>
+            <rect x="20" y="64" width="600" height="300" fill="url(#aql-pal)" mask="url(#aql-cone)" class="aql-wash"/>
+            <path class="aql-surface" stroke="url(#aql-pal)" d=""/>
+            <g class="aql-plants">
+              <path class="aql-plant" d="M48 364 C38 330 62 304 50 262 M62 364 C70 330 52 300 72 276"/>
+              <path class="aql-plant" d="M178 364 C170 336 190 318 182 290"/>
+              <path class="aql-plant" d="M520 364 C510 320 540 300 528 250 M540 364 C552 330 532 296 556 268 M560 364 C566 340 556 320 574 300"/>
+              <path class="aql-plant" d="M388 364 C396 344 380 330 392 312"/>
+            </g>
+            <rect x="20" y="350" width="600" height="14" fill="#3A3127"/>
+            <g class="aql-fishes" fill="#0B0B0B">
+              <g transform="translate(78 250)"><g class="aql-rise"><g class="aql-swim" style="--t:7s;--dx:10px"><path class="aql-body" d="M0 0 C8 -9 24 -9 32 0 C24 9 8 9 0 0 Z M0 0 L-9 -7 L-9 7 Z"/><circle cx="25" cy="-2" r="1.6"/></g></g></g>
+              <g transform="translate(200 168) scale(.9)"><g class="aql-swim" style="--t:11s;--dx:34px"><path class="aql-body" d="M0 0 C8 -9 24 -9 32 0 C24 9 8 9 0 0 Z M0 0 L-9 -7 L-9 7 Z"/><circle cx="25" cy="-2" r="1.6"/></g></g>
+              <g transform="translate(300 232)"><g class="aql-swim" style="--t:9s;--dx:-26px"><path class="aql-body" d="M0 0 C8 -9 24 -9 32 0 C24 9 8 9 0 0 Z M0 0 L-9 -7 L-9 7 Z"/><circle cx="25" cy="-2" r="1.6"/></g></g>
+              <g transform="translate(420 150) scale(.85)"><g class="aql-swim" style="--t:12s;--dx:30px"><path class="aql-body" d="M0 0 C8 -9 24 -9 32 0 C24 9 8 9 0 0 Z M0 0 L-9 -7 L-9 7 Z"/><circle cx="25" cy="-2" r="1.6"/></g></g>
+              <g transform="translate(468 272) scale(1.35)"><g class="aql-swim" style="--t:13s;--dx:-20px"><path class="aql-body" d="M0 0 C8 -9 24 -9 32 0 C24 9 8 9 0 0 Z M0 0 L-9 -7 L-9 7 Z"/><circle cx="25" cy="-2" r="1.6"/></g></g>
+              <g transform="translate(340 312) scale(.8)"><g class="aql-swim" style="--t:10s;--dx:24px"><path class="aql-body" d="M0 0 C8 -9 24 -9 32 0 C24 9 8 9 0 0 Z M0 0 L-9 -7 L-9 7 Z"/><circle cx="25" cy="-2" r="1.6"/></g></g>
+              <g transform="translate(150 300) scale(.95)"><g class="aql-swim" style="--t:8s;--dx:-18px"><path class="aql-body" d="M0 0 C8 -9 24 -9 32 0 C24 9 8 9 0 0 Z M0 0 L-9 -7 L-9 7 Z"/><circle cx="25" cy="-2" r="1.6"/></g></g>
+            </g>
+            <rect x="14" y="30" width="612" height="340" rx="10" fill="none" stroke="#9FB5BC" stroke-opacity=".45" stroke-width="3"/>
+            <rect x="6" y="16" width="628" height="20" rx="7" fill="#2B3036"/>
+            <rect x="6" y="16" width="628" height="4" rx="2" fill="#454C54"/>
+            <g class="aql-bar">
+              <circle cx="58" cy="45" r="6" fill="url(#aql-brass)"/><circle cx="582" cy="45" r="6" fill="url(#aql-brass)"/>
+              <rect x="62" y="38" width="516" height="15" rx="7.5" fill="#262B31"/>
+              <rect x="66" y="38.5" width="508" height="12.5" rx="6" fill="url(#aql-brass)"/>
+              <circle cx="88" cy="44.5" r="9.5" fill="#3A2A18"/>
+              <circle cx="88" cy="44.5" r="8" fill="url(#aql-amber)"/>
+              <circle class="aql-domering" cx="88" cy="44.5" r="11.5"/>
+              <circle cx="109" cy="44.5" r="3.6" fill="#7A5418"/><circle cx="109" cy="44.5" r="2" fill="#EDC983"/>
+              <rect x="120" y="40.5" width="372" height="8.5" rx="4.25" fill="#1D1A14"/>
+              <g class="aql-halo" filter="url(#aql-blur)"></g>
+              <g class="aql-leds"></g>
+              <rect x="500" y="40.5" width="18" height="8.5" rx="2" fill="#121417"/><rect x="506" y="42.5" width="6" height="4.5" fill="#6E6A60"/>
+              <ellipse cx="540" cy="44.75" rx="8.5" ry="4.75" fill="#C9D1D6"/><ellipse cx="540" cy="44.75" rx="6" ry="3" fill="#1B1F24"/>
+              <ellipse class="aql-eyering" cx="540" cy="44.75" rx="11" ry="7"/>
+              <g fill="#5E4214"><circle cx="72" cy="44.5" r="1.3"/><circle cx="526" cy="44.5" r="1.3"/><circle cx="568" cy="44.5" r="1.3"/></g>
+            </g>
+          </svg>
+        </figure>
+        <div class="aql-panel">
+          <p class="aql-plate">Lumina control panel<span>Hosted by the bar · N° 004</span></p>
+          <fieldset class="aql-group">
+            <legend>The tank below</legend>
+            <div class="aql-tanks" data-group="tank"></div>
+          </fieldset>
+          <fieldset class="aql-group">
+            <legend>Mode</legend>
+            <div class="aql-modes" data-group="mode">
+              <button type="button" data-mode="match" aria-pressed="true"><b>Match</b><small>The tank's own colours</small></button>
+              <button type="button" data-mode="complement" aria-pressed="false"><b>Complement</b><small>The opposite hues</small></button>
+            </div>
+          </fieldset>
+          <button type="button" class="aql-rise-btn" id="aql-rise">Send a fish up under the dome</button>
+          <p class="aql-read" id="aql-read" aria-live="polite"></p>
+        </div>
+        <p class="aql-note">A simulation of how the light is designed to behave: no firmware has been written yet. The tank colours here stand in for what the colour sensor would read, and the real bar hangs face-down, so you'd see the light on the water, not the lamps.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="ps-section" id="model">
+    <div class="wrap">
+      <div class="ps-head">
+        <span class="ps-stage"><i>4</i>3D model in Solidcraft</span>
+        <h2>A brass bar you could actually mould</h2>
+        <p>A first-pass CAD model sized around real parts: 300 mm long, 26 mm wide and 11 mm thick, with the dome standing 10 mm proud. The lamp face points up here; under the lid it would hang face-down over the water. Drag to spin it.</p>
+      </div>
+      <div class="ps-grid side">
+        <div>
+          <div class="ps-viewer">
+            <model-viewer id="enclosure" src="../4-model/model.glb" alt="3D model of the Aquatica Lumina light bar" camera-controls auto-rotate shadow-intensity="0.6" interaction-prompt="none" camera-orbit="-30deg 55deg auto" min-camera-orbit="auto 1deg auto" max-camera-orbit="auto 179deg auto"></model-viewer>
+          </div>
+          <div class="ps-views" role="group" aria-label="Views">
+            <button type="button" data-target="#enclosure" data-orbit="-30deg 55deg auto" aria-pressed="true">Three-quarter</button>
+            <button type="button" data-target="#enclosure" data-orbit="0deg 1deg auto" aria-pressed="false">Lamp face</button>
+            <button type="button" data-target="#enclosure" data-orbit="0deg 88deg auto" aria-pressed="false">USB side</button>
+            <button type="button" data-target="#enclosure" data-orbit="20deg 160deg auto" aria-pressed="false">Back &amp; rail</button>
+          </div>
+        </div>
+        <ol class="ps-callouts">
+          <li><b>Brass deck over a gunmetal base</b><span>Two moulded halves split along a visible step and sealed with a silicone cord, painted and antiqued to look like milled brass. Splash-proof, not submersible.</span></li>
+          <li><b>Faceted dome</b><span>Smoky amber and see-through to infrared. The sensor behind it watches for fish near the surface and for the room going dark.</span></li>
+          <li><b>Porthole button</b><span>A brass eyepiece over a tiny switch: wake, change mode, or hold to open the Wi-Fi control panel.</span></li>
+          <li><b>Lamp window</b><span>Twelve squares on a frosted diffuser, one RGB LED behind each.</span></li>
+          <li><b>Viewing window and colour eye</b><span>Smoked glass over the microcontroller, then a chrome oval over the colour sensor.</span></li>
+          <li><b>Side USB-C and clip rail</b><span>The charging port hides behind a tethered brass plug on the long edge. A 160 mm rail stays taped under the lid; the bar snaps in and out of it.</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="ps-section" id="inside">
+    <div class="wrap">
+      <div class="ps-head">
+        <span class="ps-stage"><i>5</i>Electronics in KiCad</span>
+        <h2>What's inside</h2>
+        <p>One long two-layer board, 248 × 21.4 mm, runs almost the whole bar. The lamps, sensors and button face the water; a XIAO ESP32-C6 is soldered flat on the back, with its USB-C at the side edge. Two slim LiPo pouch cells lie underneath.</p>
+      </div>
+      <div class="ps-stats">
+        <div class="ps-stat"><b>0 / 0</b><span>DRC violations and unrouted connections</span></div>
+        <div class="ps-stat"><b>51</b><span>Parts on the board, plus two 600 mAh cells</span></div>
+        <div class="ps-stat"><b>~55 mA</b><span>Night draw at a dim glow; ~30 µA asleep by day</span></div>
+      </div>
+      <div class="ps-viewer">
+        <div class="load"><button class="ps-btn primary" type="button" data-load-model="../5-electronics/board.glb" data-alt="3D model of the long circuit board">Load the 3D board (8.5 MB)</button></div>
+        <span class="note">Routed in KiCad with Freerouting</span>
+      </div>
+      <div class="ps-parts">
+        <div class="ps-part"><span class="ref">U1 · XIAO ESP32-C6</span><h3>The brain</h3><p>Wi-Fi for the control panel, USB-C, LiPo charging and a 15 µA deep sleep on one thumb-sized board. It's soldered flat, because sockets would add 8 mm to an 11 mm bar.</p></div>
+        <div class="ps-part"><span class="ref">U2 · APDS-9960</span><h3>Fish and dusk</h3><p>Pulses infrared through the dome and reads what comes back, so a fish near the surface changes the reading. Its ambient channel says when the room is dim.</p></div>
+        <div class="ps-part"><span class="ref">U3 · APDS-9251-001</span><h3>Colour eye</h3><p>A true RGB + IR sensor behind the chrome oval. The lamps flash white for a moment and it reads the colour that bounces back from the tank.</p></div>
+        <div class="ps-part"><span class="ref">LED1–12 · WS2812B-2020</span><h3>The lamps</h3><p>Twelve 2 mm RGB LEDs, one under each window square, on a single data line.</p></div>
+        <div class="ps-part"><span class="ref">Q1, Q2 · AO3401A + AO3400A</span><h3>Day switch</h3><p>Cuts power to the whole LED chain outside the night window, since each LED draws about 1 mA even when dark.</p></div>
+        <div class="ps-part"><span class="ref">SW1 · PTS810</span><h3>Porthole</h3><p>A 2.5 mm-tall switch under the brass button. It's wired to a pin that can wake the chip from deep sleep.</p></div>
+      </div>
+      <details class="ps-bom">
+        <summary>Full bill of materials (<span data-bom-count>…</span> lines)</summary>
+        <div class="ps-table" data-bom="../5-electronics/bom.csv">Loading the parts list…</div>
+      </details>
+      <ul class="ps-files" aria-label="Design files">
+        <li><a href="../5-electronics/aqua-accent.kicad_sch">Schematic (KiCad)</a></li>
+        <li><a href="../5-electronics/aqua-accent.kicad_pcb">Board (KiCad)</a></li>
+        <li><a href="../5-electronics/bom.csv">bom.csv</a></li>
+        <li><a href="../4-model/model.step">Enclosure (STEP)</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="ps-section" id="trail">
+    <div class="wrap">
+      <div class="ps-head">
+        <h2>How we got here</h2>
+        <p>From a random roll to a routed board in one episode. The twist, "built into a found object", became the aquarium itself: the thing the light lives on and reads. Along the way the concept's PIR sensor became an optical one (a PIR can't see through water) and the USB-C moved from the face to the side edge.</p>
+      </div>
+      <ol class="ps-trail">
+        <li><figure><a class="frame" href="../2-concept/Steampunk-Rainbow-Aquarium-Light-Blueprint.png"><img src="../2-concept/Steampunk-Rainbow-Aquarium-Light-Blueprint.png" alt="Concept board: the steampunk light bar, the tank it lights, and five example light modes" loading="lazy"></a><figcaption><b>Concept</b>The chosen concept board</figcaption></figure></li>
+        <li><figure><a class="frame" href="../3-layout/ctrlSteampunk-LED-Light-Bar-Blueprint.png"><img src="../3-layout/ctrlSteampunk-LED-Light-Bar-Blueprint.png" alt="Control drawing: face, side and three-quarter views of the bar" loading="lazy"></a><figcaption><b>Control drawing</b>Face, side and three-quarter views</figcaption></figure></li>
+        <li><figure><a class="frame" href="../4-model/iso.png"><img src="../4-model/iso.png" alt="Isometric view of the CAD model" loading="lazy"></a><figcaption><b>3D model</b>Solidcraft enclosure</figcaption></figure></li>
+        <li><figure><a class="frame" href="../5-electronics/board-iso.png"><img src="../5-electronics/board-iso.png" alt="3D render of the routed carrier board" loading="lazy"></a><figcaption><b>Electronics</b>The 248 mm carrier, routed</figcaption></figure></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="ps-section" id="next">
+    <div class="wrap">
+      <div class="ps-head">
+        <h2>What we still don't know</h2>
+        <p>This is a speedrun first pass. Here's what we'd answer before anyone orders a board or cuts a mould.</p>
+      </div>
+      <ul class="ps-questions">
+        <li><span class="topic">Board</span><h3>Routed and clean, but never built</h3><p>The XIAO ESP32-C6's battery pads and antenna end are taken from Seeed's footprint and wiki. Both need checking against a real board before ordering.</p></li>
+        <li><span class="topic">Sensing</span><h3>Can it see fish through water?</h3><p>Water soaks up the sensor's infrared within a few centimetres, so it would only notice fish near the surface. The firmware could also watch the colour sensor for fast flicker as a second cue.</p></li>
+        <li><span class="topic">Colour</span><h3>What does one sensor make of a whole tank?</h3><p>It reads the blended reflection of everything below, not each fish. Whether that blend turns into a palette people actually like is untested.</p></li>
+        <li><span class="topic">Dome</span><h3>Which amber resin passes infrared?</h3><p>Amber and smoke dyes are usually near-clear at 950 nm, but tinted plastics vary. The chosen resin needs a proximity test before it's committed.</p></li>
+        <li><span class="topic">Power</span><h3>Blue fades on a tired battery</h3><p>The LEDs run straight from the cell, and below about 3.6 V their blue dims, so the firmware would stop at 3.5 V and ask for a charge. A 5 V boost would fix it. Charging could also take around 12 hours.</p></li>
+        <li><span class="topic">Finish</span><h3>Brass paint versus Wi-Fi</h3><p>A metallic-flake "brass" would detune the antenna, so the patch above it needs a non-metallic finish. The rail's snap grooves also leave a thin 0.7 mm wall.</p></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer class="ps-foot">
+  <div class="wrap">
+    <span>Aquatica Lumina is an open design from Product Speedrun episode 004, by Donald Bell and Jordan Bunker. Build it, change it, even sell it: hardware under <a href="https://github.com/donaldbell/productspeedrun/blob/main/LICENSES/CERN-OHL-P-2.0.txt">CERN-OHL-P v2</a>, words and images under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. If you do, we'd love a credit and to hear about it.</span>
+    <span><a href="../../../">All episodes</a> · <a href="https://github.com/donaldbell/productspeedrun/tree/main/episodes/004-004">Files on GitHub</a></span>
+  </div>
+</footer>
+
+<script>
+// The free slot's behaviour (this episode only): read a tank, build a 12-lamp palette, ripple on a rising fish.
+(() => {
+  const root = document.getElementById("aql");
+  if (!root) return;
+  const NS = "http://www.w3.org/2000/svg";
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const TANKS = [
+    { name: "Neon tetras", sub: "Planted, red and electric blue", water: "#0E4C5A", plant: "#3E9B45",
+      fish: ["#E5343F", "#22A6E8", "#E5343F", "#22A6E8", "#F2A93B", "#E5343F", "#22A6E8"], keys: ["#22A6E8", "#E5343F", "#43B649", "#F2A93B"] },
+    { name: "Goldfish", sub: "Orange and gold over moss", water: "#22443A", plant: "#7FA650",
+      fish: ["#F2871C", "#F7C948", "#E0532D", "#F2871C", "#F7C948", "#E0532D", "#F2871C"], keys: ["#F7C948", "#F2871C", "#E0532D", "#8FB359"] },
+    { name: "Reef", sub: "Blue water, pink coral", water: "#0A2E5C", plant: "#C0548F",
+      fish: ["#2C6BE6", "#F7D73F", "#FF6FAE", "#2C6BE6", "#8A52E0", "#F7D73F", "#FF6FAE"], keys: ["#2C6BE6", "#8A52E0", "#FF6FAE", "#F7D73F"] },
+    { name: "Betta", sub: "Deep red, indigo, teal", water: "#161E36", plant: "#2E8F7A",
+      fish: ["#B3224F", "#3A2C94", "#2FC6B8", "#B3224F", "#D94A7A", "#3A2C94", "#B3224F"], keys: ["#B3224F", "#D94A7A", "#3A2C94", "#2FC6B8"] },
+  ];
+  const N = 12, x0 = 140, x1 = 472;
+  const leds = [], halos = [], flares = [], stops = [];
+  const gLeds = root.querySelector(".aql-leds"), gHalo = root.querySelector(".aql-halo"), grad = root.querySelector("#aql-pal");
+  const rect = (parent, attrs) => { const r = document.createElementNS(NS, "rect"); for (const k in attrs) r.setAttribute(k, attrs[k]); parent.appendChild(r); return r; };
+  for (let i = 0; i < N; i++) {
+    const cx = x0 + (i * (x1 - x0)) / (N - 1);
+    halos.push(rect(gHalo, { x: cx - 8, y: 38.5, width: 16, height: 12.5, rx: 3 }));
+    leds.push(rect(gLeds, { class: "aql-led", x: cx - 3.5, y: 41.25, width: 7, height: 7, rx: 1 }));
+    const f = rect(gLeds, { class: "aql-flare", x: cx - 3.5, y: 41.25, width: 7, height: 7, rx: 1 });
+    f.style.setProperty("--dl", (i * 70) + "ms"); flares.push(f);
+    const s = document.createElementNS(NS, "stop"); s.setAttribute("offset", (i / (N - 1)).toFixed(3)); grad.appendChild(s); stops.push(s);
+  }
+  let d = "M20 72 q15 -5 30 0"; for (let i = 0; i < 19; i++) d += " t30 0";
+  root.querySelector(".aql-surface").setAttribute("d", d);
+
+  // colour helpers
+  const hex2rgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const rgb2hex = (c) => "#" + c.map((v) => Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, "0")).join("");
+  const rgb2hsl = ([r, g, b]) => { r /= 255; g /= 255; b /= 255; const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2; let h = 0, s = 0;
+    if (mx !== mn) { const dd = mx - mn; s = l > .5 ? dd / (2 - mx - mn) : dd / (mx + mn);
+      h = mx === r ? (g - b) / dd + (g < b ? 6 : 0) : mx === g ? (b - r) / dd + 2 : (r - g) / dd + 4; h *= 60; }
+    return [h, s, l]; };
+  const hsl2hex = (h, s, l) => { const k = (n) => (n + h / 30) % 12, a = s * Math.min(l, 1 - l);
+    const f = (n) => l - a * Math.max(-1, Math.min(k(n) - 3, 9 - k(n), 1)); return rgb2hex([f(0), f(8), f(4)].map((v) => v * 255)); };
+  const palette = (keys, mode) => Array.from({ length: N }, (_, i) => {
+    const t = (i / (N - 1)) * (keys.length - 1), a = Math.floor(t), b = Math.min(a + 1, keys.length - 1), u = t - a;
+    const ca = hex2rgb(keys[a]), cb = hex2rgb(keys[b]);
+    let [h, s] = rgb2hsl(ca.map((v, j) => v + (cb[j] - v) * u));
+    if (mode === "complement") h = (h + 180) % 360;
+    return hsl2hex(h, Math.max(.55, Math.min(.9, s)), .58);
+  });
+
+  // state and drawing
+  let tank = 0, mode = "match", token = 0;
+  const read = document.getElementById("aql-read");
+  const setLeds = (cols, stagger) => cols.forEach((c, i) => {
+    const dl = stagger && !reduce ? (i * 55) + "ms" : "0ms";
+    [leds[i], halos[i]].forEach((el) => { el.style.transitionDelay = dl; el.style.fill = c; });
+    stops[i].style.transitionDelay = dl; stops[i].style.stopColor = c; stops[i].setAttribute("stop-color", c);
+  });
+  const drawTank = () => {
+    const t = TANKS[tank];
+    root.querySelector(".aql-water").style.fill = t.water;
+    root.querySelectorAll(".aql-plant").forEach((p) => (p.style.stroke = t.plant));
+    root.querySelectorAll(".aql-body").forEach((p, i) => (p.style.fill = t.fish[i % t.fish.length]));
+  };
+  const reading = () => { const k = TANKS[tank].keys.map(hex2rgb); return [0, 1, 2].map((j) => Math.round(k.reduce((sum, c) => sum + c[j], 0) / k.length)); };
+  const settle = (stagger) => {
+    const [r, g, b] = reading();
+    setLeds(palette(TANKS[tank].keys, mode), stagger);
+    read.textContent = `Colour eye: R ${r} · G ${g} · B ${b} → 12 lamps, ${mode === "match" ? "matching" : "complementary"} palette, glowing at 5 %.`;
+  };
+  const play = () => {
+    const my = ++token;
+    drawTank();
+    setLeds(Array(N).fill("#FFF6E2"), false);
+    root.setAttribute("data-reading", "");
+    read.textContent = "Flash: all twelve lamps white for a moment while the colour eye reads the reflection…";
+    setTimeout(() => { if (my !== token) return; root.removeAttribute("data-reading"); settle(true); }, reduce ? 400 : 900);
+  };
+
+  // controls
+  const tankBox = root.querySelector('[data-group="tank"]');
+  TANKS.forEach((t, i) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.dataset.tank = i; b.setAttribute("aria-pressed", String(i === tank));
+    b.innerHTML = `<b>${t.name}</b><small>${t.sub}</small><span class="aql-chips" aria-hidden="true">${t.keys.map((c) => `<i style="--c:${c}"></i>`).join("")}</span>`;
+    tankBox.appendChild(b);
+  });
+  const press = (box, btn) => box.querySelectorAll("button").forEach((o) => o.setAttribute("aria-pressed", String(o === btn)));
+  tankBox.addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; tank = +b.dataset.tank; press(tankBox, b); play(); });
+  const modeBox = root.querySelector('[data-group="mode"]');
+  modeBox.addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; mode = b.dataset.mode; press(modeBox, b); play(); });
+  let rise = 0;
+  document.getElementById("aql-rise").addEventListener("click", () => {
+    const my = ++rise;
+    ["data-sensing", "data-rippling"].forEach((a) => root.removeAttribute(a)); void root.getBoundingClientRect();
+    root.setAttribute("data-sensing", "");
+    read.textContent = "Dome: something moved near the surface…";
+    setTimeout(() => { if (my !== rise) return; root.setAttribute("data-rippling", ""); read.textContent = "Dome: a fish near the surface → one slow ripple along the lamps, then back to the palette."; }, reduce ? 0 : 650);
+    setTimeout(() => { if (my === rise) ["data-sensing", "data-rippling"].forEach((a) => root.removeAttribute(a)); }, 2600);
+  });
+
+  drawTank(); settle(false);
+})();
+</script>
+</body>
+</html>

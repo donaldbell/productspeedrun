@@ -1,0 +1,4 @@
+(sym_lib_table
+	(version 7)
+	(lib (name "aqua") (type "KiCad") (uri "${KIPRJMOD}/lib/aqua.kicad_sym") (options "") (descr "Aquarium Accent Light parts"))
+)

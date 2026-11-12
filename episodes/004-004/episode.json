@@ -1,0 +1,76 @@
+{
+  "slug": "004-004",
+  "number": 4,
+  "title": "#004",
+  "createdAt": "2026-11-10T20:53:03.921Z",
+  "stage": 7,
+  "roll": [
+    {
+      "bucket": "Sense",
+      "group": "Hardware",
+      "label": "Color / light"
+    },
+    {
+      "bucket": "Act",
+      "group": "Hardware",
+      "label": "Addressable RGB LEDs"
+    },
+    {
+      "bucket": "User",
+      "group": "Human",
+      "label": "Aquarium keeper"
+    },
+    {
+      "bucket": "Form factor",
+      "group": "Flavor",
+      "label": "Clip-on"
+    },
+    {
+      "bucket": "Vibe",
+      "group": "Flavor",
+      "label": "Steampunk"
+    },
+    {
+      "bucket": "Twist",
+      "group": "Flavor",
+      "label": "Built into a found object"
+    }
+  ],
+  "brief": {
+    "name": "Aquatica Lumina",
+    "pitch": "A color-sensing aquarium accent light that perfectly matches the colors of its environment.",
+    "what": "An LED aquarium mood light that perfectly matches or complements the colors of your aquarium and fish by reading and analyzing its color values.",
+    "who": "Amateur aquarium enthusiasts (maybe on the more tech side) interested in a unique visual addition to their tank. ",
+    "electronics": "A color sensor, a light sensor for automatically turning the lights on when the tank is dim, addressable RGB LEDs, a rechargeable slim LiPo pouch battery, USB recharging, ESP32 with hosted AP control panel for adjusting light moods, intensity, modes, timer, animations, motion sensor (mini PIR or other type) to detect fish movement which can create subtle ripple lighting animations.",
+    "design": "Inspired by Steampunk (in a Jules Verne under the sea way), but functionally water resistant, slim, lightweight, unobtrusive.",
+    "looksLike": "I'm thinking of those tasteful, stick-on under-cabinet LED lights, about a foot in length, a smartphone thickness (wider if needed to accommodate Xiao, and around 1.5 inch wide. Able to fit and adhere under the lid of an aquarium (without falling in). Rechargeable by removing lid and charging over USB C.",
+    "does": "",
+    "size": "",
+    "boardStyle": "carrier",
+    "units": []
+  },
+  "prompts": {
+    "3-layout": "Now turn this same product into an industrial designer's control drawing: the product drawn as exact front, side and top orthographic views at the same scale, plus one three-quarter view, with clean outer silhouettes and the parting lines and colour splits drawn in. Keep every shape and detail exactly as in the concept art. This can be black and white line art.\n\nDraw only the outside of the product: no circuit boards, batteries or other parts inside, no exploded views, and no parts list or notes. Use exactly the buttons, ports, lights, grilles and other features in the concept art, in the same places, without adding new ones. Leave out dimension numbers.\n\nFor reference, here's the product: It's an LED aquarium mood light that perfectly matches or complements the colors of your aquarium and fish by reading and analyzing its color values. It's made for amateur aquarium enthusiasts (maybe on the more tech side) interested in a unique visual addition to their tank. It fits a color sensor, a light sensor for automatically turning the lights on when the tank is dim, addressable RGB LEDs, a rechargeable slim LiPo pouch battery, USB recharging, ESP32 with hosted AP control panel for adjusting light moods, intensity, modes, timer, animations, motion sensor (mini PIR or other type) to detect fish movement which can create subtle ripple lighting animations inside. The design is inspired by Steampunk (in a Jules Verne under the sea way), but functionally water resistant, slim, lightweight, unobtrusive, and it resembles the form factor of I'm thinking of those tasteful, stick-on under-cabinet LED lights, about a foot in length, a smartphone thickness (wider if needed to accommodate Xiao, and around 1.5 inch wide. Able to fit and adhere under the lid of an aquarium (without falling in). Rechargeable by removing lid and charging over USB C, at about that size."
+  },
+  "promptEdited": {
+    "2-concept": false,
+    "3-layout": true,
+    "render": false,
+    "showcase": false
+  },
+  "favorites": {
+    "2-concept": "2-concept/Steampunk-Rainbow-Aquarium-Light-Blueprint.png",
+    "3-layout": "3-layout/ctrlSteampunk-LED-Light-Bar-Blueprint.png",
+    "render": "4-model/render-sqGemini_Generated_Image_c67tpgc67tpgc67t.jpeg"
+  },
+  "done": [
+    1,
+    3,
+    2,
+    4,
+    5,
+    7
+  ],
+  "decision": "keep",
+  "decidedAt": "2026-11-11T22:15:27.184Z"
+}

@@ -1,0 +1,16 @@
+Mobileer ME1000 synthesizer engine
+Copyright Phil Burk / Mobileer, Inc.
+
+The source in src/spmidi/ is the Mobileer SP-MIDI synthesizer by Phil Burk, from
+https://github.com/philburk/mobileer-synth (commit bb1ec40), released under the Apache License,
+Version 2.0 (see LICENSE). The individual file headers still carry Mobileer's original 2002-2007
+"PROPRIETARY and CONFIDENTIAL" notices from when the engine was licensed commercially (Palm Treo and
+other phones); the repository's LICENSE now covers them.
+
+The ringtones in ../../sounds/mobileer/ are Phil Burk's, from the same repository
+(data/ringtones/phil/), under the same licence.
+
+Changes made for Backpack Defender: only the files needed for ME1000 MIDI-file playback were copied.
+One line was added to engine/spmidi.c: "#undef assert" before its own no-op assert macro, because the
+ESP32 toolchain's newlib already defines assert (otherwise a redefinition warning). Nothing else was
+changed. config/spmidi_user_config.h (ours) selects ME1000, mono and static allocation.

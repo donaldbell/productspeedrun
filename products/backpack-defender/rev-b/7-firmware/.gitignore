@@ -1,0 +1,5 @@
+.pio/
+.vscode/
+test/render_sounds
+preview/mobileer/**/*.wav
+test/obj/

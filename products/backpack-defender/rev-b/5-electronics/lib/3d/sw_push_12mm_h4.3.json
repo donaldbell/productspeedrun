@@ -1,0 +1,8 @@
+{"commands":[
+{"command":"solid.box","params":{"length":12,"width":12,"height":3.3,"center":[6.25,-2.5,1.65],"operation":"new","body_name":"Body"}},
+{"command":"solid.cylinder","params":{"radius":3.5,"height":1.2,"base":[6.25,-2.5,3.1],"operation":"join","targets":["Body"]}},
+{"command":"solid.cylinder","params":{"radius":0.5,"height":2.3,"base":[0,0,-2.1],"operation":"new","body_name":"Pin 1"}},
+{"command":"solid.cylinder","params":{"radius":0.5,"height":2.3,"base":[12.5,0,-2.1],"operation":"new","body_name":"Pin 2"}},
+{"command":"solid.cylinder","params":{"radius":0.5,"height":2.3,"base":[0,-5,-2.1],"operation":"new","body_name":"Pin 3"}},
+{"command":"solid.cylinder","params":{"radius":0.5,"height":2.3,"base":[12.5,-5,-2.1],"operation":"new","body_name":"Pin 4"}}
+]}
