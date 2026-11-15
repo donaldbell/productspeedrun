@@ -21,6 +21,19 @@
 .ps-hero figure img { aspect-ratio: 1 / 1; height: auto; object-fit: cover; }
 .ps-moment img { height: auto; }
 
+/* Episode Short (in "How we got here"): a vertical local poster; YouTube only loads on press */
+.aql-video { margin: 0 0 calc(var(--gap) * 1.5); display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: var(--gap); align-items: end; }
+.aql-video-frame { position: relative; aspect-ratio: 9 / 16; border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--line); background: #000; }
+.aql-video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.aql-video-play { position: absolute; inset: 0; display: block; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; }
+.aql-video-play img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.aql-video-icon { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); filter: drop-shadow(0 2px 8px rgba(0,0,0,.4)); transition: transform .15s; }
+.aql-video-play:hover .aql-video-icon, .aql-video-play:focus-visible .aql-video-icon { transform: translate(-50%, -50%) scale(1.1); }
+.aql-video-play:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+.aql-video figcaption { font-size: 14px; color: var(--muted); max-width: 46ch; }
+.aql-video figcaption a { color: var(--accent-ink); }
+@media (max-width: 600px) { .aql-video { grid-template-columns: minmax(0, 280px); } }
+
 /* The free slot (this episode: the bar reads a tank and plays it back, in a brass instrument panel) */
 .aql { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: var(--gap); align-items: start; }
 .aql-tank { margin: 0; border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--line); background: #0B1A20; }
@@ -300,6 +313,15 @@
         <h2>How we got here</h2>
         <p>From a random roll to a routed board in one episode. The twist, "built into a found object", became the aquarium itself: the thing the light lives on and reads. Along the way the concept's PIR sensor became an optical one (a PIR can't see through water) and the USB-C moved from the face to the side edge.</p>
       </div>
+      <figure class="aql-video">
+        <div class="aql-video-frame">
+          <button type="button" class="aql-video-play" data-video="5Cm398s3GiQ" aria-label="Play the episode 004 Short (loads YouTube)">
+            <img src="short.jpg" alt="" width="540" height="960" loading="lazy">
+            <span class="aql-video-icon" aria-hidden="true"><svg viewBox="0 0 68 48" width="68" height="48"><path d="M66.5 7.7a8.5 8.5 0 0 0-6-6C55.3.3 34 .3 34 .3s-21.3 0-26.5 1.4a8.5 8.5 0 0 0-6 6C.1 13 .1 24 .1 24s0 11 1.4 16.3a8.5 8.5 0 0 0 6 6C12.7 47.7 34 47.7 34 47.7s21.3 0 26.5-1.4a8.5 8.5 0 0 0 6-6C67.9 35 67.9 24 67.9 24s0-11-1.4-16.3z" fill="#E33"/><path d="M27 34V14l18 10z" fill="#fff"/></svg></span>
+          </button>
+        </div>
+        <figcaption><b>The episode, in short.</b> A quick walk through episode 004, from the idea to the brass bar and its board. Pressing play loads the video from YouTube. <a href="https://www.youtube.com/shorts/5Cm398s3GiQ">Watch it on YouTube</a></figcaption>
+      </figure>
       <ol class="ps-trail">
         <li><figure><a class="frame" href="../2-concept/Steampunk-Rainbow-Aquarium-Light-Blueprint.png"><img src="../2-concept/Steampunk-Rainbow-Aquarium-Light-Blueprint.png" alt="Concept board: the steampunk light bar, the tank it lights, and five example light modes" loading="lazy"></a><figcaption><b>Concept</b>The chosen concept board</figcaption></figure></li>
         <li><figure><a class="frame" href="../3-layout/ctrlSteampunk-LED-Light-Bar-Blueprint.png"><img src="../3-layout/ctrlSteampunk-LED-Light-Bar-Blueprint.png" alt="Control drawing: face, side and three-quarter views of the bar" loading="lazy"></a><figcaption><b>Control drawing</b>Face, side and three-quarter views</figcaption></figure></li>
@@ -334,6 +356,19 @@
   </div>
 </footer>
 
+<script>
+// Episode Short: swap the local poster for YouTube's privacy-enhanced player only when pressed.
+// Shorts have no "Embed" menu item, but the ordinary /embed/<id> player plays them.
+document.querySelectorAll(".aql-video-play").forEach((b) => b.addEventListener("click", () => {
+  const f = document.createElement("iframe");
+  f.src = `https://www.youtube-nocookie.com/embed/${b.dataset.video}?autoplay=1&rel=0`;
+  f.title = "Product Speedrun episode 004: An Idea for a Color-Aware Aquarium Light";
+  f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+  f.allowFullscreen = true;
+  b.replaceWith(f);
+  f.focus();
+}));
+</script>
 <script>
 // The free slot's behaviour (this episode only): read a tank, build a 12-lamp palette, ripple on a rising fish.
 (() => {
