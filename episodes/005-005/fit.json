@@ -1,0 +1,137 @@
+{
+ "board": {
+  "size": [
+   50,
+   34
+  ],
+  "corner_r": 3,
+  "thickness": 1.0,
+  "faces": "top",
+  "origin": [
+   0,
+   88.3437,
+   20.3514
+  ],
+  "x_axis": [
+   1,
+   0,
+   0
+  ],
+  "y_axis": [
+   0,
+   -0.121869,
+   0.992546
+  ],
+  "posts_face": "bottom",
+  "provisional": false
+ },
+ "holes": [
+  [
+   -21,
+   -13
+  ],
+  [
+   21,
+   -13
+  ]
+ ],
+ "hole_d": 2.2,
+ "rests": [
+  [
+   -21,
+   13
+  ],
+  [
+   21,
+   13
+  ]
+ ],
+ "features": {
+  "module": {
+   "at": [
+    0,
+    -6.5
+   ],
+   "face": "top",
+   "size": [
+    17.8,
+    21
+   ],
+   "note": "XIAO nRF52840 Sense soldered flat on the top face (toward the head), USB-C down; its shell overhangs the bottom edge 1.2"
+  },
+  "usb": {
+   "at": [
+    0,
+    -17
+   ],
+   "face": "top",
+   "note": "XIAO USB-C mouth at the board's bottom edge, through the pod's bottom face (reached under the sweatband)"
+  },
+  "mic": {
+   "at": [
+    0,
+    -6.5
+   ],
+   "face": "top",
+   "note": "the Sense's PDM mic on the XIAO's top face: felt-covered acoustic opening in the pod's inner face over the module"
+  },
+  "button": {
+   "at": [
+    14.5,
+    -12
+   ],
+   "face": "top",
+   "note": "PTS810 MODE button: a flexure key in the pod's inner face presses it (under the sweatband)"
+  },
+  "plug_a": {
+   "at": [
+    -25,
+    9.5
+   ],
+   "face": "top",
+   "note": "JST PH side-entry SMD (S3B-PH-SM4-TB), mouth flush with the -x edge: band half A (wearer's right)"
+  },
+  "plug_b": {
+   "at": [
+    25,
+    9.5
+   ],
+   "face": "top",
+   "note": "JST PH side-entry SMD, mouth flush with the +x edge: band half B (wearer's left)"
+  },
+  "cells": {
+   "at": [
+    0,
+    -4
+   ],
+   "face": "top",
+   "note": "cell lead pads at x +-22.4; the two 6 x 34 x 50 LiPo pouches sit off-board in the pod's wings, centred 68 mm of arc either side of the back centre (near ends ~31 mm from the centre, clear of the plugs' mating housings)"
+  }
+ },
+ "keepouts": {
+  "antenna": [
+   -6.4,
+   0.5,
+   6.4,
+   17
+  ]
+ },
+ "band": {
+  "rows": 12,
+  "columns": 208,
+  "pitch": 2.8,
+  "note": "off-board: two flex matrices of 12 x 104 meeting at the back seam; screen z 3.0-36.6, band 39.6 tall; 178 x 204 mm oval at the brim seam, leaning in 7 deg"
+ },
+ "model": {
+  "design": "4-model/fit_model.solidcraft",
+  "stand_ins": [
+   "PCB",
+   "XIAO",
+   "XIAO USB-C",
+   "Plug A",
+   "Plug B",
+   "Button SW"
+  ],
+  "note": "fit_model.solidcraft = model.solidcraft without the 219 louvres and 335 pixel tiles (build_model.py --fit). They all sit on the band's outer face, outside the Screen body, which the check still includes, so the quicker check misses nothing"
+ }
+}

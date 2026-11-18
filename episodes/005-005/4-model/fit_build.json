@@ -1,0 +1,3128 @@
+{
+ "commands": [
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 0.0,
+    "name": "screen o0"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "major": [
+     0,
+     102.0
+    ],
+    "minor_radius": 89.0
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 39.6,
+    "name": "screen o1"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "major": [
+     0,
+     97.1377
+    ],
+    "minor_radius": 84.1377
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.loft",
+   "params": {
+    "sections": [
+     {
+      "sketch": "screen o0"
+     },
+     {
+      "sketch": "screen o1"
+     }
+    ],
+    "operation": "new",
+    "name": "screen loft",
+    "body_name": "Screen"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": -1.0,
+    "name": "screen i0"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "major": [
+     0,
+     99.1228
+    ],
+    "minor_radius": 86.1228
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 40.6,
+    "name": "screen i1"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "major": [
+     0,
+     94.0149
+    ],
+    "minor_radius": 81.0149
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.loft",
+   "params": {
+    "sections": [
+     {
+      "sketch": "screen i0"
+     },
+     {
+      "sketch": "screen i1"
+     }
+    ],
+    "operation": "cut",
+    "targets": [
+     "Screen"
+    ],
+    "name": "screen hollow"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 0.0,
+    "name": "cord b o0"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "major": [
+     0,
+     102.4
+    ],
+    "minor_radius": 89.4
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 0.4,
+    "name": "cord b o1"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "major": [
+     0,
+     103.4509
+    ],
+    "minor_radius": 90.4509
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 0.9,
+    "name": "cord b o2"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "major": [
+     0,
+     103.9395
+    ],
+    "minor_radius": 90.9395
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 1.5,
+    "name": "cord b o3"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "major": [
+     0,
+     104.0658
+    ],
+    "minor_radius": 91.0658
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 2.1,
+    "name": "cord b o4"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "major": [
+     0,
+     103.7922
+    ],
+    "minor_radius": 90.7922
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 2.6,
+    "name": "cord b o5"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "major": [
+     0,
+     103.1808
+    ],
+    "minor_radius": 90.1808
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 3.0,
+    "name": "cord b o6"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "major": [
+     0,
+     102.0316
+    ],
+    "minor_radius": 89.0316
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.loft",
+   "params": {
+    "sections": [
+     {
+      "sketch": "cord b o0"
+     },
+     {
+      "sketch": "cord b o1"
+     },
+     {
+      "sketch": "cord b o2"
+     },
+     {
+      "sketch": "cord b o3"
+     },
+     {
+      "sketch": "cord b o4"
+     },
+     {
+      "sketch": "cord b o5"
+     },
+     {
+      "sketch": "cord b o6"
+     }
+    ],
+    "operation": "new",
+    "name": "cord b loft",
+    "body_name": "Cord Bottom"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": -1.0,
+    "name": "cord b i0"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "major": [
+     0,
+     101.6228
+    ],
+    "minor_radius": 88.6228
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 4.0,
+    "name": "cord b i1"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "major": [
+     0,
+     101.0089
+    ],
+    "minor_radius": 88.0089
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.loft",
+   "params": {
+    "sections": [
+     {
+      "sketch": "cord b i0"
+     },
+     {
+      "sketch": "cord b i1"
+     }
+    ],
+    "operation": "cut",
+    "targets": [
+     "Cord Bottom"
+    ],
+    "name": "cord b hollow"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 36.6,
+    "name": "cord t o0"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "major": [
+     0,
+     97.9061
+    ],
+    "minor_radius": 84.9061
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 37.0,
+    "name": "cord t o1"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "major": [
+     0,
+     98.957
+    ],
+    "minor_radius": 85.957
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 37.5,
+    "name": "cord t o2"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "major": [
+     0,
+     99.4456
+    ],
+    "minor_radius": 86.4456
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 38.1,
+    "name": "cord t o3"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "major": [
+     0,
+     99.5719
+    ],
+    "minor_radius": 86.5719
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 38.7,
+    "name": "cord t o4"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "major": [
+     0,
+     99.2982
+    ],
+    "minor_radius": 86.2982
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 39.2,
+    "name": "cord t o5"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "major": [
+     0,
+     98.6868
+    ],
+    "minor_radius": 85.6868
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 39.6,
+    "name": "cord t o6"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "major": [
+     0,
+     97.5377
+    ],
+    "minor_radius": 84.5377
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.loft",
+   "params": {
+    "sections": [
+     {
+      "sketch": "cord t o0"
+     },
+     {
+      "sketch": "cord t o1"
+     },
+     {
+      "sketch": "cord t o2"
+     },
+     {
+      "sketch": "cord t o3"
+     },
+     {
+      "sketch": "cord t o4"
+     },
+     {
+      "sketch": "cord t o5"
+     },
+     {
+      "sketch": "cord t o6"
+     }
+    ],
+    "operation": "new",
+    "name": "cord t loft",
+    "body_name": "Cord Top"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 35.6,
+    "name": "cord t i0"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "major": [
+     0,
+     97.1289
+    ],
+    "minor_radius": 84.1289
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 40.6,
+    "name": "cord t i1"
+   }
+  },
+  {
+   "command": "sketch.ellipse",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "major": [
+     0,
+     96.5149
+    ],
+    "minor_radius": 83.5149
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.loft",
+   "params": {
+    "sections": [
+     {
+      "sketch": "cord t i0"
+     },
+     {
+      "sketch": "cord t i1"
+     }
+    ],
+    "operation": "cut",
+    "targets": [
+     "Cord Top"
+    ],
+    "name": "cord t hollow"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 1.2,
+    "name": "pod s0"
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      72.6802,
+      50.914
+     ],
+     [
+      66.7673,
+      60.7269
+     ],
+     [
+      59.7564,
+      69.7607
+     ],
+     [
+      51.7027,
+      77.844
+     ],
+     [
+      42.6892,
+      84.7985
+     ],
+     [
+      32.8342,
+      90.4458
+     ],
+     [
+      22.2962,
+      94.6208
+     ],
+     [
+      11.274,
+      97.1867
+     ],
+     [
+      0.0,
+      98.0527
+     ],
+     [
+      -11.274,
+      97.1867
+     ],
+     [
+      -22.2962,
+      94.6208
+     ],
+     [
+      -32.8342,
+      90.4458
+     ],
+     [
+      -42.6892,
+      84.7985
+     ],
+     [
+      -51.7027,
+      77.844
+     ],
+     [
+      -59.7564,
+      69.7607
+     ],
+     [
+      -66.7673,
+      60.7269
+     ],
+     [
+      -72.6802,
+      50.914
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -72.6802,
+     50.914
+    ],
+    "through": [
+     -69.3475,
+     42.236
+    ],
+    "end": [
+     -60.6501,
+     44.5707
+    ]
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      -60.6501,
+      44.5707
+     ],
+     [
+      -55.5446,
+      53.0451
+     ],
+     [
+      -49.5386,
+      60.7854
+     ],
+     [
+      -42.7015,
+      67.649
+     ],
+     [
+      -35.1244,
+      73.4965
+     ],
+     [
+      -26.9216,
+      78.1983
+     ],
+     [
+      -18.229,
+      81.6432
+     ],
+     [
+      -9.2,
+      83.7458
+     ],
+     [
+      0.0,
+      84.4527
+     ],
+     [
+      9.2,
+      83.7458
+     ],
+     [
+      18.229,
+      81.6432
+     ],
+     [
+      26.9216,
+      78.1983
+     ],
+     [
+      35.1244,
+      73.4965
+     ],
+     [
+      42.7015,
+      67.649
+     ],
+     [
+      49.5386,
+      60.7854
+     ],
+     [
+      55.5446,
+      53.0451
+     ],
+     [
+      60.6501,
+      44.5707
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     60.6501,
+     44.5707
+    ],
+    "through": [
+     69.3475,
+     42.236
+    ],
+    "end": [
+     72.6802,
+     50.914
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 37.6,
+    "name": "pod s1"
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      70.8093,
+      44.6572
+     ],
+     [
+      65.3608,
+      54.7216
+     ],
+     [
+      58.7511,
+      64.0359
+     ],
+     [
+      51.0295,
+      72.4146
+     ],
+     [
+      42.2752,
+      79.6605
+     ],
+     [
+      32.6064,
+      85.5732
+     ],
+     [
+      22.188,
+      89.9625
+     ],
+     [
+      11.234,
+      92.6685
+     ],
+     [
+      -0.0,
+      93.5833
+     ],
+     [
+      -11.234,
+      92.6685
+     ],
+     [
+      -22.188,
+      89.9625
+     ],
+     [
+      -32.6064,
+      85.5732
+     ],
+     [
+      -42.2752,
+      79.6605
+     ],
+     [
+      -51.0295,
+      72.4146
+     ],
+     [
+      -58.7511,
+      64.0359
+     ],
+     [
+      -65.3608,
+      54.7216
+     ],
+     [
+      -70.8093,
+      44.6572
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -70.8093,
+     44.6572
+    ],
+    "through": [
+     -67.0556,
+     36.1619
+    ],
+    "end": [
+     -58.4909,
+     38.8938
+    ]
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      -58.4909,
+      38.8938
+     ],
+     [
+      -53.8072,
+      47.5471
+     ],
+     [
+      -48.1739,
+      55.487
+     ],
+     [
+      -41.6598,
+      62.5572
+     ],
+     [
+      -34.3577,
+      68.6028
+     ],
+     [
+      -26.3871,
+      73.4786
+     ],
+     [
+      -17.8922,
+      77.0588
+     ],
+     [
+      -9.0375,
+      79.2471
+     ],
+     [
+      -0.0,
+      79.9833
+     ],
+     [
+      9.0375,
+      79.2471
+     ],
+     [
+      17.8922,
+      77.0588
+     ],
+     [
+      26.3871,
+      73.4786
+     ],
+     [
+      34.3577,
+      68.6028
+     ],
+     [
+      41.6598,
+      62.5572
+     ],
+     [
+      48.1739,
+      55.487
+     ],
+     [
+      53.8072,
+      47.5471
+     ],
+     [
+      58.4909,
+      38.8938
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     58.4909,
+     38.8938
+    ],
+    "through": [
+     67.0556,
+     36.1619
+    ],
+    "end": [
+     70.8093,
+     44.6572
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.loft",
+   "params": {
+    "sections": [
+     {
+      "sketch": "pod s0"
+     },
+     {
+      "sketch": "pod s1"
+     }
+    ],
+    "operation": "new",
+    "name": "pod loft",
+    "body_name": "Pod"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 37.6,
+    "name": "pod lid s0"
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      70.8093,
+      44.6572
+     ],
+     [
+      65.3608,
+      54.7216
+     ],
+     [
+      58.7511,
+      64.0359
+     ],
+     [
+      51.0295,
+      72.4146
+     ],
+     [
+      42.2752,
+      79.6605
+     ],
+     [
+      32.6064,
+      85.5732
+     ],
+     [
+      22.188,
+      89.9625
+     ],
+     [
+      11.234,
+      92.6685
+     ],
+     [
+      -0.0,
+      93.5833
+     ],
+     [
+      -11.234,
+      92.6685
+     ],
+     [
+      -22.188,
+      89.9625
+     ],
+     [
+      -32.6064,
+      85.5732
+     ],
+     [
+      -42.2752,
+      79.6605
+     ],
+     [
+      -51.0295,
+      72.4146
+     ],
+     [
+      -58.7511,
+      64.0359
+     ],
+     [
+      -65.3608,
+      54.7216
+     ],
+     [
+      -70.8093,
+      44.6572
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -70.8093,
+     44.6572
+    ],
+    "through": [
+     -67.0556,
+     36.1619
+    ],
+    "end": [
+     -58.4909,
+     38.8938
+    ]
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      -58.4909,
+      38.8938
+     ],
+     [
+      -53.8072,
+      47.5471
+     ],
+     [
+      -48.1739,
+      55.487
+     ],
+     [
+      -41.6598,
+      62.5572
+     ],
+     [
+      -34.3577,
+      68.6028
+     ],
+     [
+      -26.3871,
+      73.4786
+     ],
+     [
+      -17.8922,
+      77.0588
+     ],
+     [
+      -9.0375,
+      79.2471
+     ],
+     [
+      -0.0,
+      79.9833
+     ],
+     [
+      9.0375,
+      79.2471
+     ],
+     [
+      17.8922,
+      77.0588
+     ],
+     [
+      26.3871,
+      73.4786
+     ],
+     [
+      34.3577,
+      68.6028
+     ],
+     [
+      41.6598,
+      62.5572
+     ],
+     [
+      48.1739,
+      55.487
+     ],
+     [
+      53.8072,
+      47.5471
+     ],
+     [
+      58.4909,
+      38.8938
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     58.4909,
+     38.8938
+    ],
+    "through": [
+     67.0556,
+     36.1619
+    ],
+    "end": [
+     70.8093,
+     44.6572
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 38.8,
+    "name": "pod lid s1"
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      70.744,
+      44.4494
+     ],
+     [
+      65.3116,
+      54.522
+     ],
+     [
+      58.7158,
+      63.8457
+     ],
+     [
+      51.0058,
+      72.2343
+     ],
+     [
+      42.2606,
+      79.4901
+     ],
+     [
+      32.5983,
+      85.4119
+     ],
+     [
+      22.1842,
+      89.8086
+     ],
+     [
+      11.2326,
+      92.5195
+     ],
+     [
+      0.0,
+      93.436
+     ],
+     [
+      -11.2326,
+      92.5195
+     ],
+     [
+      -22.1842,
+      89.8086
+     ],
+     [
+      -32.5983,
+      85.4119
+     ],
+     [
+      -42.2606,
+      79.4901
+     ],
+     [
+      -51.0058,
+      72.2343
+     ],
+     [
+      -58.7158,
+      63.8457
+     ],
+     [
+      -65.3116,
+      54.522
+     ],
+     [
+      -70.744,
+      44.4494
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -70.744,
+     44.4494
+    ],
+    "through": [
+     -66.9761,
+     35.9607
+    ],
+    "end": [
+     -58.4162,
+     38.7061
+    ]
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      -58.4162,
+      38.7061
+     ],
+     [
+      -53.747,
+      47.3651
+     ],
+     [
+      -48.1266,
+      55.3117
+     ],
+     [
+      -41.6236,
+      62.3888
+     ],
+     [
+      -34.331,
+      68.4411
+     ],
+     [
+      -26.3684,
+      73.3227
+     ],
+     [
+      -17.8805,
+      76.9075
+     ],
+     [
+      -9.0318,
+      79.0987
+     ],
+     [
+      0.0,
+      79.836
+     ],
+     [
+      9.0318,
+      79.0987
+     ],
+     [
+      17.8805,
+      76.9075
+     ],
+     [
+      26.3684,
+      73.3227
+     ],
+     [
+      34.331,
+      68.4411
+     ],
+     [
+      41.6236,
+      62.3888
+     ],
+     [
+      48.1266,
+      55.3117
+     ],
+     [
+      53.747,
+      47.3651
+     ],
+     [
+      58.4162,
+      38.7061
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     58.4162,
+     38.7061
+    ],
+    "through": [
+     66.9761,
+     35.9607
+    ],
+    "end": [
+     70.744,
+     44.4494
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.loft",
+   "params": {
+    "sections": [
+     {
+      "sketch": "pod lid s0"
+     },
+     {
+      "sketch": "pod lid s1"
+     }
+    ],
+    "operation": "new",
+    "name": "pod lid loft",
+    "body_name": "Pod Lid"
+   }
+  },
+  {
+   "command": "parameters.add",
+   "params": {
+    "name": "pod_wall",
+    "expression": "1.2 mm",
+    "comment": "pod wall"
+   }
+  },
+  {
+   "command": "parameters.add",
+   "params": {
+    "name": "band_core",
+    "expression": "3.0 mm",
+    "comment": "band thickness behind the screen"
+   }
+  },
+  {
+   "command": "parameters.add",
+   "params": {
+    "name": "pixel_pitch",
+    "expression": "2.8 mm",
+    "comment": "LED pitch"
+   }
+  },
+  {
+   "command": "parameters.add",
+   "params": {
+    "name": "lean",
+    "expression": "7.0 deg",
+    "comment": "band lean (deg)"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 2.4,
+    "name": "pod cavity s0"
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      71.5595,
+      50.151
+     ],
+     [
+      65.7324,
+      59.854
+     ],
+     [
+      58.8226,
+      68.7826
+     ],
+     [
+      50.8866,
+      76.7676
+     ],
+     [
+      42.0079,
+      83.6334
+     ],
+     [
+      32.3047,
+      89.2056
+     ],
+     [
+      21.9334,
+      93.3226
+     ],
+     [
+      11.0894,
+      95.8519
+     ],
+     [
+      0.0,
+      96.7053
+     ],
+     [
+      -11.0894,
+      95.8519
+     ],
+     [
+      -21.9334,
+      93.3226
+     ],
+     [
+      -32.3047,
+      89.2056
+     ],
+     [
+      -42.0079,
+      83.6334
+     ],
+     [
+      -50.8866,
+      76.7676
+     ],
+     [
+      -58.8226,
+      68.7826
+     ],
+     [
+      -65.7324,
+      59.854
+     ],
+     [
+      -71.5595,
+      50.151
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -71.5595,
+     50.151
+    ],
+    "through": [
+     -68.8288,
+     43.0222
+    ],
+    "end": [
+     -61.6444,
+     44.9422
+    ]
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      -61.6444,
+      44.9422
+     ],
+     [
+      -56.4812,
+      53.5409
+     ],
+     [
+      -50.3983,
+      61.4021
+     ],
+     [
+      -43.4641,
+      68.3803
+     ],
+     [
+      -35.7689,
+      74.3321
+     ],
+     [
+      -27.4275,
+      79.1232
+     ],
+     [
+      -18.578,
+      82.6371
+     ],
+     [
+      -9.3783,
+      84.7834
+     ],
+     [
+      0.0,
+      85.5053
+     ],
+     [
+      9.3783,
+      84.7834
+     ],
+     [
+      18.578,
+      82.6371
+     ],
+     [
+      27.4275,
+      79.1232
+     ],
+     [
+      35.7689,
+      74.3321
+     ],
+     [
+      43.4641,
+      68.3803
+     ],
+     [
+      50.3983,
+      61.4021
+     ],
+     [
+      56.4812,
+      53.5409
+     ],
+     [
+      61.6444,
+      44.9422
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     61.6444,
+     44.9422
+    ],
+    "through": [
+     68.8288,
+     43.0222
+    ],
+    "end": [
+     71.5595,
+     50.151
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": "XY",
+    "offset": 38.1,
+    "name": "pod cavity s1"
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      69.6949,
+      44.0628
+     ],
+     [
+      64.3205,
+      54.0061
+     ],
+     [
+      57.8027,
+      63.2029
+     ],
+     [
+      50.1925,
+      71.4701
+     ],
+     [
+      41.5701,
+      78.6142
+     ],
+     [
+      32.0539,
+      84.439
+     ],
+     [
+      21.8071,
+      88.7599
+     ],
+     [
+      11.0395,
+      91.4222
+     ],
+     [
+      -0.0,
+      92.3219
+     ],
+     [
+      -11.0395,
+      91.4222
+     ],
+     [
+      -21.8071,
+      88.7599
+     ],
+     [
+      -32.0539,
+      84.439
+     ],
+     [
+      -41.5701,
+      78.6142
+     ],
+     [
+      -50.1925,
+      71.4701
+     ],
+     [
+      -57.8027,
+      63.2029
+     ],
+     [
+      -64.3205,
+      54.0061
+     ],
+     [
+      -69.6949,
+      44.0628
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     -69.6949,
+     44.0628
+    ],
+    "through": [
+     -66.6249,
+     37.0811
+    ],
+    "end": [
+     -59.547,
+     39.3234
+    ]
+   }
+  },
+  {
+   "command": "sketch.spline.fit_point",
+   "params": {
+    "points": [
+     [
+      -59.547,
+      39.3234
+     ],
+     [
+      -54.802,
+      48.1037
+     ],
+     [
+      -49.088,
+      56.1677
+     ],
+     [
+      -42.4719,
+      63.3564
+     ],
+     [
+      -35.0456,
+      69.5108
+     ],
+     [
+      -26.9285,
+      74.4806
+     ],
+     [
+      -18.2667,
+      78.1342
+     ],
+     [
+      -9.2291,
+      80.3695
+     ],
+     [
+      -0.0,
+      81.1219
+     ],
+     [
+      9.2291,
+      80.3695
+     ],
+     [
+      18.2667,
+      78.1342
+     ],
+     [
+      26.9285,
+      74.4806
+     ],
+     [
+      35.0456,
+      69.5108
+     ],
+     [
+      42.4719,
+      63.3564
+     ],
+     [
+      49.088,
+      56.1677
+     ],
+     [
+      54.802,
+      48.1037
+     ],
+     [
+      59.547,
+      39.3234
+     ]
+    ]
+   }
+  },
+  {
+   "command": "sketch.arc.three_point",
+   "params": {
+    "start": [
+     59.547,
+     39.3234
+    ],
+    "through": [
+     66.6249,
+     37.0811
+    ],
+    "end": [
+     69.6949,
+     44.0628
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.loft",
+   "params": {
+    "sections": [
+     {
+      "sketch": "pod cavity s0"
+     },
+     {
+      "sketch": "pod cavity s1"
+     }
+    ],
+    "operation": "cut",
+    "name": "pod cavity loft",
+    "targets": [
+     "Pod"
+    ]
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      0.0,
+      89.3362,
+      20.4733
+     ],
+     "x_dir": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "y_dir": [
+      0.0,
+      -0.1219,
+      0.9925
+     ]
+    },
+    "name": "pcb"
+   }
+  },
+  {
+   "command": "sketch.rectangle.rounded",
+   "params": {
+    "p0": [
+     -25.0,
+     -17.0
+    ],
+    "p1": [
+     25.0,
+     17.0
+    ],
+    "radius": 3
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     -21.0,
+     -13.0
+    ],
+    "diameter": 2.2
+   }
+  },
+  {
+   "command": "sketch.circle.center",
+   "params": {
+    "center": [
+     21.0,
+     -13.0
+    ],
+    "diameter": 2.2
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "pcb",
+    "distance": 1.0,
+    "operation": "new",
+    "name": "pcb ext",
+    "body_name": "PCB"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      0.0,
+      88.3437,
+      20.3514
+     ],
+     "x_dir": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "y_dir": [
+      0.0,
+      -0.1219,
+      0.9925
+     ]
+    },
+    "name": "xiao"
+   }
+  },
+  {
+   "command": "sketch.rectangle.rounded",
+   "params": {
+    "p0": [
+     -8.9,
+     -17.0
+    ],
+    "p1": [
+     8.9,
+     4.0
+    ],
+    "radius": 1.0
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "xiao",
+    "distance": 0.8,
+    "operation": "new",
+    "name": "xiao ext",
+    "body_name": "XIAO"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      0.0,
+      87.5497,
+      20.2539
+     ],
+     "x_dir": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "y_dir": [
+      0.0,
+      -0.1219,
+      0.9925
+     ]
+    },
+    "name": "xiao shield"
+   }
+  },
+  {
+   "command": "sketch.rectangle.rounded",
+   "params": {
+    "p0": [
+     -6.0,
+     -11.5
+    ],
+    "p1": [
+     6.0,
+     0.5
+    ],
+    "radius": 0.5
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "xiao shield",
+    "distance": 1.6,
+    "operation": "join",
+    "targets": [
+     "XIAO"
+    ],
+    "name": "xiao shield ext"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      0.0,
+      90.5617,
+      2.2871
+     ],
+     "x_dir": [
+      0.0,
+      -0.9925,
+      -0.1219
+     ],
+     "y_dir": [
+      1.0,
+      0.0,
+      0.0
+     ]
+    },
+    "name": "usb shell"
+   }
+  },
+  {
+   "command": "sketch.slot.center_to_center",
+   "params": {
+    "p0": [
+     2.4,
+     -2.87
+    ],
+    "p1": [
+     2.4,
+     2.87
+    ],
+    "width": 3.2
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "usb shell",
+    "distance": 7.35,
+    "operation": "new",
+    "name": "usb shell ext",
+    "body_name": "XIAO USB-C"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      0.0,
+      88.3437,
+      20.3514
+     ],
+     "x_dir": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "y_dir": [
+      0.0,
+      -0.1219,
+      0.9925
+     ]
+    },
+    "name": "plug a"
+   }
+  },
+  {
+   "command": "sketch.rectangle.two_point",
+   "params": {
+    "p0": [
+     -25.0,
+     4.55
+    ],
+    "p1": [
+     -17.4,
+     14.45
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "plug a",
+    "distance": 4.8,
+    "operation": "new",
+    "name": "plug a ext",
+    "body_name": "Plug A"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      0.0,
+      88.3437,
+      20.3514
+     ],
+     "x_dir": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "y_dir": [
+      0.0,
+      -0.1219,
+      0.9925
+     ]
+    },
+    "name": "plug b"
+   }
+  },
+  {
+   "command": "sketch.rectangle.two_point",
+   "params": {
+    "p0": [
+     25.0,
+     4.55
+    ],
+    "p1": [
+     17.4,
+     14.45
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "plug b",
+    "distance": 4.8,
+    "operation": "new",
+    "name": "plug b ext",
+    "body_name": "Plug B"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      0.0,
+      88.3437,
+      20.3514
+     ],
+     "x_dir": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "y_dir": [
+      0.0,
+      -0.1219,
+      0.9925
+     ]
+    },
+    "name": "button sw"
+   }
+  },
+  {
+   "command": "sketch.rectangle.two_point",
+   "params": {
+    "p0": [
+     11.6,
+     -13.9
+    ],
+    "p1": [
+     17.4,
+     -10.1
+    ]
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "button sw",
+    "distance": 2.5,
+    "operation": "new",
+    "name": "button sw ext",
+    "body_name": "Button SW"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      52.7838,
+      65.3123,
+      20.3514
+     ],
+     "x_dir": [
+      -0.6711,
+      0.7413,
+      0
+     ],
+     "y_dir": [
+      -0.0903,
+      -0.0818,
+      0.9925
+     ]
+    },
+    "name": "cell a"
+   }
+  },
+  {
+   "command": "sketch.rectangle.rounded",
+   "params": {
+    "p0": [
+     -25.0,
+     -17.0
+    ],
+    "p1": [
+     25.0,
+     17.0
+    ],
+    "radius": 1.5
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "cell a",
+    "distance": 6.0,
+    "direction": "negative",
+    "operation": "new",
+    "name": "cell a ext",
+    "body_name": "Cell A"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -52.7838,
+      65.3123,
+      20.3514
+     ],
+     "x_dir": [
+      -0.6711,
+      -0.7413,
+      0
+     ],
+     "y_dir": [
+      0.0903,
+      -0.0818,
+      0.9925
+     ]
+    },
+    "name": "cell b"
+   }
+  },
+  {
+   "command": "sketch.rectangle.rounded",
+   "params": {
+    "p0": [
+     -25.0,
+     -17.0
+    ],
+    "p1": [
+     25.0,
+     17.0
+    ],
+    "radius": 1.5
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "cell b",
+    "distance": 6.0,
+    "direction": "negative",
+    "operation": "new",
+    "name": "cell b ext",
+    "body_name": "Cell B"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "diameter": 4.2,
+    "height": 2.7368,
+    "base": [
+     -21.0,
+     93.637,
+     7.9037
+    ],
+    "axis": [
+     0.0,
+     -0.9925,
+     -0.1219
+    ],
+    "operation": "join",
+    "targets": [
+     "Pod"
+    ],
+    "name": "post 1"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "diameter": 1.9,
+    "height": 1.6,
+    "base": [
+     -21.0,
+     90.9205,
+     7.5702
+    ],
+    "axis": [
+     0.0,
+     -0.9925,
+     -0.1219
+    ],
+    "operation": "join",
+    "targets": [
+     "Pod"
+    ],
+    "name": "stake 1"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "diameter": 4.2,
+    "height": 2.7368,
+    "base": [
+     21.0,
+     93.637,
+     7.9037
+    ],
+    "axis": [
+     0.0,
+     -0.9925,
+     -0.1219
+    ],
+    "operation": "join",
+    "targets": [
+     "Pod"
+    ],
+    "name": "post 2"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "diameter": 1.9,
+    "height": 1.6,
+    "base": [
+     21.0,
+     90.9205,
+     7.5702
+    ],
+    "axis": [
+     0.0,
+     -0.9925,
+     -0.1219
+    ],
+    "operation": "join",
+    "targets": [
+     "Pod"
+    ],
+    "name": "stake 2"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "diameter": 4.2,
+    "height": 2.5895,
+    "base": [
+     -21.0,
+     90.3222,
+     33.692
+    ],
+    "axis": [
+     0.0,
+     -0.9925,
+     -0.1219
+    ],
+    "operation": "join",
+    "targets": [
+     "Pod"
+    ],
+    "name": "post 3"
+   }
+  },
+  {
+   "command": "solid.cylinder",
+   "params": {
+    "diameter": 4.2,
+    "height": 2.5895,
+    "base": [
+     21.0,
+     90.3222,
+     33.692
+    ],
+    "axis": [
+     0.0,
+     -0.9925,
+     -0.1219
+    ],
+    "operation": "join",
+    "targets": [
+     "Pod"
+    ],
+    "name": "post 4"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      0.0,
+      91.1467,
+      -2.4772
+     ],
+     "x_dir": [
+      0.0,
+      -0.9925,
+      -0.1219
+     ],
+     "y_dir": [
+      1.0,
+      0.0,
+      0.0
+     ]
+    },
+    "name": "usb opening"
+   }
+  },
+  {
+   "command": "sketch.slot.center_to_center",
+   "params": {
+    "p0": [
+     2.4,
+     -2.8
+    ],
+    "p1": [
+     2.4,
+     2.8
+    ],
+    "width": 4.0
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "usb opening",
+    "distance": 7.0,
+    "operation": "cut",
+    "targets": [
+     "Pod"
+    ],
+    "name": "usb opening cut"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      0.0,
+      83.9765,
+      19.8152
+     ],
+     "x_dir": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "y_dir": [
+      0.0,
+      -0.1219,
+      0.9925
+     ]
+    },
+    "name": "mic holes"
+   }
+  },
+  {
+   "command": "sketch.polygon.inscribed",
+   "params": {
+    "center": [
+     0.0,
+     -6.5
+    ],
+    "radius": 0.6,
+    "sides": 6
+   }
+  },
+  {
+   "command": "sketch.polygon.inscribed",
+   "params": {
+    "center": [
+     1.6454,
+     -5.55
+    ],
+    "radius": 0.6,
+    "sides": 6
+   }
+  },
+  {
+   "command": "sketch.polygon.inscribed",
+   "params": {
+    "center": [
+     0.0,
+     -4.6
+    ],
+    "radius": 0.6,
+    "sides": 6
+   }
+  },
+  {
+   "command": "sketch.polygon.inscribed",
+   "params": {
+    "center": [
+     -1.6454,
+     -5.55
+    ],
+    "radius": 0.6,
+    "sides": 6
+   }
+  },
+  {
+   "command": "sketch.polygon.inscribed",
+   "params": {
+    "center": [
+     -1.6454,
+     -7.45
+    ],
+    "radius": 0.6,
+    "sides": 6
+   }
+  },
+  {
+   "command": "sketch.polygon.inscribed",
+   "params": {
+    "center": [
+     -0.0,
+     -8.4
+    ],
+    "radius": 0.6,
+    "sides": 6
+   }
+  },
+  {
+   "command": "sketch.polygon.inscribed",
+   "params": {
+    "center": [
+     1.6454,
+     -7.45
+    ],
+    "radius": 0.6,
+    "sides": 6
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "mic holes",
+    "distance": 6,
+    "operation": "cut",
+    "targets": [
+     "Pod"
+    ],
+    "name": "mic cut"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      0.0,
+      84.7705,
+      19.9127
+     ],
+     "x_dir": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "y_dir": [
+      0.0,
+      -0.1219,
+      0.9925
+     ]
+    },
+    "name": "button hole"
+   }
+  },
+  {
+   "command": "sketch.polygon.inscribed",
+   "params": {
+    "center": [
+     14.5,
+     -12.0
+    ],
+    "radius": 3.3,
+    "sides": 8,
+    "angle": 22.5
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "button hole",
+    "distance": 7.8236,
+    "operation": "cut",
+    "targets": [
+     "Pod"
+    ],
+    "name": "button hole cut"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      0.0,
+      85.6638,
+      20.0224
+     ],
+     "x_dir": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "y_dir": [
+      0.0,
+      -0.1219,
+      0.9925
+     ]
+    },
+    "name": "button flange"
+   }
+  },
+  {
+   "command": "sketch.polygon.inscribed",
+   "params": {
+    "center": [
+     14.5,
+     -12.0
+    ],
+    "radius": 4.4,
+    "sides": 8,
+    "angle": 22.5
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "button flange",
+    "distance": 0.7,
+    "operation": "new",
+    "name": "button flange ext",
+    "body_name": "Mode Key"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      0.0,
+      85.0683,
+      19.9492
+     ],
+     "x_dir": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "y_dir": [
+      0.0,
+      -0.1219,
+      0.9925
+     ]
+    },
+    "name": "button key"
+   }
+  },
+  {
+   "command": "sketch.polygon.inscribed",
+   "params": {
+    "center": [
+     14.5,
+     -12.0
+    ],
+    "radius": 2.95,
+    "sides": 8,
+    "angle": 22.5
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "button key",
+    "distance": 5.0236,
+    "operation": "join",
+    "targets": [
+     "Mode Key"
+    ],
+    "name": "button key ext"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      -29.5,
+      89.6673,
+      30.0853
+     ],
+     "x_dir": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "y_dir": [
+      0.0,
+      -0.1219,
+      0.9925
+     ]
+    },
+    "name": "plug_a exit"
+   }
+  },
+  {
+   "command": "sketch.polygon.inscribed",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "radius": 2.3,
+    "sides": 8,
+    "angle": 22.5
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "plug_a exit",
+    "distance": 8,
+    "direction": "negative",
+    "operation": "cut",
+    "targets": [
+     "Pod"
+    ],
+    "name": "plug_a exit cut"
+   }
+  },
+  {
+   "command": "sketch.create",
+   "params": {
+    "plane": {
+     "origin": [
+      29.5,
+      89.6673,
+      30.0853
+     ],
+     "x_dir": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "y_dir": [
+      0.0,
+      -0.1219,
+      0.9925
+     ]
+    },
+    "name": "plug_b exit"
+   }
+  },
+  {
+   "command": "sketch.polygon.inscribed",
+   "params": {
+    "center": [
+     0,
+     0
+    ],
+    "radius": 2.3,
+    "sides": 8,
+    "angle": 22.5
+   }
+  },
+  {
+   "command": "sketch.finish",
+   "params": {}
+  },
+  {
+   "command": "solid.extrude",
+   "params": {
+    "sketch": "plug_b exit",
+    "distance": 8,
+    "direction": "negative",
+    "operation": "cut",
+    "targets": [
+     "Pod"
+    ],
+    "name": "plug_b exit cut"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Screen"
+    ],
+    "color": "#0d1220"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Cord Bottom"
+    ],
+    "color": "#7d735c"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Cord Top"
+    ],
+    "color": "#7d735c"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Pod"
+    ],
+    "color": "#26282d"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Pod Lid"
+    ],
+    "color": "#2e3035"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "PCB"
+    ],
+    "color": "#1f5a3a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "XIAO"
+    ],
+    "color": "#22324f"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "XIAO USB-C"
+    ],
+    "color": "#c8cbcf"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Plug A"
+    ],
+    "color": "#f2efe6"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Plug B"
+    ],
+    "color": "#f2efe6"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Button SW"
+    ],
+    "color": "#3a3a3a"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Cell A"
+    ],
+    "color": "#b9bcc2"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Cell B"
+    ],
+    "color": "#b9bcc2"
+   }
+  },
+  {
+   "command": "appearance.assign",
+   "params": {
+    "bodies": [
+     "Mode Key"
+    ],
+    "color": "#ff7a1a"
+   }
+  }
+ ]
+}

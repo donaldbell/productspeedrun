@@ -1,0 +1,67 @@
+{
+  "slug": "005-005",
+  "number": 5,
+  "title": "005",
+  "createdAt": "2026-11-18T16:56:17.123Z",
+  "stage": 7,
+  "roll": [
+    {
+      "bucket": "Brain",
+      "group": "Hardware",
+      "label": "nRF52840"
+    },
+    {
+      "bucket": "User",
+      "group": "Human",
+      "label": "Angler"
+    },
+    {
+      "bucket": "Form factor",
+      "group": "Flavor",
+      "label": "Wearable"
+    },
+    {
+      "bucket": "Vibe",
+      "group": "Flavor",
+      "label": "Tiki"
+    },
+    {
+      "bucket": "Twist",
+      "group": "Flavor",
+      "label": "Reacts to music"
+    }
+  ],
+  "brief": {
+    "name": "Smart Bucket Hat",
+    "pitch": "A Bucket Hat with an embedded LED matrix that acts as a user-programmable marquee for text and animations and a built-in BLE beacon for tracking in crowded environments (festivals).",
+    "what": "A common yet fashionable bucket hat with an embedded matrix of RGB LEDs all around the head that uses a Bluetooth-connected microcontroller for displaying text and animations defined in a companion app for your phone. The same microcontroller can act as a location-aware beacon for friends to locate you at crowded events like festivals. ",
+    "who": "Marketed towards anglers, tiki enthusiasts, burning man attendees, festival goers, attentions-seekers, party people.",
+    "electronics": "NRF52840, flexible RGB LED matrix (hub 75 or neopixel matrix), battery, matrix LED driver",
+    "design": "It's an existing format of headwear (bucket hat) just augmented by electronics.",
+    "looksLike": "Hat size.",
+    "boardStyle": "carrier",
+    "units": []
+  },
+  "prompts": {},
+  "promptEdited": {
+    "2-concept": false,
+    "model": false,
+    "render": false,
+    "showcase": false
+  },
+  "favorites": {
+    "2-concept": "2-concept/Smart-Bucket-Hat-Festival-Poster.png",
+    "3-layout": "3-layout/tech_LED-Pixel-Bucket-Hat-Design-Sheet.png",
+    "render": "4-model/render-hero_Gemini_Generated_Image_d0sy7dd0sy7dd0sy.jpeg"
+  },
+  "done": [
+    1,
+    2,
+    3,
+    5,
+    4,
+    7
+  ],
+  "decision": "keep",
+  "decidedAt": "2026-11-18T22:39:09.451Z"
+}

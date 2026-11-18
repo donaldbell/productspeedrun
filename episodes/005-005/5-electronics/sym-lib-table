@@ -1,0 +1,4 @@
+(sym_lib_table
+	(version 7)
+	(lib (name "bucket") (type "KiCad") (uri "${KIPRJMOD}/lib/bucket.kicad_sym") (options "") (descr "Smart Bucket Hat parts"))
+)

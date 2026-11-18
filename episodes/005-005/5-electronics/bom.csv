@@ -1,0 +1,20 @@
+Ref,Qty,Value,Description,Footprint,MPN
+C1 C4 C5 C6 C7,5,47uF,"Capacitor, ceramic, 47 uF 6.3 V X5R 1206 (bulk on a battery rail)",C_1206_3216Metric,CL31A476MQHNNNE
+C2 C3,2,4.7uF,"Capacitor, ceramic, 4.7 uF 16 V X5R 0603",C_0603_1608Metric,CL10A475KO8NNNC
+C8 C9,2,100nF,"Capacitor, ceramic, 100 nF 50 V X7R 0603",C_0603_1608Metric,CC0603KRX7R9BB104
+J3,1,BAND A,"JST PH 3-pin SMD side entry: LED band half A (VLED, DIN, GND); the pod unplugs for washing",JST_PH_S3B-PH-SM4-TB_1x03-1MP_P2.00mm_Horizontal,S3B-PH-SM4-TB(LF)(SN)
+J4,1,BAND B,"JST PH 3-pin SMD side entry: LED band half B (VLED, DIN, GND); the pod unplugs for washing",JST_PH_S3B-PH-SM4-TB_1x03-1MP_P2.00mm_Horizontal,S3B-PH-SM4-TB(LF)(SN)
+Q1 Q2,2,AO3401A,"P-MOSFET -30 V -4 A SOT-23: high-side switch, band half A",SOT-23,AO3401A
+Q3,1,AO3400A,N-MOSFET 30 V 5.7 A SOT-23: drives Q1/Q2's gates from the 3.3 V GPIO,SOT-23,AO3400A
+R1,1,2k,"Resistor, 1 %, 0603, 2k",R_0603_1608Metric,0603WAF2001T5E
+R2,1,10k,"Resistor, 1 %, 0603, 10k",R_0603_1608Metric,0603WAF1002T5E
+R3 R5,2,100k,"Resistor, 1 %, 0603, 100k",R_0603_1608Metric,0603WAF1003T5E
+R4 R6 R7,3,100,"Resistor, 1 %, 0603, 100",R_0603_1608Metric,0603WAF1000T5E
+SW1,1,MODE,"Tact switch 4.2 x 3.2 x 2.5 mm SMD, pressed through the pod's inner face: wake, next show, hold = beacon / off",SW_SPST_PTS810,PTS810 SJM 250 SMTR LFS
+U1,1,XIAO nRF52840 Sense,"Seeed XIAO nRF52840 Sense (BLE 5, USB-C, LiPo charger, 3.3 V LDO, PDM mic, IMU), castellations + BAT pads reflowed to the carrier",Seeed_XIAO_nRF52840_SMD,102010448
+U2,1,MCP73831T-2ACI/OT,"Li-ion/LiPo linear charger 4.2 V, 500 mA (R1 2k), SOT-23-5: fills the pack ~5x faster than the XIAO's own",SOT-23-5,MCP73831T-2ACI/OT
+U3 U4,2,SN74LV1T34DBVR,"Single buffer with 3.3 V-compatible inputs, powered from VLED: full-swing data for band half A",SOT-23-5,SN74LV1T34DBVR
+BT1,1,LiPo ~1200 mAh,"LiPo pouch 3.7 V ~1200 mAh, ~6 x 34 x 50 mm (603450), with protection PCB, leads soldered to J1",off-board,generic 603450
+BT2,1,LiPo ~1200 mAh,"Second, matching cell in parallel, leads soldered to J2 (charge both to the same voltage before joining)",off-board,generic 603450
+LB1,1,LED band half A,"Flex matrix 12 x 104 addressable RGB LEDs (1515 / 1010 size, 2.8 mm pitch, ~34 x 292 mm), JST PH 3-pin lead (VLED, DIN, GND)",off-board,custom flex
+LB2,1,LED band half B,"Second band half, mirrored, same JST PH 3-pin lead",off-board,custom flex

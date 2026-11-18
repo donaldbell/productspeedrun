@@ -1,0 +1,543 @@
+<!doctype html>
+<!--
+  Product Speedrun 005: Smart Bucket Hat. Built from kit/showcase/template.html.
+  Paths: ../2-concept/ … ../5-electronics/ are this episode's folders; ../../../kit/ is the shared series look.
+  The free slot ("A screen all the way round") draws the band's pixel art from 4-model/build_model.py, ported to JS,
+  and estimates runtime from the power budget in 5-electronics/NOTES.md.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Smart Bucket Hat · Product Speedrun 005</title>
+<meta name="description" content="A design proposal for a bucket hat whose band is a full-colour LED screen: it scrolls text, reacts to music and helps friends find you in a festival crowd. A Product Speedrun concept.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="../../../kit/showcase.css">
+<style>
+/* This episode's accent: tiki orange, from the mask at the front of the band and the pod's mode key. */
+:root { --accent: #E2620C; --accent-ink: #A84600; --accent-soft: #FCEBDD; }
+@media (prefers-color-scheme: dark) { :root { --accent-ink: #FFA661; --accent-soft: #2A1A10; } }
+
+/* The free slot's own styles (this episode: the LED band at night, with its four shows) */
+.band { --b-ink: #F4ECDC; --b-muted: #BDB19A; --b-line: rgba(255, 236, 200, .16); --b-gold: #FFC23A;
+  position: relative; overflow: hidden; display: grid; gap: 12px; color: var(--b-ink); border-color: #3B2A1C;
+  padding-top: calc(clamp(18px, 3vw, 32px) + 8px); padding-bottom: calc(clamp(18px, 3vw, 32px) + 8px);
+  background:
+    radial-gradient(38% 46% at 6% 0%, rgba(255, 140, 40, .22), transparent 70%),
+    radial-gradient(38% 46% at 94% 0%, rgba(255, 194, 58, .18), transparent 70%),
+    linear-gradient(180deg, #24163A 0%, #120E22 48%, #07090F 100%); }
+.band::before, .band::after { content: ""; position: absolute; left: 0; right: 0; height: 9px; opacity: .85;
+  background: linear-gradient(135deg, #B87A2C 33%, transparent 33.5%) 0 0 / 14px 9px repeat-x,
+              linear-gradient(225deg, #B87A2C 33%, transparent 33.5%) 0 0 / 14px 9px repeat-x; }
+.band::before { top: 0; }
+.band::after { bottom: 0; transform: scaleY(-1); }
+.band-stage { position: relative; }
+.band-hat { display: block; width: 100%; aspect-ratio: 100 / 44; }
+.band-map { display: block; width: 100%; aspect-ratio: 208 / 12; border-radius: 3px; }
+.band-key { display: flex; justify-content: space-between; margin-top: -4px; font: 500 11px/1.2 var(--mono); color: var(--b-muted); }
+.band-ctl { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 16px 32px; margin-top: 10px; align-items: start; }
+.band-modes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.band-modes button { display: grid; grid-template-columns: 14px 1fr; gap: 2px 10px; min-height: 44px; padding: 11px 13px; text-align: left;
+  border-radius: var(--r-md); border: 1px solid var(--b-line); background: rgba(255, 255, 255, .04); color: var(--b-ink); font: inherit; font-weight: 600; cursor: pointer; }
+.band-modes button i { grid-row: span 2; width: 14px; height: 14px; margin-top: 4px; border-radius: 2px; background: var(--c); box-shadow: 0 0 10px var(--c); }
+.band-modes button small { font-weight: 400; font-size: 13px; color: var(--b-muted); }
+.band-modes button[aria-pressed="true"] { border-color: var(--b-gold); background: rgba(255, 194, 58, .1); }
+.band-modes button:focus-visible, .band-tools button:focus-visible, .band input:focus-visible { outline: 3px solid var(--b-gold); outline-offset: 2px; }
+.band-tools { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin-top: 12px; font-size: 14px; color: var(--b-muted); }
+.band-tools label { display: flex; gap: 10px; align-items: center; }
+.band-tools input[type="range"] { width: 150px; accent-color: var(--b-gold); }
+.band-tools button { min-height: 36px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--b-line); background: transparent; color: var(--b-ink); font: 500 13px/1 var(--body); cursor: pointer; }
+.band-say { font: 600 clamp(18px, 1.9vw, 21px)/1.35 var(--display); }
+.band-text[hidden] { display: none; }
+.band-text { display: grid; gap: 6px; margin-top: 12px; font-size: 13px; color: var(--b-muted); }
+.band-text input { width: 100%; min-height: 44px; padding: 8px 12px; border-radius: var(--r-sm); border: 1px solid var(--b-line); background: #0B0E18; color: var(--b-gold);
+  font: 700 16px/1.2 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+.band-power { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--b-line); display: grid; gap: 4px; }
+.band-power b { font: 700 16px/1.3 var(--mono); color: var(--b-gold); font-variant-numeric: tabular-nums; }
+.band-power span { font-size: 13px; color: var(--b-muted); }
+.band-phone { position: absolute; right: 1%; top: 2%; width: 168px; padding: 10px 12px 12px; border-radius: 18px; border: 1px solid rgba(255, 255, 255, .2);
+  background: #0B0E18; box-shadow: 0 10px 30px rgba(0, 0, 0, .5); font-size: 12px; color: var(--b-muted); display: grid; gap: 2px; }
+.band-phone[hidden] { display: none; }
+.band-phone b { font: 800 26px/1.05 var(--display); color: #29D3FF; }
+.band-phone b.cold { color: #8FA3C8; }
+.band-phone .bars { display: flex; gap: 3px; align-items: end; height: 16px; margin-top: 6px; }
+.band-phone .bars i { width: 6px; border-radius: 1px; background: rgba(255, 255, 255, .18); }
+.band-phone .bars i.on { background: #29D3FF; }
+@media (max-width: 860px) { .band-ctl { grid-template-columns: 1fr; } }
+@media (max-width: 600px) {
+  .band-phone { position: static; width: auto; grid-template-columns: 1fr auto; align-items: center; margin-top: 6px; }
+  .band-phone .bars { grid-row: span 3; grid-column: 2; }
+  .band-modes { grid-template-columns: 1fr; }
+}
+</style>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js"></script>
+<script type="module" src="../../../kit/series-bar.js"></script>
+<script type="module" src="../../../kit/showcase.js"></script>
+</head>
+<body>
+<ps-series-bar></ps-series-bar>
+
+<header class="ps-hero" id="top">
+  <div class="wrap">
+    <div>
+      <ul class="ps-roll" aria-label="The roll">
+        <li><small>Brain</small><b>nRF52840</b></li>
+        <li><small>User</small><b>Angler</b></li>
+        <li><small>Form factor</small><b>Wearable</b></li>
+        <li><small>Vibe</small><b>Tiki</b></li>
+        <li><small>Twist</small><b>Reacts to music</b></li>
+      </ul>
+      <h1>Smart Bucket Hat</h1>
+      <p class="ps-pitch">A design proposal for a bucket hat whose band is a full-colour LED screen that scrolls your messages, dances to the music and helps your friends find you in a crowd.</p>
+      <p class="ps-lede">The idea: an ordinary-looking bucket hat with a 12 × 208 pixel screen sewn in where the hatband goes. From a phone app you'd send it scrolling text, tiki art or a light show that pulses with the music around you. With the screen dark it keeps broadcasting over Bluetooth, so friends' phones can find you at a crowded festival. The electronics would hide in a slim pod behind the sweatband.</p>
+      <dl class="ps-facts">
+        <div><dt>2,496 pixels</dt><dd>12 × 208 RGB, all the way round</dd></div>
+        <div><dt>One band, any hat</dt><dd>Designed for a hat maker to sew in</dd></div>
+        <div><dt>Bluetooth beacon</dt><dd>So friends' phones can find you</dd></div>
+        <div><dt>~1–1.5 h of show</dt><dd>Weeks as a beacon alone</dd></div>
+      </dl>
+    </div>
+    <figure>
+      <img src="../4-model/render-hero_Gemini_Generated_Image_d0sy7dd0sy7dd0sy.jpeg" alt="A charcoal bucket hat on a dark plinth, its band a grid of glowing square pixels showing a tiki mask, palm trees, a pink hibiscus and blue sparkles" width="1024" height="1024">
+      <figcaption>An AI render of the CAD model: a concept that hasn't been built. The CAD covers the LED band; the hat around it would be any hat maker's.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<nav class="ps-run" aria-label="How this episode ran">
+  <ol>
+    <li><a href="#top"><span class="n"><i>1</i>Roll &amp; brief</span><span class="thumb"><svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><rect x="3" y="3" width="34" height="34" rx="8" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="13" cy="13" r="3" fill="currentColor"/><circle cx="27" cy="27" r="3" fill="currentColor"/><circle cx="20" cy="20" r="3" fill="currentColor"/></svg></span></a></li>
+    <li><a href="#who"><span class="n"><i>2</i>Concept</span><span class="thumb"><img src="moment.jpg" alt=""></span></a></li>
+    <li><a href="#trail"><span class="n"><i>3</i>Drawing</span><span class="thumb"><img src="../3-layout/tech_LED-Pixel-Bucket-Hat-Design-Sheet.png" alt=""></span></a></li>
+    <li><a href="#model"><span class="n"><i>4</i>3D model</span><span class="thumb"><img src="../4-model/iso.png" alt=""></span></a></li>
+    <li><a href="#inside"><span class="n"><i>5</i>Electronics</span><span class="thumb"><img src="../5-electronics/board.png" alt=""></span></a></li>
+    <li><a href="#top"><span class="n"><i>6</i>Showcase</span><span class="thumb">This page</span></a></li>
+    <li><a href="#next"><span class="n"><i>7</i>Verdict</span><span class="thumb"><span class="verdict open" data-verdict>Still deciding</span></span></a></li>
+  </ol>
+</nav>
+
+<main>
+  <section class="ps-section" id="who">
+    <div class="wrap">
+      <div class="ps-head">
+        <h2>Out on the lake, lost in the crowd</h2>
+        <p>The roll said angler. The tiki vibe said festival. The bucket hat already belongs to both.</p>
+      </div>
+      <div class="ps-grid two">
+        <div class="ps-person">
+          <span class="role">The angler</span>
+          <h3>Already owns three bucket hats</h3>
+          <p>It's their uniform for a day on the water. This one would look like any other hat until they wake it: a fish jumping over the waves for the boat, the boat's name scrolling round the back, or nothing at all. In beacon mode the band stays dark and the battery could last for weeks, so the crew can find whoever wandered off down the shore.</p>
+        </div>
+        <div class="ps-person">
+          <span class="role">Festival-goers, playa camps, tiki-bar regulars</span>
+          <h3>Lost their friends by the second set</h3>
+          <p>The hat would scroll their camp's name above the crowd and pulse with the bass. When everyone scatters, their friends' phones could pick up its Bluetooth signal and say "warmer" or "colder" until they're back together.</p>
+        </div>
+      </div>
+      <figure class="ps-moment">
+        <img src="moment.jpg" alt="Concept art: a smiling man in a Hawaiian shirt and a bucket hat whose LED band shows a tiki mask, palms and hibiscus at a dusk festival, with callouts for the LED matrix, the Bluetooth location beacon, music reactions and a phone app" width="820" height="749" loading="lazy">
+        <blockquote>"Meet at the tiki bar."<cite>Scrolling round his hat above the crowd at dusk, while his friend's phone says she's getting warmer. Stage 2 concept art, the hosts' favourite.</cite></blockquote>
+      </figure>
+    </div>
+  </section>
+
+  <!-- The free slot: the band at night, with the four shows the design calls for. -->
+  <section class="ps-section tint" id="demo">
+    <div class="wrap">
+      <div class="ps-head">
+        <h2>A screen all the way round</h2>
+        <p>This is the band's art from the CAD model, pixel for pixel. Pick a show to see what the hat would run once the app has sent it.</p>
+      </div>
+      <div class="ps-free band" id="band">
+        <div class="band-stage">
+          <canvas class="band-hat" id="band-hat" role="img" aria-label="The hat's LED band seen from the front"></canvas>
+          <div class="band-phone" id="band-phone" hidden aria-hidden="true">
+            <span>A friend's phone</span>
+            <b id="band-dir">Warmer</b>
+            <span id="band-dist">about 20 m away</span>
+            <span class="bars"><i style="height:5px"></i><i style="height:8px"></i><i style="height:11px"></i><i style="height:14px"></i><i style="height:16px"></i></span>
+          </div>
+        </div>
+        <canvas class="band-map" id="band-map" aria-hidden="true"></canvas>
+        <div class="band-key" aria-hidden="true"><span>Back</span><span>Side</span><span>Front</span><span>Side</span><span>Back</span></div>
+        <div class="band-ctl">
+          <div>
+            <div class="band-modes" role="group" aria-label="Shows">
+              <button type="button" data-mode="tiki" aria-pressed="true" style="--c:#FF7A1A"><i></i>Tiki art<small>The art from the model</small></button>
+              <button type="button" data-mode="text" aria-pressed="false" style="--c:#FFC23A"><i></i>Marquee<small>Your words, scrolling</small></button>
+              <button type="button" data-mode="music" aria-pressed="false" style="--c:#39E64A"><i></i>Music<small>Pulses on the beat</small></button>
+              <button type="button" data-mode="beacon" aria-pressed="false" style="--c:#29D3FF"><i></i>Beacon<small>Dark, but findable</small></button>
+            </div>
+            <div class="band-tools">
+              <label>Turn the hat <input type="range" id="band-turn" min="-104" max="104" step="1" value="0"></label>
+              <button type="button" id="band-pause" aria-pressed="false">Pause</button>
+            </div>
+          </div>
+          <div>
+            <p class="band-say" id="band-say" aria-live="polite"></p>
+            <div class="band-text" id="band-text" hidden>
+              <label for="band-msg">Type a line (letters, numbers, ! ? &amp; and * for a heart)</label>
+              <input id="band-msg" type="text" maxlength="28" value="Meet me at the tiki bar" autocomplete="off" spellcheck="false">
+            </div>
+            <p class="band-power"><b id="band-amps">…</b><span>Estimated from the design's power budget: two 1200 mAh cells, and about 0.4 mA for every LED, even a dark one. Nothing has been measured yet.</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ps-section" id="model">
+    <div class="wrap">
+      <div class="ps-head">
+        <span class="ps-stage"><i>4</i>3D model in Solidcraft</span>
+        <h2>The band, not the hat</h2>
+        <p>The product is the LED band a hat maker would sew into an ordinary bucket hat, so that's what the CAD models: an oval 182 × 208 mm and 39.6 mm tall, leaning in 7° to follow the crown, with the electronics pod hidden inside at the back. Drag to spin it.</p>
+      </div>
+      <div class="ps-grid side">
+        <div>
+          <div class="ps-viewer">
+            <model-viewer id="enclosure" src="../4-model/model.glb" alt="3D model of the Smart Bucket Hat's LED band, with tiki pixel art at the front" camera-controls auto-rotate shadow-intensity="0.6" interaction-prompt="none" camera-orbit="25deg 68deg auto"></model-viewer>
+          </div>
+          <div class="ps-views" role="group" aria-label="Views">
+            <button type="button" data-target="#enclosure" data-orbit="25deg 68deg auto" aria-pressed="true">Three-quarter</button>
+            <button type="button" data-target="#enclosure" data-orbit="0deg 85deg auto" aria-pressed="false">Front</button>
+            <button type="button" data-target="#enclosure" data-orbit="90deg 85deg auto" aria-pressed="false">Side</button>
+            <button type="button" data-target="#enclosure" data-orbit="180deg 85deg auto" aria-pressed="false">Back</button>
+            <button type="button" data-target="#enclosure" data-orbit="0deg 32deg auto" aria-pressed="false">Inside the back</button>
+          </div>
+        </div>
+        <ol class="ps-callouts">
+          <li><b>Pixel screen</b><span>12 rows × 208 columns of square pixels at 2.8 mm, under a black louvre grid on a deep-navy ground. Unlit, the hat just has a dark band.</span></li>
+          <li><b>Piping cords</b><span>A fabric cord along the top and bottom, where the band is sewn to the crown and the brim seam. A hat maker would wrap them in the hat's own cloth.</span></li>
+          <li><b>Hidden pod</b><span>A charcoal TPU pod inside the back, behind the sweatband: the board, two flat cells, a mic port and an orange mode key. Nothing shows from outside.</span></li>
+          <li><b>USB-C, facing down</b><span>Fold the sweatband down to charge. The two halves of the band plug into the pod, so the electronics could come out before the hat goes in the wash.</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="ps-section" id="inside">
+    <div class="wrap">
+      <div class="ps-head">
+        <span class="ps-stage"><i>5</i>Electronics in KiCad</span>
+        <h2>What's inside</h2>
+        <p>One 50 × 34 mm two-layer board stands in the pod, leaning with the band. A Seeed XIAO nRF52840 Sense is soldered flat in the middle and brings the radio, the microphone and the motion sensor; the board around it only adds what a 2,496-pixel band needs.</p>
+      </div>
+      <div class="ps-stats">
+        <div class="ps-stat"><b>0 / 0</b><span>DRC violations and unrouted connections</span></div>
+        <div class="ps-stat"><b>Pass</b><span>The routed board checked inside the pod in CAD: no overlaps</span></div>
+        <div class="ps-stat"><b>~1 A</b><span>What the band would draw with every pixel dark</span></div>
+        <div class="ps-stat"><b>~5 h</b><span>To charge both cells at about 550 mA</span></div>
+      </div>
+      <div class="ps-viewer">
+        <div class="load"><button class="ps-btn primary" type="button" data-load-model="../5-electronics/board.glb" data-alt="3D model of the circuit board">Load the 3D board (5 MB)</button></div>
+        <span class="note">Routed in KiCad with Freerouting</span>
+      </div>
+      <div class="ps-parts">
+        <div class="ps-part"><span class="ref">U1 · XIAO nRF52840 Sense</span><h3>The brain</h3><p>Bluetooth 5 for the app and the friend-finder beacon, a PDM mic to hear the beat, a motion sensor for tap and nod gestures, and the USB-C port.</p></div>
+        <div class="ps-part"><span class="ref">LB1–LB2 · custom flex, 12 × 104 each</span><h3>The screen</h3><p>Two halves of 1,248 addressable RGB LEDs, both starting from the back seam, each with its own data line so a frame takes ~37 ms (about 25 fps).</p></div>
+        <div class="ps-part"><span class="ref">Q1–Q3 · AO3401A × 2, AO3400A</span><h3>Band power switch</h3><p>Cuts the band's ~1 A idle draw whenever it isn't showing anything, and keeps it off at boot.</p></div>
+        <div class="ps-part"><span class="ref">U3–U4 · SN74LV1T34</span><h3>Clean data</h3><p>Lift the 3.3 V data to the cell's full voltage, so it stays clean over ~30 cm of band carrying amps of LED current.</p></div>
+        <div class="ps-part"><span class="ref">J3–J4 · JST PH 3-pin, SMD</span><h3>Unplug to wash</h3><p>One plug per band half. Side-entry surface-mount plugs keep the board thin enough for the pod.</p></div>
+        <div class="ps-part"><span class="ref">U2 · MCP73831</span><h3>Faster charging</h3><p>Charges at 500 mA, filling the pack in about 5 hours. The XIAO's own charger would take about a day.</p></div>
+        <div class="ps-part"><span class="ref">SW1 · PTS810</span><h3>Mode key</h3><p>Under the sweatband: press for the next show, hold 2 s for beacon only, hold 5 s for off.</p></div>
+        <div class="ps-part"><span class="ref">BT1–BT2 · 2 × LiPo 603450</span><h3>Power</h3><p>Two ~1200 mAh pouch cells, one in each wing of the pod, to spread the weight round the back of the head.</p></div>
+      </div>
+      <details class="ps-bom">
+        <summary>Full bill of materials (<span data-bom-count>…</span> lines)</summary>
+        <div class="ps-table" data-bom="../5-electronics/bom.csv">Loading the parts list…</div>
+      </details>
+      <ul class="ps-files" aria-label="Design files">
+        <li><a href="../5-electronics/bucket-hat.kicad_sch">Schematic (KiCad)</a></li>
+        <li><a href="../5-electronics/bucket-hat.kicad_pcb">Board (KiCad)</a></li>
+        <li><a href="../5-electronics/bom.csv">bom.csv</a></li>
+        <li><a href="../4-model/model.step">LED band and pod (STEP)</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="ps-section" id="trail">
+    <div class="wrap">
+      <div class="ps-head">
+        <h2>How we got here</h2>
+        <p>Product Speedrun rolls five random ingredients, and two hosts take them from brainstorm to a routed board in one episode. This roll: an nRF52840, an angler, a wearable, a tiki vibe and "reacts to music".</p>
+      </div>
+      <ol class="ps-trail">
+        <li><figure><a class="frame" href="../2-concept/Smart-Bucket-Hat-by-the-Lake.png"><img src="../2-concept/Smart-Bucket-Hat-by-the-Lake.png" alt="Concept art: an older angler in a khaki bucket hat on a boat, the band showing a pixel fish over waves and pine trees" loading="lazy"></a><figcaption><b>Concept</b>The angler's version, beside the festival poster above</figcaption></figure></li>
+        <li><figure><a class="frame" href="../3-layout/tech_LED-Pixel-Bucket-Hat-Design-Sheet.png"><img src="../3-layout/tech_LED-Pixel-Bucket-Hat-Design-Sheet.png" alt="Control drawing: front, three-quarter and top views of the hat with its pixel band" loading="lazy"></a><figcaption><b>Control drawing</b>Front, three-quarter and top views</figcaption></figure></li>
+        <li><figure><a class="frame" href="../4-model/iso.png"><img src="../4-model/iso.png" alt="Isometric view of the CAD model: the oval LED band with tiki art and the pod inside the back" loading="lazy"></a><figcaption><b>3D model</b>The band and its pod in Solidcraft</figcaption></figure></li>
+        <li><figure><a class="frame" href="../5-electronics/schematic.png"><img src="../5-electronics/schematic.png" alt="The schematic" loading="lazy"></a><figcaption><b>Electronics</b>The schematic</figcaption></figure></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="ps-section" id="next">
+    <div class="wrap">
+      <div class="ps-head">
+        <h2>What we still don't know</h2>
+        <p>This is a speedrun first pass. Here's what we'd answer before anyone orders a board or sews a band into a hat.</p>
+      </div>
+      <ul class="ps-questions">
+        <li><span class="topic">Runtime</span><h3>About an hour of show, not a whole night</h3><p>Addressable LEDs draw about 0.4 mA each even when dark, so 2,496 of them idle at around 1 A. Two 1200 mAh cells would give roughly 1–1.5 hours of show. Bigger cells, fewer rows or a scanned LED driver on the flex would all add time, and none has been chosen yet.</p></li>
+        <li><span class="topic">Screen</span><h3>The band isn't an off-the-shelf part</h3><p>Stock flexible LED panels have 10 mm pixels. A 2.8 mm pitch means a custom two-layer flex with tiny 1515- or 1010-size LEDs. Whichever has the lowest idle current sets the runtime, and it needs measuring.</p></li>
+        <li><span class="topic">Comfort</span><h3>Is the pod comfortable?</h3><p>It spans about a third of the band at the back of the head and is 13.6 mm deep, behind the sweatband. Shorter cells would make it ~26 mm shorter. Nobody has worn one yet.</p></li>
+        <li><span class="topic">Controls</span><h3>Where should the button live?</h3><p>The mode key sits under the sweatband. A tap or a nod, read by the XIAO's motion sensor, could replace it without adding a visible button.</p></li>
+        <li><span class="topic">Finding</span><h3>Warmer or colder, not a map</h3><p>Friends' phones would judge distance from the Bluetooth signal strength. Showing real positions on a map would need the wearer's phone to share its location: an app feature, not hardware.</p></li>
+        <li><span class="topic">Board</span><h3>Routed and checked, but never built</h3><p>The first prototype has to confirm the XIAO's battery pads, which end its antenna is at, and that its USB-C path can feed the 500 mA charger.</p></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer class="ps-foot">
+  <div class="wrap">
+    <span>Smart Bucket Hat is an open design from Product Speedrun episode 005, by Donald Bell and Jordan Bunker. Build it, change it, even sell it: hardware under <a href="https://github.com/donaldbell/productspeedrun/blob/main/LICENSES/CERN-OHL-P-2.0.txt">CERN-OHL-P v2</a>, words and images under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. If you do, we'd love a credit and to hear about it.</span>
+    <span><a href="../../../">All episodes</a> · <a href="https://github.com/donaldbell/productspeedrun/tree/main/episodes/005-005">Files on GitHub</a></span>
+  </div>
+</footer>
+
+<script>
+// The free slot's behaviour (this episode only): the LED band, 12 rows x 208 columns, k = 0 at the front centre.
+(() => {
+  const NC = 208, NR = 12, CORD = 3 / 39.6;          // the cords are 3 mm of the band's 39.6
+  const PAL = { O: "#ff7a1a", Y: "#ffc23a", R: "#ff3b1f", G: "#39e64a", M: "#ff3fd2", V: "#b44dff", B: "#3b7bff", C: "#29d3ff", W: "#fff1c9" };
+  const RGB = {}; for (const [k, h] of Object.entries(PAL)) RGB[k] = [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const mod = (a, n) => ((a % n) + n) % n;
+
+  // ---- the art, ported from 4-model/build_model.py (same sprites, same places) ----
+  const TIKI = ["..C.R.Y.R.C..", ".OOOOOOOOOOO.", "OO.........OO", "O.YYYY.YYYY.O", "O.Y..Y.Y..Y.O", "O.YYYY.YYYY.O",
+                "O.....O.....O", "OO...OOO...OO", "O.RRRRRRRRR.O", "O.R.R.R.R.R.O", "O.RRRRRRRRR.O", ".OOOOOOOOOOO."];
+  const PALM = ["..GGG.GGG..", ".GGGGGGGGG.", "GG..GYG..GG", "G..GGYGG..G", "..G..Y..G..", ".....Y.....",
+                ".....Y.....", "....Y......", "....Y......", "....Y......", "...YY......", "..YYYY....."];
+  const HIBISCUS = ["...MMM...", ".MMMMMMM.", "MMMVVVMMM", "MMVVYVVMM", "MMMVVVMMM", ".MMMMMMM.", "...M.M...", "..G...G.."];
+  const STAR = [".B.", "BBB", ".B."];
+  const FISH = ["....WWWWW....", "..WWWWWWWWW.W", ".W.WWWWWWWWWW", "WWWWWWWWWW..W", "..WWWWWWW...."];
+  const ART = Array.from({ length: NR }, () => Array(NC).fill("."));
+  const TWINKLE = new Set();
+  const put = (sprite, k0, r0, mirror = false, color = null) => sprite.forEach((line, r) => {
+    if (mirror) line = [...line].reverse().join("");
+    [...line].forEach((ch, j) => { if (ch !== ".") { const k = mod(k0 + j, NC); ART[r0 + r][k] = color || ch; if (sprite === STAR) TWINKLE.add((r0 + r) * NC + k); } });
+  });
+  const both = (sprite, k0, r0) => { const w = sprite[0].length; put(sprite, k0, r0); put(sprite, -k0 - w + 1, r0, true); };
+  for (let k = 42; k < NC - 41; k++) {               // waves round the sides and back
+    const crest = 10 + Math.round(Math.sin(2 * Math.PI * (k - 42) / 13));
+    ART[crest][k] = "C";
+    for (let r = crest + 1; r < NR; r++) ART[r][k] = "B";
+  }
+  put(TIKI, -6, 0); both(STAR, 8, 5); both(PALM, 13, 0); both(STAR, 25, 2); both(HIBISCUS, 29, 2); both(STAR, 39, 0);
+  both(FISH, 46, 3); both(STAR, 61, 1); both(PALM, 66, 0); both(STAR, 80, 4);
+
+  // ---- a 5 x 7 font for the marquee (narrow glyphs for punctuation) ----
+  const F = {
+    A: ".###.|#...#|#...#|#####|#...#|#...#|#...#", B: "####.|#...#|#...#|####.|#...#|#...#|####.", C: ".###.|#...#|#....|#....|#....|#...#|.###.",
+    D: "####.|#...#|#...#|#...#|#...#|#...#|####.", E: "#####|#....|#....|####.|#....|#....|#####", F: "#####|#....|#....|####.|#....|#....|#....",
+    G: ".###.|#...#|#....|#.###|#...#|#...#|.####", H: "#...#|#...#|#...#|#####|#...#|#...#|#...#", I: "###|.#.|.#.|.#.|.#.|.#.|###",
+    J: "..###|...#.|...#.|...#.|...#.|#..#.|.##..", K: "#...#|#..#.|#.#..|##...|#.#..|#..#.|#...#", L: "#....|#....|#....|#....|#....|#....|#####",
+    M: "#...#|##.##|#.#.#|#.#.#|#...#|#...#|#...#", N: "#...#|#...#|##..#|#.#.#|#..##|#...#|#...#", O: ".###.|#...#|#...#|#...#|#...#|#...#|.###.",
+    P: "####.|#...#|#...#|####.|#....|#....|#....", Q: ".###.|#...#|#...#|#...#|#.#.#|#..#.|.##.#", R: "####.|#...#|#...#|####.|#.#..|#..#.|#...#",
+    S: ".####|#....|#....|.###.|....#|....#|####.", T: "#####|..#..|..#..|..#..|..#..|..#..|..#..", U: "#...#|#...#|#...#|#...#|#...#|#...#|.###.",
+    V: "#...#|#...#|#...#|#...#|#...#|.#.#.|..#..", W: "#...#|#...#|#...#|#.#.#|#.#.#|#.#.#|.#.#.", X: "#...#|#...#|.#.#.|..#..|.#.#.|#...#|#...#",
+    Y: "#...#|#...#|.#.#.|..#..|..#..|..#..|..#..", Z: "#####|....#|...#.|..#..|.#...|#....|#####",
+    0: ".###.|#...#|#..##|#.#.#|##..#|#...#|.###.", 1: ".#.|##.|.#.|.#.|.#.|.#.|###", 2: ".###.|#...#|....#|...#.|..#..|.#...|#####",
+    3: "####.|....#|....#|.###.|....#|....#|####.", 4: "...#.|..##.|.#.#.|#..#.|#####|...#.|...#.", 5: "#####|#....|####.|....#|....#|#...#|.###.",
+    6: ".###.|#....|#....|####.|#...#|#...#|.###.", 7: "#####|....#|...#.|..#..|.#...|.#...|.#...", 8: ".###.|#...#|#...#|.###.|#...#|#...#|.###.",
+    9: ".###.|#...#|#...#|.####|....#|....#|.###.", "!": "#|#|#|#|#|.|#", "?": ".###.|#...#|....#|...#.|..#..|.....|..#..",
+    ".": ".|.|.|.|.|.|#", ",": "..|..|..|..|..|.#|#.", "'": "#|#|.|.|.|.|.", "-": "...|...|...|###|...|...|...", ":": ".|#|.|.|.|#|.",
+    "&": ".##..|#..#.|#.#..|.#...|#.#.#|#..#.|.##.#", "*": ".#.#.|#####|#####|#####|.###.|..#..|.....", " ": "...|...|...|...|...|...|..."
+  };
+  const TEXT_COLS = ["O", "Y", "G", "C", "M"];
+  let tape = [];                                      // tape[r][i]: the marquee, 208 columns round the band
+  const buildTape = (s) => {
+    tape = Array.from({ length: NR }, () => Array(NC).fill("."));
+    let x = 0, n = 0;
+    for (const ch of s.toUpperCase()) {
+      const g = F[ch]; if (!g) continue;
+      const rows = g.split("|"), col = ch === " " ? "." : TEXT_COLS[n++ % TEXT_COLS.length];
+      rows.forEach((row, r) => [...row].forEach((p, j) => { if (p === "#" && x + j < NC) tape[2 + r][x + j] = col; }));
+      x += rows[0].length + 1;
+      if (x >= NC - 12) break;
+    }
+  };
+
+  // ---- state ----
+  const root = document.getElementById("band");
+  const hat = document.getElementById("band-hat"), map = document.getElementById("band-map");
+  const say = document.getElementById("band-say"), amps = document.getElementById("band-amps");
+  const turn = document.getElementById("band-turn"), pauseBtn = document.getElementById("band-pause");
+  const textBox = document.getElementById("band-text"), msg = document.getElementById("band-msg");
+  const phone = document.getElementById("band-phone"), dirEl = document.getElementById("band-dir"), distEl = document.getElementById("band-dist");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let mode = "tiki", view = 0, autoTurn = true, running = !reduce, visible = true, t = 0, scroll = 40, last = 0, lit = 0, shownAt = -1;
+  const LINES = {
+    tiki: "The tiki at the front, palms and hibiscus round it, a fish over the waves on each side and ALOHA across the back. Turn the hat to see the rest.",
+    text: "Type a line in the app and it would scroll all the way round the band.",
+    music: "The XIAO's own microphone would listen for the beat and pulse the band with it, on the hat itself. This is a simulated beat: nothing here is listening.",
+    beacon: "The band goes dark, and the hat keeps sending a small Bluetooth signal that friends' phones could use to find it."
+  };
+  const LABELS = { tiki: "tiki pixel art", text: "a scrolling message", music: "a light show pulsing to a beat", beacon: "every pixel dark, in beacon mode" };
+
+  // ---- what each pixel shows: a palette letter (or null) and a brightness ----
+  const pixel = (r, k) => {
+    if (mode === "tiki") { const ch = ART[r][k]; if (ch === ".") return null; return [ch, TWINKLE.has(r * NC + k) ? 0.55 + 0.45 * Math.sin(t * 4 + k * 1.7) : 1]; }
+    if (mode === "text") {
+      if (r >= 10) { const crest = Math.sin(2 * Math.PI * (k + t * 3) / 13) > 0.2 ? 10 : 11; return r >= crest ? [r === crest ? "C" : "B", 0.8] : null; }
+      const ch = tape[r][mod(k + Math.floor(scroll), NC)]; return ch === "." ? null : [ch, 1];
+    }
+    if (mode === "music") {
+      const d = Math.min(k, NC - k), beat = (t % 0.508) / 0.508, env = 0.32 + 0.68 * Math.exp(-beat * 4.5);
+      const level = env * (0.35 + 0.65 * Math.abs(Math.sin(d * 0.29 + t * 2.1) * Math.cos(d * 0.11 - t * 1.3)));
+      const h = Math.round(level * NR), fromBottom = NR - 1 - r;
+      if (fromBottom >= h) return null;
+      return ["BBCCGGYYOORR"[fromBottom], fromBottom === h - 1 ? 1 : 0.85];
+    }
+    return null;
+  };
+
+  // ---- drawing ----
+  const ctxH = hat.getContext("2d"), ctxM = map.getContext("2d");
+  const glow = document.createElement("canvas"), ctxG = glow.getContext("2d");
+  const canBlur = typeof ctxH.filter === "string";
+  let W = 0, H = 0, MW = 0, MH = 0, dpr = 1;
+  const size = () => {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = hat.clientWidth; H = hat.clientHeight; MW = map.clientWidth; MH = map.clientHeight;
+    hat.width = Math.round(W * dpr); hat.height = Math.round(H * dpr);
+    map.width = Math.round(MW * dpr); map.height = Math.round(MH * dpr);
+    glow.width = Math.max(1, Math.round(W / 2)); glow.height = Math.max(1, Math.round(H / 2));
+    draw();
+  };
+  const rgba = (c, f, a = 1) => `rgba(${Math.round(c[0] * f)},${Math.round(c[1] * f)},${Math.round(c[2] * f)},${a})`;
+  const NAVY = [13, 18, 32], S = 2 * Math.PI / NC;
+
+  function drawHat() {
+    const c = ctxH; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H);
+    ctxG.setTransform(1, 0, 0, 1, 0, 0); ctxG.clearRect(0, 0, glow.width, glow.height); ctxG.setTransform(glow.width / W, 0, 0, glow.height / H, 0, 0);
+    const rx = W * 0.42, bh = 2 * rx * 0.218, ry = rx * 0.19, cx = W / 2, cy = H * 0.52, top = 0.946;
+    const P = (a, tt, inset = 1) => { const s = (top + (1 - top) * tt) * inset; return [cx + rx * s * Math.sin(a), cy + (tt - 0.5) * bh + ry * s * Math.cos(a)]; };
+    const poly = (ctx, pts) => { ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]); ctx.closePath(); };
+    const arc = (a0, a1, tt, inset, n = 48) => Array.from({ length: n + 1 }, (_, i) => P(a0 + (a1 - a0) * i / n, tt, inset));
+
+    if (mode === "beacon") {                           // Bluetooth pings round the hat
+      for (let i = 0; i < 3; i++) {
+        const p = ((t / 1.8) + i / 3) % 1;
+        c.strokeStyle = `rgba(41,211,255,${0.45 * (1 - p)})`; c.lineWidth = 2;
+        c.beginPath(); c.ellipse(cx, cy, rx * (1.04 + p * 0.5), (bh / 2 + ry) * (1.04 + p * 0.9), 0, 0, 2 * Math.PI); c.stroke();
+      }
+    }
+    // the inside of the back half, and the pod on it
+    poly(c, [...arc(Math.PI / 2, 1.5 * Math.PI, 0, 1), ...arc(1.5 * Math.PI, Math.PI / 2, 1, 1)]);
+    c.fillStyle = "#14151a"; c.fill();
+    const podC = (NC / 2 - view) * S, podHalf = 1.095;
+    const inBack = (a) => Math.cos(a) < -0.02;
+    const pa = []; for (let i = 0; i <= 40; i++) { const a = podC - podHalf + 2 * podHalf * i / 40; if (inBack(a)) pa.push(a); }
+    if (pa.length > 1) {
+      poly(c, [...pa.map((a) => P(a, 0.04, 0.86)), ...pa.slice().reverse().map((a) => P(a, 0.96, 0.86))]);
+      c.fillStyle = "#2a2c32"; c.fill(); c.strokeStyle = "#3a3d44"; c.lineWidth = 1; c.stroke();
+      const ka = podC + 0.18; if (inBack(ka)) { const [x, y] = P(ka, 0.55, 0.86); c.fillStyle = "#ff7a1a"; c.beginPath(); c.arc(x, y, Math.max(2.5, W * 0.006), 0, 2 * Math.PI); c.fill(); }
+      const ma = podC - 0.05; if (inBack(ma)) { const [x, y] = P(ma, 0.5, 0.86); c.fillStyle = "#4a4d55"; for (let i = 0; i < 7; i++) { const an = i * Math.PI / 3, rr = i ? W * 0.006 : 0; c.beginPath(); c.arc(x + rr * Math.cos(an), y + rr * Math.sin(an), Math.max(1, W * 0.0018), 0, 2 * Math.PI); c.fill(); } }
+    }
+    // the top cord at the back, then the front of the band
+    const cord = (a0, a1, tt) => { const pts = arc(a0, a1, tt, 1, 64); c.beginPath(); c.moveTo(...pts[0]); pts.forEach((p) => c.lineTo(...p)); c.strokeStyle = "#7d735c"; c.lineWidth = Math.max(1.5, bh * CORD * 0.7); c.lineCap = "round"; c.stroke(); };
+    cord(Math.PI / 2, 1.5 * Math.PI, CORD / 2);
+    poly(c, [...arc(-Math.PI / 2, Math.PI / 2, 0, 1), ...arc(Math.PI / 2, -Math.PI / 2, 1, 1)]);
+    c.fillStyle = "#040406"; c.fill();
+    const rowH = (1 - 2 * CORD) / NR;
+    for (let k = Math.floor(view) - 53; k <= Math.ceil(view) + 53; k++) {
+      let a0 = (k - 0.5 - view) * S, a1 = a0 + S;
+      if (a1 <= -Math.PI / 2 || a0 >= Math.PI / 2) continue;
+      a0 = Math.max(a0 + S * 0.09, -Math.PI / 2); a1 = Math.min(a1 - S * 0.09, Math.PI / 2);
+      if (a1 <= a0) continue;
+      const am = (a0 + a1) / 2, shade = Math.cos(am), kk = mod(k, NC);
+      for (let r = 0; r < NR; r++) {
+        const t0 = CORD + r * rowH + rowH * 0.09, t1 = CORD + (r + 1) * rowH - rowH * 0.09;
+        const quad = [P(a0, t0), P(a1, t0), P(a1, t1), P(a0, t1)];
+        const px = pixel(r, kk);
+        poly(c, quad);
+        if (px) { const f = (0.45 + 0.55 * shade) * px[1]; c.fillStyle = rgba(RGB[px[0]], f); c.fill(); poly(ctxG, quad); ctxG.fillStyle = rgba(RGB[px[0]], f); ctxG.fill(); }
+        else { c.fillStyle = rgba(NAVY, 0.5 + 0.7 * shade); c.fill(); }
+      }
+    }
+    if (canBlur) { c.save(); c.globalCompositeOperation = "lighter"; c.filter = `blur(${Math.max(3, W * 0.008)}px)`; c.globalAlpha = 0.85; c.drawImage(glow, 0, 0, W, H); c.restore(); }
+    cord(-Math.PI / 2, Math.PI / 2, CORD / 2);
+    cord(-Math.PI / 2, Math.PI / 2, 1 - CORD / 2);
+  }
+
+  function drawMap() {                                // the whole band unrolled, front in the middle
+    const c = ctxM; c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.fillStyle = "#040406"; c.fillRect(0, 0, MW, MH);
+    const cw = MW / NC, ch = MH / NR; let n = 0;
+    for (let i = 0; i < NC; i++) {
+      const k = mod(i - NC / 2, NC);
+      for (let r = 0; r < NR; r++) {
+        const px = pixel(r, k);
+        if (px) n++;
+        c.fillStyle = px ? rgba(RGB[px[0]], px[1]) : "#141a2c";
+        c.fillRect(i * cw + cw * 0.1, r * ch + ch * 0.1, cw * 0.8, ch * 0.8);
+      }
+    }
+    lit = n;
+    const i0 = mod(view + NC / 2 - 52, NC), w = 105 * cw;
+    c.strokeStyle = "rgba(255,194,58,.9)"; c.lineWidth = 1.5;
+    c.strokeRect(i0 * cw, 0.75, Math.min(w, MW - i0 * cw), MH - 1.5);
+    if (i0 * cw + w > MW) c.strokeRect(0, 0.75, i0 * cw + w - MW, MH - 1.5);
+  }
+
+  function readout() {
+    if (mode === "beacon") { amps.textContent = "Band switched off · about 0.1 mA · weeks between charges"; return; }
+    const want = 1.0 + lit * 0.0009 + 0.005, draw = Math.min(want, 2.4), mins = Math.round(2.4 / draw * 60 / 5) * 5;
+    amps.textContent = `${lit.toLocaleString("en")} of 2,496 pixels lit · about ${draw.toFixed(1)} A${want > 2.4 ? " (the firmware's cap)" : ""} · roughly ${Math.floor(mins / 60)} h ${String(mins % 60).padStart(2, "0")} min a charge`;
+  }
+
+  function beaconPhone() {
+    const d = 22 + 18 * Math.sin(t * 0.35), warmer = Math.cos(t * 0.35) < 0;
+    dirEl.textContent = warmer ? "Warmer" : "Colder"; dirEl.classList.toggle("cold", !warmer);
+    distEl.textContent = `about ${Math.round(d)} m away`;
+    const bars = d < 8 ? 5 : d < 16 ? 4 : d < 26 ? 3 : d < 34 ? 2 : 1;
+    phone.querySelectorAll(".bars i").forEach((b, i) => b.classList.toggle("on", i < bars));
+  }
+
+  function draw() {
+    if (!W) return;
+    drawMap(); drawHat();
+    if (t - shownAt > 0.25 || shownAt < 0) { readout(); if (mode === "beacon") beaconPhone(); shownAt = t; }
+  }
+
+  function frame(now) {
+    const dt = last ? Math.min((now - last) / 1000, 0.1) : 0; last = now;
+    if (running && visible) {
+      t += dt;
+      if (mode === "tiki" && autoTurn) { view += 5 * dt; turn.value = Math.round(mod(view + NC / 2, NC) - NC / 2); }
+      if (mode === "text") scroll += 14 * dt;
+      draw();
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // ---- controls ----
+  const setMode = (m) => {
+    mode = m; shownAt = -1;
+    root.querySelectorAll("[data-mode]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.mode === m)));
+    textBox.hidden = m !== "text"; phone.hidden = m !== "beacon";
+    if (m !== "tiki") { view = 0; turn.value = 0; } else autoTurn = true;
+    if (m === "text") scroll = 40;
+    say.textContent = LINES[m];
+    hat.setAttribute("aria-label", `The hat's LED band seen from the front, showing ${LABELS[m]}`);
+    draw();
+  };
+  root.querySelectorAll("[data-mode]").forEach((b) => b.addEventListener("click", () => setMode(b.dataset.mode)));
+  turn.addEventListener("input", () => { view = Number(turn.value); autoTurn = false; draw(); });
+  msg.addEventListener("input", () => { buildTape(msg.value); scroll = 40; draw(); });
+  const setRunning = (on) => { running = on; pauseBtn.textContent = on ? "Pause" : "Play"; pauseBtn.setAttribute("aria-pressed", String(!on)); };
+  pauseBtn.addEventListener("click", () => setRunning(!running));
+  setRunning(running);
+  new IntersectionObserver((es) => { visible = es[0].isIntersecting; }).observe(root);
+  new ResizeObserver(size).observe(hat);
+  buildTape(msg.value);
+  setMode("tiki");
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
