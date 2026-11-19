@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
 <link rel="stylesheet" href="../../../kit/showcase.css">
 <style>
-/* This episode's accent: tiki orange, from the mask at the front of the band and the pod's mode key. */
+/* This episode's accent: sunset orange, from the sun at the front of the band and the pod's mode key. */
 :root { --accent: #E2620C; --accent-ink: #A84600; --accent-soft: #FCEBDD; }
 @media (prefers-color-scheme: dark) { :root { --accent-ink: #FFA661; --accent-soft: #2A1A10; } }
 
@@ -90,7 +90,7 @@
       </ul>
       <h1>HeadLine</h1>
       <p class="ps-pitch">A design proposal for a bucket hat whose band is a full-colour LED screen that scrolls your messages, dances to the music and helps your friends find you in a crowd.</p>
-      <p class="ps-lede">The idea: an ordinary-looking bucket hat with a 12 × 208 pixel screen sewn in where the hatband goes. From a phone app you'd send it scrolling text, tiki art or a light show that pulses with the music around you. With the screen dark it keeps broadcasting over Bluetooth, so friends' phones can find you at a crowded festival. The electronics would hide in a slim pod behind the sweatband.</p>
+      <p class="ps-lede">The idea: an ordinary-looking bucket hat with a 12 × 208 pixel screen sewn in where the hatband goes. From a phone app you'd send it scrolling text, pixel art or a light show that pulses with the music around you. With the screen dark it keeps broadcasting over Bluetooth, so friends' phones can find you at a crowded festival. The electronics would hide in a slim pod behind the sweatband.</p>
       <dl class="ps-facts">
         <div><dt>2,496 pixels</dt><dd>12 × 208 RGB, all the way round</dd></div>
         <div><dt>One band, any hat</dt><dd>Designed for a hat maker to sew in</dd></div>
@@ -165,7 +165,7 @@
         <div class="band-ctl">
           <div>
             <div class="band-modes" role="group" aria-label="Shows">
-              <button type="button" data-mode="tiki" aria-pressed="true" style="--c:#FF7A1A"><i></i>Tiki art<small>The art from the model</small></button>
+              <button type="button" data-mode="art" aria-pressed="true" style="--c:#FF7A1A"><i></i>Pixel art<small>The art from the model</small></button>
               <button type="button" data-mode="text" aria-pressed="false" style="--c:#FFC23A"><i></i>Marquee<small>Your words, scrolling</small></button>
               <button type="button" data-mode="music" aria-pressed="false" style="--c:#39E64A"><i></i>Music<small>Pulses on the beat</small></button>
               <button type="button" data-mode="beacon" aria-pressed="false" style="--c:#29D3FF"><i></i>Beacon<small>Dark, but findable</small></button>
@@ -198,7 +198,7 @@
       <div class="ps-grid side">
         <div>
           <div class="ps-viewer">
-            <model-viewer id="enclosure" src="../4-model/model.glb" alt="3D model of HeadLine's LED band, with tiki pixel art at the front" camera-controls auto-rotate shadow-intensity="0.6" interaction-prompt="none" camera-orbit="25deg 68deg auto"></model-viewer>
+            <model-viewer id="enclosure" src="../4-model/model.glb" alt="3D model of HeadLine's LED band, with pixel art of a sunset over the sea at the front" camera-controls auto-rotate shadow-intensity="0.6" interaction-prompt="none" camera-orbit="25deg 68deg auto"></model-viewer>
           </div>
           <div class="ps-views" role="group" aria-label="Views">
             <button type="button" data-target="#enclosure" data-orbit="25deg 68deg auto" aria-pressed="true">Three-quarter</button>
@@ -267,7 +267,7 @@
       <ol class="ps-trail">
         <li><figure><a class="frame" href="../2-concept/Smart-Bucket-Hat-by-the-Lake.png"><img src="../2-concept/Smart-Bucket-Hat-by-the-Lake.png" alt="Concept art: an older angler in a khaki bucket hat on a boat, the band showing a pixel fish over waves and pine trees" loading="lazy"></a><figcaption><b>Concept</b>The angler's version, beside the festival poster above</figcaption></figure></li>
         <li><figure><a class="frame" href="../3-layout/tech_LED-Pixel-Bucket-Hat-Design-Sheet.png"><img src="../3-layout/tech_LED-Pixel-Bucket-Hat-Design-Sheet.png" alt="Control drawing: front, three-quarter and top views of the hat with its pixel band" loading="lazy"></a><figcaption><b>Control drawing</b>Front, three-quarter and top views</figcaption></figure></li>
-        <li><figure><a class="frame" href="../4-model/iso.png"><img src="../4-model/iso.png" alt="Isometric view of the CAD model: the oval LED band with tiki art and the pod inside the back" loading="lazy"></a><figcaption><b>3D model</b>The band and its pod in Solidcraft</figcaption></figure></li>
+        <li><figure><a class="frame" href="../4-model/iso.png"><img src="../4-model/iso.png" alt="Isometric view of the CAD model: the oval LED band with its sunset and palm pixel art, and the pod inside the back" loading="lazy"></a><figcaption><b>3D model</b>The band and its pod in Solidcraft</figcaption></figure></li>
         <li><figure><a class="frame" href="../5-electronics/schematic.png"><img src="../5-electronics/schematic.png" alt="The schematic" loading="lazy"></a><figcaption><b>Electronics</b>The schematic</figcaption></figure></li>
       </ol>
     </div>
@@ -307,8 +307,8 @@
   const mod = (a, n) => ((a % n) + n) % n;
 
   // ---- the art, ported from 4-model/build_model.py (same sprites, same places) ----
-  const TIKI = ["..C.R.Y.R.C..", ".OOOOOOOOOOO.", "OO.........OO", "O.YYYY.YYYY.O", "O.Y..Y.Y..Y.O", "O.YYYY.YYYY.O",
-                "O.....O.....O", "OO...OOO...OO", "O.RRRRRRRRR.O", "O.R.R.R.R.R.O", "O.RRRRRRRRR.O", ".OOOOOOOOOOO."];
+  const SUNSET = ["....YYYYY....", "..YYYYYYYYY..", ".YYYYYYYYYYY.", ".OOOOOOOOOOO.", "OOOOOOOOOOOOO", "RRRRRRRRRRRRR",
+                  ".............", "CCC.COOOC.CCC", ".............", ".BBB.BOB.BBB.", ".............", "BB..BBBBB..BB"];
   const PALM = ["..GGG.GGG..", ".GGGGGGGGG.", "GG..GYG..GG", "G..GGYGG..G", "..G..Y..G..", ".....Y.....",
                 ".....Y.....", "....Y......", "....Y......", "....Y......", "...YY......", "..YYYY....."];
   const HIBISCUS = ["...MMM...", ".MMMMMMM.", "MMMVVVMMM", "MMVVYVVMM", "MMMVVVMMM", ".MMMMMMM.", "...M.M...", "..G...G.."];
@@ -326,8 +326,12 @@
     ART[crest][k] = "C";
     for (let r = crest + 1; r < NR; r++) ART[r][k] = "B";
   }
-  put(TIKI, -6, 0); both(STAR, 8, 5); both(PALM, 13, 0); both(STAR, 25, 2); both(HIBISCUS, 29, 2); both(STAR, 39, 0);
+  put(SUNSET, -6, 0); both(STAR, 8, 5); both(PALM, 13, 0); both(STAR, 25, 2); both(HIBISCUS, 29, 2); both(STAR, 39, 0);
   both(FISH, 46, 3); both(STAR, 61, 1); both(PALM, 66, 0); both(STAR, 80, 4);
+  const GLYPH = { A: [".###.", "#...#", "#...#", "#####", "#...#", "#...#", "#...#"], L: ["#....", "#....", "#....", "#....", "#....", "#....", "#####"],
+                  O: [".###.", "#...#", "#...#", "#...#", "#...#", "#...#", ".###."], H: ["#...#", "#...#", "#...#", "#####", "#...#", "#...#", "#...#"] };
+  [..."ALOHA"].forEach((ch, i) => put(GLYPH[ch], NC / 2 - 14 + 6 * i, 1, false, "W"));   // across the back
+  for (const k of [84, NC - 84 - 1]) { ART[2][k] = "C"; ART[5][k + (k < NC / 2 ? 2 : -2)] = "C"; }   // sparkles either side
 
   // ---- a 5 x 7 font for the marquee (narrow glyphs for punctuation) ----
   const F = {
@@ -369,18 +373,18 @@
   const textBox = document.getElementById("band-text"), msg = document.getElementById("band-msg");
   const phone = document.getElementById("band-phone"), dirEl = document.getElementById("band-dir"), distEl = document.getElementById("band-dist");
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let mode = "tiki", view = 0, autoTurn = true, running = !reduce, visible = true, t = 0, scroll = 40, last = 0, lit = 0, shownAt = -1;
+  let mode = "art", view = 0, autoTurn = true, running = !reduce, visible = true, t = 0, scroll = 40, last = 0, lit = 0, shownAt = -1;
   const LINES = {
-    tiki: "The tiki at the front, palms and hibiscus round it, a fish over the waves on each side and ALOHA across the back. Turn the hat to see the rest.",
+    art: "A sunset over the sea at the front, palms and hibiscus round it, a fish over the waves on each side and ALOHA across the back. Turn the hat to see the rest.",
     text: "Type a line in the app and it would scroll all the way round the band.",
     music: "The XIAO's own microphone would listen for the beat and pulse the band with it, on the hat itself. This is a simulated beat: nothing here is listening.",
     beacon: "The band goes dark, and the hat keeps sending a small Bluetooth signal that friends' phones could use to find it."
   };
-  const LABELS = { tiki: "tiki pixel art", text: "a scrolling message", music: "a light show pulsing to a beat", beacon: "every pixel dark, in beacon mode" };
+  const LABELS = { art: "pixel art of a sunset and palms", text: "a scrolling message", music: "a light show pulsing to a beat", beacon: "every pixel dark, in beacon mode" };
 
   // ---- what each pixel shows: a palette letter (or null) and a brightness ----
   const pixel = (r, k) => {
-    if (mode === "tiki") { const ch = ART[r][k]; if (ch === ".") return null; return [ch, TWINKLE.has(r * NC + k) ? 0.55 + 0.45 * Math.sin(t * 4 + k * 1.7) : 1]; }
+    if (mode === "art") { const ch = ART[r][k]; if (ch === ".") return null; return [ch, TWINKLE.has(r * NC + k) ? 0.55 + 0.45 * Math.sin(t * 4 + k * 1.7) : 1]; }
     if (mode === "text") {
       if (r >= 10) { const crest = Math.sin(2 * Math.PI * (k + t * 3) / 13) > 0.2 ? 10 : 11; return r >= crest ? [r === crest ? "C" : "B", 0.8] : null; }
       const ch = tape[r][mod(k + Math.floor(scroll), NC)]; return ch === "." ? null : [ch, 1];
@@ -508,7 +512,7 @@
     const dt = last ? Math.min((now - last) / 1000, 0.1) : 0; last = now;
     if (running && visible) {
       t += dt;
-      if (mode === "tiki" && autoTurn) { view += 5 * dt; turn.value = Math.round(mod(view + NC / 2, NC) - NC / 2); }
+      if (mode === "art" && autoTurn) { view += 5 * dt; turn.value = Math.round(mod(view + NC / 2, NC) - NC / 2); }
       if (mode === "text") scroll += 14 * dt;
       draw();
     }
@@ -520,7 +524,7 @@
     mode = m; shownAt = -1;
     root.querySelectorAll("[data-mode]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.mode === m)));
     textBox.hidden = m !== "text"; phone.hidden = m !== "beacon";
-    if (m !== "tiki") { view = 0; turn.value = 0; } else autoTurn = true;
+    if (m !== "art") { view = 0; turn.value = 0; } else autoTurn = true;
     if (m === "text") scroll = 40;
     say.textContent = LINES[m];
     hat.setAttribute("aria-label", `The hat's LED band seen from the front, showing ${LABELS[m]}`);
@@ -535,7 +539,7 @@
   new IntersectionObserver((es) => { visible = es[0].isIntersecting; }).observe(root);
   new ResizeObserver(size).observe(hat);
   buildTape(msg.value);
-  setMode("tiki");
+  setMode("art");
   requestAnimationFrame(frame);
 })();
 </script>

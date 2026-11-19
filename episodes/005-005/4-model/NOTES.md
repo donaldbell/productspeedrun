@@ -4,12 +4,12 @@
 
 **Done (2026-11-18):**
 - `DESIGN.md` design read, two blockout passes plus the engineered model (`compare.png`: every signature feature reads; the piping is finer than the concept's seam).
-- `model.solidcraft` from `build_model.py` (~8 min full build, ~5 min `--blockout`, 47 s `--fit`). 573 bodies: band, 219 louvres, 335 pixel tiles, pod, lid, key, cells, stand-ins.
+- `model.solidcraft` from `build_model.py` (~8 min full build, ~5 min `--blockout`, 47 s `--fit`). 545 bodies: band, 219 louvres, 312 pixel tiles, pod, lid, key, cells, stand-ins.
 - `fit.json` / `FIT.md` agreed with Stage 5 (their numbers taken as sent, no open requests either way).
 - Fit check: **PASS**, 0 overlaps (Stage 5, against `fit_model.solidcraft`). Near misses: Mode Key–PTS810 ~0.18, Pod–PCB 0.11, Pod–XIAO 0.26, Lid–PCB 0.27.
 - Exports: `iso.png`, `model.step`, `model.stl`, `model.glb` (14 meshes, one per colour; pixels emissive).
 
-**The product:** a 58 cm hat's LED band. It's an oval cone 182 × 208 mm over the cords and 39.6 mm tall, leaning in 7°. A 12 × 208 pixel screen (2.8 mm pitch, black louvre grid over deep navy) shows tiki art across the front, fish and waves on the sides and ALOHA across the back, between fabric piping cords. Hidden inside at the back is a charcoal TPU pod (±102 mm of arc × 36 × 13.6 deep) holding the XIAO nRF52840 Sense carrier, two 1200 mAh cells, the mode key and the mic port. USB-C faces down, under the sweatband.
+**The product:** a 58 cm hat's LED band. It's an oval cone 182 × 208 mm over the cords and 39.6 mm tall, leaning in 7°. A 12 × 208 pixel screen (2.8 mm pitch, black louvre grid over deep navy) shows a sunset over the sea, palms and hibiscus across the front, fish and waves on the sides and ALOHA across the back, between fabric piping cords. Hidden inside at the back is a charcoal TPU pod (±102 mm of arc × 36 × 13.6 deep) holding the XIAO nRF52840 Sense carrier, two 1200 mAh cells, the mode key and the mic port. USB-C faces down, under the sweatband.
 
 **Left for the hosts:** the four questions below (pod size, runtime vs pixel density, where the mode button lives, the piping colour).
 
@@ -23,7 +23,7 @@ The band, not the hat. The product is the LED band a hat maker fuses into an ord
 |---|---|---|
 | **Screen** (deep navy) | The band's core: TPU back skin (fused to the crown fabric), two flex LED matrices, diffuser. An oval cone leaning in 7° | 3.0 thick, z 0 → 39.6; screen surface 178 × 204 at the brim seam (a 58 cm hat) |
 | **Louvres** (black) | The pixel grid, 0.5 proud of the diffuser: 208 vertical ribs and 11 rings | 0.5 wide, 2.8 pitch, 12 rows × 208 columns |
-| **Pixel tiles** | The lit cells of the art (tiki, palms, hibiscus, sparkles, fish, waves, ALOHA), as coloured tiles in the cells | 335 bodies, 9 colours, map in `build_model.py` |
+| **Pixel tiles** | The lit cells of the art (sunset, palms, hibiscus, sparkles, fish, waves, ALOHA), as coloured tiles in the cells | 312 bodies, 9 colours, map in `build_model.py` |
 | **Cords** | Fabric-wrapped piping at the top and bottom of the screen, where the band is sewn into the crown and the brim seam | 3.0 tall, 2.25 proud |
 | **Pod** (charcoal TPU) | Tub against the inside of the band at the back, behind the sweatband: offset-oval band d −3.8 → −17.4 (0.8 left for the crown fabric), 102 mm of arc either side of the back centre, z 1.2 → 37.6, 1.2 walls | ~204 mm of arc × 36.4 × 13.6 deep |
 | **Pod lid** | Closes the tub's top; the board and cells drop in from above | 1.2 thick, z 37.6 → 38.8 |
@@ -38,7 +38,7 @@ The band, not the hat. The product is the LED band a hat maker fuses into an ord
 ## Fit with Stage 5
 
 - `fit.json` holds the board, holes, rests, features and the band's numbers. Stage 5's numbers were taken as sent: board 50 × 34 R3, holes (±21, −13), module, usb, button, plugs, cells, antenna keep-out.
-- `fit.json`'s `model.design` is **`fit_model.solidcraft`**: the same build without the 219 louvres and 335 tiles (`python3 build_model.py --fit`). They all sit on the band's outer face, outside the Screen body, which the check still includes. With 560 bodies, a full check would take far longer.
+- `fit.json`'s `model.design` is **`fit_model.solidcraft`**: the same build without the 219 louvres and 312 tiles (`python3 build_model.py --fit`). They all sit on the band's outer face, outside the Screen body, which the check still includes. With 545 bodies, a full check would take far longer.
 - My own clearance check of the stand-ins against the pod: no overlaps after round 3. Intended contacts and near misses: Pod–PCB 0.0 (the posts), Mode Key–Button SW 0.20, Pod–Mode Key 0.32, Pod–XIAO USB-C 0.33, Pod Lid–PCB 0.25, Pod–cells 0.35, Pod–XIAO 0.58.
   - Round 1: the key went the wrong way (a sign error), the USB cutter stopped short of the wall, and the cells hit the pod's round ends and the plugs.
   - Round 2: the leaning cells clipped the floor by 0.1, so the floor dropped 0.4.

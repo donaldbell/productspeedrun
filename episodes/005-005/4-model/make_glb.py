@@ -17,7 +17,7 @@ fit = json.load(open(os.path.join(here, "..", "fit.json")))
 HIDDEN = set(fit["model"]["stand_ins"]) | {"Cell A", "Cell B"}
 COLORS = {b: c for b, c in json.load(open(os.path.join(here, "model_colors.json"))).items() if b not in HIDDEN}
 NAMES = {"#0d1220": "Screen", "#040406": "Louvres", "#7d735c": "Piping", "#26282d": "Pod", "#2e3035": "Pod Lid",
-         "#ff7a1a": "Tiki Orange", "#ffc23a": "Amber", "#ff3b1f": "Tiki Red", "#39e64a": "Palm Green",
+         "#ff7a1a": "Sunset Orange", "#ffc23a": "Amber", "#ff3b1f": "Sunset Red", "#39e64a": "Palm Green",
          "#ff3fd2": "Hibiscus", "#b44dff": "Violet", "#3b7bff": "Blue", "#29d3ff": "Cyan", "#fff1c9": "Warm White"}
 GLOW = {"#ff7a1a", "#ffc23a", "#ff3b1f", "#39e64a", "#ff3fd2", "#b44dff", "#3b7bff", "#29d3ff", "#fff1c9"}
 

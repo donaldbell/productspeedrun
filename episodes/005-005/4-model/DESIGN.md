@@ -6,7 +6,7 @@ Sources: the favourite concept art (`2-concept/Smart-Bucket-Hat-Festival-Poster.
 
 **What to trust.** The concept sets the look: a dark screen band framed by fabric piping, a tight black grid of square pixels, and saturated tiki pixel art (a tiki mask at the front, palms either side, hibiscus outboard, sparkles). The control drawing gives the band's proportions, its taper, the piping above and below and the pixel density. The pixel art itself is a stand-in for whatever the app shows. Nothing inside the hat is drawn, so the pod is ours.
 
-**Orientation in the model:** Z up, the bottom of the band (the brim seam) on z 0. The hat's front is **−Y** (the tiki mask), the back **+Y** (where the pod hides inside). X is across the head.
+**Orientation in the model:** Z up, the bottom of the band (the brim seam) on z 0. The hat's front is **−Y** (the sunset), the back **+Y** (where the pod hides inside). X is across the head.
 
 ## Signature features
 
@@ -17,7 +17,7 @@ Sources: the favourite concept art (`2-concept/Smart-Bucket-Hat-Festival-Poster.
 | F3 | **Piping at both edges**: a rounded fabric cord along the top and bottom of the screen, standing proud of it and framing it (the light rims in both concepts; the doubled lines in the control drawing). This is where the band is sewn into the hat. | Loft through 7 ellipse sections whose offset bulges out like a cord (proud by 1.7), minus the inner loft. In the hat's fabric colour. |
 | F4 | **A tight black grid of square pixels**: 12 rows of square cells with black louvres between them, dense enough to read as a screen, not as dots (12 rows in the poster close-up, 11 in the drawing). | A black louvre layer 0.5 proud of the screen: vertical ribs (a comb profile intersected with the louvre shell) and horizontal rings (a comb in the side plane intersected with a copy of it). 2.8 mm pitch, 208 columns. |
 | F5 | **A dark screen ground**: unlit, the band is a near-black navy stripe, so the hat reads as a plain hat with a dark band when it's off. | The screen core in deep navy; the louvres black. |
-| F6 | **Saturated tiki pixel art**, the poster's look: a tiki mask at front centre (orange, amber brows, red mouth), green palms with amber trunks on either side, magenta hibiscus outboard of them, blue sparkles between. | Lit cells as thin coloured tiles inside the louvre cells, cut from a tile shell row by row (a copy of the shell intersected with a comb of the lit cells in that row, per colour). The art is written as a 12 × 208 character map in `build_model.py`, so it can be redrawn. |
+| F6 | **Saturated tropical pixel art**, the poster's look: a sunset over the sea at front centre (amber and orange sun, a red horizon, its orange reflection in cyan and blue waves; it replaced the poster's tiki mask, see the note at the end), green palms with amber trunks on either side, magenta hibiscus outboard of them, blue sparkles between. | Lit cells as thin coloured tiles inside the louvre cells, cut from a tile shell row by row (a copy of the shell intersected with a comb of the lit cells in that row, per colour). The art is written as a 12 × 208 character map in `build_model.py`, so it can be redrawn. |
 | F7 | **The marquee runs all the way round**: the angler concept shows fish, waves and trees round the sides and back. | Waves and a jumping fish on each side, and "ALOHA" across the back (the text mode). |
 | F8 | **The brains are invisible**: the electronics live in a slim pod inside the band at the back, behind the sweatband, following the band's curve. USB-C faces down into the hat, so you fold the sweatband down to charge. | A pod lofted between two offset-oval sections (a concentric arc, so it hugs the band), hollowed after the blockout. Charcoal. |
 
@@ -57,7 +57,7 @@ inner face    d −3.0 the whole height (the back skin bonded to the crown fabri
 | Piping (both cords) | weathered charcoal-olive `#5a5242` | The festival hat's fabric. A hat maker would wrap it in the hat's own cloth (khaki for the lake hat). Matte. |
 | Screen core | deep navy `#151b2c` | The unlit screen, satin |
 | Louvres | black `#0a0b0f` | Matte |
-| Tiki mask | orange `#ff7a1a`, amber `#ffc23a`, red `#ff3b1f` | Glowing |
+| Sunset | amber `#ffc23a`, orange `#ff7a1a`, red `#ff3b1f` | Glowing |
 | Palms | green `#39e64a`, trunk amber `#e0a020` | |
 | Hibiscus | magenta `#ff3fd2`, violet `#b44dff`, yellow centre | |
 | Sparkles, waves | blue `#3b7bff`, cyan `#29d3ff` | |
@@ -88,3 +88,5 @@ Filled in after each `tools/form/compare.py` pass. ✓ reads, partly, ✗ doesn'
 Pass 1 → 2: coloured every split tile by name; spread the sprites over the front half (tiki, sparkles, palms, hibiscus at ±45°, fish over waves on the sides, second palms further back); darker screen, blacker louvres, fatter cords.
 
 Pass 3 (engineered model): the pod was rebuilt from two-curve-pair sections (the periodic-spline loft had twisted), and lengthened and deepened for the cells. The cords are a touch warmer. Still off: the piping reads finer than in the concept, where it's the hat's own seam. At hat scale a 3 mm cord is right, and the render can lift it.
+
+**Change, 2026-11-19 (hosts' call):** the tiki mask at the front centre is gone, replaced by a sunset over the sea, the same motif as the hosts' chosen hero render. As a grid of pixels, the mask's face (big eyes, a wide red mouth) could read as a racist caricature, so it is no longer used anywhere in the model or the page. The palms, hibiscus, sparkles, fish, waves and ALOHA are unchanged. The pass table above is kept as it was recorded.

@@ -8,7 +8,7 @@
 The product is the band a hat maker fuses into an ordinary bucket hat, not the hat (host's call): a tapered oval
 pixel screen with fabric piping top and bottom, and a slim pod hidden inside at the back.
 
-Model frame: Z up, the bottom of the band (the brim seam) on z 0. The hat's front is -Y (the tiki mask), the back
+Model frame: Z up, the bottom of the band (the brim seam) on z 0. The hat's front is -Y (the sunset), the back
 +Y (the pod). See DESIGN.md for the design read (signature features F1-F8, proportions, colours).
 """
 import bisect, json, math, os, sys
@@ -101,20 +101,20 @@ def row_z(r): return Z_S1 - (r + 1) * PITCH, Z_S1 - r * PITCH   # row r (0 = top
 # ---- the pixel art (DESIGN.md F6, F7): 12 rows x 208 columns, k = 0 at the front centre --------------------
 ART_COLORS = {"O": "#ff7a1a", "Y": "#ffc23a", "R": "#ff3b1f", "G": "#39e64a", "M": "#ff3fd2", "V": "#b44dff",
               "B": "#3b7bff", "C": "#29d3ff", "W": "#fff1c9"}
-ART_NAMES = {"O": "Tiki Orange", "Y": "Amber", "R": "Tiki Red", "G": "Palm Green", "M": "Hibiscus", "V": "Violet",
+ART_NAMES = {"O": "Sunset Orange", "Y": "Amber", "R": "Sunset Red", "G": "Palm Green", "M": "Hibiscus", "V": "Violet",
              "B": "Blue", "C": "Cyan", "W": "Warm White"}
-TIKI = ["..C.R.Y.R.C..",
-        ".OOOOOOOOOOO.",
-        "OO.........OO",
-        "O.YYYY.YYYY.O",
-        "O.Y..Y.Y..Y.O",
-        "O.YYYY.YYYY.O",
-        "O.....O.....O",
-        "OO...OOO...OO",
-        "O.RRRRRRRRR.O",
-        "O.R.R.R.R.R.O",
-        "O.RRRRRRRRR.O",
-        ".OOOOOOOOOOO."]
+SUNSET = ["....YYYYY....",       # front centre: the sun setting over the sea, its reflection in the waves
+          "..YYYYYYYYY..",
+          ".YYYYYYYYYYY.",
+          ".OOOOOOOOOOO.",
+          "OOOOOOOOOOOOO",
+          "RRRRRRRRRRRRR",
+          ".............",
+          "CCC.COOOC.CCC",
+          ".............",
+          ".BBB.BOB.BBB.",
+          ".............",
+          "BB..BBBBB..BB"]
 PALM = ["..GGG.GGG..",
         ".GGGGGGGGG.",
         "GG..GYG..GG",
@@ -165,7 +165,7 @@ for k in range(42, NC - 41):                  # waves all the way round the side
     ART[crest][k] = "C"
     for r in range(crest + 1, NR):
         ART[r][k] = "B"
-put(TIKI, -6, 0)                              # front centre, packed like the poster: tiki, palms, hibiscus
+put(SUNSET, -6, 0)                            # front centre: the sunset, with palms and hibiscus round it
 both(STAR, 8, 5)
 both(PALM, 13, 0)
 both(STAR, 25, 2)

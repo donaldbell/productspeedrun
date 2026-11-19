@@ -132,6 +132,6 @@
    "Plug B",
    "Button SW"
   ],
-  "note": "fit_model.solidcraft = model.solidcraft without the 219 louvres and 335 pixel tiles (build_model.py --fit). They all sit on the band's outer face, outside the Screen body, which the check still includes, so the quicker check misses nothing"
+  "note": "fit_model.solidcraft = model.solidcraft without the 219 louvres and 312 pixel tiles (build_model.py --fit). They all sit on the band's outer face, outside the Screen body, which the check still includes, so the quicker check misses nothing"
  }
 }
