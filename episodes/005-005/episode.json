@@ -32,7 +32,7 @@
     }
   ],
   "brief": {
-    "name": "Smart Bucket Hat",
+    "name": "HeadLine",
     "pitch": "A Bucket Hat with an embedded LED matrix that acts as a user-programmable marquee for text and animations and a built-in BLE beacon for tracking in crowded environments (festivals).",
     "what": "A common yet fashionable bucket hat with an embedded matrix of RGB LEDs all around the head that uses a Bluetooth-connected microcontroller for displaying text and animations defined in a companion app for your phone. The same microcontroller can act as a location-aware beacon for friends to locate you at crowded events like festivals. ",
     "who": "Marketed towards anglers, tiki enthusiasts, burning man attendees, festival goers, attentions-seekers, party people.",
