@@ -70,6 +70,18 @@
   .band-phone .bars { grid-row: span 3; grid-column: 2; }
   .band-modes { grid-template-columns: 1fr; }
 }
+/* Episode Short (in "How we got here"): a vertical local poster; YouTube only loads on press */
+.hl-video { margin: 0 0 calc(var(--gap) * 1.5); display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: var(--gap); align-items: end; }
+.hl-video-frame { position: relative; aspect-ratio: 9 / 16; border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--line); background: #000; }
+.hl-video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.hl-video-play { position: absolute; inset: 0; display: block; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; }
+.hl-video-play img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hl-video-icon { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); filter: drop-shadow(0 2px 8px rgba(0,0,0,.4)); transition: transform .15s; }
+.hl-video-play:hover .hl-video-icon, .hl-video-play:focus-visible .hl-video-icon { transform: translate(-50%, -50%) scale(1.1); }
+.hl-video-play:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+.hl-video figcaption { font-size: 14px; color: var(--muted); max-width: 46ch; }
+.hl-video figcaption a { color: var(--accent-ink); }
+@media (max-width: 600px) { .hl-video { grid-template-columns: minmax(0, 280px); } }
 </style>
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.4.0/dist/model-viewer.min.js"></script>
 <script type="module" src="../../../kit/series-bar.js"></script>
@@ -264,6 +276,15 @@
         <h2>How we got here</h2>
         <p>Product Speedrun rolls five random ingredients, and two hosts take them from brainstorm to a routed board in one episode. This roll: an nRF52840, an angler, a wearable, a tiki vibe and "reacts to music".</p>
       </div>
+      <figure class="hl-video">
+        <div class="hl-video-frame">
+          <button type="button" class="hl-video-play" data-video="b3ojXZ3jMnw" aria-label="Play the episode 005 Short (loads YouTube)">
+            <img src="short.jpg" alt="" width="540" height="960" loading="lazy">
+            <span class="hl-video-icon" aria-hidden="true"><svg viewBox="0 0 68 48" width="68" height="48"><path d="M66.5 7.7a8.5 8.5 0 0 0-6-6C55.3.3 34 .3 34 .3s-21.3 0-26.5 1.4a8.5 8.5 0 0 0-6 6C.1 13 .1 24 .1 24s0 11 1.4 16.3a8.5 8.5 0 0 0 6 6C12.7 47.7 34 47.7 34 47.7s21.3 0 26.5-1.4a8.5 8.5 0 0 0 6-6C67.9 35 67.9 24 67.9 24s0-11-1.4-16.3z" fill="#E33"/><path d="M27 34V14l18 10z" fill="#fff"/></svg></span>
+          </button>
+        </div>
+        <figcaption><b>The episode, in short.</b> A quick walk through episode 005, from the idea to the LED band and its board. Pressing play loads the video from YouTube. <a href="https://www.youtube.com/shorts/b3ojXZ3jMnw">Watch it on YouTube</a></figcaption>
+      </figure>
       <ol class="ps-trail">
         <li><figure><a class="frame" href="../2-concept/Smart-Bucket-Hat-by-the-Lake.png"><img src="../2-concept/Smart-Bucket-Hat-by-the-Lake.png" alt="Concept art: an older angler in a khaki bucket hat on a boat, the band showing a pixel fish over waves and pine trees" loading="lazy"></a><figcaption><b>Concept</b>The angler's version, beside the festival poster above</figcaption></figure></li>
         <li><figure><a class="frame" href="../3-layout/tech_LED-Pixel-Bucket-Hat-Design-Sheet.png"><img src="../3-layout/tech_LED-Pixel-Bucket-Hat-Design-Sheet.png" alt="Control drawing: front, three-quarter and top views of the hat with its pixel band" loading="lazy"></a><figcaption><b>Control drawing</b>Front, three-quarter and top views</figcaption></figure></li>
@@ -542,6 +563,18 @@
   setMode("art");
   requestAnimationFrame(frame);
 })();
+
+// Episode Short: swap the local poster for YouTube's privacy-enhanced player only when pressed.
+// Shorts have no "Embed" menu item, but the ordinary /embed/<id> player plays them.
+document.querySelectorAll(".hl-video-play").forEach((b) => b.addEventListener("click", () => {
+  const f = document.createElement("iframe");
+  f.src = `https://www.youtube-nocookie.com/embed/${b.dataset.video}?autoplay=1&rel=0`;
+  f.title = "Product Speedrun episode 005: LED Hat Concept to Help You Stick Out";
+  f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+  f.allowFullscreen = true;
+  b.replaceWith(f);
+  f.focus();
+}));
 </script>
 </body>
 </html>
